@@ -784,7 +784,7 @@
                     ),
                 },
                 url: "/wc/showProfessionEntries",
-                method: "GET",
+                method: "POST",
                 data: { a: s },
                 cache: !1,
                 success: function (s) {
@@ -809,7 +809,7 @@
                     ),
                 },
                 url: "/auto/showAutoVehicleEntries",
-                method: "GET",
+                method: "POST",
                 data: { a: s },
                 cache: !1,
                 success: function (s) {
@@ -833,7 +833,7 @@
                     ),
                 },
                 url: "/auto/showAutoDriverEntries",
-                method: "GET",
+                method: "POST",
                 data: { a: s },
                 cache: !1,
                 success: function (s) {
@@ -858,7 +858,7 @@
                                       ).attr("content"),
                                   },
                                   url: "/auto/showSpouseInformationForm",
-                                  method: "GET",
+                                  method: "POST",
                                   data: { a: s },
                                   cache: !1,
                                   success: function (s) {

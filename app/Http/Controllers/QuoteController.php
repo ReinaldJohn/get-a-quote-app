@@ -36,7 +36,7 @@ class QuoteController extends Controller
 
     public function showProfessionEntries(Request $request, Quote $quoteModel) {
 
-        if ($request->isMethod('get') && $request->has('a')) {
+        if ($request->isMethod('post') && $request->has('a')) {
 
             $a = $request->input('a');
 
@@ -100,7 +100,7 @@ class QuoteController extends Controller
 
     public function showVehicleEntries(Request $request) {
 
-        if ($request->isMethod('get') && $request->has('a')) {
+        if ($request->isMethod('post') && $request->has('a')) {
 
             $a = $request->input('a');
             // dd($a);
@@ -166,7 +166,7 @@ class QuoteController extends Controller
 
     public function showDriverEntries(Request $request) {
 
-        if ($request->isMethod('get') && $request->has('a')) {
+        if ($request->isMethod('post') && $request->has('a')) {
 
             $a = $request->input('a');
 
@@ -221,7 +221,7 @@ class QuoteController extends Controller
 
     public function showSpouseInformationForm(Request $request) {
 
-        if ($request->isMethod('get') && $request->has('a')) {
+        if ($request->isMethod('post') && $request->has('a')) {
 
             $a = $request->input('a');
 
