@@ -1,7 +1,7 @@
 (function ($) {
 
 	"use strict";
-	
+
 	// Preload
 	$(window).on('load', function () { // makes sure the whole site is loaded
 		$('[data-loader="circle-side"]').fadeOut(); // will first fade out the loading animation
@@ -15,20 +15,20 @@
         var numProfessions = $("#wc_no_of_profession").val();
         var professionData = [];
         var professionContent = "";
-    
+
         for (var i = 1; i <= numProfessions; i++) {
             var profession = {};
             profession.name = $("#wc_profession_" + i + " option:selected").text();
             profession.annualPayroll = $("#wc_annual_payroll_" + i).val();
             profession.fullTimeEmployees = $("#wc_fulltime_" + i).val();
             profession.partTimeEmployees = $("#wc_parttime_" + i).val();
-    
+
             professionContent += '<div><h6><strong>Profession Entry No. ' + i + '</strong></h6>';
             professionContent += '<p>Profession: <strong>' + profession.name + '</strong></p>';
             professionContent += '<p>Annual Payroll: <strong>' + profession.annualPayroll + '</strong></p>';
             professionContent += '<p>Full Time: <strong>' + profession.fullTimeEmployees + ' Employees</strong></p>';
             professionContent += '<p>Part Time: <strong>' + profession.partTimeEmployees + ' Employee</strong></p></div>';
-    
+
             professionData.push(profession);
         }
         $(".entryContainer").html(professionContent);
@@ -41,7 +41,7 @@
         var numVehicles = $("#auto_add_vehicle").val();
         var vehiclesData = [];
         var vehiclesContent = "";
-    
+
         for (var i = 1; i <= numVehicles; i++) {
             var vehicles = {};
             vehicles.year = $("#auto_vehicle_year_" + i ).val();
@@ -51,7 +51,7 @@
             vehicles.mileage = $("#auto_vehicle_mileage_" + i).val();
             vehicles.garageAddress = $("#auto_vehicle_garage_add_" + i).val();
             vehicles.coverageLimits = $("#auto_vehicle_coverage_limits_" + i + " option:selected").text();
-    
+
             vehiclesContent += '<div><h6><strong>Vehicle Information Entry No. ' + i + '</strong></h6>';
             vehiclesContent += '<p>Year: <strong>' + vehicles.year + '</strong></p>';
             vehiclesContent += '<p>Make: <strong>' + vehicles.make + '</strong></p>';
@@ -60,7 +60,7 @@
             vehiclesContent += '<p>Mileage / Radius: <strong>' + vehicles.mileage + '</strong></p>';
             vehiclesContent += '<p>Garage Address: <strong>' + vehicles.garageAddress + '</strong></p>';
             vehiclesContent += '<p>Coverage Limits: <strong>' + vehicles.coverageLimits + '</strong></p></div>';
-    
+
             vehiclesData.push(vehicles);
         }
         $(".vehicleEntries").html(vehiclesContent);
@@ -72,7 +72,7 @@
         var numDrivers = $("#auto_add_driver").val();
         var driversData = [];
         var driversContent = "";
-    
+
         for (var i = 1; i <= numDrivers; i++) {
             var drivers = {};
             drivers.driversName = $("#auto_add_drivers_name_" + i ).val();
@@ -437,7 +437,7 @@
 						return "";
 					}
 				}
-				
+
 				function generateAllHTML(informationObject, targetDiv) {
 					var htmlString = "";
 					for (var info in informationObject) {
@@ -445,7 +445,7 @@
 					}
 					$(targetDiv).html(htmlString);
 				}
-				
+
 				generateAllHTML(personalInformation, "#personal_information_details");
 				generateAllHTML(generalLiabilityInformation, "#gl_information_details");
 				generateAllHTML(workersCompensationInformation2, "#wc_details_2");
@@ -494,8 +494,8 @@
 	        }
 	    }
 	});
-	
-	// Submit loader mask 
+
+	// Submit loader mask
 	var form = $("form#wrapped");
 	form.on('submit', function () {
 		form.validate();
@@ -519,6 +519,7 @@
 	});
 
 	function hideSteps(checkboxValue) {
+        console.log(checkboxValue)
 		switch (checkboxValue) {
 			case 'gl':
 				$('#gl_step_1, #gl_step_2, #glDetailsContainer').removeClass('step wizard-step').addClass('hidden');
@@ -578,11 +579,56 @@
 				// ajax container
 				$('#tools_step_1').find('#tools_no_losses_5years_container').empty();
 				break;
-				
+
 			case 'br':
 				$('#br_step_1, #brDetailsContainer').removeClass('step wizard-step').addClass('hidden');
 				$('#br_step_1').find('input').val('');
 				$('#br_step_1').find('select').val('');
+				break;
+
+			case 'bop':
+				$('#bop_step_1, #bop_step_2, #bop_step_3, #bop_step_4, #bopDetailsContainer').removeClass('step wizard-step').addClass('hidden');
+				$('#bop_step_1').find('input').val('');
+				$('#bop_step_1').find('select').val('');
+
+				$('#bop_step_2').find('input').val('');
+				$('#bop_step_2').find('select').val('');
+
+				$('#bop_step_3').find('input').val('');
+				$('#bop_step_3').find('select').val('');
+
+				$('#bop_step_4').find('input').val('');
+				$('#bop_step_4').find('select').val('');
+				break;
+
+            case 'comm_prop':
+                $('#property_step_1, #property_step_2, #property_step_3, #cpDetailsContainer').removeClass('step wizard-step').addClass('hidden');
+				$('#property_step_1').find('input').val('');
+				$('#property_step_1').find('select').val('');
+
+				$('#property_step_2').find('input').val('');
+				$('#property_step_2').find('select').val('');
+
+				$('#property_step_3').find('input').val('');
+				$('#property_step_3').find('select').val('');
+                break;
+
+            case 'eo':
+                $('#eo_step_1, #eo_step_2, #eo_step_3, #eo_step_4, #eo_step_5, #eoDetailsContainer').removeClass('step wizard-step').addClass('hidden');
+				$('#eo_step_1').find('input').val('');
+				$('#eo_step_1').find('select').val('');
+
+				$('#eo_step_2').find('input').val('');
+				$('#eo_step_2').find('select').val('');
+
+				$('#eo_step_3').find('input').val('');
+				$('#eo_step_3').find('select').val('');
+
+				$('#eo_step_4').find('input').val('');
+				$('#eo_step_4').find('select').val('');
+
+				$('#eo_step_5').find('input').val('');
+				$('#eo_step_5').find('select').val('');
 				break;
 
 			case 'pollution':
@@ -593,11 +639,47 @@
 				$('#pollution_step_1, #pollution_descops').val('');
 				$('#pollution_step_2, #pollution_explain_losses').val('');
 				// ajax container
-				$('#pollution_step_2').find('#pollution_subcon_cost_container').val('');				
+				$('#pollution_step_2').find('#pollution_subcon_cost_container').val('');
 				break;
+
+			case 'epli':
+				$('#epli_step_1, #epli_step_2, #epli_step_3, #epli_step_4, #epli_step_6, #epliDetailsContainer').removeClass('step wizard-step').addClass('hidden');
+				$('#epli_step_1').find('input').val('');
+				$('#epli_step_1').find('select').val('');
+
+				$('#epli_step_2').find('input').val('');
+				$('#epli_step_2').find('select').val('');
+
+				$('#epli_step_3').find('input').val('');
+				$('#epli_step_3').find('select').val('');
+
+				$('#epli_step_4').find('input').val('');
+				$('#epli_step_4').find('select').val('');
+
+				$('#epli_step_5').find('input').val('');
+				$('#epli_step_5').find('select').val('');
+
+				$('#epli_step_6').find('input').val('');
+				$('#epli_step_6').find('select').val('');
+				break;
+
+            case 'cyber':
+                $('#cyber_step_1, #cyber_step_2, #cyberDetailsContainer').removeClass('step wizard-step').addClass('hidden');
+				$('#cyber_step_1').find('input').val('');
+				$('#cyber_step_1').find('select').val('');
+
+				$('#cyber_step_2').find('input').val('');
+				$('#cyber_step_2').find('select').val('');
+                break;
+
+            case 'instfloat':
+                $('#instfloat_step_1, #instfloatDetailsContainer').removeClass('step wizard-step').addClass('hidden');
+				$('#instfloat_step_1').find('input').val('');
+				$('#instfloat_step_1').find('select').val('');
+                break;
 		}
 	}
-	
+
 	function showSteps(checkboxValue) {
 		switch (checkboxValue) {
 			case 'gl':
@@ -621,11 +703,29 @@
 			case 'br':
 				$('#br_step_1, #brDetailsContainer').addClass('step wizard-step').removeClass('hidden');
 				break;
+			case 'bop':
+				$('#bop_step_1, #bop_step_2, #bop_step_3, #bop_step_4, #bopDetailsContainer').addClass('step wizard-step').removeClass('hidden');
+				break;
+            case 'comm_prop':
+                $('#property_step_1, #property_step_2, #property_step_3, #cpDetailsContainer').addClass('step wizard-step').removeClass('hidden');
+				break;
+            case 'eo':
+                $('#eo_step_1, #eo_step_2, #eo_step_3, #eo_step_4, #eo_step_5, #eoDetailsContainer').addClass('step wizard-step').removeClass('hidden');
+				break;
 			case 'pollution':
 				$('#pollution_step_1, #pollution_step_2, #pollutionDetailsContainer').addClass('step wizard-step').removeClass('hidden');
 				break;
+			case 'epli':
+				$('#epli_step_1, #epli_step_2, #epli_step_3, #epli_step_4, #epli_step_5, #epli_step_6, #epliDetailsContainer').addClass('step wizard-step').removeClass('hidden');
+				break;
+			case 'cyber':
+				$('#cyber_step_1, #cyber_step_2, #cyberDetailsContainer').addClass('step wizard-step').removeClass('hidden');
+				break;
+			case 'instfloat':
+				$('#instfloat_step_1, #instfloatDetailsContainer').addClass('step wizard-step').removeClass('hidden');
+				break;
 		}
-	}	
+	}
 
 	$('input[name="question_1[]"]').each(function() {
 		var checkboxValue = $(this).val();
@@ -644,7 +744,7 @@
             $(this).prop('checked', true);
             showSteps(checkboxValue);
         }
-    }); 
+    });
 
     $('input[name="question_1[]"]').change(function() {
         var checkboxValue = $(this).val();
@@ -668,7 +768,7 @@
 			}
 		});
 	};
-	  
+
 	$.fn.ssnFormat = function() {
 		return this.on('input blur', function() {
 			var id = $(this);
@@ -782,7 +882,7 @@
 			numericValue = parseFloat(numericValue || 0);
 			$(this).data('numeric-value', numericValue);
 			var usdValue = toUSD(numericValue);
-	
+
 			if (numericValue < 1500) {
 				toastr.error('Scheduled Equipment Value must be above $1,500');
 				$(this).val('');
@@ -880,7 +980,7 @@
 						<div class="mb-3 form-floating">
 							<input type="text" name="wc_subcon_cost_year" id="wc_subcon_cost_year" class="form-control" placeholder="">
 							<label for="wc_subcon_cost_year">Subcontractor cost in a year</label>
-						</div>										
+						</div>
 					</div>
 				`)
 			},
@@ -1001,7 +1101,7 @@
 						}
 					});
 				} else {
-					$(`#${containerId}`).empty();				
+					$(`#${containerId}`).empty();
 				}
 			});
 
@@ -1057,7 +1157,7 @@
 			complete: function () {
 				datePickerFormatter('#bond_owners_spouse_dob'); // Initialize datepicker after AJAX request completes
 				$('#bond_owners_spouse_ssn').ssnFormat();
-			},			
+			},
 			error: function (xhr, status, error) {
 				$("#custom-loader").addClass("hidden");
 				$("#custom-loader").removeClass("active");
@@ -1126,7 +1226,7 @@
 				$("#custom-loader").removeClass("active");
 			}
 		});
-	}	
+	}
 
 	// START PERSONAL INFORMATION SCRIPS
 	$('#phone_number').on('input', formatUSPhone);
@@ -1184,7 +1284,7 @@
 		var numProfs = $(this).val();
 		$('#profession_entry_container').empty();
 		for(var i = 1; i <= numProfs; i++) {
-			await showProfessionEntries(i); 
+			await showProfessionEntries(i);
 		}
 	});
 	perfectCurrencyFormatter('#wc_subcon_cost_year');
@@ -1215,7 +1315,7 @@
 		var numVehicles = $(this).val();
 		$('#auto_vehicles_container').empty();
 		for(var i = 1; i <= numVehicles; i++) {
-			await showAutoVehicleEntries(i); 
+			await showAutoVehicleEntries(i);
 		}
 	});
 	$(document).ready(function() {
@@ -1304,7 +1404,7 @@
 			$("#custom-loader").addClass("hidden");
 			$("#custom-loader").removeClass("active");
 		}
-	});	
+	});
 	// END TOOLS SCRIPTS
 
 	// START BR SCRIPTS
@@ -1351,12 +1451,12 @@
 			$("#custom-loader").addClass("hidden");
 			$("#custom-loader").removeClass("active");
 		}
-	});	
+	});
 	// END POLLUTION SCRIPTS
 
 	// START ABOUT YOUR COMPANY SCRIPTS
 	datePickerFormatter('#ayc_date_business_started');
 	$('#ayc_phone_number').on('input', formatUSPhone);
 	// END ABOUT YOUR COMPANY SCRIPTS
-})(window.jQuery); 
+})(window.jQuery);
 

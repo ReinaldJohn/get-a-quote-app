@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Quote;
 use Illuminate\Http\Request;
+use App\Models\BOPInformation;
 use Illuminate\Support\Facades\DB;
 use App\Models\PersonalInformation;
 use Illuminate\Support\Facades\Log;
 use App\Models\LicenseBondInformation;
 use App\Models\BuildersRiskInformation;
+use Illuminate\Support\Facades\Session;
 use App\Models\CommercialAutoInformation;
 use App\Models\ToolsEquipmentInformation;
 use App\Models\ExcessLiabilityInformation;
@@ -26,8 +28,12 @@ class QuoteController extends Controller
         $states = $quoteModel->getAllStates();
         $professions = $quoteModel->getAllProfessions();
         $currentYear = Carbon::now()->format('Y');
-
         return view("quote.index", compact('states', 'professions'), ['currentYear' => $currentYear]);
+    }
+
+    public function getStateByZipcode(Request $request, $zipcode) {
+        $stateData = Quote::getStateByZipcode($zipcode);
+        return response()->json(['state' => $stateData]);
     }
 
     public function thankyouPage() {
@@ -36,60 +42,46 @@ class QuoteController extends Controller
 
     public function showProfessionEntries(Request $request, Quote $quoteModel) {
 
-        if ($request->isMethod('post') && $request->has('a')) {
-
+        if ($request->isMethod('get') && $request->has('a')) {
             $a = $request->input('a');
-
             $output = "
+                <div id='profession_entry_container_{$a}'>
+                    <h4 class='profession_header mt-2 mb-2'>Profession Entry No. {$a}</h4>
+                    <div class='row justify-content-center'>
+                        <div class='col-md-12'>
+                            <div class='mb-3 form-floating'>
+                                <select class='form-control wc_profession_{$a}' name='wc_profession_{$a}' id='wc_profession_{$a}' aria-label='wc_profession_{$a}'>
+                                    <option value selected></option> ";
 
-            <h4 class='profession_header mt-2 mb-2'>Profession Entry No. {$a}</h4>
-            <div class='row justify-content-center'>
-                <div class='col-md-12'>
-                    <div class='mb-3 form-floating'>
-                        <select class='form-control' name='wc_profession_{$a}' id='wc_profession_{$a}' aria-label='wc_profession_{$a}'>
-                            <option value selected></option> ";
+                                        // Start output buffering
+                                        ob_start();
 
-                                // Start output buffering
-                                ob_start();
+                                        $professions = $quoteModel->getAllProfessions();
+                                        foreach ($professions as $profession) {
+                                            echo "<option value='{$profession['id']}'>{$profession['name']}</option>";
+                                        }
 
-                                $professions = $quoteModel->getAllProfessions();
-                                foreach ($professions as $profession) {
-                                    echo "<option value='{$profession['id']}'>{$profession['name']}</option>";
-                                }
+                                        // Get current buffer contents and delete current output buffer
+                                        $options = ob_get_clean();
 
-                                // Get current buffer contents and delete current output buffer
-                                $options = ob_get_clean();
-
-                                // Append options to output
-                                $output .= $options;
+                                        // Append options to output
+                                        $output .= $options;
 
             $output .= "
 
-                        </select>
-                        <label for='wc_profession_{$a}'>Profession</label>
+                                </select>
+                                <label for='wc_profession_{$a}'>Profession</label>
+                            </div>
+                        </div>
+                        <div id='classcode_if_others_container_{$a}'></div>
+                        <div class='col-md-12'>
+                            <div class='mb-3 form-floating'>
+                                <input type='text' name='wc_annual_payroll_{$a}' id='wc_annual_payroll_{$a}' class='form-control annual-payroll required' placeholder='' maxlength='20'>
+                                <label for='wc_annual_payroll_{$a}'>Annual Payroll of Employee</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class='col-md-12'>
-                    <div class='mb-3 form-floating'>
-                        <input type='text' name='wc_annual_payroll_{$a}' id='wc_annual_payroll_{$a}' class='form-control annual-payroll required' placeholder='' maxlength='20'>
-                        <label for='wc_annual_payroll_{$a}'>Annual Payroll</label>
-                    </div>
-                </div>
-                <small class='mb-2'><em># of Employees excluding Officers</em></small>
-                <div class='col-md-6'>
-                    <div class='mb-3 form-floating'>
-                        <input type='text' name='wc_fulltime_{$a}' id='wc_fulltime_{$a}' class='form-control' placeholder='' maxlength='3'>
-                        <label for='wc_fulltime_{$a}'>Full Time</label>
-                    </div>
-                </div>
-                <div class='col-md-6'>
-                    <div class='mb-3 form-floating'>
-                        <input type='text' name='wc_parttime_{$a}' id='wc_parttime_{$a}' class='form-control' placeholder='' maxlength='3'>
-                        <label for='wc_parttime_{$a}'>Part Time</label>
-                    </div>
-                </div>
-            </div>
-
             ";
 
             return response()->json(['data' => $output]);
@@ -100,7 +92,7 @@ class QuoteController extends Controller
 
     public function showVehicleEntries(Request $request) {
 
-        if ($request->isMethod('post') && $request->has('a')) {
+        if ($request->isMethod('get') && $request->has('a')) {
 
             $a = $request->input('a');
             // dd($a);
@@ -166,7 +158,7 @@ class QuoteController extends Controller
 
     public function showDriverEntries(Request $request) {
 
-        if ($request->isMethod('post') && $request->has('a')) {
+        if ($request->isMethod('get') && $request->has('a')) {
 
             $a = $request->input('a');
 
@@ -221,7 +213,7 @@ class QuoteController extends Controller
 
     public function showSpouseInformationForm(Request $request) {
 
-        if ($request->isMethod('post') && $request->has('a')) {
+        if ($request->isMethod('get') && $request->has('a')) {
 
             $a = $request->input('a');
 
@@ -323,12 +315,12 @@ class QuoteController extends Controller
                         $dateBusinessStartedFormatted = Carbon::createFromFormat('m/d/Y', $commonData['ayc_date_business_started']);
                         $aboutYourCompany->date_business_started = $dateBusinessStartedFormatted->format('Y-m-d');
                         $aboutYourCompany->years_exp_as_contractor = $commonData['ayc_yrs_exp_contractor'];
-                        $aboutYourCompany->owners_firstname = $commonData['ayc_owners_first_name'];
-                        $aboutYourCompany->owners_lastname = $commonData['ayc_owners_last_name'];
-                        $aboutYourCompany->phone_number = $commonData['ayc_phone_number'];
+                        // $aboutYourCompany->owners_firstname = $commonData['ayc_owners_first_name'];
+                        // $aboutYourCompany->owners_lastname = $commonData['ayc_owners_last_name'];
+                        // $aboutYourCompany->phone_number = $commonData['ayc_phone_number'];
                         $dateBusinessStartedFormatted1 = Carbon::parse($dateBusinessStartedFormatted)->format('F j, Y');
 
-                        Log::info('About to save About Your Company. Data: ' . json_encode($aboutYourCompany));
+                        Log::info('About to save About Your Company Data: ' . json_encode($aboutYourCompany));
 
                         $ayc_saving = $aboutYourCompany->save();
 
@@ -961,6 +953,46 @@ class QuoteController extends Controller
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
                                 }
                                 break;
+                            case 'bop':
+                                try {
+                                    $businessOwnersPolicy = new BOPInformation();
+                                    $businessOwnersPolicy->personal_info_id = $personalInformation->id;
+                                    $businessOwnersPolicy->property_address = $productData['bop_property_address'];
+                                    $businessOwnersPolicy->loss_payee_info = $productData['bop_loss_payee_info'];
+                                    $businessOwnersPolicy->building_industry = $productData['bop_building_industry'];
+                                    $businessOwnersPolicy->occupancy = $productData['bop_occupancy'];
+                                    $businessOwnersPolicy->value_cost_of_building = floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_val_cost_bldg']));
+                                    $businessOwnersPolicy->business_property_limit = floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_business_property_limit']));
+                                    $businessOwnersPolicy->building_construction_type = $productData['bop_bldg_construction_type'];
+                                    $businessOwnersPolicy->year_built = $productData['bop_year_built'];
+                                    $businessOwnersPolicy->no_of_stories = $productData['bop_no_of_stories'];
+                                    $businessOwnersPolicy->total_building_sqft = $productData['bop_total_bldg_sqft'];
+                                    $businessOwnersPolicy->automatic_sprinkler_system = $productData['bop_automatic_sprinkler_system'];
+                                    $businessOwnersPolicy->automatic_fire_alarm = $productData['bop_automatic_fire_alarm'];
+                                    $businessOwnersPolicy->distance_near_fire_hydrant = $productData['bop_distance_nearest_fire_hydrant'];
+                                    $businessOwnersPolicy->automatic_commercial_ext_system = $productData['bop_automatic_comm_cooking_ext'];
+                                    $businessOwnersPolicy->automatic_burglar_alarm = $productData['bop_automatic_burglar_alarm'];
+                                    $businessOwnersPolicy->security_cameras = $productData['bop_security_cameras'];
+                                    $businessOwnersPolicy->last_update_to_roofing_year = $productData['bop_last_update_roofing_year'];
+                                    $businessOwnersPolicy->last_update_to_heating_year = $productData['bop_last_update_heating_year'];
+                                    $businessOwnersPolicy->last_update_to_plumbing_year = $productData['bop_last_update_plumbing_year'];
+                                    $businessOwnersPolicy->last_update_to_electrical_year = $productData['bop_last_update_electrical_year'];
+
+                                    $businessOwnersPolicy->save();
+
+                                    $templateData['businessOwnersPolicy'] = $businessOwnersPolicy;
+                                    $templateData['productType'] = 'bop';
+                                    $templateData['personalInformation'] = $personalInformation;
+
+                                    $html_body .= view('quote.quote-details', $templateData)->render();
+
+                                    Log::info('Record inserted with id for BOP: ' . $businessOwnersPolicy->id);
+                                } catch (\Exception $e) {
+                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                }
+                                break;
+                            case 'comm_prop':
+                                break;
                             case 'pollution':
                                 try {
                                     $pollutionLiability = new PollutionLiabilityInformation();
@@ -1002,6 +1034,12 @@ class QuoteController extends Controller
                                 } catch (\Exception $e) {
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
                                 }
+                                break;
+                            case 'epli':
+                                break;
+                            case 'cyber':
+                                break;
+                            case 'instfloat':
                                 break;
                         }
                     }
@@ -1063,6 +1101,26 @@ class QuoteController extends Controller
         $response = json_decode($response, true);
         curl_close($curl);
         Log::info('SMTP2GO Response:', $response);
+    }
+
+    public function clearSessionData(Request $request) {
+        Session::flush();
+        return response()->json(['message' => 'Session data cleared successfully']);
+    }
+
+    public function setSessionVariable(Request $request) {
+        $data = $request->input('doesGLandWCChecked');
+        // dd($data);
+        session(['doesGLandWCChecked' => $data]);
+        // dd(is_string(session('doesGLandWCChecked')));
+
+
+        return response()->json(['message' => 'Session variable set successfully', 'doesGLandWCCChecked' => $data]);
+    }
+
+    public function unsetSessionVariable(Request $request) {
+        Session::forget('doesGLandWCChecked');
+        return response()->json(['message' => 'Session variable unset successfully']);
     }
 
 }

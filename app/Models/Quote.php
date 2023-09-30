@@ -9,8 +9,12 @@ class Quote extends Model
 {
     use HasFactory;
 
+    // public function getAllStates() {
+    //     return $this->select('id', 'abbr')->from('states')->get();
+    // }
+
     public function getAllStates() {
-        return $this->select('id', 'abbr')->from('states')->get();
+        return $this->select('state_abbr')->distinct()->from('states')->get();
     }
 
     public function getAllProfessions() {
@@ -18,7 +22,7 @@ class Quote extends Model
     }
 
     public function getStatesById($id) {
-        $states = $this->select('abbr')->from('states')->where('id', $id)->first();
+        $states = $this->select('state_abbr')->from('states')->where('id', $id)->first();
         return $states ? $states->abbr : null;
     }
 
@@ -26,5 +30,20 @@ class Quote extends Model
         $profession = $this->select('name')->from('professions')->where('id', $id)->first();
         return $profession ? $profession->name : null;
     }
+
+    public static function getStateByZipcode($zipcode) {
+        return self::query()->from('states')->where('zipcode', $zipcode)->first(['state_abbr', 'city']);
+    }
+
+    // public function getStateByZipcode($zipcode)
+    // {
+    //     $state = Quote::getStateByZipcode($zipcode);
+
+    //     if ($state) {
+    //         return response()->json($state);
+    //     }
+
+    //     return response()->json(['error' => 'State not found for the provided zipcode.'], 404);
+    // }
 
 }

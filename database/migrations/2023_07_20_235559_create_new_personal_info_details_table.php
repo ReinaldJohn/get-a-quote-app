@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('last_name', 100);
             $table->string('address', 255);
             $table->string('city', 50);
-            $table->tinyInteger('state');
+            $table->string('state', 2);
             $table->string('zipcode', 5);
             $table->string('phone_number', 15);
             $table->string('fax_number')->nullable();
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('personal_info');
+        Schema::dropIfExists('new_personal_info_details');
     }
 };

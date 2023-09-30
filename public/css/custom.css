@@ -14,6 +14,17 @@
     position: relative;
 }
 
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(192,192,192,0.3);
+    z-index: 999;
+    pointer-events: auto;
+}
+
 .custom-loader {
     position: absolute;
     top: 50%;
@@ -26,7 +37,7 @@
     border-color: #E4E4ED;
     border-right-color: #064367;
     animation: s2 1s infinite linear;
-    z-index:999;
+    pointer-events: none;
 }
 
 @keyframes s2 {
@@ -39,7 +50,7 @@
 }
 
 .ui-widget-header {
-    background-color: #0170A8;
+    background-color: #00a6ff;
 }
 
 .ui-datepicker .ui-datepicker-title {
@@ -52,14 +63,27 @@
 
 .reviewInfoContainer {
     width:600px;
+    text-align:center;
 }
 
 .reviewInfoContainer div {
     margin-bottom: 20px;
+    border-radius: 10px;
+    border: 3px solid #000;
+}
+
+.reviewInfoContainer h5 {
+    font-weight: bold;
+}
+
+.reviewInfoContainer h6 {
+    text-align:left;
+    margin: 10px 0 10px 0;
 }
 
 .reviewInfoContainer p {
     margin: 0;
+    text-align:left;
 }
 
 .reviewInfoSubContainer {
@@ -69,3 +93,4 @@
 .entryContainer {
     padding: 10px !important;
 }
+

@@ -15,8 +15,15 @@ return new class extends Migration
     {
         Schema::create('states', function (Blueprint $table) {
             $table->id();
-            $table->string('abbr', 2);
-            $table->string('name', 50);
+            $table->string('zipcode', 50);
+            $table->string('city', 50);
+            $table->string('state', 50);
+            $table->string('state_abbr', 50);
+            $table->string('county_area', 50);
+            $table->string('code', 50);
+            $table->string('latitude', 50);
+            $table->string('longitude', 50);
+            $table->string('some_field', 50);
         });
     }
 
