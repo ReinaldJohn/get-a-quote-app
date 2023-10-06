@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EPLIInformation extends Model
+class ClientInformation extends Model
 {
     use HasFactory;
 
-    protected $table = 'epli_details';
+    protected $table = 'client_information';
     protected $guarded = [];
 }

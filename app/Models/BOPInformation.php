@@ -9,6 +9,6 @@ class BOPInformation extends Model
 {
     use HasFactory;
 
-    protected $table = 'bop_details';
+    protected $table = 'business_owners_policy_details';
     protected $guarded = [];
 }

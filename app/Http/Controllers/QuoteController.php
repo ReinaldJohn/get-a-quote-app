@@ -7,7 +7,7 @@ use App\Models\Quote;
 use Illuminate\Http\Request;
 use App\Models\BOPInformation;
 use Illuminate\Support\Facades\DB;
-use App\Models\PersonalInformation;
+// use App\Models\PersonalInformation;
 use Illuminate\Support\Facades\Log;
 use App\Models\LicenseBondInformation;
 use App\Models\BuildersRiskInformation;

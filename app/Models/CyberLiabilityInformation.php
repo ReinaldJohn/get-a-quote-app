@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CyberLiabilityInformation extends Model
 {
     use HasFactory;
+
+    protected $table = 'cyber_liability_details';
+    protected $guarded = [];
 }

@@ -9,6 +9,6 @@ class ToolsEquipmentInformation extends Model
 {
     use HasFactory;
 
-    protected $table = 'tools_equipment_details';
+    protected $table = 'tools_and_equipment_details';
     protected $guarded = [];
 }

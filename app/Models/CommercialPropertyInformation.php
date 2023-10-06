@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CommercialPropertyInformation extends Model
 {
     use HasFactory;
+
+    protected $table = 'commercial_property_details';
+    protected $guarded = [];
 }

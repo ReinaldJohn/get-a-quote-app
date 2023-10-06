@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class InstallationFloaterInformation extends Model
 {
     use HasFactory;
+
+    protected $table = 'installation_floater_details';
+    protected $guarded = [];
 }
