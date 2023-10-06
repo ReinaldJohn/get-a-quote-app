@@ -18,7 +18,7 @@ class Quote extends Model
     }
 
     public function getAllProfessions() {
-        return $this->select('id', 'name')->from('professions')->get();
+        return $this->select('id', 'name')->from('professions')->orderBy('name', 'ASC')->get();
     }
 
     public function getStatesById($id) {

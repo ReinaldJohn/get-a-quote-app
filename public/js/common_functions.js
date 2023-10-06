@@ -1,5 +1,5 @@
 (function ($) {
-    "use strict";
+    ("use strict");
 
     // Preload
     $(window).on("load", function () {
@@ -12,15 +12,15 @@
     });
 
     let observer = new MutationObserver(() => {
-    // $("#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea")
-    //     .not("#fax_number, #personal_website, #contractor_license")
-    //     .prop("required", true);
+        // $("#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea")
+        //     .not("#fax_number, #personal_website, #contractor_license")
+        //     .prop("required", true);
     });
 
     // Observe the entire document for changes
     observer.observe(document, {
-        childList: true,  // Observes direct children
-        subtree: true     // Observes all descendants
+        childList: true, // Observes direct children
+        subtree: true, // Observes all descendants
     });
 
     function updateProfessionContents() {
@@ -30,76 +30,69 @@
 
         for (var i = 1; i <= numProfessions; i++) {
             var profession = {};
-            profession.name = $("#wc_profession_" + i + " option:selected").text() || "";
+            profession.name =
+                $("#wc_profession_" + i + " option:selected").text() || "";
             profession.annualPayroll = $("#wc_annual_payroll_" + i).val() || "";
-            // profession.fullTimeEmployees = $("#wc_fulltime_" + i).val() || "";
-            // profession.partTimeEmployees = $("#wc_parttime_" + i).val() || "";
 
-            professionContent += "<div><h6><strong>Profession Entry No. " + i + "</strong></h6>";
-            professionContent += "<p>Profession: <strong>" + profession.name + "</strong></p>";
-            // professionContent += "<div><h6>Additional Questions</h6></div>";
-            // professionContent += "<p>Q1: <strong>" + (gl_gross_add_q1 !== null ? gl_gross_add_q1 : "N/A") + "</strong></p>";
-            // professionContent += "<p>Q2: <strong>" + (gl_gross_add_q2 !== null ? gl_gross_add_q2 : "N/A") + "</strong></p>";
-            // professionContent += "<p>Q3: <strong>" + (gl_gross_add_q3 !== null ? gl_gross_add_q3 : "N/A") + "</strong></p>";
-            // professionContent += "<p>Q4: <strong>" + (gl_gross_add_q4 !== null ? gl_gross_add_q4 : "N/A") + "</strong></p>";
-
-            professionContent += "<p>Annual Payroll: <strong>" + profession.annualPayroll + "</strong></p>";
-            // professionContent += "<p>Full Time: <strong>" + profession.fullTimeEmployees + " Employees</strong></p>";
-            // professionContent += "<p>Part Time: <strong>" + profession.partTimeEmployees + " Employee</strong></p></div>";
+            professionContent += `<div><h6><strong>Profession Entry No. ${i}</strong></h6>`;
+            professionContent += `<p>Profession: <strong>${profession.name}</strong></p>`;
+            professionContent += `<p>Annual Payroll: <strong>${profession.annualPayroll}</strong></p></div>`;
 
             professionData.push(profession);
         }
 
-        $("#profession_entry_container").html(professionContent);
-        numProfessions ? $("#wc_details_1").html("<p>Number of Profession: <strong>" + numProfessions + "</strong></p>") : "";
+        if (numProfessions) {
+            $("#wc_details_1").html(`
+            <p>Number of Professions: <strong>${numProfessions}</strong></p>
+            ${professionContent}
+        `);
+        } else {
+            $("#wc_details_1").html("");
+        }
+    }
+    $("#wc_no_of_profession").change(updateProfessionContents);
+    $("#wc_no_of_profession").val("1").trigger("change");
+
+    function updateOwnersInfoContents() {
+        let ownershipContent = "";
+
+        // console.log("updateOwnersInfoContents called"); // Log when the function is called
+        $(".ownersInfo").each(function (index) {
+            let counter = index + 1; // Considering that the counter starts from 1
+
+            let ownerName = $(this).find(`[name='wc_name_${counter}']`).val();
+            let titleRelationship = $(this)
+                .find(`[name='wc_title_relationship_${counter}']`)
+                .val();
+            let ownershipPercentage = $(this)
+                .find(`[name='wc_ownership_perc_${counter}']`)
+                .val();
+            let excludedIncluded = $(this)
+                .find(`[name='wc_exc_inc_${counter}']`)
+                .val();
+            let ssn = $(this).find(`[name='wc_ssn_${counter}']`).val();
+            let fein = $(this).find(`[name='wc_fein_${counter}']`).val();
+            let dob = $(this).find(`[name='wc_dob_${counter}']`).val();
+
+            ownershipContent += `<div class='mt-4'><p>Owner Name: <strong>${ownerName}</strong></p>`;
+            ownershipContent += `<p>Title/Relationship: <strong>${titleRelationship}</strong></p>`;
+            ownershipContent += `<p>Ownership %: <strong>${ownershipPercentage}%</strong></p>`;
+            ownershipContent += `<p>Excluded/Included: <strong>${excludedIncluded}</strong></p>`;
+            ownershipContent += `<p>SSN: <strong>${ssn}</strong></p>`;
+            ownershipContent += `<p>FEIN: <strong>${fein}</strong></p>`;
+            ownershipContent += `<p>Date of Birth: <strong>${dob}</strong></p></div>`;
+        });
+
+        $("#wc_details_3").append(`
+
+            <p><strong>Owners Information</strong></p>
+            ${ownershipContent}
+        `);
+
+        return ownershipContent;
     }
 
-    // $(document).on("change", "#wc_no_of_profession", updateProfessionContents);
-
-    $("#wc_no_of_profession").change(updateProfessionContents);
-    // $("#wc_no_of_profession").val("1").trigger('change');
-
-    // function updateGLProfessionContents() {
-    //     // var gl_profession = $("#gl_profession option:selected").text();
-
-
-    //     // if (professionArray.includes(gl_profession)) {
-    //     //     // Show additional questions if the selected option is in professionArray
-    //     //     $("#additional_questions").show();
-    //     // } else {
-    //     //     // Hide additional questions if the selected option is not in professionArray
-    //     //     $("#additional_questions").hide();
-    //     // }
-
-    //     var gl_profession = $("#gl_profession option:selected").text();
-    //     const professionArray = ["General Contractor", "Roofing Contractor", "Electrical Contractor", "Plumbing Contractor", "HVAC - Heating or Combined Heating and Air Conditioning Systems, Intall, Service and Repair", "Concrete Flat Contractor", "Concrete Foundation Contractor", "Handyman", "Floor Covering Installation (No Ceramic, Tile, Stone, or Wood)", "Landscaping Contractor", "Landscape Gardening", "Painting Contractor", "Plastering/Stucco", "Tree Trimming and Removal", "Masonry Contractor"];
-
-    //     if (professionArray.includes(gl_profession)) {
-    //         // Collect answers to additional questions
-    //         var gl_gross_add_q1 = $("#gl_gross_add_q1").val().trim() !== "" ? $("#gl_gross_add_q1").val() : null;
-    //         var gl_gross_add_q2 = $("#gl_gross_add_q2").val().trim() !== "" ? $("#gl_gross_add_q2").val() : null;
-    //         var gl_gross_add_q3 = $("#gl_gross_add_q3").val().trim() !== "" ? $("#gl_gross_add_q3").val() : null;
-    //         var gl_gross_add_q4 = $("#gl_gross_add_q4").val().trim() !== "" ? $("#gl_gross_add_q4").val() : null;
-
-    //         // Create an object to store the additional questions and answers
-    //         var additionalQuestions = {
-    //             "Question 1": gl_gross_add_q1,
-    //             "Question 2": gl_gross_add_q2,
-    //             "Question 3": gl_gross_add_q3,
-    //             "Question 4": gl_gross_add_q4
-    //         };
-
-    //         // Generate HTML for the review section
-    //         generateAllHTML("#gl_information_details", [additionalQuestions]);
-    //     }
-    // }
-
-    // // Attach an event listener to the select dropdown
-    // $("#gl_profession").on("change", updateGLProfessionContents);
-
-    // // Initially call the function to check the dropdown's initial state
-    // updateGLProfessionContents();
-
+    $("#wc_ownership_perc").change(updateOwnersInfoContents);
 
     function updateVehicleContents() {
         var numVehicles = $("#auto_add_vehicle").val();
@@ -252,14 +245,28 @@
     function generateScheduledEquipmentHTML() {
         var scheduledEquipmentHTML = "";
 
-        $('input[name^="instfloat_scheduled_equipment_type_"]').each(function (index) {
+        $('input[name^="instfloat_scheduled_equipment_type_"]').each(function (
+            index
+        ) {
             var equipmentType = $(this).val();
-            var manufacturer = $("#instfloat_scheduled_equipment_mfg_" + (index + 1)).val();
-            var idOrSerial = $("#instfloat_scheduled_equipment_id_or_serial_" + (index + 1)).val();
-            var model = $("#instfloat_scheduled_equipment_model_" + (index + 1)).val();
-            var newOrUsed = $("#instfloat_scheduled_equipment_new_or_used_" + (index + 1)).val();
-            var modelYear = $("#instfloat_scheduled_equipment_model_year_" + (index + 1)).val();
-            var datePurchased = $("#instfloat_scheduled_equipment_date_purchased_" + (index + 1)).val();
+            var manufacturer = $(
+                "#instfloat_scheduled_equipment_mfg_" + (index + 1)
+            ).val();
+            var idOrSerial = $(
+                "#instfloat_scheduled_equipment_id_or_serial_" + (index + 1)
+            ).val();
+            var model = $(
+                "#instfloat_scheduled_equipment_model_" + (index + 1)
+            ).val();
+            var newOrUsed = $(
+                "#instfloat_scheduled_equipment_new_or_used_" + (index + 1)
+            ).val();
+            var modelYear = $(
+                "#instfloat_scheduled_equipment_model_year_" + (index + 1)
+            ).val();
+            var datePurchased = $(
+                "#instfloat_scheduled_equipment_date_purchased_" + (index + 1)
+            ).val();
 
             scheduledEquipmentHTML += `
                 <div><h6><strong>Scheduled Equipment ${index + 1}</strong></h6>
@@ -299,17 +306,30 @@
                     var zipcode = $("#zipcode").val();
                     var phone_number = $("#phone_number").val();
                     var fax_number = $("#fax_number").val();
-                    var fax_number_if_set = fax_number ? "<p>Fax Number: <strong>" + fax_number + " </strong></p>" : "";
+                    var fax_number_if_set = fax_number
+                        ? "<p>Fax Number: <strong>" +
+                          fax_number +
+                          " </strong></p>"
+                        : "";
                     var email_address = $("#email_address").val();
                     var personal_website = $("#personal_website").val();
-                    var personal_website_if_set = personal_website ? "<p>Personal Website: <strong>" + personal_website + "</strong></p>" : "";
+                    var personal_website_if_set = personal_website
+                        ? "<p>Personal Website: <strong>" +
+                          personal_website +
+                          "</strong></p>"
+                        : "";
                     var contractor_license = $("#contractor_license").val();
-                    var contractor_license_if_set = contractor_license ? "<p>Contractor License No.: <strong>" + contractor_license + "</strong></p>" : "";
+                    var contractor_license_if_set = contractor_license
+                        ? "<p>Contractor License No.: <strong>" +
+                          contractor_license +
+                          "</strong></p>"
+                        : "";
 
                     var personalInformation = {
                         "Company Name": company_name,
-                        "Full Name": firstname + lastname,
-                        Address: address + city + states + zipcode,
+                        "Full Name": firstname + " " + lastname,
+                        Address:
+                            address + " " + city + " " + states + " " + zipcode,
                         "Phone Number": phone_number,
                         "Fax Number": fax_number_if_set,
                         "Email Address": email_address,
@@ -317,56 +337,59 @@
                         "Contractor License No.": contractor_license_if_set,
                     };
 
-
                     // GL Step 1 & 2
                     var generalLiabilityInformation = {};
-
                     var gl_annual_gross = $("#gl_annual_gross").val();
-                    var gl_profession = $("#gl_profession option:selected").text();
-
-                    var gl_gross_add_q1 = $("#gl_gross_add_q1").val() !== "" ? $("#gl_gross_add_q1").val() : null;
-                    var gl_gross_add_q2 = $("#gl_gross_add_q2").val() !== "" ? $("#gl_gross_add_q2").val() : null;
-                    var gl_gross_add_q3 = $("#gl_gross_add_q3").val() !== "" ? $("#gl_gross_add_q3").val() : null;
-                    var gl_gross_add_q4 = $("#gl_gross_add_q4").val() !== "" ? $("#gl_gross_add_q4").val() : null;
-
-                    console.log("Q1: " + gl_gross_add_q1)
-                    console.log("Q2: " + gl_gross_add_q2)
-                    console.log("Q3: " + gl_gross_add_q3)
-                    console.log("Q4: " + gl_gross_add_q4)
-
-                    var additionalQuestionsGL = {};
-
-                    switch (gl_profession.trim()) {
-                        case 'General Liability':
-                            // Update the properties within the object
-                            generalLiabilityInformation["Profession"] = gl_profession;
-                            generalLiabilityInformation["Additional Questions for General Liability"] = {
-                                "New construction - How many houses will you be building for the whole year": gl_gross_add_q1,
-                                "Do you work on ADU houses?": gl_gross_add_q2,
-                            };
-                            break;
-                        case 'Masonry Contractor':
-                            // Update the properties within the object
-                            generalLiabilityInformation["Profession"] = gl_profession;
-                            generalLiabilityInformation["Additional Questions for Masonry Contractor"] = {
-                                "Do you have any pools exposure": gl_gross_add_q1,
-                                "Do you do retaining walls that exceed 6ft": gl_gross_add_q2,
-                            };
-                            break;
-                        // Add more cases for other professions as needed
-                    }
-
-                    var gl_residential = $("#gl_residential option:selected").text();
-                    var gl_commercial = $("#gl_commercial option:selected").text();
-                    var gl_new_construction = $("#gl_new_construction option:selected").text();
-                    var gl_repair_remodel = $("#gl_repair_remodel option:selected").text();
+                    var gl_profession = $(
+                        "#gl_profession option:selected"
+                    ).text();
+                    var gl_residential = $(
+                        "#gl_residential option:selected"
+                    ).text();
+                    var gl_commercial = $(
+                        "#gl_commercial option:selected"
+                    ).text();
+                    var gl_new_construction = $(
+                        "#gl_new_construction option:selected"
+                    ).text();
+                    var gl_repair_remodel = $(
+                        "#gl_repair_remodel option:selected"
+                    ).text();
                     var gl_descops = $("#gl_descops").val();
+                    var gl_multiple_state_work = $(
+                        "#gl_multiple_state_work option:selected"
+                    ).text();
+
+                    function getStateWorkData() {
+                        let stateWorks = [];
+                        $(".stateWorkContainer").each(function () {
+                            let state = $(this).find("select").val();
+                            let percentage = parseInt(
+                                $(this).find("input").val(),
+                                10
+                            );
+                            if (state && !isNaN(percentage)) {
+                                stateWorks.push({
+                                    State: state,
+                                    Percentage: percentage,
+                                });
+                            }
+                        });
+                        return stateWorks;
+                    }
+                    let stateWorksData = getStateWorkData();
+
                     var gl_cost_proj_5years = $("#gl_cost_proj_5years").val();
-
-                    var gl_no_field_emp = $("#gl_no_field_emp").val();
+                    var gl_full_time_employees = $(
+                        "#gl_full_time_employees"
+                    ).val();
+                    var gl_part_time_employees = $(
+                        "#gl_part_time_employees"
+                    ).val();
                     var gl_payroll_amt = $("#gl_payroll_amt").val();
-                    var gl_using_subcon = $("#gl_using_subcon").val();
-
+                    var gl_using_subcon = $(
+                        "#gl_using_subcon option:selected"
+                    ).text();
                     var gl_using_subcon_if_set = "";
                     if (gl_using_subcon === "Yes") {
                         var gl_subcon_cost = $("#gl_subcon_cost").val();
@@ -374,67 +397,306 @@
                     } else {
                         var gl_using_subcon_if_set = "";
                     }
+                    generalLiabilityInformation["Annual Gross Receipts"] =
+                        gl_annual_gross;
 
-                    var gl_no_losses_5years = $("#gl_no_losses_5years").val();
+                    // Profession Slot
+                    var additionalQuestionsGL = {};
+                    // console.log(gl_profession.trim());
+                    switch (gl_profession.trim()) {
+                        case "General Contractor":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "New construction - How many houses will you be building for the whole year":
+                                    $("#gl_gross_add_q1_for_gc").val(),
+                                "Do you work on ADU houses?": $(
+                                    "#gl_gross_add_q2_for_gc option:selected"
+                                ).text(),
+                            };
+                            break;
+                        case "Roofing Contractor":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Do you use any heating devices when performing your work?":
+                                    $(
+                                        "#gl_gross_add_q1_for_roofing option:selected"
+                                    ).text(),
+                                "Do you do spray foam roofing?": $(
+                                    "#gl_gross_add_q2_for_roofing option:selected"
+                                ).text(),
+                            };
 
-                    if (gl_no_losses_5years >= 0) {
-                        var gl_explain_losses = $("#gl_explain_losses").val();
-                        var gl_explain_losses_if_set = gl_explain_losses;
-                    } else {
-                        var gl_explain_losses_if_set = "";
+                            const subQuestionValue = $(
+                                "#gl_gross_add_q2_for_roofing"
+                            ).val();
+                            if (subQuestionValue === "1") {
+                                additionalQuestionsGL[
+                                    "Percentage of Maximum height exposure"
+                                ] = $(
+                                    "#gl_gross_add_sub_q2_for_roofing option:selected"
+                                ).text();
+                            }
+
+                            additionalQuestionsGL[
+                                "Do you work on slopes greater that 15 degrees?"
+                            ] = $(
+                                "#gl_gross_add_q4_for_roofing option:selected"
+                            ).text();
+                            additionalQuestionsGL["Maximum height exposure"] =
+                                $(
+                                    "#gl_gross_add_q3_for_roofing option:selected"
+                                ).text();
+                            break;
+                        case "Electrical Contractor":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Are you working on the following": $(
+                                    "#gl_gross_add_q1_for_electrical option:selected"
+                                ).text(),
+                            };
+                            break;
+                        case "Plumbing Contractor":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Are you working on gas, water, and sewer mains?":
+                                    $(
+                                        "#gl_gross_add_q1_for_plumbing option:selected"
+                                    ).text(),
+                                "Do you use any heating devices when performing your work?":
+                                    $(
+                                        "#gl_gross_add_q2_for_plumbing option:selected"
+                                    ).text(),
+                            };
+                            break;
+                        case "HVAC - Heating or Combined Heating and Air Conditioning Systems, Install, Service and Repair":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Do you use any heating devices when performing your work?":
+                                    $(
+                                        "#gl_gross_add_q1_for_hvac option:selected"
+                                    ).text(),
+                                "Do you do refrigeration works?": $(
+                                    "#gl_gross_add_q2_for_hvac option:selected"
+                                ).text(),
+                            };
+
+                            const subQuestion2Value = $(
+                                "#gl_gross_add_q2_for_hvac"
+                            ).val();
+                            if (subQuestion2Value === "1") {
+                                additionalQuestionsGL[
+                                    "Please indicate the percentage for refrigeration works"
+                                ] = $(
+                                    "#gl_gross_add_sub_q2_for_hvac option:selected"
+                                ).text();
+                            }
+
+                            additionalQuestionsGL["Any works involving LPG?"] =
+                                $(
+                                    "#gl_gross_add_q3_for_hvac option:selected"
+                                ).text();
+
+                            const subQuestion3Value = $(
+                                "#gl_gross_add_q3_for_hvac"
+                            ).val();
+                            if (subQuestion3Value === "1") {
+                                additionalQuestionsGL[
+                                    "Please indicate the percentage for works involving LPG"
+                                ] = $(
+                                    "#gl_gross_add_sub_q3_for_hvac option:selected"
+                                ).text();
+                            }
+                            break;
+                        case "Concrete Flat Contractor":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Flat Works %": $(
+                                    "#gl_gross_add_q1_for_concrete"
+                                ).val(),
+                                "Foundation Works %": $(
+                                    "#gl_gross_add_q2_for_concrete"
+                                ).val(),
+                                "Do you do works on dike, dams, and bridges?":
+                                    $("#gl_gross_add_q3_for_concrete").val(),
+                            };
+                            break;
+                        case "Concrete Foundation Contractor":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Flat Works %": $(
+                                    "#gl_gross_add_q1_for_concrete"
+                                ).val(),
+                                "Foundation Works %": $(
+                                    "#gl_gross_add_q2_for_concrete"
+                                ).val(),
+                                "Do you do works on dike, dams, and bridges?":
+                                    $("#gl_gross_add_q3_for_concrete").val(),
+                            };
+                            break;
+                        case "Handyman":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "What’s the largest project that you have done?":
+                                    $("#gl_gross_add_q1_for_handyman").val(),
+                            };
+                            break;
+                        case "Floor Covering Installation (No Ceramic, Tile, Stone, or Wood)":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "What type of flooring do you install?": $(
+                                    "#gl_gross_add_q1_for_flooring"
+                                ).val(),
+                            };
+                            break;
+                        case "Landscaping Contractor":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Any hardscaping works?": $(
+                                    "#gl_gross_add_q1_for_landscaping"
+                                ).val(),
+                                "Do you installs irrigations systems?": $(
+                                    "#gl_gross_add_q2_for_landscaping"
+                                ).val(),
+                                "Retaining walls max height.": $(
+                                    "#gl_gross_add_q3_for_landscaping"
+                                ).val(),
+                            };
+                            break;
+                        case "Lawn Care Services":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Any hardscaping works?": $(
+                                    "#gl_gross_add_q1_for_landscaping"
+                                ).val(),
+                                "Do you installs irrigations systems?": $(
+                                    "#gl_gross_add_q2_for_landscaping"
+                                ).val(),
+                                "Retaining walls max height.": $(
+                                    "#gl_gross_add_q3_for_landscaping"
+                                ).val(),
+                            };
+                            break;
+                        case "Painting Contractor":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Do you paint automotive?": $(
+                                    "#gl_gross_add_q1_for_painting option:selected"
+                                ).text(),
+                                "Do you paint roofs, ships, roads and highways?":
+                                    $(
+                                        "#gl_gross_add_q2_for_painting option:selected"
+                                    ).val(),
+                                "Max height exposure?": $(
+                                    "#gl_gross_add_q3_for_painting"
+                                ).val(),
+                            };
+                            break;
+                        case "Plastering/Stucco":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Max. height exposure": $(
+                                    "#gl_gross_add_q1_for_plastering"
+                                ).val(),
+                            };
+                            break;
+                        case "Tree Trimming and Removal":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Max. Height Exposure": $(
+                                    "#gl_gross_add_q1_for_tree_service"
+                                ).val(),
+                            };
+                            break;
+                        case "Masonry Contractor":
+                            generalLiabilityInformation["Profession"] =
+                                gl_profession;
+                            additionalQuestionsGL = {
+                                "Do you have any pools exposure?": $(
+                                    "#gl_gross_add_q1_for_masonry option:selected"
+                                ).text(),
+                                "Do you do retaining walls that exceeds 6ft?":
+                                    $("#gl_gross_add_q2_for_masonry").val(),
+                            };
+                            break;
                     }
 
-                    // Update the properties within the object
-                    generalLiabilityInformation["Annual Gross Receipts"] = gl_annual_gross;
+                    if (Object.keys(additionalQuestionsGL).length === 0) {
+                        generalLiabilityInformation["Profession"] =
+                            gl_profession;
+                    } else {
+                        generalLiabilityInformation["Additional Questions"] =
+                            additionalQuestionsGL;
+                    }
+
+                    generalLiabilityInformation["Additional Questions"] =
+                        additionalQuestionsGL;
                     generalLiabilityInformation["Residential"] = gl_residential;
                     generalLiabilityInformation["Commercial"] = gl_commercial;
-                    generalLiabilityInformation["New Construction"] = gl_new_construction;
-                    generalLiabilityInformation["Repair/Remodel"] = gl_repair_remodel;
-                    generalLiabilityInformation["Detailed Description of Operations"] = gl_descops;
-                    generalLiabilityInformation["Cost of the Largest Project in the past 5 years"] = gl_cost_proj_5years;
-                    generalLiabilityInformation["Number of Field Employees"] = gl_no_field_emp;
-                    generalLiabilityInformation["Payroll Amount"] = gl_payroll_amt;
-                    generalLiabilityInformation["Are you using any subcontractor"] = gl_using_subcon;
-                    generalLiabilityInformation["Subcontractor Cost"] = gl_using_subcon_if_set;
-                    generalLiabilityInformation["# of Losses for the Past 5 Years"] = gl_no_losses_5years;
-                    generalLiabilityInformation["Explain Losses (Please include loss amount)"] = gl_explain_losses_if_set;
-
-                    // var generalLiabilityInformation = {
-                    //     "Annual Gross Receipts": gl_annual_gross,
-                    //     Profession: gl_profession,
-                    //     Residential: gl_residential,
-                    //     Commercial: gl_commercial,
-                    //     "New Construction": gl_new_construction,
-                    //     "Repair/Remodel": gl_repair_remodel,
-                    //     "Detailed Description of Operations": gl_descops,
-                    //     "Cost of the Largest Project in the past 5 years": gl_cost_proj_5years,
-                    //     "Number of Field Employees": gl_no_field_emp,
-                    //     "Payroll Amount": gl_payroll_amt,
-                    //     "Are you using any subcontractor": gl_using_subcon,
-                    //     "Subcontractor Cost": gl_using_subcon_if_set,
-                    //     "# of Losses for the Past 5 Years": gl_no_losses_5years,
-                    //     "Explain Losses (Please include loss amount)": gl_explain_losses_if_set,
-                    // };
-
-                    // var newConstructionHouses = generalLiabilityInformation["Additional Questions GL"]["New construction - How many houses will you be building for the whole year?"];
-                    // var workOnADUHouses = generalLiabilityInformation["Additional Questions GL"]["Do you work on ADU houses?"];
+                    generalLiabilityInformation["New Construction"] =
+                        gl_new_construction;
+                    generalLiabilityInformation["Repair/Remodel"] =
+                        gl_repair_remodel;
+                    generalLiabilityInformation[
+                        "Detailed Description of Operations"
+                    ] = gl_descops;
+                    generalLiabilityInformation["Multiple State Work"] =
+                        gl_multiple_state_work;
+                    generalLiabilityInformation["State Works"] = stateWorksData;
+                    generalLiabilityInformation[
+                        "Cost of the Largest Project in the past 5 years?"
+                    ] = gl_cost_proj_5years;
+                    generalLiabilityInformation["Full Time Employee/s"] =
+                        gl_full_time_employees;
+                    generalLiabilityInformation["Part Time Employee/s"] =
+                        gl_part_time_employees;
+                    generalLiabilityInformation["Payroll Amount"] =
+                        gl_payroll_amt;
+                    generalLiabilityInformation[
+                        "Are you using any subcontractor"
+                    ] = gl_using_subcon;
+                    generalLiabilityInformation["Subcontractor Cost"] =
+                        gl_using_subcon_if_set;
 
                     // WC Step 1 & 2
                     updateProfessionContents();
                     var wc_gross_receipt = $("#wc_gross_receipt").val();
-                    var wc_does_hire_subcon = $("#wc_does_hire_subcon option:selected").text();
+                    var wc_does_hire_subcon = $(
+                        "#wc_does_hire_subcon option:selected"
+                    ).text();
                     var wc_subcon_cost_year_if_set = "";
                     if (wc_does_hire_subcon === "Yes") {
-                        var wc_subcon_cost_year = $("#wc_subcon_cost_year").val();
+                        var wc_subcon_cost_year = $(
+                            "#wc_subcon_cost_year"
+                        ).val();
                         wc_subcon_cost_year_if_set = wc_subcon_cost_year;
                     } else {
                         wc_subcon_cost_year_if_set = "";
                     }
 
-                    var wc_num_of_empl = $("#wc_num_of_empl").text();
+                    var wc_num_of_empl = $(
+                        "#wc_num_of_empl option:selected"
+                    ).text();
                     var wc_name = $("#wc_name").val();
-                    var wc_title_relationship = $("#wc_title_relationship option:selected").text();
-                    var wc_ownership_perc = $("#wc_exc_inc option:selected").text();
+                    var wc_title_relationship = $(
+                        "#wc_title_relationship"
+                    ).val();
+                    var wc_ownership_perc = $(
+                        "#wc_ownership_perc option:selected"
+                    ).text();
                     var wc_exc_inc = $("#wc_exc_inc option:selected").text();
                     var wc_ssn = $("#wc_ssn").val();
                     var wc_fein = $("#wc_fein").val();
@@ -443,12 +705,13 @@
                     var workersCompensationInformation2 = {
                         "Gross Receipt": wc_gross_receipt,
                         "Do you hire subcontractor": wc_does_hire_subcon,
-                        "Subcontractor cost in a year": wc_subcon_cost_year_if_set,
+                        "Subcontractor cost in a year":
+                            wc_subcon_cost_year_if_set,
                         "No. of Employees": wc_num_of_empl,
                     };
 
                     var workersCompensationInformation3 = {
-                        Name: wc_name,
+                        "Owner Name": wc_name,
                         "Title / Relationship": wc_title_relationship,
                         "Ownership %": wc_ownership_perc,
                         "Excluded / Included": wc_exc_inc,
@@ -456,6 +719,15 @@
                         FEIN: wc_fein,
                         "Date of Birth": wc_dob,
                     };
+
+                    var ownershipContent = updateOwnersInfoContents();
+                    // console.log("Ownership Content:", ownershipContent);
+
+                    var ownersInfo = {
+                        "Owners Information": ownershipContent,
+                    };
+
+                    updateOwnersInfoContents();
 
                     // AUTO Step 1 & 2
                     updateVehicleContents();
@@ -465,35 +737,53 @@
                     var bond_owners_name = $("#bond_owners_name").val();
                     var bond_owners_ssn = $("#bond_owners_ssn").val();
                     var bond_owners_dob = $("#bond_owners_dob").val();
-                    var bond_owners_civil_status = $("#bond_owners_civil_status option:selected").text();
+                    var bond_owners_civil_status = $(
+                        "#bond_owners_civil_status option:selected"
+                    ).text();
 
                     var bond_owners_spouse_name = "";
                     var bond_owners_spouse_dob = "";
                     var bond_owners_spouse_ssn = "";
 
                     if (bond_owners_civil_status === "Married") {
-                        bond_owners_spouse_name = $("#bond_owners_spouse_name").val();
-                        bond_owners_spouse_dob = $("#bond_owners_spouse_dob").val();
-                        bond_owners_spouse_ssn = $("#bond_owners_spouse_ssn").val();
+                        bond_owners_spouse_name = $(
+                            "#bond_owners_spouse_name"
+                        ).val();
+                        bond_owners_spouse_dob = $(
+                            "#bond_owners_spouse_dob"
+                        ).val();
+                        bond_owners_spouse_ssn = $(
+                            "#bond_owners_spouse_ssn"
+                        ).val();
                     } else {
                         bond_owners_spouse_name = "";
                         bond_owners_spouse_dob = "";
                         bond_owners_spouse_ssn = "";
                     }
 
-                    var bond_type_bond_requested = $("#bond_type_bond_requested").val();
+                    var bond_type_bond_requested = $(
+                        "#bond_type_bond_requested"
+                    ).val();
                     var bond_amount_of_bond = $("#bond_amount_of_bond").val();
-                    var bond_term_of_bond = $("#bond_term_of_bond option:selected").text();
-                    var bond_type_of_license = $("#bond_type_of_license option:selected").text();
+                    var bond_term_of_bond = $(
+                        "#bond_term_of_bond option:selected"
+                    ).text();
+                    var bond_type_of_license = $(
+                        "#bond_type_of_license option:selected"
+                    ).text();
 
                     var bond_if_other_type_of_license = "";
                     if (bond_type_of_license === "Others") {
-                        bond_if_other_type_of_license = $("#bond_if_other_type_of_license").val();
+                        bond_if_other_type_of_license = $(
+                            "#bond_if_other_type_of_license"
+                        ).val();
                     } else {
                         bond_if_other_type_of_license = "";
                     }
 
-                    var bond_license_or_application_no = $("#bond_license_or_application_no").val();
+                    var bond_license_or_application_no = $(
+                        "#bond_license_or_application_no"
+                    ).val();
                     var bond_effective_date = $("#bond_effective_date").val();
 
                     var contractorLicenseBondInformation = {
@@ -508,28 +798,46 @@
                         "Amount of Bond": bond_amount_of_bond,
                         "Term of Bond": bond_term_of_bond,
                         "Type of License": bond_type_of_license,
-                        "If others, please indicate": bond_if_other_type_of_license,
-                        "License Number or Application Number": bond_license_or_application_no,
+                        "If others, please indicate":
+                            bond_if_other_type_of_license,
+                        "License Number or Application Number":
+                            bond_license_or_application_no,
                         "Effective Date": bond_effective_date,
                     };
 
                     // Excess Step 1 & 2
-                    var excess_limits = $("#excess_limits").val();
+                    var excess_limits = $(
+                        "#excess_limits option:selected"
+                    ).text();
                     var excess_gl_eff_date = $("#excess_gl_eff_date").val();
-                    var excess_no_losses_5years = $("#excess_no_losses_5years option:selected").text();
+                    var excess_no_losses_5years = $(
+                        "#excess_no_losses_5years option:selected"
+                    ).text();
                     var excess_explain_losses = "";
 
                     if (excess_no_losses_5years >= 0) {
-                        excess_explain_losses = $("#excess_explain_losses").val();
+                        excess_explain_losses = $(
+                            "#excess_explain_losses"
+                        ).val();
                     } else {
                         excess_explain_losses = "";
                     }
 
-                    var excess_insurance_carrier = $("#excess_insurance_carrier").val();
-                    var excess_policy_or_quote_no = $("#excess_policy_or_quote_no").val();
-                    var excess_policy_premium = $("#excess_policy_premium").val();
-                    var excess_effective_date = $("#excess_effective_date").val();
-                    var excess_expiration_date = $("#excess_expiration_date").val();
+                    var excess_insurance_carrier = $(
+                        "#excess_insurance_carrier"
+                    ).val();
+                    var excess_policy_or_quote_no = $(
+                        "#excess_policy_or_quote_no"
+                    ).val();
+                    var excess_policy_premium = $(
+                        "#excess_policy_premium"
+                    ).val();
+                    var excess_effective_date = $(
+                        "#excess_effective_date"
+                    ).val();
+                    var excess_expiration_date = $(
+                        "#excess_expiration_date"
+                    ).val();
 
                     var excessLiabilityInformation = {
                         "Excess Limits": excess_limits,
@@ -547,15 +855,27 @@
 
                     // Tools Step 1 & 2
                     var tools_misc_tools = $("#tools_misc_tools").val();
-                    var tools_rented_or_leased_amt = $("#tools_rented_or_leased_amt").val();
-                    var tools_sched_equipment = $("#tools_sched_equipment").val();
+                    var tools_rented_or_leased_amt = $(
+                        "#tools_rented_or_leased_amt"
+                    ).val();
+                    var tools_sched_equipment = $(
+                        "#tools_sched_equipment"
+                    ).val();
                     var tools_equipment_type = $("#tools_equipment_type").val();
                     var tools_equipment_year = $("#tools_equipment_year").val();
                     var tools_equipment_make = $("#tools_equipment_make").val();
-                    var tools_equipment_model = $("#tools_equipment_model").val();
-                    var tools_equipment_vin_or_serial_no = $("#tools_equipment_vin_or_serial_no").val();
-                    var tools_equipment_valuation = $("#tools_equipment_valuation").val();
-                    var tools_no_losses_5years = $("#tools_no_losses_5years option:selected").text();
+                    var tools_equipment_model = $(
+                        "#tools_equipment_model"
+                    ).val();
+                    var tools_equipment_vin_or_serial_no = $(
+                        "#tools_equipment_vin_or_serial_no"
+                    ).val();
+                    var tools_equipment_valuation = $(
+                        "#tools_equipment_valuation"
+                    ).val();
+                    var tools_no_losses_5years = $(
+                        "#tools_no_losses_5years option:selected"
+                    ).text();
                     var tools_explain_losses = $("#tools_explain_losses").val();
 
                     var toolsEquipmentInformation = {
@@ -579,9 +899,94 @@
 
                     // Builders Risk Step 1 & 2
                     var br_property_address = $("#br_property_address").val();
-                    var br_value_of_existing_structure = $("#br_value_of_existing_structure").val();
-                    var br_value_of_work_performed = $("#br_value_of_work_performed").val();
-                    var br_period_duration_project = $("#br_period_duration_project").val();
+                    var br_value_of_existing_structure = $(
+                        "#br_value_of_existing_structure"
+                    ).val();
+                    var br_value_of_work_performed = $(
+                        "#br_value_of_work_performed"
+                    ).val();
+                    var br_period_duration_project = $(
+                        "#br_period_duration_project option:selected"
+                    ).text();
+
+                    var br_construction_type = $(
+                        "#br_construction_type option:selected"
+                    ).text();
+
+                    var br_complete_descops_of_project = $(
+                        "#br_complete_descops_of_project"
+                    ).val();
+                    var br_sq_footage = $("#br_sq_footage").val();
+                    var br_number_of_floors = $("#br_number_of_floors").val();
+                    var br_number_of_units_dwelling = $(
+                        "#br_number_of_units_dwelling"
+                    ).val();
+                    var br_anticipated_occupancy = $(
+                        "#br_anticipated_occupancy"
+                    ).val();
+                    var br_last_update_to_roofing_year = $(
+                        "#br_last_update_to_roofing_year"
+                    ).val();
+                    var br_last_update_to_heating_year = $(
+                        "#br_last_update_to_heating_year"
+                    ).val();
+                    var br_last_update_to_electrical_year = $(
+                        "#br_last_update_to_electrical_year"
+                    ).val();
+                    var br_last_update_to_plumbing_year = $(
+                        "#br_last_update_to_plumbing_year"
+                    ).val();
+                    var br_distance_to_nearest_fire_hydrant = $(
+                        "#br_distance_to_nearest_fire_hydrant"
+                    ).val();
+                    var br_distance_to_nearest_fire_station = $(
+                        "#br_distance_to_nearest_fire_station"
+                    ).val();
+                    var br_structure_occupied_remodel_renovation = $(
+                        "#br_structure_occupied_remodel_renovation"
+                    ).val();
+                    var br_when_structure_built = $(
+                        "#br_when_structure_built"
+                    ).val();
+                    var br_jobsite_security = $("#br_jobsite_security").val();
+                    var br_scheduled_property_address_builders_risk_coverage =
+                        $(
+                            "#br_scheduled_property_address_builders_risk_coverage option:selected"
+                        ).text();
+                    var br_sched_property_carrier_name = $(
+                        "#br_sched_property_carrier_name"
+                    ).val();
+
+                    var br_sched_property_effective_date = $(
+                        "#br_sched_property_effective_date"
+                    ).val();
+                    var br_sched_property_expiration_date = $(
+                        "#br_sched_property_expiration_date"
+                    ).val();
+
+                    var br_residential_commercial = $(
+                        "#br_residential_commercial option:selected"
+                    ).text();
+                    var br_has_project_started = $(
+                        "#br_has_project_started option:selected"
+                    ).text();
+
+                    var br_when_project_started = $(
+                        "#br_when_project_started"
+                    ).val();
+                    var br_what_are_work_done = $(
+                        "#br_what_are_work_done"
+                    ).val();
+                    var br_cost_of_work_done = $("#br_cost_of_work_done").val();
+                    var br_what_are_remaining_works = $(
+                        "#br_what_are_remaining_works"
+                    ).val();
+                    var br_cost_remaining_works = $(
+                        "#br_cost_remaining_works"
+                    ).val();
+                    var br_when_will_project_start = $(
+                        "#br_when_will_project_start"
+                    ).val();
 
                     var buildersRiskInformation = {
                         "Property Address": br_property_address,
@@ -591,37 +996,106 @@
                             br_value_of_work_performed,
                         "Period of Insurance/Duration of the Project":
                             br_period_duration_project,
+                        "Construction Type": br_construction_type,
+                        "Complete descriptions of operations for the project for which you are currently applying for insurance":
+                            br_complete_descops_of_project,
+                        "Square Footage": br_sq_footage,
+                        "Number of Floors": br_number_of_floors,
+                        "Number of Units in Dwelling":
+                            br_number_of_units_dwelling,
+                        "What is the Anticipated Occupancy":
+                            br_anticipated_occupancy,
+                        "Last Update to Roofing Year":
+                            br_last_update_to_roofing_year,
+                        "Last Update to Heating Year":
+                            br_last_update_to_heating_year,
+                        "Last Update to Electrical Year":
+                            br_last_update_to_electrical_year,
+                        "Last Update to Plumbing Year":
+                            br_last_update_to_plumbing_year,
+                        "Distance to Nearest Fire Hydrant":
+                            br_distance_to_nearest_fire_hydrant,
+                        "Distance to Nearest Fire Station":
+                            br_distance_to_nearest_fire_station,
+                        "Will the Structure be Occupied During the Remodel/Renovation?":
+                            br_structure_occupied_remodel_renovation,
+                        "When was the structure built?":
+                            br_when_structure_built,
+                        "Jobsite Security": br_jobsite_security,
+                        "Has the scheduled property address had any prior Builder's Risk coverage?":
+                            br_scheduled_property_address_builders_risk_coverage,
+                        "Carrier Name": br_sched_property_carrier_name,
+                        "Effective Date": br_sched_property_effective_date,
+                        "Expiration Date": br_sched_property_expiration_date,
+                        "Residential/Commercial": br_residential_commercial,
+                        "Has the project started?": br_has_project_started,
+                        "When has the project started?":
+                            br_when_project_started,
+                        "What are the work done?": br_what_are_work_done,
+                        "Cost of Work Done": br_cost_of_work_done,
+                        "What are the remaining works?":
+                            br_what_are_remaining_works,
+                        "Cost of remaining works": br_cost_remaining_works,
+                        "When will project start?": br_when_will_project_start,
                     };
 
                     // Business Owner's Policy Step 1 - 4
                     // BOP Step 1
                     var bop_property_address = $("#bop_property_address").val();
                     var bop_loss_payee_info = $("#bop_loss_payee_info").val();
-                    var bop_building_industry = $("#bop_building_industry").val();
+                    var bop_building_industry = $(
+                        "#bop_building_industry"
+                    ).val();
                     var bop_occupancy = $("#bop_occupancy").val();
                     var bop_val_cost_bldg = $("#bop_val_cost_bldg").val();
-                    var bop_business_property_limit = $("#bop_business_property_limit").val();
+                    var bop_business_property_limit = $(
+                        "#bop_business_property_limit"
+                    ).val();
 
                     // BOP Step 2
-                    var bop_bldg_construction_type = $("#bop_bldg_construction_type option:selected").text();
+                    var bop_bldg_construction_type = $(
+                        "#bop_bldg_construction_type option:selected"
+                    ).text();
                     var bop_year_built = $("#bop_year_built").val();
                     var bop_no_of_stories = $("#bop_no_of_stories").val();
                     var bop_total_bldg_sqft = $("#bop_total_bldg_sqft").val();
 
                     // BOP Step 3
-                    var bop_automatic_sprinkler_system = $("#bop_automatic_sprinkler_system option:selected").text();
-                    var bop_automatic_fire_alarm = $("#bop_automatic_fire_alarm option:selected").val();
-                    var bop_distance_nearest_fire_hydrant = $("#bop_distance_nearest_fire_hydrant").val();
-                    var bop_distance_nearest_fire_station = $("#bop_distance_nearest_fire_station").val();
-                    var bop_automatic_comm_cooking_ext = $("#bop_automatic_comm_cooking_ext option:selected").text();
+                    var bop_automatic_sprinkler_system = $(
+                        "#bop_automatic_sprinkler_system option:selected"
+                    ).text();
+                    var bop_automatic_fire_alarm = $(
+                        "#bop_automatic_fire_alarm option:selected"
+                    ).val();
+                    var bop_distance_nearest_fire_hydrant = $(
+                        "#bop_distance_nearest_fire_hydrant"
+                    ).val();
+                    var bop_distance_nearest_fire_station = $(
+                        "#bop_distance_nearest_fire_station"
+                    ).val();
+                    var bop_automatic_comm_cooking_ext = $(
+                        "#bop_automatic_comm_cooking_ext option:selected"
+                    ).text();
 
                     // BOP Step 4
-                    var bop_automatic_burglar_alarm = $("#bop_automatic_burglar_alarm option:selected").text();
-                    var bop_security_cameras = $("#bop_security_cameras option:selected").text();
-                    var bop_last_update_roofing_year = $("#bop_last_update_roofing_year").val();
-                    var bop_last_update_heating_year = $("#bop_last_update_heating_year").val();
-                    var bop_last_update_plumbing_year = $("#bop_last_update_plumbing_year").val();
-                    var bop_last_update_electrical_year = $("#bop_last_update_electrical_year").val();
+                    var bop_automatic_burglar_alarm = $(
+                        "#bop_automatic_burglar_alarm option:selected"
+                    ).text();
+                    var bop_security_cameras = $(
+                        "#bop_security_cameras option:selected"
+                    ).text();
+                    var bop_last_update_roofing_year = $(
+                        "#bop_last_update_roofing_year"
+                    ).val();
+                    var bop_last_update_heating_year = $(
+                        "#bop_last_update_heating_year"
+                    ).val();
+                    var bop_last_update_plumbing_year = $(
+                        "#bop_last_update_plumbing_year"
+                    ).val();
+                    var bop_last_update_electrical_year = $(
+                        "#bop_last_update_electrical_year"
+                    ).val();
 
                     var bopInformation = {
                         "Property Address": bop_property_address,
@@ -629,145 +1103,280 @@
                         "Building Industry": bop_building_industry,
                         "Occupancy (Who owns the Building?)": bop_occupancy,
                         "Value of Cost of the Building?": bop_val_cost_bldg,
-                        "What is the Business Property Limit?": bop_business_property_limit,
-                        "Building Construction Type": bop_bldg_construction_type,
+                        "What is the Business Property Limit?":
+                            bop_business_property_limit,
+                        "Building Construction Type":
+                            bop_bldg_construction_type,
                         "Year Built": bop_year_built,
                         "No. of Stories": bop_no_of_stories,
                         "Total Building Sq. Ft.": bop_total_bldg_sqft,
-                        "Automatic Sprinkler System": bop_automatic_sprinkler_system,
+                        "Automatic Sprinkler System":
+                            bop_automatic_sprinkler_system,
                         "Automatic Fire Alarm": bop_automatic_fire_alarm,
-                        "Distance to Nearest Fire Hydrant": bop_distance_nearest_fire_hydrant,
-                        "Distance to Nearest Fire Station": bop_distance_nearest_fire_station,
-                        "Automatic Commercial Cooking Extinguishing System": bop_automatic_comm_cooking_ext,
+                        "Distance to Nearest Fire Hydrant":
+                            bop_distance_nearest_fire_hydrant,
+                        "Distance to Nearest Fire Station":
+                            bop_distance_nearest_fire_station,
+                        "Automatic Commercial Cooking Extinguishing System":
+                            bop_automatic_comm_cooking_ext,
                         "Automatic Burglar Alarm": bop_automatic_burglar_alarm,
                         "Security Cameras": bop_security_cameras,
-                        "Last Update to Roofing Yr": bop_last_update_roofing_year,
-                        "Last Update to Heating Yr": bop_last_update_heating_year,
-                        "Last Update to Plumbing Yr": bop_last_update_plumbing_year,
-                        "Last Update to Electrical Yr": bop_last_update_electrical_year,
-                    }
+                        "Last Update to Roofing Yr":
+                            bop_last_update_roofing_year,
+                        "Last Update to Heating Yr":
+                            bop_last_update_heating_year,
+                        "Last Update to Plumbing Yr":
+                            bop_last_update_plumbing_year,
+                        "Last Update to Electrical Yr":
+                            bop_last_update_electrical_year,
+                    };
 
                     // Commercial Property Step 1 - 3
                     // Commercial Property Step 1
-                    var property_business_located = $("#property_business_located").val();
-                    var property_property_address = $("#property_property_address").val();
-                    var property_name_of_owner = $("#property_name_of_owner").val();
-                    var property_value_cost_bldg = $("#property_value_cost_bldg").val();
-                    var property_business_property_limit = $("#property_business_property_limit").val();
+                    var property_business_located = $(
+                        "#property_business_located"
+                    ).val();
+                    var property_property_address = $(
+                        "#property_property_address"
+                    ).val();
+                    var property_name_of_owner = $(
+                        "#property_name_of_owner"
+                    ).val();
+                    var property_value_cost_bldg = $(
+                        "#property_value_cost_bldg"
+                    ).val();
+                    var property_business_property_limit = $(
+                        "#property_business_property_limit"
+                    ).val();
 
                     // Commercial Property Step 2
-                    var property_does_have_more_than_one_location = $("#property_does_have_more_than_one_location option:selected").text();
-                    var property_multiple_units = $("#property_multiple_units option:selected").text();
-                    var property_construction_type = $("#property_construction_type").val();
+                    var property_does_have_more_than_one_location = $(
+                        "#property_does_have_more_than_one_location option:selected"
+                    ).text();
+                    var property_multiple_units = $(
+                        "#property_multiple_units option:selected"
+                    ).text();
+                    var property_construction_type = $(
+                        "#property_construction_type"
+                    ).val();
                     var property_year_built = $("#property_year_built").val();
-                    var property_no_of_stories = $("#property_no_of_stories").val();
-                    var property_total_bldg_sqft = $("#property_total_bldg_sqft").val();
-                    var property_is_bldg_equipped_with_fire_sprinklers = $("#property_is_bldg_equipped_with_fire_sprinklers option:selected").text();
-                    var property_distance_nearest_fire_hydrant = $("#property_distance_nearest_fire_hydrant").val();
-                    var property_distance_nearest_fire_station = $("#property_distance_nearest_fire_station").val();
-                    var property_protection_class = $("#property_protection_class").val();
+                    var property_no_of_stories = $(
+                        "#property_no_of_stories"
+                    ).val();
+                    var property_total_bldg_sqft = $(
+                        "#property_total_bldg_sqft"
+                    ).val();
+                    var property_is_bldg_equipped_with_fire_sprinklers = $(
+                        "#property_is_bldg_equipped_with_fire_sprinklers option:selected"
+                    ).text();
+                    var property_distance_nearest_fire_hydrant = $(
+                        "#property_distance_nearest_fire_hydrant"
+                    ).val();
+                    var property_distance_nearest_fire_station = $(
+                        "#property_distance_nearest_fire_station"
+                    ).val();
+                    var property_protection_class = $(
+                        "#property_protection_class"
+                    ).val();
 
                     // Commercial Property Step 3
-                    var property_protective_device = $("#property_protective_device").val();
-                    var property_last_update_roofing_year = $("#property_last_update_roofing_year").val();
-                    var property_last_update_heating_year = $("#property_last_update_heating_year").val();
-                    var property_last_update_plumbing_year = $("#property_last_update_plumbing_year").val();
-                    var property_last_update_electrical_year = $("#property_last_update_electrical_year").val();
+                    var property_protective_device = $(
+                        "#property_protective_device"
+                    ).val();
+                    var property_last_update_roofing_year = $(
+                        "#property_last_update_roofing_year"
+                    ).val();
+                    var property_last_update_heating_year = $(
+                        "#property_last_update_heating_year"
+                    ).val();
+                    var property_last_update_plumbing_year = $(
+                        "#property_last_update_plumbing_year"
+                    ).val();
+                    var property_last_update_electrical_year = $(
+                        "#property_last_update_electrical_year"
+                    ).val();
 
                     var commercialPropertyInformation = {
-                        "Business Location is Located in": property_business_located,
+                        "Business Location is Located in":
+                            property_business_located,
                         "Property Address": property_property_address,
-                        "Name of the owner of the building": property_name_of_owner,
-                        "Value of Cost of the Building": property_value_cost_bldg,
-                        "What is the Business Property Limit": property_business_property_limit,
-                        "Do you have more than one location": property_does_have_more_than_one_location,
-                        "Are there multiple units (residential or commercial) in your building": property_multiple_units,
+                        "Name of the owner of the building":
+                            property_name_of_owner,
+                        "Value of Cost of the Building":
+                            property_value_cost_bldg,
+                        "What is the Business Property Limit":
+                            property_business_property_limit,
+                        "Do you have more than one location":
+                            property_does_have_more_than_one_location,
+                        "Are there multiple units (residential or commercial) in your building":
+                            property_multiple_units,
                         "Construction Type": property_construction_type,
                         "Year Built": property_year_built,
                         "No. of Stories": property_no_of_stories,
-                        "Total Building Square Footage": property_total_bldg_sqft,
-                        "Is your building equipped with fire sprinklers": property_is_bldg_equipped_with_fire_sprinklers,
-                        "Distance to Nearest Fire Hydrant": property_distance_nearest_fire_hydrant,
-                        "Distance to Nearest Fire Station": property_distance_nearest_fire_station,
+                        "Total Building Square Footage":
+                            property_total_bldg_sqft,
+                        "Is your building equipped with fire sprinklers":
+                            property_is_bldg_equipped_with_fire_sprinklers,
+                        "Distance to Nearest Fire Hydrant":
+                            property_distance_nearest_fire_hydrant,
+                        "Distance to Nearest Fire Station":
+                            property_distance_nearest_fire_station,
                         "Protection Class": property_protection_class,
-                        "Select any protective devices you have": property_protective_device,
-                        "Last Update to Roofing Year": property_last_update_roofing_year,
-                        "Last Update to Heating Year": property_last_update_heating_year,
-                        "Last Update to Plumbing Year": property_last_update_plumbing_year,
-                        "Last Update to Electrical Year": property_last_update_electrical_year,
-                    }
+                        "Select any protective devices you have":
+                            property_protective_device,
+                        "Last Update to Roofing Year":
+                            property_last_update_roofing_year,
+                        "Last Update to Heating Year":
+                            property_last_update_heating_year,
+                        "Last Update to Plumbing Year":
+                            property_last_update_plumbing_year,
+                        "Last Update to Electrical Year":
+                            property_last_update_electrical_year,
+                    };
 
                     // Errors and Omission Step 1 - 5
                     // EO Step 1
-                    var eo_requested_limits = $("#eo_requested_limits option:selected").text();
-                    var eo_reqlimit_if_others = $("#eo_reqlimit_if_others").val();
-                    var eo_request_deductible = $("#eo_request_deductible option:selected").text();
-                    var eo_reqdeductible_if_others = $("#eo_reqdeductible_if_others").val();
+                    var eo_requested_limits = $(
+                        "#eo_requested_limits option:selected"
+                    ).text();
+                    var eo_reqlimit_if_others = $(
+                        "#eo_reqlimit_if_others"
+                    ).val();
+                    var eo_request_deductible = $(
+                        "#eo_request_deductible option:selected"
+                    ).text();
+                    var eo_reqdeductible_if_others = $(
+                        "#eo_reqdeductible_if_others"
+                    ).val();
                     // EO Step 2
-                    var eo_business_entity_q1 = $("#eo_business_entity_q1 option:selected").text();
-                    var eo_business_entity_q2 = $("#eo_business_entity_q2 option:selected").text();
-                    var eo_business_entity_q3 = $("#eo_business_entity_q3 option:selected").text();
-                    var eo_business_entity_q4 = $("#eo_business_entity_q4 option:selected").text();
-                    var eo_business_entity_q5 = $("#eo_business_entity_q5 option:selected").text();
+                    var eo_business_entity_q1 = $(
+                        "#eo_business_entity_q1 option:selected"
+                    ).text();
+                    var eo_business_entity_q2 = $(
+                        "#eo_business_entity_q2 option:selected"
+                    ).text();
+                    var eo_business_entity_q3 = $(
+                        "#eo_business_entity_q3 option:selected"
+                    ).text();
+                    var eo_business_entity_q4 = $(
+                        "#eo_business_entity_q4 option:selected"
+                    ).text();
+                    var eo_business_entity_q5 = $(
+                        "#eo_business_entity_q5 option:selected"
+                    ).text();
                     // EO Step 3
                     var eo_number_employee = $("#eo_number_employee").val();
                     var eo_full_time = $("#eo_full_time").val();
-                    var eo_ftime_salary_range = $("#eo_ftime_salary_range").val();
+                    var eo_ftime_salary_range = $(
+                        "#eo_ftime_salary_range"
+                    ).val();
                     var eo_part_time = $("#eo_part_time").val();
-                    var eo_ptime_salary_range = $("#eo_ptime_salary_range").val();
+                    var eo_ptime_salary_range = $(
+                        "#eo_ptime_salary_range"
+                    ).val();
                     // EO Step 4
-                    var eo_emp_practice_q1 = $("#eo_emp_practice_q1 option:selected").text();
+                    var eo_emp_practice_q1 = $(
+                        "#eo_emp_practice_q1 option:selected"
+                    ).text();
                     // EO Step 5
                     var eo_hr_q1 = $("#eo_hr_q1 option:selected").text();
+                    var eo_hr_sub_q1 = $("#eo_hr_sub_q1").val();
                     var eo_hr_q2 = $("#eo_hr_q2 option:selected").text();
+                    var eo_hr_sub_q2 = $("#eo_hr_sub_q2").val();
                     var eo_hr_q3 = $("#eo_hr_q3 option:selected").text();
+                    var eo_hr_sub_q3 = $("#eo_hr_sub_q3").val();
                     var eo_hr_q4 = $("#eo_hr_q4 option:selected").text();
+                    var eo_hr_sub_q4 = $("#eo_hr_sub_q4").val();
 
                     var errorsEmissionInformation = {
                         "Requested Limits": eo_requested_limits,
                         "If Others, Please indicate": eo_reqlimit_if_others,
-                        "Requested Deductible (Per Claim)": eo_request_deductible,
-                        "If Others, Please indicate": eo_reqdeductible_if_others,
-                        "Has the name or ownership of the entity changed within the last 5 years": eo_business_entity_q1,
-                        "Has any other business been purchased merged or consolidated with the entity within the last 5 years": eo_business_entity_q2,
-                        "Does any other entity own or control your business": eo_business_entity_q3,
-                        "Has your company name been changed during the past 5 years": eo_business_entity_q4,
-                        "Has any other business purchased, merged or consolidated with you during the past 5 years": eo_business_entity_q5,
+                        "Requested Deductible (Per Claim)":
+                            eo_request_deductible,
+                        "If Others, Please indicate":
+                            eo_reqdeductible_if_others,
+                        "Has the name or ownership of the entity changed within the last 5 years":
+                            eo_business_entity_q1,
+                        "Has any other business been purchased merged or consolidated with the entity within the last 5 years":
+                            eo_business_entity_q2,
+                        "Does any other entity own or control your business":
+                            eo_business_entity_q3,
+                        "Has your company name been changed during the past 5 years":
+                            eo_business_entity_q4,
+                        "Has any other business purchased, merged or consolidated with you during the past 5 years":
+                            eo_business_entity_q5,
                         "Number of Employees": eo_number_employee,
                         "Full Time": eo_full_time,
                         "Full Time Salary Range": eo_ftime_salary_range,
                         "Part Time": eo_part_time,
                         "Part Time Salary Range": eo_ptime_salary_range,
-                        "Has the applicant total number of employees decreased by more than ten percent (10) due to lay off, force reduction of closing of division in the past 1 year": eo_emp_practice_q1,
-                        "Does the Applicant have written employment agreements with all officers": eo_hr_q1,
-                        "Does the Applicant have its employment policies/procedures reviewed by labor or employment counsel": eo_hr_q2,
-                        "Does the Applicant have a Human Resources or Personnel Department": eo_hr_q3,
-                        "Does the Applicant have an employee handbook": eo_hr_q4
-                    }
+                        "Has the applicant total number of employees decreased by more than ten percent (10) due to lay off, force reduction of closing of division in the past 1 year":
+                            eo_emp_practice_q1,
+                        "Does the Applicant have written employment agreements with all officers":
+                            eo_hr_q1,
+                        "If Yes, Please explain": eo_hr_sub_q1,
+                        "Does the Applicant have its employment policies/procedures reviewed by labor or employment counsel":
+                            eo_hr_q2,
+                        "If Yes, Please explain": eo_hr_sub_q2,
+                        "Does the Applicant have a Human Resources or Personnel Department":
+                            eo_hr_q3,
+                        "If Yes, Please explain": eo_hr_sub_q3,
+                        "Does the Applicant have an employee handbook":
+                            eo_hr_q4,
+                        "If Yes, Please explain": eo_hr_sub_q4,
+                    };
 
                     // Pollution Step 1 & 2
-                    var pollution_profession = $("#pollution_profession option:selected").text();
-                    var pollution_residential = $("#pollution_residential option:selected").text();
-                    var pollution_commercial = $("#pollution_commercial option:selected").text();
-                    var pollution_new_construction = $("#pollution_new_construction option:selected").text();
-                    var pollution_repair_remodel = $("#pollution_repair_remodel option:selected").text();
+                    var pollution_profession = $(
+                        "#pollution_profession option:selected"
+                    ).text();
+                    var pollution_residential = $(
+                        "#pollution_residential option:selected"
+                    ).text();
+                    var pollution_commercial = $(
+                        "#pollution_commercial option:selected"
+                    ).text();
+                    var pollution_new_construction = $(
+                        "#pollution_new_construction option:selected"
+                    ).text();
+                    var pollution_repair_remodel = $(
+                        "#pollution_repair_remodel option:selected"
+                    ).text();
                     var pollution_descops = $("#pollution_descops").val();
-                    var pollution_cost_proj_5years = $("#pollution_cost_proj_5years").val();
-                    var pollution_annual_gross = $("#pollution_annual_gross").val();
-                    var pollution_no_field_emp = $("#pollution_no_field_emp").val();
-                    var pollution_payroll_amt = $("#pollution_payroll_amt").val();
-                    var pollution_using_subcon = $("#pollution_using_subcon").val();
+                    var pollution_cost_proj_5years = $(
+                        "#pollution_cost_proj_5years"
+                    ).val();
+                    var pollution_annual_gross = $(
+                        "#pollution_annual_gross"
+                    ).val();
+                    var pollution_no_field_emp = $(
+                        "#pollution_no_field_emp"
+                    ).val();
+                    var pollution_payroll_amt = $(
+                        "#pollution_payroll_amt"
+                    ).val();
+                    var pollution_using_subcon = $(
+                        "#pollution_using_subcon"
+                    ).val();
                     var pollution_using_subcon_if_set = "";
                     if (pollution_using_subcon === "Yes") {
-                        var pollution_subcon_cost = $("#pollution_subcon_cost").val();
-                        var pollution_using_subcon_if_set = pollution_subcon_cost;
+                        var pollution_subcon_cost = $(
+                            "#pollution_subcon_cost"
+                        ).val();
+                        var pollution_using_subcon_if_set =
+                            pollution_subcon_cost;
                     } else {
                         var pollution_using_subcon_if_set = "";
                     }
-                    var pollution_no_losses_5years = $("#pollution_no_losses_5years").val();
+                    var pollution_no_losses_5years = $(
+                        "#pollution_no_losses_5years"
+                    ).val();
                     if (pollution_no_losses_5years >= 0) {
-                        var pollution_explain_losses = $("#pollution_explain_losses").val();
-                        var pollution_explain_losses_if_set = pollution_explain_losses;
+                        var pollution_explain_losses = $(
+                            "#pollution_explain_losses"
+                        ).val();
+                        var pollution_explain_losses_if_set =
+                            pollution_explain_losses;
                     } else {
                         var pollution_explain_losses_if_set = "";
                     }
@@ -779,14 +1388,18 @@
                         "New Construction": pollution_new_construction,
                         "Repair/Remodel": pollution_repair_remodel,
                         "Detailed Description of Operations": pollution_descops,
-                        "Cost of the Largest Project in the past 5 years": pollution_cost_proj_5years,
+                        "Cost of the Largest Project in the past 5 years":
+                            pollution_cost_proj_5years,
                         "Annual Gross Receipts": pollution_annual_gross,
                         "Number of Field Employees": pollution_no_field_emp,
                         "Payroll Amount": pollution_payroll_amt,
-                        "Are you using any subcontractor": pollution_using_subcon,
+                        "Are you using any subcontractor":
+                            pollution_using_subcon,
                         "Subcontractor Cost": pollution_using_subcon_if_set,
-                        "# of Losses for the Past 5 Years": pollution_no_losses_5years,
-                        "Explain Losses (Please include loss amount)": pollution_explain_losses_if_set,
+                        "# of Losses for the Past 5 Years":
+                            pollution_no_losses_5years,
+                        "Explain Losses (Please include loss amount)":
+                            pollution_explain_losses_if_set,
                     };
 
                     // EPLI Step 1 - 6
@@ -794,15 +1407,23 @@
                     var epli_fein = $("#epli_fein").val();
                     var epli_current_epli = $("#epli_current_epli").val();
                     var epli_prior_carrier = $("#epli_prior_carrier").val();
-                    var epli_prior_carrier_epli = $("#epli_prior_carrier_epli").val();
+                    var epli_prior_carrier_epli = $(
+                        "#epli_prior_carrier_epli"
+                    ).val();
                     var epli_effective_date = $("#epli_effective_date").val();
-                    var epli_prev_premium_amount = $("#epli_prev_premium_amount").val();
-                    var epli_deductible_amount = $("#epli_deductible_amount").val();
+                    var epli_prev_premium_amount = $(
+                        "#epli_prev_premium_amount"
+                    ).val();
+                    var epli_deductible_amount = $(
+                        "#epli_deductible_amount"
+                    ).val();
 
                     // EPLI Step 2
                     var epli_full_time = $("#epli_full_time").val();
                     var epli_part_time = $("#epli_part_time").val();
-                    var epli_independent_contractors = $("#epli_independent_contractors").val();
+                    var epli_independent_contractors = $(
+                        "#epli_independent_contractors"
+                    ).val();
                     var epli_volunteers = $("#epli_volunteers").val();
                     var epli_leased_seasonal = $("#epli_leased_seasonal").val();
                     var epli_non_us_base_emp = $("#epli_non_us_base_emp").val();
@@ -822,9 +1443,15 @@
                     var epli_salary_range_q3 = $("#epli_salary_range_q3").val();
 
                     // EPLI Ste 5
-                    var epli_emp_terminated_last_12_months_q1 = $("#epli_emp_terminated_last_12_months_q1").val();
-                    var epli_emp_terminated_last_12_months_q2 = $("#epli_emp_terminated_last_12_months_q2").val();
-                    var epli_emp_terminated_last_12_months_q3 = $("#epli_emp_terminated_last_12_months_q3").val();
+                    var epli_emp_terminated_last_12_months_q1 = $(
+                        "#epli_emp_terminated_last_12_months_q1"
+                    ).val();
+                    var epli_emp_terminated_last_12_months_q2 = $(
+                        "#epli_emp_terminated_last_12_months_q2"
+                    ).val();
+                    var epli_emp_terminated_last_12_months_q3 = $(
+                        "#epli_emp_terminated_last_12_months_q3"
+                    ).val();
 
                     // EPLI Step 6
                     var epli_hr_q1 = $("#epli_hr_q1 option:selected").text();
@@ -845,38 +1472,52 @@
                         "EPLI - Full Time": epli_full_time,
                         "Part Time": epli_part_time,
                         "Independent Contractors": epli_independent_contractors,
-                        "Volunteers": epli_volunteers,
+                        Volunteers: epli_volunteers,
                         "Leased or Seasonal": epli_leased_seasonal,
                         "Non-US base Emp.": epli_non_us_base_emp,
                         "Total Employees": epli_total_employees,
-                        "CA": epli_located_at_ca,
-                        "GA": epli_located_at_ga,
-                        "TX": epli_located_at_tx,
-                        "FL": epli_located_at_fl,
-                        "NY": epli_located_at_ny,
-                        "NJ": epli_located_at_nj,
+                        CA: epli_located_at_ca,
+                        GA: epli_located_at_ga,
+                        TX: epli_located_at_tx,
+                        FL: epli_located_at_fl,
+                        NY: epli_located_at_ny,
+                        NJ: epli_located_at_nj,
                         "Up to $60,000": epli_salary_range_q1,
                         "$60,000 - $120,000": epli_salary_range_q2,
                         "Over $120,000": epli_salary_range_q3,
-                        "Voluntary": epli_emp_terminated_last_12_months_q1,
-                        "Involuntary": epli_emp_terminated_last_12_months_q2,
+                        Voluntary: epli_emp_terminated_last_12_months_q1,
+                        Involuntary: epli_emp_terminated_last_12_months_q2,
                         "Laid-Off": epli_emp_terminated_last_12_months_q3,
-                        "Does the Applicant have a standard employment application for all applicants": epli_hr_q1,
-                        "Does the Applicant have an 'At Will' provision in the employment application": epli_hr_q2,
-                        "Does the Applicant have an employment handbook": epli_hr_q3,
-                        "Does the Applicant have a written policy with respect to sexual harassment": epli_hr_q4,
-                        "Does the Applicant have a written policy with respect to discrimination": epli_hr_q5,
-                        "Does the Applicant have written annual evaluations for employees": epli_hr_q6,
-                    }
+                        "Does the Applicant have a standard employment application for all applicants":
+                            epli_hr_q1,
+                        "Does the Applicant have an 'At Will' provision in the employment application":
+                            epli_hr_q2,
+                        "Does the Applicant have an employment handbook":
+                            epli_hr_q3,
+                        "Does the Applicant have a written policy with respect to sexual harassment":
+                            epli_hr_q4,
+                        "Does the Applicant have a written policy with respect to discrimination":
+                            epli_hr_q5,
+                        "Does the Applicant have written annual evaluations for employees":
+                            epli_hr_q6,
+                    };
 
                     // Cyber Step 1-2
                     // Cyber Step 1
-                    var cyber_it_contact_name = $("#cyber_it_contact_name").val();
-                    var cyber_it_contact_number = $("#cyber_it_contact_number").val();
-                    var cyber_it_contact_email = $("#cyber_it_contact_email").val();
+                    var cyber_it_contact_name = $(
+                        "#cyber_it_contact_name"
+                    ).val();
+                    var cyber_it_contact_number = $(
+                        "#cyber_it_contact_number"
+                    ).val();
+                    var cyber_it_contact_email = $(
+                        "#cyber_it_contact_email"
+                    ).val();
 
                     // Cyber Step 2
-                    var cyber_engaged_business_activities = $("#cyber_engaged_business_activities option:selected").text();
+                    var cyber_engaged_business_activities = $(
+                        "#cyber_engaged_business_activities option:selected"
+                    ).text();
                     var cyber_q1 = $("#cyber_q1 option:selected").text();
                     var cyber_q2 = $("#cyber_q2 option:selected").text();
                     var cyber_q3 = $("#cyber_q3 option:selected").text();
@@ -889,123 +1530,302 @@
                         "IT Contact Name": cyber_it_contact_name,
                         "IT Contact Number": cyber_it_contact_number,
                         "IT Contact Email": cyber_it_contact_email,
-                        "Are you engaged in any of the following business activities?": cyber_engaged_business_activities,
-                        "Is there a system in place for verifying fund and wire transfers over $25,000 through a secondary means of communication prior to execution?": cyber_q1,
-                        "Do you store your backups offline or with a cloud service provider?": cyber_q2,
-                        "Do you store or process personal, health, or credit card information of more than 500,000 Individuals?": cyber_q3,
-                        "Do you enabled multi-factor authentication for email access and remote network access?": cyber_q4,
-                        "Do you encrypt all sensitive information at rest?": cyber_q5,
-                        "Any relevant claims or incidents exceeding $10,000 within the past three years?": cyber_q6,
-                        "Would there be any potential Cyber Event, Loss, or claim that could fall within the scope of the policy you are applying for?": cyber_q7,
-                    }
+                        "Are you engaged in any of the following business activities?":
+                            cyber_engaged_business_activities,
+                        "Is there a system in place for verifying fund and wire transfers over $25,000 through a secondary means of communication prior to execution?":
+                            cyber_q1,
+                        "Do you store your backups offline or with a cloud service provider?":
+                            cyber_q2,
+                        "Do you store or process personal, health, or credit card information of more than 500,000 Individuals?":
+                            cyber_q3,
+                        "Do you enabled multi-factor authentication for email access and remote network access?":
+                            cyber_q4,
+                        "Do you encrypt all sensitive information at rest?":
+                            cyber_q5,
+                        "Any relevant claims or incidents exceeding $10,000 within the past three years?":
+                            cyber_q6,
+                        "Would there be any potential Cyber Event, Loss, or claim that could fall within the scope of the policy you are applying for?":
+                            cyber_q7,
+                    };
 
                     // Installation Floater Step 1 - 5
-                    var instfloat_territory_of_operation = $("#instfloat_territory_of_operation").val();
-                    var instfloat_type_of_operation = $("#instfloat_type_of_operation").val();
-                    var instfloat_scheduled_type_of_equipment = $("#instfloat_scheduled_type_of_equipment").val();
-                    var instfloat_deductible_amount = $("#instfloat_deductible_amount").val();
+                    var instfloat_territory_of_operation = $(
+                        "#instfloat_territory_of_operation"
+                    ).val();
+                    var instfloat_type_of_operation = $(
+                        "#instfloat_type_of_operation"
+                    ).val();
+                    var instfloat_scheduled_type_of_equipment = $(
+                        "#instfloat_scheduled_type_of_equipment"
+                    ).val();
+                    var instfloat_deductible_amount = $(
+                        "#instfloat_deductible_amount"
+                    ).val();
                     var instfloat_location = $("#instfloat_location").val();
-                    var instfloat_months_in_storage = $("#instfloat_months_in_storage").val();
-                    var instfloat_max_value_of_equipment = $("#instfloat_max_value_of_equipment").val();
-                    var instfloat_max_value_of_bldg_storage = $("#instfloat_max_value_of_bldg_storage").val();
-                    var instfloat_type_security_placed = $("#instfloat_type_security_placed").val();
-                    var instfloat_unscheduled_type_of_equipment = $("#instfloat_unscheduled_type_of_equipment").val();
-                    var instfloat_unscheduled_max_value_equipment_storing = $("#instfloat_unscheduled_max_value_equipment_storing").val();
-                    var instfloat_additional_info_q1 = $("#instfloat_additional_info_q1").val();
-                    var instfloat_additional_info_q2 = $("#instfloat_additional_info_q2").val();
-                    var instfloat_additional_info_q3 = $("#instfloat_additional_info_q3").val();
-                    var instfloat_additional_info_q4 = $("#instfloat_additional_info_q4").val();
+                    var instfloat_months_in_storage = $(
+                        "#instfloat_months_in_storage"
+                    ).val();
+                    var instfloat_max_value_of_equipment = $(
+                        "#instfloat_max_value_of_equipment"
+                    ).val();
+                    var instfloat_max_value_of_bldg_storage = $(
+                        "#instfloat_max_value_of_bldg_storage"
+                    ).val();
+                    var instfloat_type_security_placed = $(
+                        "#instfloat_type_security_placed"
+                    ).val();
+                    var instfloat_unscheduled_type_of_equipment = $(
+                        "#instfloat_unscheduled_type_of_equipment"
+                    ).val();
+                    var instfloat_unscheduled_max_value_equipment_storing = $(
+                        "#instfloat_unscheduled_max_value_equipment_storing"
+                    ).val();
+                    var instfloat_additional_info_q1 = $(
+                        "#instfloat_additional_info_q1"
+                    ).val();
+                    var instfloat_additional_info_q2 = $(
+                        "#instfloat_additional_info_q2"
+                    ).val();
+                    var instfloat_additional_info_q3 = $(
+                        "#instfloat_additional_info_q3"
+                    ).val();
+                    var instfloat_additional_info_q4 = $(
+                        "#instfloat_additional_info_q4"
+                    ).val();
 
                     var instFloatInformation = {
-                        "Territory of Operation": instfloat_territory_of_operation,
+                        "Territory of Operation":
+                            instfloat_territory_of_operation,
                         "Type of Operation": instfloat_type_of_operation,
-                        "Type of Equipment / materials you will be working with": instfloat_scheduled_type_of_equipment,
+                        "Type of Equipment / materials you will be working with":
+                            instfloat_scheduled_type_of_equipment,
                         "Deductible Amount": instfloat_deductible_amount,
-                        "Location": instfloat_location,
+                        Location: instfloat_location,
                         "Months in storage": instfloat_months_in_storage,
-                        "Maximum Value of equipment that you will be storing": instfloat_max_value_of_equipment,
-                        "Maximum Value of Building storage": instfloat_max_value_of_bldg_storage,
-                        "Type of Security in place withing the storage building": instfloat_type_security_placed,
-                        "Type of Equipment / materials you will be working with": instfloat_unscheduled_type_of_equipment,
-                        "Maximum Value of equipment that you will be storing": instfloat_unscheduled_max_value_equipment_storing,
-                        "Equipment Rented. Loaned to / from Others with or without Operators?": instfloat_additional_info_q1,
-                        "Are you Operating Equipment not listed here?": instfloat_additional_info_q2,
-                        "Property used underground?": instfloat_additional_info_q3,
+                        "Maximum Value of equipment that you will be storing":
+                            instfloat_max_value_of_equipment,
+                        "Maximum Value of Building storage":
+                            instfloat_max_value_of_bldg_storage,
+                        "Type of Security in place withing the storage building":
+                            instfloat_type_security_placed,
+                        "Type of Equipment / materials you will be working with":
+                            instfloat_unscheduled_type_of_equipment,
+                        "Maximum Value of equipment that you will be storing":
+                            instfloat_unscheduled_max_value_equipment_storing,
+                        "Equipment Rented. Loaned to / from Others with or without Operators?":
+                            instfloat_additional_info_q1,
+                        "Are you Operating Equipment not listed here?":
+                            instfloat_additional_info_q2,
+                        "Property used underground?":
+                            instfloat_additional_info_q3,
                         "Any work done afloat?": instfloat_additional_info_q4,
-                    }
+                    };
 
                     // About Your Company Step
                     var ayc_bop = $("#ayc_bop option:selected").text();
-                    var ayc_date_business_started = $("#ayc_date_business_started").val();
-                    var ayc_yrs_exp_contractor = $("#ayc_yrs_exp_contractor").val();
-                    var ayc_owners_first_name = $("#ayc_owners_first_name").val();
-                    var ayc_owners_last_name = $("#ayc_owners_last_name").val();
-                    var ayc_phone_number = $("#ayc_phone_number").val();
+                    var ayc_date_business_started = $(
+                        "#ayc_date_business_started"
+                    ).val();
+                    var ayc_yrs_exp_contractor = $(
+                        "#ayc_yrs_exp_contractor"
+                    ).val();
+                    var ayc_no_of_losses = $(
+                        "#ayc_no_of_losses option:selected"
+                    ).text();
+                    var ayc_no_of_losses_explain = $(
+                        "#ayc_no_of_losses_explain"
+                    ).val();
 
                     var aboutYourCompanyInformation = {
                         "Business Ownership Structure": ayc_bop,
                         "Date Business Started": ayc_date_business_started,
-                        "Years of experience as a contractor": ayc_yrs_exp_contractor,
-                        "Owner’s First Name": ayc_owners_first_name,
-                        "Owner’s Last Name": ayc_owners_last_name,
-                        "Owner’s Phone Number": ayc_phone_number,
+                        "Years of experience as a contractor":
+                            ayc_yrs_exp_contractor,
+                        "No. of Losses": ayc_no_of_losses,
+                        "Explain Losses (Please include loss amount)":
+                            ayc_no_of_losses_explain,
                     };
 
                     function generateAllHTML(targetDiv, informationObjects) {
                         var htmlString = "";
 
                         // Loop through each information object
-                        informationObjects.forEach(function (informationObject) {
+                        informationObjects.forEach(function (
+                            informationObject
+                        ) {
                             for (var info in informationObject) {
                                 var value = informationObject[info];
 
-                                if (value) {
-                                    if (info === "Building Construction Type") {
+                                if (value || typeof value === "object") {
+                                    if (
+                                        typeof value === "string" &&
+                                        value.startsWith("<div")
+                                    ) {
+                                        // console.log(
+                                        //     "Appending ownership content"
+                                        // );
+
+                                        htmlString += value;
+                                    } else if (
+                                        info === "Building Construction Type"
+                                    ) {
                                         // Add an <h6> tag before this specific field
-                                        htmlString += "<h6><strong>What is the property contents?</strong></h6>";
+                                        htmlString +=
+                                            "<h6><strong>What is the property contents?</strong></h6>";
                                         // Use <p> tags for the field name and its value
-                                        htmlString += "<p>Building Construction Type: <strong>" + value + "</strong></p>";
-                                    } else if (info === "Automatic Sprinkler System") {
-                                        htmlString += "<h6><strong>Protective Safeguards - Fire:</strong></h6>";
-                                        htmlString += "<p>Automatic Sprinkler System: <strong>" + value + "</strong></p>";
-                                    } else if (info === "Automatic Burglar Alarm") {
-                                        htmlString += "<h6><strong>Protective Safeguards - Burglary and Robbery:</strong></h6>";
-                                        htmlString += "<p>Automatic Burglar Alarm: <strong>" + value + "</strong></p>";
-                                    } else if (info === "Has the name or ownership of the entity changed within the last 5 years") {
-                                        htmlString += "<h6><strong>Business Entity:</strong></h6>";
-                                        htmlString += "<p>Has the name or ownership of the entity changed within the last 5 years?: <strong>" + value + "</strong></p>";
+                                        htmlString +=
+                                            "<p>Building Construction Type: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info === "Automatic Sprinkler System"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Protective Safeguards - Fire:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Automatic Sprinkler System: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info === "Automatic Burglar Alarm"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Protective Safeguards - Burglary and Robbery:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Automatic Burglar Alarm: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Has the name or ownership of the entity changed within the last 5 years"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Business Entity:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Has the name or ownership of the entity changed within the last 5 years?: <strong>" +
+                                            value +
+                                            "</strong></p>";
                                     } else if (info === "Number of Employees") {
-                                        htmlString += "<h6><strong>Employees:</strong></h6>";
-                                        htmlString += "<p>Number of Employees: <strong>" + value + "</strong></p>";
-                                    } else if (info === "Has the applicant total number of employees decreased by more than ten percent (10) due to lay off, force reduction of closing of division in the past 1 year") {
-                                        htmlString += "<h6><strong>Employment Practices:</strong></h6>";
-                                        htmlString += "<p>Has the applicant total number of employees decreased by more than ten percent (10) due to lay off, force reduction of closing of division in the past 1 year?: <strong>" + value + "</strong></p>";
-                                    } else if (info === "Does the Applicant have written employment agreements with all officers") {
-                                        htmlString += "<h6><strong>Human Resources:</strong></h6>";
-                                        htmlString += "<p>Does the Applicant have written employment agreements with all officers?: <strong>" + value + "</strong></p>";
+                                        htmlString +=
+                                            "<h6><strong>Employees:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Number of Employees: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Has the applicant total number of employees decreased by more than ten percent (10) due to lay off, force reduction of closing of division in the past 1 year"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Employment Practices:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Has the applicant total number of employees decreased by more than ten percent (10) due to lay off, force reduction of closing of division in the past 1 year?: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Does the Applicant have written employment agreements with all officers"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Human Resources:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does the Applicant have written employment agreements with all officers?: <strong>" +
+                                            value +
+                                            "</strong></p>";
                                     } else if (info === "EPLI - Full Time") {
-                                        htmlString += "<h6><strong>How many employees are:</strong></h6>";
-                                        htmlString += "<p>Full Time: <strong>" + value + "</strong></p>";
+                                        htmlString +=
+                                            "<h6><strong>How many employees are:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Full Time: <strong>" +
+                                            value +
+                                            "</strong></p>";
                                     } else if (info === "CA") {
-                                        htmlString += "<h6><strong>How many employees are located at:</strong></h6>";
-                                        htmlString += "<p>CA: <strong>" + value + "</strong></p>";
+                                        htmlString +=
+                                            "<h6><strong>How many employees are located at:</strong></h6>";
+                                        htmlString +=
+                                            "<p>CA: <strong>" +
+                                            value +
+                                            "</strong></p>";
                                     } else if (info === "Up to $60,000") {
-                                        htmlString += "<h6><strong>How many percent of employees are in the salary range of:</strong></h6>";
-                                        htmlString += "<p>Up to $60,000: <strong>" + value + "</strong></p>";
+                                        htmlString +=
+                                            "<h6><strong>How many percent of employees are in the salary range of:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Up to $60,000: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info === "State Works" &&
+                                        Array.isArray(value)
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>State Works:</strong></h6>";
+                                        value.forEach((stateWork) => {
+                                            htmlString += `<p>State: <strong>${stateWork.State}</strong> - Percentage: <strong>${stateWork.Percentage}%</strong></p>`;
+                                        });
+                                        htmlString += "<br />";
                                     } else if (info === "Voluntary") {
-                                        htmlString += "<h6><strong>How many employees have been terminated in the last 12 months:</strong></h6>";
-                                        htmlString += "<p>Voluntary: <strong>" + value + "</strong></p>";
-                                    }
-                                    else if (typeof value === 'object') {
-                                        // If it's an object, iterate through its properties and format them
-                                        htmlString += "<h6><strong>" + info + ":</strong></h6>";
-                                        for (var subInfo in value) {
-                                            htmlString += "<p>" + subInfo + ": <strong>" + value[subInfo] + "</strong></p>";
+                                        htmlString +=
+                                            "<h6><strong>How many employees have been terminated in the last 12 months:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Voluntary: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (info === "Owner Name") {
+                                        htmlString +=
+                                            "<h6><strong>Owner's Information:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Owner's Name: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (info === "Profession Name") {
+                                        htmlString +=
+                                            "<h6><strong>Profession Entry No. " +
+                                            (index + 1) +
+                                            "</strong></h6>"; // 'index' will be from the forEach loop
+                                        htmlString +=
+                                            "<p>Profession: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (info === "Annual Payroll") {
+                                        htmlString +=
+                                            "<p>Annual Payroll: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (info === "Profession") {
+                                        htmlString +=
+                                            "<p>Profession: <strong>" +
+                                            (value === undefined ? "" : value) +
+                                            "</strong></p>";
+                                    } else if (
+                                        info === "Additional Questions" &&
+                                        typeof value === "object"
+                                    ) {
+                                        // Check if there are additional questions to display
+                                        var hasAdditionalQuestions =
+                                            Object.keys(value).length > 0;
+                                        if (hasAdditionalQuestions) {
+                                            htmlString +=
+                                                "<h6><strong>Additional Questions for " +
+                                                gl_profession +
+                                                ":</strong></h6>";
+                                            for (var subInfo in value) {
+                                                htmlString +=
+                                                    "<p>" +
+                                                    subInfo +
+                                                    ": <strong>" +
+                                                    value[subInfo] +
+                                                    "</strong></p>";
+                                            }
+                                            htmlString += "<br />";
                                         }
-                                    }
-                                    else {
+                                    } else {
                                         // For other fields, use <p> tags
-                                        htmlString += "<p>" + info + ": <strong>" + value + "</strong></p>";
+                                        htmlString +=
+                                            "<p>" +
+                                            info +
+                                            ": <strong>" +
+                                            value +
+                                            "</strong></p>";
                                     }
                                 }
                             }
@@ -1014,31 +1834,66 @@
                         // Check if the targetDiv is the installation floater section
                         if (targetDiv === "#instfloat_liability_details") {
                             // Call generateScheduledEquipmentHTML to get scheduled equipment data
-                            var scheduledEquipmentHTML = generateScheduledEquipmentHTML();
+                            var scheduledEquipmentHTML =
+                                generateScheduledEquipmentHTML();
                             // Append the scheduled equipment HTML to the existing HTML
                             htmlString += scheduledEquipmentHTML;
                         }
 
                         // Update the targetDiv with the combined HTML
+                        // console.log("Final HTML String:", htmlString);
+
                         $(targetDiv).html(htmlString);
                     }
 
-                    generateAllHTML("#personal_information_details", [personalInformation]);
-                    generateAllHTML("#gl_information_details", [generalLiabilityInformation]);
-                    generateAllHTML("#wc_details_2", [workersCompensationInformation2]);
-                    generateAllHTML("#wc_details_3", [workersCompensationInformation3]);
-                    generateAllHTML("#license_bond_details", [contractorLicenseBondInformation]);
-                    generateAllHTML("#excess_liability_details", [excessLiabilityInformation]);
-                    generateAllHTML("#tools_equipment_details", [toolsEquipmentInformation]);
-                    generateAllHTML("#builders_risk_details", [buildersRiskInformation]);
+                    generateAllHTML("#personal_information_details", [
+                        personalInformation,
+                    ]);
+                    generateAllHTML("#gl_information_details", [
+                        generalLiabilityInformation,
+                    ]);
+                    generateAllHTML("#wc_details_2", [
+                        workersCompensationInformation2,
+                    ]);
+                    generateAllHTML("#wc_details_3", [
+                        workersCompensationInformation3,
+                        ownersInfo,
+                    ]);
+
+                    generateAllHTML("#license_bond_details", [
+                        contractorLicenseBondInformation,
+                    ]);
+                    generateAllHTML("#excess_liability_details", [
+                        excessLiabilityInformation,
+                    ]);
+                    generateAllHTML("#tools_equipment_details", [
+                        toolsEquipmentInformation,
+                    ]);
+                    generateAllHTML("#builders_risk_details", [
+                        buildersRiskInformation,
+                    ]);
                     generateAllHTML("#bop_details", [bopInformation]);
-                    generateAllHTML("#commercial_property_details", [commercialPropertyInformation]);
-                    generateAllHTML("#error_emissions_details", [errorsEmissionInformation]);
-                    generateAllHTML("#pollution_liability_details", [pollutionLiabilityInformation]);
-                    generateAllHTML("#epli_liability_details", [epliInformation]);
-                    generateAllHTML("#cyber_liability_details", [cyberLiabilityInformation]);
-                    generateAllHTML("#instfloat_liability_details", [instFloatInformation]);
-                    generateAllHTML("#about_your_company_details", [aboutYourCompanyInformation]);
+                    generateAllHTML("#commercial_property_details", [
+                        commercialPropertyInformation,
+                    ]);
+                    generateAllHTML("#error_emissions_details", [
+                        errorsEmissionInformation,
+                    ]);
+                    generateAllHTML("#pollution_liability_details", [
+                        pollutionLiabilityInformation,
+                    ]);
+                    generateAllHTML("#epli_liability_details", [
+                        epliInformation,
+                    ]);
+                    generateAllHTML("#cyber_liability_details", [
+                        cyberLiabilityInformation,
+                    ]);
+                    generateAllHTML("#instfloat_liability_details", [
+                        instFloatInformation,
+                    ]);
+                    generateAllHTML("#about_your_company_details", [
+                        aboutYourCompanyInformation,
+                    ]);
 
                     $("#process").on("click", function (e) {
                         e.preventDefault();
@@ -1046,56 +1901,68 @@
                         var productData = {};
 
                         // Gather data for commonData from #personal_information_step and #about_your_company_step
-                        $("#personal_information_step, #about_your_company_step")
+                        $(
+                            "#personal_information_step, #about_your_company_step"
+                        )
                             .find("input, select, textarea")
                             .each(function () {
                                 commonData[this.name] = $(this).val();
                             });
 
                         // Serialize products data into an object
-                        $('input[name="question_1[]"]:checked').each(function () {
-                            var productKey = $(this).val();
-                            productData[productKey] = {};
+                        $('input[name="question_1[]"]:checked').each(
+                            function () {
+                                var productKey = $(this).val();
+                                productData[productKey] = {};
 
-                            $("div[id^='" + productKey + "_step_']")
-                                .find("input, select, textarea")
-                                .each(function () {
-                                    productData[productKey][this.name] = $(this).val();
-                                });
-                        });
+                                $("div[id^='" + productKey + "_step_']")
+                                    .find("input, select, textarea")
+                                    .each(function () {
+                                        productData[productKey][this.name] =
+                                            $(this).val();
+                                    });
+                            }
+                        );
 
                         // Send the data
                         axios({
                             method: "post",
                             url: "/quote-form-submit",
                             headers: {
-                                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                                "X-CSRF-TOKEN": document
+                                    .querySelector('meta[name="csrf-token"]')
+                                    .getAttribute("content"),
                                 "Content-Type": "application/json",
                             },
                             data: {
                                 common: commonData,
-                                products: productData
-                            }
+                                products: productData,
+                            },
                         })
-                        .then(response => {
-                            document.getElementById("loader_form").style.display = "none";
-                            if (response.data.redirect) {
-                                window.location.href = response.data.redirect;
-                            } else {
-                                toastr.success(response.data.message);
-                                window.open("/thankyou", "_blank");
-                                location.reload();
-                            }
-                        })
-                        .catch(error => {
-                            // Error logic
-                            document.getElementById("loader_form").style.display = "none";
-                            if (error.response && error.response.data) {
-                                toastr.error(error.response.data.message);
-                            } else {
-                                toastr.error("An error occurred");
-                            }
-                        });
+                            .then((response) => {
+                                document.getElementById(
+                                    "loader_form"
+                                ).style.display = "none";
+                                if (response.data.redirect) {
+                                    window.location.href =
+                                        response.data.redirect;
+                                } else {
+                                    toastr.success(response.data.message);
+                                    window.open("/thankyou", "_blank");
+                                    location.reload();
+                                }
+                            })
+                            .catch((error) => {
+                                // Error logic
+                                document.getElementById(
+                                    "loader_form"
+                                ).style.display = "none";
+                                if (error.response && error.response.data) {
+                                    toastr.error(error.response.data.message);
+                                } else {
+                                    toastr.error("An error occurred");
+                                }
+                            });
                     });
                 }
                 return !inputs.length || !!inputs.valid();
@@ -1166,28 +2033,40 @@
     function hideSteps(checkboxValue) {
         switch (checkboxValue) {
             case "gl":
-                $("#gl_step_1, #gl_step_2, #glDetailsContainer").removeClass("step wizard-step").addClass("hidden");
+                $("#gl_step_1, #gl_step_2, #glDetailsContainer")
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
                 $("#gl_step_1, #gl_step_2").find("input").val("");
                 $("#gl_step_1, #gl_step_2").find("select").val("");
                 // textarea
                 $("#gl_step_1, #gl_descops").val("");
                 $("#gl_step_2, #gl_explain_losses").val("");
                 // ajax container
+                $("#gl_step_1")
+                    .find("#gl_annual_gross_additional_questions")
+                    .val("");
+                $("#gl_step_1").find("#gl_profession_if_others").val("");
+                $("#gl_step_1").find("#gl_profession_container").val("");
                 $("#gl_step_2").find("#gl_subcon_cost_container").val("");
                 break;
 
             case "wc":
-                $("#wc_step_1, #wc_step_2, #wcDetailsContainer").removeClass("step wizard-step").addClass("hidden");
+                $("#wc_step_1, #wc_step_2, #wcDetailsContainer")
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
                 $("#wc_step_1, #wc_step_2").find("input").val("");
                 $("#wc_step_1, #wc_step_2").find("select").val("");
 
                 // ajax container
-                $("#wc_step_1, #wc_step_2").find("#profession_entry_container").empty();
-                $("#wc_step_1, #wc_step_2").find("#wc_subcon_cost_year_container").empty();
+                $("#wc_step_1").find("#profession_entry_container").empty();
+                $("#wc_step_1").find("#wc_subcon_cost_year_container").empty();
+                $("#wc_step_2").find("#owners_information_container").empty();
                 break;
 
             case "auto":
-                $("#auto_step_1, #auto_step_2, #autoDetailsContainer").removeClass("step wizard-step").addClass("hidden");
+                $("#auto_step_1, #auto_step_2, #autoDetailsContainer")
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
                 $("#auto_step_1, #auto_step_2").find("input").val("");
                 $("#auto_step_1, #auto_step_2").find("select").val("");
 
@@ -1197,189 +2076,331 @@
                 break;
 
             case "bond":
-                $("#bond_step_1, #bond_step_2, #bondDetailsContainer").removeClass("step wizard-step").addClass("hidden");
+                $("#bond_step_1, #bond_step_2, #bondDetailsContainer")
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
                 $("#bond_step_1, #bond_step_2").find("input").val("");
                 $("#bond_step_1, #bond_step_2").find("select").val("");
 
                 // ajax container
-                $("#bond_step_1").find("#bond_owner_if_married_container").empty();
-                $("#bond_step_2").find("#bond_license_type_if_others_container").empty();
+                $("#bond_step_1")
+                    .find("#bond_owner_if_married_container")
+                    .empty();
+                $("#bond_step_2")
+                    .find("#bond_license_type_if_others_container")
+                    .empty();
                 break;
 
             case "excess":
-                $("#excess_step_1, #excess_step_2, #excessDetailsContainer").removeClass("step wizard-step").addClass("hidden");
+                $("#excess_step_1, #excess_step_2, #excessDetailsContainer")
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
                 $("#excess_step_1, #excess_step_2").find("input").val("");
                 $("#excess_step_1, #excess_step_2").find("select").val("");
 
                 // ajax container
-                $("#excess_step_1").find("#excess_no_losses_5years_container").empty();
+                $("#excess_step_1")
+                    .find("#excess_no_losses_5years_container")
+                    .empty();
                 break;
 
             case "tools":
-                $("#tools_step_1, #toolsDetailsContainer").removeClass("step wizard-step").addClass("hidden");
+                $("#tools_step_1, #toolsDetailsContainer")
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
                 $("#tools_step_1").find("input").val("");
                 $("#tools_step_1").find("select").val("");
 
                 // ajax container
-                $("#tools_step_1").find("#tools_no_losses_5years_container").empty();
+                $("#tools_step_1")
+                    .find("#tools_no_losses_5years_container")
+                    .empty();
                 break;
 
             case "br":
-                $("#br_step_1, #brDetailsContainer").removeClass("step wizard-step").addClass("hidden");
+                $(
+                    "#br_step_1, #br_step_2, #br_step_3, #br_step_4, #brDetailsContainer"
+                )
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
+
                 $("#br_step_1").find("input").val("");
                 $("#br_step_1").find("select").val("");
+
+                $("#br_step_2").find("input").val("");
+                $("#br_step_2").find("select").val("");
+
+                $("#br_step_3").find("input").val("");
+                $("#br_step_3").find("select").val("");
+
+                $("#br_step_4").find("input").val("");
+                $("#br_step_4").find("select").val("");
+
+                // ajax container
+                $("#br_step_4")
+                    .find("#br_scheduled_property_container")
+                    .empty();
+                $("#br_step_4").find("#br_project_started_container").empty();
                 break;
 
-			case 'bop':
-				$('#bop_step_1, #bop_step_2, #bop_step_3, #bop_step_4, #bopDetailsContainer').removeClass('step wizard-step').addClass('hidden');
-				$('#bop_step_1').find('input').val('');
-				$('#bop_step_1').find('select').val('');
+            case "bop":
+                $(
+                    "#bop_step_1, #bop_step_2, #bop_step_3, #bop_step_4, #bopDetailsContainer"
+                )
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
+                $("#bop_step_1").find("input").val("");
+                $("#bop_step_1").find("select").val("");
 
-				$('#bop_step_2').find('input').val('');
-				$('#bop_step_2').find('select').val('');
+                $("#bop_step_2").find("input").val("");
+                $("#bop_step_2").find("select").val("");
 
-				$('#bop_step_3').find('input').val('');
-				$('#bop_step_3').find('select').val('');
+                $("#bop_step_3").find("input").val("");
+                $("#bop_step_3").find("select").val("");
 
-				$('#bop_step_4').find('input').val('');
-				$('#bop_step_4').find('select').val('');
-				break;
-
-            case 'comm_prop':
-                $('#property_step_1, #property_step_2, #property_step_3, #cpDetailsContainer').removeClass('step wizard-step').addClass('hidden');
-				$('#property_step_1').find('input').val('');
-				$('#property_step_1').find('select').val('');
-
-				$('#property_step_2').find('input').val('');
-				$('#property_step_2').find('select').val('');
-
-				$('#property_step_3').find('input').val('');
-				$('#property_step_3').find('select').val('');
+                $("#bop_step_4").find("input").val("");
+                $("#bop_step_4").find("select").val("");
                 break;
 
-            case 'eo':
-                $('#eo_step_1, #eo_step_2, #eo_step_3, #eo_step_4, #eo_step_5, #eoDetailsContainer').removeClass('step wizard-step').addClass('hidden');
-				$('#eo_step_1').find('input').val('');
-				$('#eo_step_1').find('select').val('');
+            case "comm_prop":
+                $(
+                    "#property_step_1, #property_step_2, #property_step_3, #cpDetailsContainer"
+                )
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
+                $("#property_step_1").find("input").val("");
+                $("#property_step_1").find("select").val("");
 
-				$('#eo_step_2').find('input').val('');
-				$('#eo_step_2').find('select').val('');
+                $("#property_step_2").find("input").val("");
+                $("#property_step_2").find("select").val("");
 
-				$('#eo_step_3').find('input').val('');
-				$('#eo_step_3').find('select').val('');
+                $("#property_step_3").find("input").val("");
+                $("#property_step_3").find("select").val("");
+                break;
 
-				$('#eo_step_4').find('input').val('');
-				$('#eo_step_4').find('select').val('');
+            case "eo":
+                $(
+                    "#eo_step_1, #eo_step_2, #eo_step_3, #eo_step_4, #eo_step_5, #eoDetailsContainer"
+                )
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
+                $("#eo_step_1").find("input").val("");
+                $("#eo_step_1").find("select").val("");
 
-				$('#eo_step_5').find('input').val('');
-				$('#eo_step_5').find('select').val('');
-				break;
+                $("#eo_step_2").find("input").val("");
+                $("#eo_step_2").find("select").val("");
+
+                $("#eo_step_3").find("input").val("");
+                $("#eo_step_3").find("select").val("");
+
+                $("#eo_step_4").find("input").val("");
+                $("#eo_step_4").find("select").val("");
+
+                $("#eo_step_5").find("input").val("");
+                $("#eo_step_5").find("select").val("");
+
+                // ajax container
+                $("#eo_step_1")
+                    .find("#eo_requested_limits_others_container")
+                    .empty();
+                $("#eo_step_1")
+                    .find("#eo_requested_deductible_others_container")
+                    .empty();
+                $("#eo_step_2")
+                    .find("#eo_business_entity_q1_container")
+                    .empty();
+                $("#eo_step_2")
+                    .find("#eo_business_entity_q2_container")
+                    .empty();
+                $("#eo_step_2")
+                    .find("#eo_business_entity_q3_container")
+                    .empty();
+                $("#eo_step_2")
+                    .find("#eo_business_entity_q4_container")
+                    .empty();
+                $("#eo_step_2")
+                    .find("#eo_business_entity_q5_container")
+                    .empty();
+
+                $("#eo_step_5").find("#eo_hr_q1_container").empty();
+                $("#eo_step_5").find("#eo_hr_q2_container").empty();
+                $("#eo_step_5").find("#eo_hr_q3_container").empty();
+                $("#eo_step_5").find("#eo_hr_q4_container").empty();
+                break;
 
             case "pollution":
-                $("#pollution_step_1, #pollution_step_2, #pollutionDetailsContainer").removeClass("step wizard-step").addClass("hidden");
+                $(
+                    "#pollution_step_1, #pollution_step_2, #pollutionDetailsContainer"
+                )
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
                 $("#pollution_step_1, #pollution_step_2").find("input").val("");
-                $("#pollution_step_1, #pollution_step_2").find("select").val("");
+                $("#pollution_step_1, #pollution_step_2")
+                    .find("select")
+                    .val("");
                 // textarea
                 $("#pollution_step_1, #pollution_descops").val("");
                 $("#pollution_step_2, #pollution_explain_losses").val("");
                 // ajax container
-                $("#pollution_step_2").find("#pollution_subcon_cost_container").val("");
+                $("#pollution_step_2")
+                    .find("#pollution_subcon_cost_container")
+                    .val("");
+                $("#pollution_step_2")
+                    .find("#pollution_explain_losses_container")
+                    .val("");
                 break;
 
-			case 'epli':
-				$('#epli_step_1, #epli_step_2, #epli_step_3, #epli_step_4, #epli_step_5, #epli_step_6, #epliDetailsContainer').removeClass('step wizard-step').addClass('hidden');
-				$('#epli_step_1').find('input').val('');
-				$('#epli_step_1').find('select').val('');
+            case "epli":
+                $(
+                    "#epli_step_1, #epli_step_2, #epli_step_3, #epli_step_4, #epli_step_5, #epli_step_6, #epliDetailsContainer"
+                )
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
+                $("#epli_step_1").find("input").val("");
+                $("#epli_step_1").find("select").val("");
 
-				$('#epli_step_2').find('input').val('');
-				$('#epli_step_2').find('select').val('');
+                $("#epli_step_2").find("input").val("");
+                $("#epli_step_2").find("select").val("");
 
-				$('#epli_step_3').find('input').val('');
-				$('#epli_step_3').find('select').val('');
+                $("#epli_step_3").find("input").val("");
+                $("#epli_step_3").find("select").val("");
 
-				$('#epli_step_4').find('input').val('');
-				$('#epli_step_4').find('select').val('');
+                $("#epli_step_4").find("input").val("");
+                $("#epli_step_4").find("select").val("");
 
-				$('#epli_step_5').find('input').val('');
-				$('#epli_step_5').find('select').val('');
+                $("#epli_step_5").find("input").val("");
+                $("#epli_step_5").find("select").val("");
 
-				$('#epli_step_6').find('input').val('');
-				$('#epli_step_6').find('select').val('');
-				break;
-
-            case 'cyber':
-                $('#cyber_step_1, #cyber_step_2, #cyberDetailsContainer').removeClass('step wizard-step').addClass('hidden');
-				$('#cyber_step_1').find('input').val('');
-				$('#cyber_step_1').find('select').val('');
-
-				$('#cyber_step_2').find('input').val('');
-				$('#cyber_step_2').find('select').val('');
+                $("#epli_step_6").find("input").val("");
+                $("#epli_step_6").find("select").val("");
                 break;
 
-            case 'instfloat':
-                $('#instfloat_step_1, #instfloat_step_2, #instfloat_step_3, #instfloat_step_4, #instfloat_step_5, #instfloatDetailsContainer').removeClass('step wizard-step').addClass('hidden');
-				$('#instfloat_step_1').find('input').val('');
-				$('#instfloat_step_1').find('select').val('');
+            case "cyber":
+                $("#cyber_step_1, #cyber_step_2, #cyberDetailsContainer")
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
+                $("#cyber_step_1").find("input").val("");
+                $("#cyber_step_1").find("select").val("");
 
-				$('#instfloat_step_2').find('input').val('');
-				$('#instfloat_step_2').find('select').val('');
+                $("#cyber_step_2").find("input").val("");
+                $("#cyber_step_2").find("select").val("");
+                break;
 
-				$('#instfloat_step_3').find('input').val('');
-				$('#instfloat_step_3').find('select').val('');
+            case "instfloat":
+                $(
+                    "#instfloat_step_1, #instfloat_step_2, #instfloat_step_3, #instfloat_step_4, #instfloat_step_5, #instfloatDetailsContainer"
+                )
+                    .removeClass("step wizard-step")
+                    .addClass("hidden");
+                $("#instfloat_step_1").find("input").val("");
+                $("#instfloat_step_1").find("select").val("");
 
-				$('#instfloat_step_4').find('input').val('');
-				$('#instfloat_step_4').find('select').val('');
+                $("#instfloat_step_2").find("input").val("");
+                $("#instfloat_step_2").find("select").val("");
 
-				$('#instfloat_step_5').find('input').val('');
-				$('#instfloat_step_5').find('select').val('');
+                $("#instfloat_step_3").find("input").val("");
+                $("#instfloat_step_3").find("select").val("");
+
+                $("#instfloat_step_4").find("input").val("");
+                $("#instfloat_step_4").find("select").val("");
+
+                $("#instfloat_step_5").find("input").val("");
+                $("#instfloat_step_5").find("select").val("");
+
+                // ajax container
+                $("#instfloat_step_5")
+                    .find("#sched_equipment_container")
+                    .val("");
                 break;
         }
     }
 
     function showSteps(checkboxValue) {
         switch (checkboxValue) {
-			case 'gl':
-				$('#gl_step_1, #gl_step_2, #glDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'wc':
-				$('#wc_step_1, #wc_step_2, #wcDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'auto':
-				$('#auto_step_1, #auto_step_2, #autoDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'bond':
-				$('#bond_step_1, #bond_step_2, #bondDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'excess':
-				$('#excess_step_1, #excess_step_2, #excessDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'tools':
-				$('#tools_step_1, #toolsDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'br':
-				$('#br_step_1, #brDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'bop':
-				$('#bop_step_1, #bop_step_2, #bop_step_3, #bop_step_4, #bopDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-            case 'comm_prop':
-                $('#property_step_1, #property_step_2, #property_step_3, #cpDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-            case 'eo':
-                $('#eo_step_1, #eo_step_2, #eo_step_3, #eo_step_4, #eo_step_5, #eoDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'pollution':
-				$('#pollution_step_1, #pollution_step_2, #pollutionDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'epli':
-				$('#epli_step_1, #epli_step_2, #epli_step_3, #epli_step_4, #epli_step_5, #epli_step_6, #epliDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'cyber':
-				$('#cyber_step_1, #cyber_step_2, #cyberDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
-			case 'instfloat':
-				$('#instfloat_step_1, #instfloat_step_2, #instfloat_step_3, #instfloat_step_4, #instfloat_step_5, #instfloatDetailsContainer').addClass('step wizard-step').removeClass('hidden');
-				break;
+            case "gl":
+                $("#gl_step_1, #gl_step_2, #glDetailsContainer")
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "wc":
+                $("#wc_step_1, #wc_step_2, #wcDetailsContainer")
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "auto":
+                $("#auto_step_1, #auto_step_2, #autoDetailsContainer")
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "bond":
+                $("#bond_step_1, #bond_step_2, #bondDetailsContainer")
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "excess":
+                $("#excess_step_1, #excess_step_2, #excessDetailsContainer")
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "tools":
+                $("#tools_step_1, #toolsDetailsContainer")
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "br":
+                $(
+                    "#br_step_1, #br_step_2, #br_step_3, #br_step_4, #brDetailsContainer"
+                )
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "bop":
+                $(
+                    "#bop_step_1, #bop_step_2, #bop_step_3, #bop_step_4, #bopDetailsContainer"
+                )
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "comm_prop":
+                $(
+                    "#property_step_1, #property_step_2, #property_step_3, #cpDetailsContainer"
+                )
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "eo":
+                $(
+                    "#eo_step_1, #eo_step_2, #eo_step_3, #eo_step_4, #eo_step_5, #eoDetailsContainer"
+                )
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "pollution":
+                $(
+                    "#pollution_step_1, #pollution_step_2, #pollutionDetailsContainer"
+                )
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "epli":
+                $(
+                    "#epli_step_1, #epli_step_2, #epli_step_3, #epli_step_4, #epli_step_5, #epli_step_6, #epliDetailsContainer"
+                )
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "cyber":
+                $("#cyber_step_1, #cyber_step_2, #cyberDetailsContainer")
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
+            case "instfloat":
+                $(
+                    "#instfloat_step_1, #instfloat_step_2, #instfloat_step_3, #instfloat_step_4, #instfloat_step_5, #instfloatDetailsContainer"
+                )
+                    .addClass("step wizard-step")
+                    .removeClass("hidden");
+                break;
         }
     }
 
@@ -1402,7 +2423,10 @@
     $('input[name="question_1[]"]').change(function () {
         var checkboxValue = $(this).val();
         var isChecked = $(this).is(":checked");
-        localStorage.setItem(checkboxValue, isChecked ? "checked" : "unchecked");
+        localStorage.setItem(
+            checkboxValue,
+            isChecked ? "checked" : "unchecked"
+        );
         if (isChecked) {
             showSteps(checkboxValue);
         } else {
@@ -1458,42 +2482,44 @@
     }
 
     function datePickerFormatter(selector) {
-        $(selector).addClass('readonly').attr('readonly', 'readonly');
+        $(selector).addClass("readonly").attr("readonly", "readonly");
         $(selector).datepicker({
             changeMonth: true,
             changeYear: true,
-            maxDate: '-1d',
-            yearRange: '1950:' + new Date().getFullYear(),
+            maxDate: "-1d",
+            yearRange: "1950:" + new Date().getFullYear(),
             showAnim: "slideDown",
         });
     }
 
     function yearPickerFormatter(selector) {
-        $(selector).addClass('readonly').attr('readonly', 'readonly');
-        if(!$(selector).hasClass('hasDatepicker')) {
+        $(selector).addClass("readonly").attr("readonly", "readonly");
+        if (!$(selector).hasClass("hasDatepicker")) {
             $(selector).datepicker({
                 changeYear: true, // This allows changing the year
                 showButtonPanel: true, // Shows the buttons at the bottom
-                dateFormat: 'yy', // Sets the format to only display the year
-                yearRange: '1900:' + new Date().getFullYear(), // For example, if you want a range from 1900 to the current year.
+                dateFormat: "yy", // Sets the format to only display the year
+                yearRange: "1900:" + new Date().getFullYear(), // For example, if you want a range from 1900 to the current year.
                 beforeShow: function (input, inst) {
                     setTimeout(function () {
                         inst.dpDiv.css({
                             top: $(input).offset().top + $(input).outerHeight(),
-                            left: $(input).offset().left
+                            left: $(input).offset().left,
                         });
                         $(".ui-datepicker-calendar").hide();
                         $(".ui-datepicker-month").hide();
                     }, 0);
                 },
-                onClose: function(dateText, inst) {
-                    var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                onClose: function (dateText, inst) {
+                    var year = $(
+                        "#ui-datepicker-div .ui-datepicker-year :selected"
+                    ).val();
                     $(selector).val(year);
-                }
+                },
             });
 
             // Hide month calendar and dropdown
-            $(selector).focus(function(){
+            $(selector).focus(function () {
                 $(".ui-datepicker-calendar").hide();
                 $(".ui-datepicker-month").hide();
             });
@@ -1502,13 +2528,15 @@
 
     let equipmentCount = 1;
     function appendNewSchedEquipmentEntry(selector) {
-
         $(selector).on("click", function (e) {
             e.preventDefault();
             if (equipmentCount < 5) {
                 equipmentCount++;
                 showScheduledEquipmentEntry(equipmentCount);
-                datePickerFormatter("#instfloat_scheduled_equipment_date_purchased_" + equipmentCount);
+                datePickerFormatter(
+                    "#instfloat_scheduled_equipment_date_purchased_" +
+                        equipmentCount
+                );
             }
         });
     }
@@ -1517,33 +2545,47 @@
         if (equipmentCount >= 5) {
             return false;
         }
-        $(".equipment-entry").each(function(index, element) {
-            let newIndex = index + 2;  // +1 because indexing starts at 0 and +1 because you have the original entry
+        $(".equipment-entry").each(function (index, element) {
+            let newIndex = index + 2; // +1 because indexing starts at 0 and +1 because you have the original entry
             $(element).find("h6").text(`Scheduled Equipment ${newIndex}`);
-            $(element).find("input, select").each(function() {
-                let name = $(this).attr("name");
-                let id = $(this).attr("id");
-                let newName = name.replace(/_\d+$/, `_${newIndex}`);
-                let newId = id.replace(/_\d+$/, `_${newIndex}`);
-                $(this).attr("name", newName);
-                $(this).attr("id", newId);
-                $(this).next("label").attr("for", newId);
-            });
+            $(element)
+                .find("input, select")
+                .each(function () {
+                    let name = $(this).attr("name");
+                    let id = $(this).attr("id");
+                    let newName = name.replace(/_\d+$/, `_${newIndex}`);
+                    let newId = id.replace(/_\d+$/, `_${newIndex}`);
+                    $(this).attr("name", newName);
+                    $(this).attr("id", newId);
+                    $(this).next("label").attr("for", newId);
+                });
         });
     }
 
+    function appendInputIfProfessionIsOthers() {
+        $("#gl_profession_if_others").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="gl_specify_profession" id="gl_specify_profession" class="form-control" placeholder="">
+                    <label for="gl_specify_profession">Please specify your profession</label>
+                </div>
+            </div>
+        `);
+    }
+
     function getStateByZipcode() {
-        const zipcode = $('#zipcode').val();
+        const zipcode = $("#zipcode").val();
         if (zipcode) {
-            axios.get(`/api/get-state-by-zipcode/${zipcode}`)
-            .then(function(response) {
-                $('#city').val(response.data.state.city);
-                $("#states").val(response.data.state.state_abbr).change();
-                // console.log(response.data.state.state_abbr);
-            })
-            .catch(function(error) {
-                console.error("Error fetching state by zipcode:", error);
-            });
+            axios
+                .get(`/api/get-state-by-zipcode/${zipcode}`)
+                .then(function (response) {
+                    $("#city").val(response.data.state.city);
+                    $("#states").val(response.data.state.state_abbr).change();
+                    // console.log(response.data.state.state_abbr);
+                })
+                .catch(function (error) {
+                    console.error("Error fetching state by zipcode:", error);
+                });
         }
     }
 
@@ -1683,19 +2725,19 @@
 
     // Function to run after page refresh
     function clearSessionData() {
-        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+        const csrfToken = $('meta[name="csrf-token"]').attr("content");
         $.ajax({
-            url: '/clear-session-data', // Update this with your Laravel route
-            method: 'POST',
+            url: "/clear-session-data", // Update this with your Laravel route
+            method: "POST",
             headers: {
-                "X-CSRF-TOKEN": csrfToken
+                "X-CSRF-TOKEN": csrfToken,
             },
             success: function (response) {
                 // console.log('Clear Session Variable Message: ' + response.message);
             },
             error: function (error) {
-                console.error('Error:', error);
-            }
+                console.error("Error:", error);
+            },
         });
     }
 
@@ -1703,30 +2745,28 @@
     window.onload = clearSessionData;
 
     function setSessionVariable(data) {
-        const csrfToken = $('meta[name="csrf-token"]').attr('content');
-        // console.log('Data:', data); // Log the value of 'data'
-        // console.log('CSRF Token:', csrfToken); // Log the CSRF token
+        const csrfToken = $('meta[name="csrf-token"]').attr("content");
         $.ajax({
-            url: '/set-session-variable',
-            method: 'POST',
+            url: "/set-session-variable",
+            method: "POST",
             headers: {
-                "X-CSRF-TOKEN": csrfToken
+                "X-CSRF-TOKEN": csrfToken,
             },
-            data: { doesGLandWCChecked: data }, // Replace 'yourData' with the actual data key
+            data: { doesGLandWCChecked: data },
             success: function (response) {
                 // console.log('Set Session Variable Message: ' + response.message);
             },
             error: function (error) {
-                console.error('Error:', error);
-            }
+                console.error("Error:", error);
+            },
         });
     }
 
     function unsetSessionVariable() {
-        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+        const csrfToken = $('meta[name="csrf-token"]').attr("content");
         $.ajax({
-            url: '/unset-session-variable',
-            method: 'POST',
+            url: "/unset-session-variable",
+            method: "POST",
             headers: {
                 "X-CSRF-TOKEN": csrfToken,
             },
@@ -1734,8 +2774,8 @@
                 // console.log('Unset Session Variable Message: ' + response.message);
             },
             error: function (error) {
-                console.error('Error:', error);
-            }
+                console.error("Error:", error);
+            },
         });
     }
 
@@ -1743,86 +2783,28 @@
         var glChecked = false;
         var wcChecked = false;
 
-        // Listen for changes in checkbox state
         $('input[name="question_1[]"]').change(function () {
             var checkboxValue = $(this).val();
             if ($(this).is(":checked")) {
                 localStorage.setItem(checkboxValue, "checked");
-                if (checkboxValue === 'gl') {
+                if (checkboxValue === "gl") {
                     glChecked = true;
-                } else if (checkboxValue === 'wc') {
+                } else if (checkboxValue === "wc") {
                     wcChecked = true;
                 }
             } else {
                 localStorage.setItem(checkboxValue, "unchecked");
-                if (checkboxValue === 'gl') {
+                if (checkboxValue === "gl") {
                     glChecked = false;
-                } else if (checkboxValue === 'wc') {
+                } else if (checkboxValue === "wc") {
                     wcChecked = false;
                 }
             }
 
-            // Check if both 'gl' and 'wc' checkboxes are checked
             if (glChecked && wcChecked) {
-                console.log('Both "gl" and "wc" checkboxes are checked.');
-
-
-                // $('#gl_no_field_emp, #wc_num_of_empl').on('input', function() {
-                //     let currentValue = $(this).val();
-                //     console.log(currentValue);
-                //     if ($(this).attr('id') === 'gl_no_field_emp') {
-                //         // $('#wc_num_of_empl').val(currentValue);
-                //         $('#wc_no_of_profession').find('option[value="' + currentValue + '"]').prop('selected', true);
-                //         $('#wc_no_of_profession').trigger('change');
-                //     } else {
-                //         $('#gl_no_field_emp').val(currentValue);
-                //     }
-                // });
-
-                setSessionVariable(false); // Replace 'yourDataValue' with the actual data you want to pass
+                // console.log('Both "gl" and "wc" checkboxes are checked.');
+                setSessionVariable(false);
                 $("#wc_step_1").load(location.href + " #wc_step_1");
-
-                // Add your code to execute when both checkboxes are checked here
-                // $('#gl_annual_gross, #wc_gross_receipt').on('input', function() {
-                //     let currentValue = $(this).val();
-                //     // Call the function with your desired data
-                //     // console.log(currentValue);
-                //     if ($(this).attr('id') === 'gl_annual_gross') {
-                //         $('#wc_gross_receipt').val(formatAsCurrency(currentValue));
-                //     } else {
-                //         $('#gl_annual_gross').val(formatAsCurrency(currentValue));
-                //     }
-                // });
-
-                // $('#gl_no_field_emp, #wc_num_of_empl').on('input', function() {
-                //     let currentValue = $(this).val();
-                //     // console.log(currentValue);
-                //     if ($(this).attr('id') === 'gl_no_field_emp') {
-                //         $('#wc_num_of_empl').val(currentValue);
-                //     } else {
-                //         $('#gl_no_field_emp').val(currentValue);
-                //     }
-                // });
-
-                // console.log($("#gl_no_field_emp").val());
-                // console.log($("#wc_no_of_profession").val());
-
-                // $("#gl_no_field_emp", "#wc_no_of_profession").on('change', function() {
-                //     const gl_no_field_emp = $("#gl_no_field_emp").val();
-                //     console.log(gl_no_field_emp);
-                //     const wc_no_of_profession = $("#wc_no_of_profession").val();
-                //     console.log(wc_no_of_profession);
-                //     // let currentValue = $(this).val();
-                //     // console.log(currentValue);
-                //     // if ($(this).attr('id') === 'gl_no_field_emp') {
-                //     //     // $('#wc_no_of_profession').val(currentValue);
-                //     //     $('#wc_no_of_profession').find('option[value="' + currentValue + '"]').prop('selected', true);
-                //     // } else {
-                //     //     $('#gl_no_field_emp').val(currentValue);
-                //     // }
-                // });
-
-
             } else {
                 unsetSessionVariable();
                 setSessionVariable(true);
@@ -1886,14 +2868,12 @@
         `);
     }
 
-
-
     async function showProfessionEntries(a) {
         try {
-            let response = await axios.get('wc/showProfessionEntries', {
+            let response = await axios.get("wc/showProfessionEntries", {
                 params: {
-                    a: a
-                }
+                    a: a,
+                },
             });
 
             let data = response.data.data;
@@ -1901,17 +2881,15 @@
             if (data) {
                 $("#profession_entry_container").append(data);
                 perfectCurrencyFormatter(".annual-payroll");
-                // let wcProfessionValue = $("#wc_profession_" + a).val();
-                // if (wc_profession === 'Others') {
-                //     alert("hello");
-                // }
-
                 // Attach a change event handler to the document for any element with an ID starting with 'wc_profession_'
-                $(document).on("change", `[id^="wc_profession_${a}"]`, function () {
-                    // Get the value of the selected option
-                    let wcProfessionValue = parseInt($(this).val());
-                    if (wcProfessionValue === 319) {
-                        $("#classcode_if_others_container_" + a).append(`
+                $(document).on(
+                    "change",
+                    `[id^="wc_profession_${a}"]`,
+                    function () {
+                        // Get the value of the selected option
+                        let wcProfessionValue = parseInt($(this).val());
+                        if (wcProfessionValue === 319) {
+                            $("#classcode_if_others_container_" + a).append(`
                             <div class="row justify-content-center customProfession">
                                 <h6 class="profession_header mt-2 mb-2">Please specify your profession:</h6>
                                 <div class="col-md-12">
@@ -1922,11 +2900,11 @@
                                 </div>
                             </div>
                         `);
-                    } else {
-                        $(".customProfession").remove();
+                        } else {
+                            $(".customProfession").remove();
+                        }
                     }
-                });
-
+                );
             }
         } catch (error) {
             // Handle any errors here
@@ -1936,10 +2914,10 @@
 
     async function showAutoVehicleEntries(a) {
         try {
-            let response = await axios.get('auto/showAutoVehicleEntries', {
+            let response = await axios.get("auto/showAutoVehicleEntries", {
                 params: {
-                    a: a
-                }
+                    a: a,
+                },
             });
 
             let data = response.data.data;
@@ -1957,8 +2935,8 @@
         try {
             const response = await axios.get("auto/showAutoDriverEntries", {
                 params: {
-                    a: a
-                }
+                    a: a,
+                },
             });
 
             const data = response.data.data;
@@ -1969,29 +2947,33 @@
             }
 
             // If Married status
-            $(`#auto_add_driver_civil_status_${a}`).on("change", async function() {
-                const selectedOption = $(this).val();
-                const containerId = `auto_driver_if_married_container_${a}`;
+            $(`#auto_add_driver_civil_status_${a}`).on(
+                "change",
+                async function () {
+                    const selectedOption = $(this).val();
+                    const containerId = `auto_driver_if_married_container_${a}`;
 
-                if (selectedOption === "Married") {
-                    try {
-                        const spouseResponse = await axios.get("auto/showSpouseInformationForm", {
-                            params: {
-                                a: a
-                            }
-                        });
+                    if (selectedOption === "Married") {
+                        try {
+                            const spouseResponse = await axios.get(
+                                "auto/showSpouseInformationForm",
+                                {
+                                    params: {
+                                        a: a,
+                                    },
+                                }
+                            );
 
-                        $(`#${containerId}`).html(spouseResponse.data.data);
-                        datePickerFormatter(".spouse_datebirth");
-
-                    } catch (error) {
-                        console.error(error);
+                            $(`#${containerId}`).html(spouseResponse.data.data);
+                            datePickerFormatter(".spouse_datebirth");
+                        } catch (error) {
+                            console.error(error);
+                        }
+                    } else {
+                        $(`#${containerId}`).empty();
                     }
-                } else {
-                    $(`#${containerId}`).empty();
                 }
-            });
-
+            );
         } catch (error) {
             console.error(error);
         }
@@ -2002,16 +2984,13 @@
             $(".loader-container").removeClass("hidden");
             $(".loader-container").addClass("active");
 
-            // Adjusted condition for the value "1" for "Yes"
             if ($(this).val() === "1") {
                 setTimeout(function () {
                     func();
                     $(".loader-container").addClass("hidden");
                     $(".loader-container").removeClass("active");
                 }, 0);
-            }
-            // Adjusted conditions for the value "0" or an empty string for "No"
-            else if ($(this).val() === "0" || $(this).val() === "") {
+            } else if ($(this).val() === "0" || $(this).val() === "") {
                 $("#" + b)
                     .parent()
                     .parent()
@@ -2081,37 +3060,66 @@
         `);
     }
 
-    function showGLProfessionsIfRoofing() {
-        $("#gl_profession_container").append(`
+    function showGLProfessionsIfGC() {
+        $("#gl_annual_gross_additional_questions").append(`
             <div class="row justify-content-center appendedQuestion">
-                <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
                 <div class="col-md-12">
+                    <h5 class="profession_header mt-2 mb-2">Additional Questions for General Contractors:</h5>
+                    <h6 class="profession_header mt-2 mb-2">New construction - How many houses will you be building for the whole year?</h6>
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q1"
-                            id="gl_additional_q1" aria-label="gl_additional_q1">
+                        <input type="text" name="gl_gross_add_q1_for_gc" id="gl_gross_add_q1_for_gc" class="form-control" placeholder="Please explain:" maxlength="">
+                        <label for="gl_gross_add_q1_for_gc">Please explain:</label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <h6 class="profession_header mt-2 mb-2">Do you work on ADU houses?</h6>
+                    <div class="mb-3 form-floating">
+                        <select class="form-select"
+                            name="gl_gross_add_q2_for_gc"
+                            id="gl_gross_add_q2_for_gc"
+                            aria-label="gl_gross_add_q2_for_gc">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q1">Do you use any heating devices when performing your work?</label>
+                        <label for="gl_gross_add_q2_for_gc">Please select:</label>
+                    </div>
+                </div>
+            </div>
+        `);
+    }
+
+    function showGLProfessionsIfRoofing() {
+        $("#gl_profession_container").append(`
+            <div class="row justify-content-center appendedQuestion">
+                <h6 class="profession_header mt-2 mb-2">Additional Questions for Roofing Contractors:</h6>
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <select class="form-select" name="gl_gross_add_q1_for_roofing"
+                            id="gl_gross_add_q1_for_roofing" aria-label="gl_gross_add_q1_for_roofing">
+                            <option value="" selected></option>
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                        <label for="gl_gross_add_q1_for_roofing">Do you use any heating devices when performing your work?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q2"
-                            id="gl_additional_q2" aria-label="gl_additional_q2">
+                        <select class="form-select" name="gl_gross_add_q2_for_roofing"
+                            id="gl_gross_add_q2_for_roofing" aria-label="gl_gross_add_q2_for_roofing">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q2">Do you do spray foam roofing?</label>
+                        <label for="gl_gross_add_q2_for_roofing">Do you do spray foam roofing?</label>
                     </div>
                 </div>
                 <div id="gl_additional_q2_sub_container"></div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q3"
-                            id="gl_additional_q3" aria-label="gl_additional_q3">
+                        <select class="form-select" name="gl_gross_add_q3_for_roofing"
+                            id="gl_gross_add_q3_for_roofing" aria-label="gl_gross_add_q3_for_roofing">
                             <option value="" selected></option>
                             <option value="0 Feet" selected>0 Feet</option>
                             <option value="5 feet">5 Feet</option>
@@ -2123,30 +3131,30 @@
                             <option value="35 feet">35 Feet</option>
                             <option value="35 feet +">35 Feet +</option>
                         </select>
-                        <label for="gl_additional_q3">Maximum height exposure</label>
+                        <label for="gl_gross_add_q3_for_roofing">Maximum height exposure</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q4"
-                            id="gl_additional_q4" aria-label="gl_additional_q4">
+                        <select class="form-select" name="gl_gross_add_q4_for_roofing"
+                            id="gl_gross_add_q4_for_roofing" aria-label="gl_gross_add_q4_for_roofing">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q4">Do you work on slopes greater that 15 degrees?</label>
+                        <label for="gl_gross_add_q4_for_roofing">Do you work on slopes greater that 15 degrees?</label>
                     </div>
                 </div>
             </div>
         `);
-        $("#gl_additional_q2").on("change", function () {
+        $("#gl_gross_add_q2_for_roofing").on("change", function () {
             const value = parseInt($(this).val());
             if (value) {
                 $("#gl_additional_q2_sub_container").append(`
                     <div class="col-md-12 appendedQuestion appendedSubQuestion">
                         <div class="mb-3 form-floating">
-                            <select class="form-select" name="gl_additional_q2_sub"
-                                id="gl_additional_q2_sub" aria-label="gl_additional_q2_sub">
+                            <select class="form-select" name="gl_gross_add_sub_q2_for_roofing"
+                                id="gl_gross_add_sub_q2_for_roofing" aria-label="gl_gross_add_sub_q2_for_roofing">
                                 <option value="" selected></option>
                                 <option value="10">10%</option>
                                 <option value="20">20%</option>
@@ -2159,12 +3167,14 @@
                                 <option value="90">90%</option>
                                 <option value="100">100%</option>
                             </select>
-                            <label for="gl_additional_q2_sub">Maximum height exposure</label>
+                            <label for="gl_gross_add_sub_q2_for_roofing">Maximum height exposure</label>
                         </div>
                     </div>
                 `);
             } else {
-                $("#gl_additional_q2_sub_container .appendedSubQuestion").remove();
+                $(
+                    "#gl_additional_q2_sub_container .appendedSubQuestion"
+                ).remove();
             }
         });
     }
@@ -2172,11 +3182,11 @@
     function showGLProfessionsIfElectrical(value) {
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
-                <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
+                <h6 class="profession_header mt-2 mb-2">Additional Questions for Electrical Contractors:</h6>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q1"
-                            id="gl_additional_q1" aria-label="gl_additional_q1">
+                        <select class="form-select" name="gl_gross_add_q1_for_electrical"
+                            id="gl_gross_add_q1_for_electrical" aria-label="gl_gross_add_q1_for_electrical">
                             <option value="" selected></option>
                             <option value="Burglar alarm">Burglar alarm</option>
                             <option value="Fire alarm">Fire alarm</option>
@@ -2185,17 +3195,25 @@
                             <option value="Traffic signal lights">Traffic signal lights</option>
                             <option value="Solar">Solar</option>
                         </select>
-                        <label for="gl_additional_q1">Are you working on the following?</label>
+                        <label for="gl_gross_add_q1_for_electrical">Are you working on the following?</label>
                     </div>
                 </div>
             </div>
         `);
 
         if (value === 103) {
-            $("#electrical_additional_questions option[value='Traffic signal lights']").remove();
+            $(
+                "#electrical_additional_questions option[value='Traffic signal lights']"
+            ).remove();
         } else if (value === 226) {
-            if ($("#electrical_additional_questions option[value='Traffic signal lights']").length === 0) {
-                $("#electrical_additional_questions").append("<option value='Traffic signal lights'>Traffic Signal Lights</option>");
+            if (
+                $(
+                    "#electrical_additional_questions option[value='Traffic signal lights']"
+                ).length === 0
+            ) {
+                $("#electrical_additional_questions").append(
+                    "<option value='Traffic signal lights'>Traffic Signal Lights</option>"
+                );
             }
         }
     }
@@ -2203,27 +3221,27 @@
     function showGLProfessionsIfPlumbing() {
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
-                <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
+                <h6 class="profession_header mt-2 mb-2">Additional Questions for Plumbing Contractors:</h6>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q1"
-                            id="gl_additional_q1" aria-label="gl_additional_q1">
+                        <select class="form-select" name="gl_gross_add_q1_for_plumbing"
+                            id="gl_gross_add_q1_for_plumbing" aria-label="gl_gross_add_q1_for_plumbing">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q1">Are you working on gas, water, and sewer mains?</label>
+                        <label for="gl_gross_add_q1_for_plumbing">Are you working on gas, water, and sewer mains?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q2"
-                            id="gl_additional_q2" aria-label="gl_additional_q2">
+                        <select class="form-select" name="gl_gross_add_q2_for_plumbing"
+                            id="gl_gross_add_q2_for_plumbing" aria-label="gl_gross_add_q2_for_plumbing">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q2">Do you use any heating devices when performing your work?</label>
+                        <label for="gl_gross_add_q2_for_plumbing">Do you use any heating devices when performing your work?</label>
                     </div>
                 </div>
             </div>
@@ -2233,54 +3251,54 @@
     function showGLProfessionsIfHVAC() {
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
-                <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
+                <h6 class="profession_header mt-2 mb-2">Additional Questions for HVAC Contractors:</h6>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q1"
-                            id="gl_additional_q1" aria-label="gl_additional_q1">
+                        <select class="form-select" name="gl_gross_add_q1_for_hvac"
+                            id="gl_gross_add_q1_for_hvac" aria-label="gl_gross_add_q1_for_hvac">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q1">Do you use any heating devices when performing your work?</label>
+                        <label for="gl_gross_add_q1_for_hvac">Do you use any heating devices when performing your work?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q2"
-                            id="gl_additional_q2" aria-label="gl_additional_q2">
+                        <select class="form-select" name="gl_gross_add_q2_for_hvac"
+                            id="gl_gross_add_q2_for_hvac" aria-label="gl_gross_add_q2_for_hvac">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q2">Do you do refrigeration works?</label>
+                        <label for="gl_gross_add_q2_for_hvac">Do you do refrigeration works?</label>
                     </div>
                 </div>
                 <div id="gl_additional_q2_sub_container"></div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q3"
-                            id="gl_additional_q3" aria-label="gl_additional_q3">
+                        <select class="form-select" name="gl_gross_add_q3_for_hvac"
+                            id="gl_gross_add_q3_for_hvac" aria-label="gl_gross_add_q3_for_hvac">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q3">Any works involving LPG?</label>
+                        <label for="gl_gross_add_q3_for_hvac">Any works involving LPG?</label>
                     </div>
                 </div>
                 <div id="gl_additional_q3_sub_container"></div>
             </div>
         `);
 
-        $("#gl_additional_q2").on("change", function () {
+        $("#gl_gross_add_q2_for_hvac").on("change", function () {
             const value = parseInt($(this).val());
             if (value) {
                 $("#gl_additional_q2_sub_container").append(`
                     <div class="col-md-12 appendedQuestion appendedSubQuestion">
                         <h6 class="profession_header mt-2 mb-2">Please indicate the percentage for refrigeration works:</h6>
                         <div class="mb-3 form-floating">
-                            <select class="form-select" name="gl_additional_q2_sub"
-                                id="gl_additional_q2_sub" aria-label="gl_additional_q2_sub">
+                            <select class="form-select" name="gl_gross_add_sub_q2_for_hvac"
+                                id="gl_gross_add_sub_q2_for_hvac" aria-label="gl_gross_add_sub_q2_for_hvac">
                                 <option value="" selected></option>
                                 <option value="10">10%</option>
                                 <option value="20">20%</option>
@@ -2293,24 +3311,26 @@
                                 <option value="90">90%</option>
                                 <option value="100">100%</option>
                             </select>
-                            <label for="gl_additional_q2_sub">Percentage</label>
+                            <label for="gl_gross_add_sub_q2_for_hvac">Percentage</label>
                         </div>
                     </div>
                 `);
             } else {
-                $("#gl_additional_q2_sub_container .appendedQuestion .appendedSubQuestion").remove();
+                $(
+                    "#gl_additional_q2_sub_container .appendedQuestion .appendedSubQuestion"
+                ).remove();
             }
         });
 
-        $("#gl_additional_q3").on("change", function () {
+        $("#gl_gross_add_q3_for_hvac").on("change", function () {
             const value = parseInt($(this).val());
             if (value) {
                 $("#gl_additional_q3_sub_container").append(`
                     <div class="col-md-12 appendedQuestion appendedSubQuestion">
                         <h6 class="profession_header mt-2 mb-2">Please indicate the percentage for works involving LPG:</h6>
                         <div class="mb-3 form-floating">
-                            <select class="form-select" name="gl_additional_q3_sub"
-                                id="gl_additional_q3_sub" aria-label="gl_additional_q3_sub">
+                            <select class="form-select" name="gl_gross_add_sub_q3_for_hvac"
+                                id="gl_gross_add_sub_q3_for_hvac" aria-label="gl_gross_add_sub_q3_for_hvac">
                                 <option value="" selected></option>
                                 <option value="10">10%</option>
                                 <option value="20">20%</option>
@@ -2323,12 +3343,14 @@
                                 <option value="90">90%</option>
                                 <option value="100">100%</option>
                             </select>
-                            <label for="gl_additional_q3_sub">Percentage</label>
+                            <label for="gl_gross_add_sub_q3_for_hvac">Percentage</label>
                         </div>
                     </div>
                 `);
             } else {
-                $("#gl_additional_q3_sub_container .appendedQuestion .appendedSubQuestion").remove();
+                $(
+                    "#gl_additional_q3_sub_container .appendedQuestion .appendedSubQuestion"
+                ).remove();
             }
         });
     }
@@ -2336,40 +3358,46 @@
     function showGLProfessionsIfConcrete() {
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
-                <h5 class="profession_header mt-2 mb-2">Additional Questions</h5>
+                <h5 class="profession_header mt-2 mb-2">Additional Questions for Concrete Contractors:</h5>
                 <div class="col-md-6">
                     <h6 class="profession_header mt-2 mb-2">Flat Works %</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q1" id="gl_additional_q1" class="form-control" placeholder="">
-                        <label for="gl_additional_q1">%</label>
+                        <input type="text" name="gl_gross_add_q1_for_concrete" id="gl_gross_add_q1_for_concrete" class="form-control" placeholder="">
+                        <label for="gl_gross_add_q1_for_concrete">%</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <h6 class="profession_header mt-2 mb-2">Foundation Works %</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q2" id="gl_additional_q2" class="form-control" placeholder="">
-                        <label for="gl_additional_q2">%</label>
+                        <input type="text" name="gl_gross_add_q2_for_concrete" id="gl_gross_add_q2_for_concrete" class="form-control" placeholder="">
+                        <label for="gl_gross_add_q2_for_concrete">%</label>
                     </div>
                 </div>
             </div>
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q3" id="gl_additional_q3" class="form-control" placeholder="" maxlength="">
-                        <label for="gl_additional_q3">Do you do works on dike, dams, and bridges?</label>
+                        <input type="text" name="gl_gross_add_q3_for_concrete" id="gl_gross_add_q3_for_concrete" class="form-control" placeholder="" maxlength="">
+                        <label for="gl_gross_add_q3_for_concrete">Do you do works on dike, dams, and bridges?</label>
                     </div>
                 </div>
             </div>
         `);
 
-        $("#gl_additional_q1").on("change", function () {
+        $("#gl_gross_add_q1_for_concrete").on("change", function () {
             setTimeout(function () {
-                computePercentage("gl_additional_q1", "gl_additional_q2");
+                computePercentage(
+                    "gl_gross_add_q1_for_concrete",
+                    "gl_gross_add_q2_for_concrete"
+                );
             }, 0);
         });
-        $("#gl_additional_q2").on("change", function () {
+        $("#gl_gross_add_q2_for_concrete").on("change", function () {
             setTimeout(function () {
-                computePercentage("gl_additional_q2", "gl_additional_q1");
+                computePercentage(
+                    "gl_gross_add_q2_for_concrete",
+                    "gl_gross_add_q1_for_concrete"
+                );
             }, 0);
         });
     }
@@ -2377,11 +3405,11 @@
     function showGLProfessionsIfHandyman() {
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
-                <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
+                <h6 class="profession_header mt-2 mb-2">Additional Questions for Handyman Contractors:</h6>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q1" id="gl_additional_q1" class="form-control" placeholder="" maxlength="">
-                        <label for="gl_additional_q1">What’s the largest project that you have done?</label>
+                        <input type="text" name="gl_gross_add_q1_for_handyman" id="gl_gross_add_q1_for_handyman" class="form-control" placeholder="" maxlength="">
+                        <label for="gl_gross_add_q1_for_handyman">What’s the largest project that you have done?</label>
                     </div>
                 </div>
             </div>
@@ -2392,10 +3420,10 @@
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
-                    <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
+                    <h6 class="profession_header mt-2 mb-2">Additional Questions for Flooring Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q1" id="gl_additional_q1" class="form-control" placeholder="" maxlength="">
-                        <label for="gl_additional_q1">What type of flooring do you install?</label>
+                        <input type="text" name="gl_gross_add_q1_for_flooring" id="gl_gross_add_q1_for_flooring" class="form-control" placeholder="" maxlength="">
+                        <label for="gl_gross_add_q1_for_flooring">What type of flooring do you install?</label>
                     </div>
                 </div>
             </div>
@@ -2406,22 +3434,22 @@
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
-                    <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
+                    <h6 class="profession_header mt-2 mb-2">Additional Questions for Landscaping Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q1" id="gl_additional_q1" class="form-control" placeholder="" maxlength="">
-                        <label for="gl_additional_q1">Any hardscaping works?</label>
+                        <input type="text" name="gl_gross_add_q1_for_landscaping" id="gl_gross_add_q1_for_landscaping" class="form-control" placeholder="" maxlength="">
+                        <label for="gl_gross_add_q1_for_landscaping">Any hardscaping works?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q2" id="gl_additional_q2" class="form-control" placeholder="" maxlength="">
-                        <label for="gl_additional_q2">Do you installs irrigations systems?</label>
+                        <input type="text" name="gl_gross_add_q2_for_landscaping" id="gl_gross_add_q2_for_landscaping" class="form-control" placeholder="" maxlength="">
+                        <label for="gl_gross_add_q2_for_landscaping">Do you install irrigations systems?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q3" id="gl_additional_q3" class="form-control" placeholder="" maxlength="">
-                        <label for="gl_additional_q3">Retaining walls max height</label>
+                        <input type="text" name="gl_gross_add_q3_for_landscaping" id="gl_gross_add_q3_for_landscaping" class="form-control" placeholder="" maxlength="">
+                        <label for="gl_gross_add_q3_for_landscaping">Retaining walls max height</label>
                     </div>
                 </div>
             </div>
@@ -2432,32 +3460,32 @@
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
-                    <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
+                    <h6 class="profession_header mt-2 mb-2">Additional Questions for Painting Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q1"
-                            id="gl_additional_q1" aria-label="gl_additional_q1">
+                        <select class="form-select" name="gl_gross_add_q1_for_painting"
+                            id="gl_gross_add_q1_for_painting" aria-label="gl_gross_add_q1_for_painting">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q1">Do you paint automotive?</label>
+                        <label for="gl_gross_add_q1_for_painting">Do you paint automotive?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_additional_q2"
-                            id="gl_additional_q2" aria-label="gl_additional_q2">
+                        <select class="form-select" name="gl_gross_add_q2_for_painting"
+                            id="gl_gross_add_q2_for_painting" aria-label="gl_gross_add_q2_for_painting">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q2">Do you paint roofs, ships, roads and highways?</label>
+                        <label for="gl_gross_add_q2_for_painting">Do you paint roofs, ships, roads and highways?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q3" id="gl_additional_q3" class="form-control" placeholder="" maxlength="">
-                        <label for="gl_additional_q3">Max height exposure?</label>
+                        <input type="text" name="gl_gross_add_q3_for_painting" id="gl_gross_add_q3_for_painting" class="form-control" placeholder="" maxlength="">
+                        <label for="gl_gross_add_q3_for_painting">Max height exposure?</label>
                     </div>
                 </div>
             </div>
@@ -2468,56 +3496,24 @@
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
-                    <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
+                    <h6 class="profession_header mt-2 mb-2">Additional Questions for Plastering Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q1" id="gl_additional_q1" class="form-control" placeholder="" maxlength="">
-                        <label for="gl_additional_q1">Max. height exposure</label>
+                        <input type="text" name="gl_gross_add_q1_for_plastering" id="gl_gross_add_q1_for_plastering" class="form-control" placeholder="" maxlength="">
+                        <label for="gl_gross_add_q1_for_plastering">Max. height exposure</label>
                     </div>
                 </div>
             </div>
         `);
     }
 
-    // function showGLProfessionsIfWelding() {
-    //     $("#gl_profession_container").append(`
-    //         <div class="row justify-content-center appendedQuestion">
-    //             <h5 class="profession_header mt-2 mb-2">Additional Questions</h5>
-    //             <div class="col-md-6">
-    //                 <h6 class="profession_header mt-2 mb-2">Structural %</h6>
-    //                 <div class="mb-3 form-floating">
-    //                     <input type="text" name="gl_additional_q1" id="gl_additional_q1" class="form-control" placeholder="">
-    //                     <label for="gl_additional_q1">%</label>
-    //                 </div>
-    //             </div>
-    //             <div class="col-md-6">
-    //                 <h6 class="profession_header mt-2 mb-2">Non-Structural %</h6>
-    //                 <div class="mb-3 form-floating">
-    //                     <input type="text" name="gl_additional_q2" id="gl_additional_q2" class="form-control" placeholder="">
-    //                     <label for="gl_additional_q2">%</label>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     `);
-    //     $("#gl_additional_q1").on("change", function () {
-    //         setTimeout(function () {
-    //             computePercentage("gl_additional_q1", "gl_additional_q2");
-    //         }, 0);
-    //     });
-    //     $("#gl_additional_q2").on("change", function () {
-    //         setTimeout(function () {
-    //             computePercentage("gl_additional_q2", "gl_additional_q1");
-    //         }, 0);
-    //     });
-    // }
-
     function showGLProfessionsIfTreeService() {
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
-                    <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
+                    <h6 class="profession_header mt-2 mb-2">Additional Questions for Tree Service Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q1" id="gl_additional_q1" class="form-control" placeholder="" maxlength="">
-                        <label for="gl_additional_q1">Max. height exposure</label>
+                        <input type="text" name="gl_gross_add_q1_for_tree_service" id="gl_gross_add_q1_for_tree_service" class="form-control" placeholder="" maxlength="">
+                        <label for="gl_gross_add_q1_for_tree_service">Max. height exposure</label>
                     </div>
                 </div>
             </div>
@@ -2528,21 +3524,21 @@
         $("#gl_profession_container").append(`
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
-                    <h6 class="profession_header mt-2 mb-2">Additional Questions</h6>
+                    <h6 class="profession_header mt-2 mb-2">Additional Questions Masonry Contractors:</h6>
                     <div class="mb-3 form-floating">
-                    <select class="form-select" name="gl_additional_q1"
-                            id="gl_additional_q1" aria-label="gl_additional_q1">
+                        <select class="form-select" name="gl_gross_add_q1_for_masonry"
+                            id="gl_gross_add_q1_for_masonry" aria-label="gl_gross_add_q1_for_masonry">
                             <option value="" selected></option>
                             <option value="0">No</option>
                             <option value="1">Yes</option>
                         </select>
-                        <label for="gl_additional_q1">Do you have any pools exposure?</label>
+                        <label for="gl_gross_add_q1_for_masonry">Do you have any pools exposure?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_additional_q2" id="gl_additional_q2" class="form-control" placeholder="" maxlength="">
-                        <label for="gl_additional_q2">Do you do retaining walls that exceeds 6ft?</label>
+                        <input type="text" name="gl_gross_add_q2_for_masonry" id="gl_gross_add_q2_for_masonry" class="form-control" placeholder="" maxlength="">
+                        <label for="gl_gross_add_q2_for_masonry">Do you do retaining walls that exceeds 6ft?</label>
                     </div>
                 </div>
             </div>
@@ -2551,9 +3547,15 @@
 
     let counter = 0;
     let percentages = [];
+    let totalPercentage = 0; // This will keep track of the overall ownership percentage
+
     function checkPercentages() {
         const sum = percentages.reduce((a, b) => a + b, 0);
         return sum;
+    }
+
+    function checkTotalPercentage() {
+        return totalPercentage + percentages.reduce((a, b) => a + b, 0);
     }
 
     function showMultipleStateWork() {
@@ -2636,25 +3638,28 @@
 
             </div>`);
 
-            $("#gl_multiple_state_work_container").append(newElement);
+        $("#gl_multiple_state_work_container").append(newElement);
 
-            $(`#gl_multiple_states_percentage_${counter}`).on("change", function() {
+        $(`#gl_multiple_states_percentage_${counter}`).on(
+            "change",
+            function () {
                 const value = parseInt($(this).val(), 10);
                 if (isNaN(value)) {
-                    toastr.error('Please enter a valid number');
+                    toastr.error("Please enter a valid number");
                     return;
                 }
                 const sum = checkPercentages();
                 if (sum + value > 100) {
-                    toastr.error('Total percentage should not exceed 100%.');
-                    $(this).val('');
+                    toastr.error("Total percentage should not exceed 100%.");
+                    $(this).val("");
                     return;
                 }
                 percentages[counter - 1] = value;
                 if (sum + value < 100) {
                     showMultipleStateWork();
                 }
-            });
+            }
+        );
     }
 
     function showToolsEquipmentNoOfLossesContainer() {
@@ -2749,30 +3754,365 @@
             </div>`);
     }
 
-    function showGLProfessionsIfGC() {
-        $("#gl_annual_gross_additional_questions").append(`
-            <div class="row justify-content-center appendedQuestion">
+    function renderOwnersInformationFields() {
+        counter++;
+
+        const ownersInfo = $("#owners_information_container").append(`
+            <div class="row justify-content-center ownersInfo">
                 <div class="col-md-12">
-                    <h5 class="profession_header mt-2 mb-2">Additional Questions</h5>
-                    <h6 class="profession_header mt-2 mb-2">New construction - How many houses will you be building for the whole year?</h6>
+                    <h5 class="profession_header mt-2 mb-2">Owner's Information</h5>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1" id="gl_gross_add_q1" class="form-control" placeholder="Please explain:" maxlength="">
-                        <label for="gl_gross_add_q1">Please explain:</label>
+                        <input type="text" name="wc_name_${counter}" id="wc_name_${counter}"
+                            class="form-control" placeholder="" maxlength="255">
+                        <label for="wc_name_${counter}">Owner's Name</label>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <h6 class="profession_header mt-2 mb-2">Do you work on ADU houses?</h6>
                     <div class="mb-3 form-floating">
-                        <select class="form-select"
-                            name="gl_gross_add_q2"
-                            id="gl_gross_add_q2"
-                            aria-label="gl_gross_add_q2">
-                            <option value="" selected></option>
-                            <option value="0">No</option>
-                            <option value="1">Yes</option>
-                        </select>
-                        <label for="gl_gross_add_q2">Please select:</label>
+                        <input type="text" name="wc_title_relationship_${counter}"
+                            id="wc_title_relationship_${counter}" class="form-control" placeholder=""
+                            maxlength="255">
+                        <label for="wc_title_relationship_${counter}">Title / Relationship</label>
                     </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3 form-floating">
+                        <select class="form-select" name="wc_ownership_perc_${counter}"
+                            id="wc_ownership_perc_${counter}" aria-label="wc_ownership_perc_${counter}">
+                            <option value selected></option>
+                            <option value="0">0%</option>
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                            <option value="15">15%</option>
+                            <option value="20">20%</option>
+                            <option value="25">25%</option>
+                            <option value="30">30%</option>
+                            <option value="35">35%</option>
+                            <option value="40">40%</option>
+                            <option value="45">45%</option>
+                            <option value="50">50%</option>
+                            <option value="55">55%</option>
+                            <option value="60">60%</option>
+                            <option value="65">65%</option>
+                            <option value="70">70%</option>
+                            <option value="75">75%</option>
+                            <option value="80">80%</option>
+                            <option value="85">85%</option>
+                            <option value="90">90%</option>
+                            <option value="95">95%</option>
+                            <option value="100">100%</option>
+                        </select>
+                        <label for="wc_ownership_perc_${counter}">Ownership %</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3 form-floating">
+                        <select class="form-select" name="wc_exc_inc_${counter}" id="wc_exc_inc_${counter}"
+                            aria-label="wc_exc_inc_${counter}">
+                            <option value selected></option>
+                            <option value="Excluded">Excluded</option>
+                            <option value="Included">Included</option>
+                        </select>
+                        <label for="wc_exc_inc_${counter}">Excluded / Included</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="wc_ssn_${counter}" id="wc_ssn_${counter}"
+                            class="form-control" placeholder="SSN">
+                        <label for="wc_ssn">SSN</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="wc_fein_${counter}" id="wc_fein_${counter}"
+                            class="form-control" placeholder="FEIN">
+                        <label for="wc_fein_${counter}">FEIN</label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="wc_dob_${counter}" id="wc_dob_${counter}"
+                            class="form-control" placeholder="MM/DD/YYYY">
+                        <label for="wc_dob_${counter}">Date of Birth</label>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        $("#owners_information_container").append(ownersInfo);
+
+        $(`#wc_ownership_perc_${counter}`).on("change", function () {
+            const value = parseInt($(this).val());
+            if (!isNaN(value)) {
+                percentages[counter - 1] = value; // store the percentage value
+                const currentTotal = checkTotalPercentage();
+
+                if (currentTotal < 100) {
+                    renderOwnersInformationFields();
+                } else if (currentTotal > 100) {
+                    toastr.error("Ownership percentage cannot exceed 100%");
+                    $(`#wc_ownership_perc_${counter}`).val("");
+                }
+            }
+        });
+        // console.log(counter);
+        // return counter;
+    }
+
+    function showSchedPropertyBRContainer() {
+        $("#br_scheduled_property_container").append(`
+            <div class="col-md-12">
+                <h6 class="profession_header mt-2 mb-2">Carrier Name</h6>
+                <div class="mb-3 form-floating">
+                    <input type="text" name="br_sched_property_carrier_name"
+                        id="br_sched_property_carrier_name" class="form-control"
+                        placeholder="Please specify:" maxlength="" />
+                    <label for="br_sched_property_carrier_name">Please specify:</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h6 class="profession_header mt-2 mb-2">Effective Date:</h6>
+                <div class="mb-3 form-floating">
+                    <input type="text" name="br_sched_property_effective_date"
+                        id="br_sched_property_effective_date" class="form-control"
+                        placeholder="Please specify:" maxlength="" />
+                    <label for="br_sched_property_effective_date">Please specify:</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h6 class="profession_header mt-2 mb-2">Expiration Date:</h6>
+                <div class="mb-3 form-floating">
+                    <input type="text" name="br_sched_property_expiration_date"
+                        id="br_sched_property_expiration_date" class="form-control"
+                        placeholder="Please specify:" maxlength="" />
+                    <label for="br_sched_property_expiration_date">Please specify:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showIfProjectStarted() {
+        $("#br_project_started_container").append(`
+            <div class="col-md-12">
+                <h6 class="profession_header mt-2 mb-2">When has the project started?</h6>
+                <div class="mb-3 form-floating">
+                    <input type="text" name="br_when_project_started"
+                        id="br_when_project_started" class="form-control"
+                        placeholder="Please specify:" maxlength="" />
+                    <label for="br_when_project_started">Please specify:</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h6 class="profession_header mt-2 mb-2">What are the work done?</h6>
+                <div class="mb-3 form-floating">
+                    <input type="text" name="br_what_are_work_done"
+                        id="br_what_are_work_done" class="form-control"
+                        placeholder="Please specify:" maxlength="" />
+                    <label for="br_what_are_work_done">Please specify:</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h6 class="profession_header mt-2 mb-2">Cost of Work Done</h6>
+                <div class="mb-3 form-floating">
+                    <input type="text" name="br_cost_of_work_done"
+                        id="br_cost_of_work_done" class="form-control"
+                        placeholder="Please specify:" maxlength="" />
+                    <label for="br_cost_of_work_done">Please specify:</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h6 class="profession_header mt-2 mb-2">What are the remaining works?</h6>
+                <div class="mb-3 form-floating">
+                    <input type="text" name="br_what_are_remaining_works"
+                        id="br_what_are_remaining_works" class="form-control"
+                        placeholder="Please specify:" maxlength="" />
+                    <label for="br_what_are_remaining_works">Please specify:</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h6 class="profession_header mt-2 mb-2">Cost of remaining works</h6>
+                <div class="mb-3 form-floating">
+                    <input type="text" name="br_cost_remaining_works"
+                        id="br_cost_remaining_works" class="form-control"
+                        placeholder="Please specify:" maxlength="" />
+                    <label for="br_cost_remaining_works">Please specify:</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <h6 class="profession_header mt-2 mb-2">When will project start?</h6>
+                <div class="mb-3 form-floating">
+                    <input type="text" name="br_when_will_project_start"
+                        id="br_when_will_project_start" class="form-control"
+                        placeholder="Please specify:" maxlength="" />
+                    <label for="br_when_will_project_start">Please specify:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showReqLimitsIfOthers() {
+        $("#eo_requested_limits_others_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_reqlimit_if_others"
+                        id="eo_reqlimit_if_others" class="form-control"
+                        placeholder="If Others, Please indicate:" />
+                    <label for="eo_reqlimit_if_others">If Others, Please indicate:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showReqDeductibleIfOthers() {
+        $("#eo_requested_deductible_others_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_reqdeductible_if_others"
+                        id="eo_reqdeductible_if_others" class="form-control"
+                        placeholder="If Others, Please indicate:" />
+                    <label for="eo_reqdeductible_if_others">If Others, Please
+                        indicate:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showReqDeductibleIfOthers() {
+        $("#eo_requested_deductible_others_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_reqdeductible_if_others"
+                        id="eo_reqdeductible_if_others" class="form-control"
+                        placeholder="If Others, Please indicate:" />
+                    <label for="eo_reqdeductible_if_others">If Others, Please
+                        indicate:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showBusinessEntityIfYesQ1() {
+        $("#eo_business_entity_q1_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_business_entity_sub_q1"
+                        id="eo_business_entity_sub_q1" class="form-control"
+                        placeholder="" />
+                    <label for="eo_business_entity_sub_q1">If Yes, Please
+                        explain:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showBusinessEntityIfYesQ2() {
+        $("#eo_business_entity_q2_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_business_entity_sub_q2"
+                        id="eo_business_entity_sub_q2" class="form-control"
+                        placeholder="" />
+                    <label for="eo_business_entity_sub_q2">If Yes, Please
+                        explain:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showBusinessEntityIfYesQ3() {
+        $("#eo_business_entity_q3_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_business_entity_sub_q3"
+                        id="eo_business_entity_sub_q3" class="form-control"
+                        placeholder="" />
+                    <label for="eo_business_entity_sub_q3">If Yes, Please
+                        explain:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showBusinessEntityIfYesQ4() {
+        $("#eo_business_entity_q4_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_business_entity_sub_q4"
+                        id="eo_business_entity_sub_q4" class="form-control"
+                        placeholder="" />
+                    <label for="eo_business_entity_sub_q4">If Yes, Please
+                        explain:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showBusinessEntityIfYesQ5() {
+        $("#eo_business_entity_q5_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_business_entity_sub_q5"
+                        id="eo_business_entity_sub_q5" class="form-control"
+                        placeholder="" />
+                    <label for="eo_business_entity_sub_q5">If Yes, Please
+                        explain:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showHRIfYesQ1() {
+        $("#eo_hr_q1_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_hr_sub_q1"
+                        id="eo_hr_sub_q1" class="form-control"
+                        placeholder="" />
+                    <label for="eo_hr_sub_q1">If Yes, Please
+                        explain:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showHRIfYesQ2() {
+        $("#eo_hr_q2_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_hr_sub_q2"
+                        id="eo_hr_sub_q2" class="form-control"
+                        placeholder="" />
+                    <label for="eo_hr_sub_q2">If Yes, Please
+                        explain:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showHRIfYesQ3() {
+        $("#eo_hr_q3_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_hr_sub_q3"
+                        id="eo_hr_sub_q3" class="form-control"
+                        placeholder="" />
+                    <label for="eo_hr_sub_q3">If Yes, Please
+                        explain:</label>
+                </div>
+            </div>
+        `);
+    }
+
+    function showHRIfYesQ4() {
+        $("#eo_hr_q4_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="eo_hr_sub_q4"
+                        id="eo_hr_sub_q4" class="form-control"
+                        placeholder="" />
+                    <label for="eo_hr_sub_q4">If Yes, Please
+                        explain:</label>
                 </div>
             </div>
         `);
@@ -2781,7 +4121,7 @@
     // START PERSONAL INFORMATION SCRIPTS
     $("#phone_number").on("input", formatUSPhone);
     $("#fax_number").on("input", formatUSPhone);
-    $('#zipcode').on('change', function() {
+    $("#zipcode").on("change", function () {
         getStateByZipcode();
     });
     // END PERSONAL INFORMATION SCRIPS
@@ -2813,7 +4153,11 @@
     $("#wc_gross_receipt").val($("#gl_annual_gross").val());
     perfectCurrencyFormatter("#gl_payroll_amt");
     perfectCurrencyFormatter("#gl_subcon_cost");
-    renderingYesNoDivs("gl_using_subcon", showSubconContainerForGL, "gl_subcon_cost");
+    renderingYesNoDivs(
+        "gl_using_subcon",
+        showSubconContainerForGL,
+        "gl_subcon_cost"
+    );
     $("#gl_no_losses_5years").on("change", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");
@@ -2848,7 +4192,7 @@
     // Function to handle changes in annual gross
     function handleAnnualGrossChange() {
         var grossValue = $("#gl_annual_gross").val();
-        var convertGrossValue = grossValue.replace(/[^0-9]/g, '');
+        var convertGrossValue = grossValue.replace(/[^0-9]/g, "");
         var newGrossValue = parseInt(convertGrossValue, 10);
         var professionValue = parseInt($("#gl_profession").val(), 10);
 
@@ -2880,8 +4224,7 @@
                 } else if (professionValue === 229) {
                     // Flooring
                     showGLProfessionsIfFlooring();
-                }
-                else if (professionValue === 119) {
+                } else if (professionValue === 119) {
                     // Landscaping
                     showGLProfessionsIfLandscaping();
                 } else if (professionValue === 56) {
@@ -2890,19 +4233,13 @@
                 } else if (professionValue === 196) {
                     // Plastering
                     showGLProfessionsIfPlastering();
-                }
-                // else if (professionValue === 149 || professionValue === 150) {
-                //     // Welding
-                //     showGLProfessionsIfWelding();
-                // }
-                else if (professionValue === 146) {
+                } else if (professionValue === 146) {
                     // Tree service
                     showGLProfessionsIfTreeService();
-                }  else if (professionValue === 51) {
+                } else if (professionValue === 51) {
                     // Masonry
                     showGLProfessionsIfMasonry();
-                }
-                else {
+                } else {
                     $(".loader-container").addClass("hidden");
                     $(".loader-container").removeClass("active");
                     $(".appendedQuestion").remove();
@@ -2914,7 +4251,7 @@
                 $(".appendedQuestion").remove();
                 $("#gl_annual_gross_additional_questions").empty();
             }
-        }  else {
+        } else {
             $(".loader-container").addClass("hidden");
             $(".loader-container").removeClass("active");
             $(".appendedQuestion").remove();
@@ -2927,11 +4264,17 @@
 
     // Event delegation for handling changes in #gl_profession
     $(document).on("change", "#gl_profession", function () {
-        handleAnnualGrossChange(); // Check immediately when #gl_profession changes
+        handleAnnualGrossChange();
+
+        const gl_profession = parseInt($(this).val());
+
+        if (gl_profession === 319) {
+            appendInputIfProfessionIsOthers();
+        }
     });
     $(document).on("change", "#gl_multiple_state_work", function () {
         const value = parseInt($(this).val(), 10);
-        if(value === 1) {
+        if (value === 1) {
             $(".loader-container").addClass("hidden");
             $(".loader-container").removeClass("active");
             $("#gl_multiple_state_work_container").empty();
@@ -2942,12 +4285,13 @@
             $(".stateWorkContainer").remove();
         }
     });
+
     // END GL SCRIPTS
 
     // START WC SCRIPTS
     $(document).on("change", "#wc_no_of_profession", async function () {
-        $(".loader-container").addClass('active');
-        $(".loader-container").removeClass('hidden');
+        $(".loader-container").addClass("active");
+        $(".loader-container").removeClass("hidden");
 
         var numProfs = parseInt($(this).val());
         $("#profession_entry_container").empty();
@@ -2956,8 +4300,8 @@
             await showProfessionEntries(i);
         }
 
-        $(".loader-container").addClass('hidden');
-        $(".loader-container").removeClass('active');
+        $(".loader-container").addClass("hidden");
+        $(".loader-container").removeClass("active");
     });
 
     perfectCurrencyFormatter("#wc_subcon_cost_year");
@@ -2970,7 +4314,6 @@
                 $(".loader-container").removeClass("active");
                 showWCSubconCostYearContainer();
             }, 0);
-
         } else if ($(this).val() === "0" || $(this).val() === "") {
             $("#wc_subcon_cost_year").parent().parent().remove();
             $(".loader-container").addClass("hidden");
@@ -2980,6 +4323,30 @@
 
     $("#wc_fein").feinFormat();
     $("#wc_ssn").ssnFormat();
+
+    $(document).on("change", "#wc_ownership_perc", function () {
+        const value = parseInt($(this).val());
+        if (!isNaN(value)) {
+            if (value < 100) {
+                totalPercentage = value;
+                $("#owners_information_container").empty();
+                counter = 0;
+                percentages = [];
+                renderOwnersInformationFields();
+                $(`input[name^="wc_ssn_"]`).ssnFormat();
+                $(`input[name^="wc_fein_"]`).feinFormat();
+                datePickerFormatter(`input[name^="wc_dob_"]`);
+            } else if (value == 100) {
+                totalPercentage = value;
+                $("#owners_information_container").empty();
+                counter = 0;
+                percentages = [];
+            } else {
+                toastr.error("Ownership percentage cannot exceed 100%");
+                $(this).val("");
+            }
+        }
+    });
     // END WC SCRIPTS
 
     // START AUTO SCRIPTS
@@ -2993,8 +4360,8 @@
             await showAutoVehicleEntries(i);
         }
     });
-    $(document).ready(function() {
-        $("#auto_add_driver").on("change", async function() {
+    $(document).ready(function () {
+        $("#auto_add_driver").on("change", async function () {
             const numDrivers = $(this).val();
             $("#auto_drivers_container").empty();
             for (let i = 1; i <= numDrivers; i++) {
@@ -3037,7 +4404,6 @@
     // END BOND SCRIPTS
 
     // START EXCESS SCRIPTS
-    perfectCurrencyFormatter("#excess_limits");
     perfectCurrencyFormatter("#excess_policy_premium");
     $("#excess_no_losses_5years").on("change", function () {
         const value = parseInt($(this).val());
@@ -3081,6 +4447,57 @@
     // START BR SCRIPTS
     perfectCurrencyFormatter("#br_value_of_existing_structure");
     perfectCurrencyFormatter("#br_value_of_work_performed");
+    $("#br_scheduled_property_address_builders_risk_coverage").on(
+        "change",
+        function () {
+            const value = parseInt($(this).val());
+            if (value >= 1) {
+                $(".loader-container").addClass("hidden");
+                $(".loader-container").removeClass("active");
+                setTimeout(function () {
+                    showSchedPropertyBRContainer();
+                    datePickerFormatter("#br_sched_property_effective_date");
+                    datePickerFormatter("#br_sched_property_expiration_date");
+                }, 0);
+            } else {
+                $(".loader-container").addClass("hidden");
+                $(".loader-container").removeClass("active");
+                $("#br_sched_property_carrier_name").parent().parent().remove();
+                $("#br_sched_property_effective_date")
+                    .parent()
+                    .parent()
+                    .remove();
+                $("#br_sched_property_expiration_date")
+                    .parent()
+                    .parent()
+                    .remove();
+            }
+        }
+    );
+    $("#br_has_project_started").on("change", function () {
+        const value = parseInt($(this).val());
+        if (value >= 1) {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showIfProjectStarted();
+                perfectCurrencyFormatter("#br_cost_of_work_done");
+                perfectCurrencyFormatter("#br_cost_remaining_works");
+                datePickerFormatter("#br_when_will_project_start");
+                datePickerFormatter("#br_when_project_started");
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#br_when_project_started").parent().parent().remove();
+            $("#br_what_are_work_done").parent().parent().remove();
+            $("#br_cost_of_work_done").parent().parent().remove();
+            $("#br_what_are_remaining_works").parent().parent().remove();
+            $("#br_cost_remaining_works").parent().parent().remove();
+            $("#br_when_will_project_start").parent().parent().remove();
+        }
+    });
+    datePickerFormatter("#br_when_structure_built");
     // END BR SCRIPTS
 
     // START BOP SCRIPTS
@@ -3107,6 +4524,173 @@
     // START EO SCRIPTS
     perfectCurrencyFormatter("#eo_ftime_salary_range");
     perfectCurrencyFormatter("#eo_ptime_salary_range");
+
+    $("#eo_requested_limits").on("change", function () {
+        const value = $(this).val();
+        if (value === "Others") {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showReqLimitsIfOthers();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_reqlimit_if_others").parent().parent().remove();
+        }
+    });
+
+    $("#eo_request_deductible").on("change", function () {
+        const value = $(this).val();
+        if (value === "Others") {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showReqDeductibleIfOthers();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_reqdeductible_if_others").parent().parent().remove();
+        }
+    });
+
+    $("#eo_business_entity_q1").on("change", function () {
+        const value = parseInt($(this).val());
+        if (value >= 1) {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showBusinessEntityIfYesQ1();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_business_entity_q1").parent().parent().remove();
+        }
+    });
+
+    $("#eo_business_entity_q2").on("change", function () {
+        const value = parseInt($(this).val());
+        if (value >= 1) {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showBusinessEntityIfYesQ2();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_business_entity_q2").parent().parent().remove();
+        }
+    });
+
+    $("#eo_business_entity_q3").on("change", function () {
+        const value = parseInt($(this).val());
+        if (value >= 1) {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showBusinessEntityIfYesQ3();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_business_entity_q3").parent().parent().remove();
+        }
+    });
+
+    $("#eo_business_entity_q4").on("change", function () {
+        const value = parseInt($(this).val());
+        if (value >= 1) {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showBusinessEntityIfYesQ4();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_business_entity_q4").parent().parent().remove();
+        }
+    });
+
+    $("#eo_business_entity_q5").on("change", function () {
+        const value = parseInt($(this).val());
+        if (value >= 1) {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showBusinessEntityIfYesQ5();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_business_entity_q5").parent().parent().remove();
+        }
+    });
+
+    $("#eo_hr_q1").on("change", function () {
+        const value = parseInt($(this).val());
+        // console.log(value);
+        if (value >= 1) {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showHRIfYesQ1();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_hr_sub_q1").parent().parent().remove();
+        }
+    });
+
+    $("#eo_hr_q2").on("change", function () {
+        const value = parseInt($(this).val());
+        if (value >= 1) {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showHRIfYesQ2();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_hr_sub_q2").parent().parent().remove();
+        }
+    });
+
+    $("#eo_hr_q3").on("change", function () {
+        const value = parseInt($(this).val());
+        if (value >= 1) {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showHRIfYesQ3();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_hr_sub_q3").parent().parent().remove();
+        }
+    });
+
+    $("#eo_hr_q4").on("change", function () {
+        const value = parseInt($(this).val());
+        if (value >= 1) {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            setTimeout(function () {
+                showHRIfYesQ4();
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#eo_hr_sub_q4").parent().parent().remove();
+        }
+    });
+
     // END EO SCRIPTS
 
     // START POLLUTION SCRIPTS
@@ -3140,7 +4724,11 @@
     perfectCurrencyFormatter("#pollution_annual_gross");
     perfectCurrencyFormatter("#pollution_payroll_amt");
     perfectCurrencyFormatter("#pollution_subcon_cost");
-    renderingYesNoDivs("pollution_using_subcon", showSubconContainerForPollution, "pollution_subcon_cost");
+    renderingYesNoDivs(
+        "pollution_using_subcon",
+        showSubconContainerForPollution,
+        "pollution_subcon_cost"
+    );
     $("#pollution_no_losses_5years").on("change", function () {
         const value = parseInt($(this).val());
         if (value >= 1) {
@@ -3167,10 +4755,16 @@
     perfectCurrencyFormatter("#instfloat_max_value_of_equipment");
     perfectCurrencyFormatter("#instfloat_max_value_of_bldg_storage");
     perfectCurrencyFormatter("#instfloat_max_value_equipment_storing");
-    perfectCurrencyFormatter("#instfloat_unscheduled_max_value_equipment_storing");
+    perfectCurrencyFormatter(
+        "#instfloat_unscheduled_max_value_equipment_storing"
+    );
     appendNewSchedEquipmentEntry("#add_sched_equipment_entry");
-    $(document).on("click", ".delete-entry", function() {
-        $(this).parent(".equipment-entry").nextUntil(".equipment-entry").addBack().remove();
+    $(document).on("click", ".delete-entry", function () {
+        $(this)
+            .parent(".equipment-entry")
+            .nextUntil(".equipment-entry")
+            .addBack()
+            .remove();
         equipmentCount--;
         updateEquipmentEntryNames();
     });
@@ -3191,7 +4785,5 @@
         numericValue = parseFloat(numericValue || 0);
         return toUSD(numericValue);
     }
-
     getCheckboxValue();
-
 })(window.jQuery);

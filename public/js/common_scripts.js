@@ -7422,12 +7422,14 @@ $.widget( "kf." + wizard, {
 		for ( ; i < l; i++ ) {
 			stepIndex = stepsTaken[ i ];
 			branchLabel = this._branchLabels[ stepIndex ];
+
 			// Going forward
 			if ( !state.stepIndex || state.stepIndex < stepIndex ) {
 
 				// No duplicate steps
 				if ( $.inArray( stepIndex, state.stepsActivated ) < 0 ) {
 					state.stepsActivated.push( stepIndex );
+
 					// No duplicate branch labels
 					if ( $.inArray( branchLabel, state.branchesActivated ) < 0 ) {
 						state.branchesActivated.push( branchLabel );
@@ -7640,7 +7642,6 @@ $.widget( "kf." + wizard, {
 	},
 
 	forward: function( event, howMany, history ) {
-
 		if ( typeof event === num ) {
 			history = howMany;
 			howMany = event;

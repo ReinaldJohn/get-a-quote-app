@@ -30,8 +30,8 @@
 
         <!-- BASE CSS -->
         <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/vendors.css') }}" rel="stylesheet">
         <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/vendors.css') }}" rel="stylesheet">
 
         <!-- YOUR CUSTOM CSS -->
         <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
@@ -403,7 +403,6 @@
                                 <!-- /Step -->
 
                                 <!-- Products Steps -->
-
                                 <!-- GL Stepper 1 -->
                                 <div class="step" id="gl_step_1">
                                     <div class="question_title">
@@ -419,7 +418,6 @@
                                                 <label for="gl_annual_gross">Annual Gross Receipts</label>
                                             </div>
                                         </div>
-
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="gl_profession" id="gl_profession"
@@ -434,9 +432,8 @@
                                                 <label for="gl_profession">Select a Profession</label>
                                             </div>
                                         </div>
-
                                         <div id="gl_annual_gross_additional_questions"></div>
-
+                                        <div id="gl_profession_if_others"></div>
                                         <div id="gl_profession_container"></div>
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
@@ -603,16 +600,16 @@
 
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
-                                                <input type="text" name="gl_full_time_employees" id="gl_full_time_employees"
-                                                    class="form-control" placeholder=""
+                                                <input type="text" name="gl_full_time_employees"
+                                                    id="gl_full_time_employees" class="form-control" placeholder=""
                                                     maxlength="3">
                                                 <label for="gl_full_time_employees">Full Time Employee/s</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
-                                                <input type="text" name="gl_part_time_employees" id="gl_part_time_employees"
-                                                    class="form-control" placeholder=""
+                                                <input type="text" name="gl_part_time_employees"
+                                                    id="gl_part_time_employees" class="form-control" placeholder=""
                                                     maxlength="3">
                                                 <label for="gl_part_time_employees">Part Time Employee/s</label>
                                             </div>
@@ -673,8 +670,9 @@
                                         @if (session('doesGLandWCChecked') === 'true')
                                             <div class="col-md-12 mt-4">
                                                 <div class="mb-3 form-floating">
-                                                    <input type="text" name="wc_gross_receipt" id="wc_gross_receipt"
-                                                        class="form-control" placeholder="Gross Receipt" maxlength="20">
+                                                    <input type="text" name="wc_gross_receipt"
+                                                        id="wc_gross_receipt" class="form-control"
+                                                        placeholder="Gross Receipt" maxlength="20">
                                                     <label for="wc_gross_receipt">Gross Receipt</label>
                                                 </div>
                                             </div>
@@ -714,10 +712,11 @@
                                     </div>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
+                                            <h5 class="profession_header mt-2 mb-2">Owner's Information</h5>
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="wc_name" id="wc_name"
                                                     class="form-control" placeholder="" maxlength="255">
-                                                <label for="wc_name">Name</label>
+                                                <label for="wc_name">Owner's Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -791,6 +790,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div id="owners_information_container"></div>
                                 </div>
                                 <!-- /Step -->
 
@@ -983,8 +983,20 @@
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <input type="text" name="excess_limits" id="excess_limits"
-                                                    class="form-control" placeholder="Excess Limits" maxlength="20">
+                                                <select class="form-select" name="excess_limits" id="excess_limits"
+                                                    aria-label="excess_limits">
+                                                    <option value selected></option>
+                                                    <option value="1000000">$1,000,000</option>
+                                                    <option value="2000000">$2,000,000</option>
+                                                    <option value="3000000">$3,000,000</option>
+                                                    <option value="4000000">$4,000,000</option>
+                                                    <option value="5000000">$5,000,000</option>
+                                                    <option value="6000000">$6,000,000</option>
+                                                    <option value="7000000">$7,000,000</option>
+                                                    <option value="8000000">$8,000,000</option>
+                                                    <option value="9000000">$9,000,000</option>
+                                                    <option value="10000000">$10,000,000</option>
+                                                </select>
                                                 <label for="excess_limits">Excess Limits</label>
                                             </div>
                                         </div>
@@ -1123,8 +1135,8 @@
                                         <div class="col-md-4">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="tools_equipment_make"
-                                                    id="tools_equipment_make" class="form-control" placeholder="Make"
-                                                    maxlength="100">
+                                                    id="tools_equipment_make" class="form-control"
+                                                    placeholder="Make" maxlength="100">
                                                 <label for="tools_equipment_make">Make</label>
                                             </div>
                                         </div>
@@ -1209,15 +1221,239 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <input type="text" name="br_period_duration_project"
-                                                    id="br_period_duration_project" class="form-control"
-                                                    placeholder="Period of Insurance / Duration of the Project"
-                                                    maxlength="20">
+                                                <select class="form-select" name="br_period_duration_project"
+                                                    id="br_period_duration_project"
+                                                    aria-label="br_period_duration_project">
+                                                    <option selected></option>
+                                                    <option value="3">3 Months</option>
+                                                    <option value="6">6 Months</option>
+                                                    <option value="9">9 Months</option>
+                                                    <option value="12 Months">12 Months</option>
+                                                </select>
                                                 <label for="br_period_duration_project">Period of Insurance / Duration
                                                     of
                                                     the Project</label>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <!-- /Step -->
+
+                                <!-- BR Stepper 2 -->
+                                <div class="step" id="br_step_2">
+                                    <div class="question_title">
+                                        <h3>Builder's Risk Application</h3>
+                                        <p>Please provide the requested information and proceed.</p>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="br_construction_type"
+                                                    id="br_construction_type" aria-label="br_construction_type">
+                                                    <option value="" selected></option>
+                                                    <option value="Frame">Frame</option>
+                                                    <option value="Joisted Masonry">Joisted Masonry</option>
+                                                    <option value="Non-Combustible">Non-Combustible</option>
+                                                    <option value="Masonry Non-Combustible">Masonry Non-Combustible
+                                                    </option>
+                                                    <option value="Modified Fire Resistive">Modified Fire Resistive
+                                                    </option>
+                                                    <option value="Fire Resistive">Fire Resistive</option>
+                                                </select>
+                                                <label for="br_construction_type">Construction Type</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <h6 class="profession_header mt-2 mb-2">Complete descriptions of
+                                                operations for the project for which you are currently applying for
+                                                insurance</h6>
+                                            <div class="mb-3 form-floating">
+                                                <textarea style="resize: none;" name="br_complete_descops_of_project" id="br_complete_descops_of_project"
+                                                    class="form-control"
+                                                    placeholder="Complete descriptions of operations for the project for which you are currently applying for insurance"></textarea>
+                                                <label for="br_complete_descops_of_project">Please specify:</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /Step -->
+
+                                <!-- BR Stepper 3 -->
+                                <div class="step" id="br_step_3">
+                                    <div class="question_title">
+                                        <h3>Builder's Risk Application</h3>
+                                        <p>Please provide the requested information and proceed.</p>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <h5 class="profession_header mt-2 mb-2">Description of Property Use Prior
+                                            to Construction</h5>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_sq_footage" id="br_sq_footage"
+                                                    class="form-control" placeholder="Square Footage"
+                                                    maxlength="20">
+                                                <label for="br_sq_footage">Square Footage</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_number_of_floors"
+                                                    id="br_number_of_floors" class="form-control"
+                                                    placeholder="Number of Floors" maxlength="20">
+                                                <label for="br_number_of_floors">Number of Floors</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_number_of_units_dwelling"
+                                                    id="br_number_of_units_dwelling" class="form-control"
+                                                    placeholder="" maxlength="20">
+                                                <label for="br_number_of_units_dwelling">Number of Units in
+                                                    Dwelling</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_anticipated_occupancy"
+                                                    id="br_anticipated_occupancy" class="form-control"
+                                                    placeholder="" maxlength="20">
+                                                <label for="br_anticipated_occupancy">What is the Anticipated
+                                                    Occupancy</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_last_update_to_roofing_year"
+                                                    id="br_last_update_to_roofing_year" class="form-control"
+                                                    placeholder="" maxlength="20">
+                                                <label for="br_last_update_to_roofing_year">Last Update to Roofing
+                                                    Year</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_last_update_to_heating_year"
+                                                    id="br_last_update_to_heating_year" class="form-control"
+                                                    placeholder="" maxlength="20">
+                                                <label for="br_last_update_to_heating_year">Last Update to Heating
+                                                    Year</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_last_update_to_electrical_year"
+                                                    id="br_last_update_to_electrical_year" class="form-control"
+                                                    placeholder="" maxlength="20">
+                                                <label for="br_last_update_to_electrical_year">Last Update to
+                                                    Electrical Year</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_last_update_to_plumbing_year"
+                                                    id="br_last_update_to_plumbing_year" class="form-control"
+                                                    placeholder="" maxlength="20">
+                                                <label for="br_last_update_to_plumbing_year">Last Update to Plumbing
+                                                    Year</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_distance_to_nearest_fire_hydrant"
+                                                    id="br_distance_to_nearest_fire_hydrant" class="form-control"
+                                                    placeholder="" maxlength="20">
+                                                <label for="br_distance_to_nearest_fire_hydrant">Distance to Nearest
+                                                    Fire Hydrant</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_distance_to_nearest_fire_station"
+                                                    id="br_distance_to_nearest_fire_station" class="form-control"
+                                                    placeholder="" maxlength="20">
+                                                <label for="br_distance_to_nearest_fire_station">Distance to Nearest
+                                                    Fire Station</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text"
+                                                    name="br_structure_occupied_remodel_renovation"
+                                                    id="br_structure_occupied_remodel_renovation"
+                                                    class="form-control" placeholder="" maxlength="20">
+                                                <label for="br_structure_occupied_remodel_renovation">Will the
+                                                    Structure be Occupied During the
+                                                    Remodel/Renovation?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /Step -->
+
+                                <!-- BR Stepper 4 -->
+                                <div class="step" id="br_step_4">
+                                    <div class="question_title">
+                                        <h3>Builder's Risk Application</h3>
+                                        <p>Please provide the requested information and proceed.</p>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_when_structure_built"
+                                                    id="br_when_structure_built" class="form-control"
+                                                    placeholder="" maxlength="20">
+                                                <label for="br_when_structure_built">When was the structure
+                                                    built?</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="br_jobsite_security"
+                                                    id="br_jobsite_security" class="form-control" placeholder=""
+                                                    maxlength="20">
+                                                <label for="br_jobsite_security">Jobsite Security</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select"
+                                                    name="br_scheduled_property_address_builders_risk_coverage"
+                                                    id="br_scheduled_property_address_builders_risk_coverage"
+                                                    aria-label="br_scheduled_property_address_builders_risk_coverage">
+                                                    <option value="" selected></option>
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                                <label for="br_scheduled_property_address_builders_risk_coverage">Has
+                                                    the scheduled property address had any prior
+                                                    Builder's Risk coverage?</label>
+                                            </div>
+                                        </div>
+                                        <div id="br_scheduled_property_container"></div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="br_residential_commercial"
+                                                    id="br_residential_commercial"
+                                                    aria-label="br_residential_commercial">
+                                                    <option value="" selected></option>
+                                                    <option value="Residential">Residential</option>
+                                                    <option value="Commercial">Commercial</option>
+                                                </select>
+                                                <label for="br_residential_commercial">Residential/Commercial</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="br_has_project_started"
+                                                    id="br_has_project_started" aria-label="br_has_project_started">
+                                                    <option value="" selected></option>
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                                <label for="br_has_project_started">Has the project started?</label>
+                                            </div>
+                                        </div>
+                                        <div id="br_project_started_container"></div>
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -1678,7 +1914,6 @@
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
-
                                                 <label for="property_is_bldg_equipped_with_fire_sprinklers">Is your
                                                     building equipped with fire
                                                     sprinklers?</label>
@@ -1751,7 +1986,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="row justify-content-center">
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
@@ -1762,7 +1996,6 @@
                                                     Year:</label>
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="property_last_update_heating_year"
@@ -1773,7 +2006,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="row justify-content-center">
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
@@ -1784,7 +2016,6 @@
                                                     Plumbing Year:</label>
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="property_last_update_electrical_year"
@@ -1820,14 +2051,7 @@
                                                 <label for="eo_requested_limits">Requested Limits:</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3 form-floating">
-                                                <input type="text" name="eo_reqlimit_if_others"
-                                                    id="eo_reqlimit_if_others" class="form-control"
-                                                    placeholder="If Others, Please indicate:" />
-                                                <label for="eo_reqlimit_if_others">If Others, Please indicate:</label>
-                                            </div>
-                                        </div>
+                                        <div id="eo_requested_limits_others_container"></div>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="eo_request_deductible"
@@ -1842,15 +2066,7 @@
                                                     Claim):</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <div class="mb-3 form-floating">
-                                                <input type="text" name="eo_reqdeductible_if_others"
-                                                    id="eo_reqdeductible_if_others" class="form-control"
-                                                    placeholder="If Others, Please indicate:" />
-                                                <label for="eo_reqdeductible_if_others">If Others, Please
-                                                    indicate:</label>
-                                            </div>
-                                        </div>
+                                        <div id="eo_requested_deductible_others_container"></div>
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -1878,6 +2094,7 @@
                                                 <label for="eo_business_entity_q1">Please select:</label>
                                             </div>
                                         </div>
+                                        <div id="eo_business_entity_q1_container"></div>
                                         <div class="col-md-12">
                                             <h6 class="profession_header mt-2 mb-2">Has any other business been
                                                 purchased merged or
@@ -1893,6 +2110,7 @@
                                                 <label for="eo_business_entity_q2">Please select:</label>
                                             </div>
                                         </div>
+                                        <div id="eo_business_entity_q2_container"></div>
                                         <div class="col-md-12">
                                             <h6 class="profession_header mt-2 mb-2">Does any other entity own or
                                                 control your
@@ -1907,6 +2125,7 @@
                                                 <label for="eo_business_entity_q3">Please select:</label>
                                             </div>
                                         </div>
+                                        <div id="eo_business_entity_q3_container"></div>
                                         <div class="col-md-12">
                                             <h6 class="profession_header mt-2 mb-2">Has your company name been changed
                                                 during the
@@ -1922,6 +2141,7 @@
                                                 <label for="eo_business_entity_q4">Please select:</label>
                                             </div>
                                         </div>
+                                        <div id="eo_business_entity_q4_container"></div>
                                         <div class="col-md-12">
                                             <h6 class="profession_header mt-2 mb-2">Has any other business purchased,
                                                 merged or
@@ -1936,6 +2156,7 @@
                                                 <label for="eo_business_entity_q5">Please select:</label>
                                             </div>
                                         </div>
+                                        <div id="eo_business_entity_q5_container"></div>
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -1956,7 +2177,6 @@
                                                 <label for="eo_number_employee">Number of Employees:</label>
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="eo_full_time" id="eo_full_time"
@@ -1964,7 +2184,6 @@
                                                 <label for="eo_full_time">Full Time:</label>
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="eo_ftime_salary_range"
@@ -1973,7 +2192,6 @@
                                                 <label for="eo_ftime_salary_range">Salary Range:</label>
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="eo_part_time" id="eo_part_time"
@@ -1981,7 +2199,6 @@
                                                 <label for="eo_part_time">Part Time:</label>
                                             </div>
                                         </div>
-
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="eo_ptime_salary_range"
@@ -2046,6 +2263,7 @@
                                                 <label for="eo_hr_q1">Please select:</label>
                                             </div>
                                         </div>
+                                        <div id="eo_hr_q1_container"></div>
                                         <div class="col-md-12">
                                             <h6 class="profession_header mt-2 mb-2">Does the Applicant have its
                                                 employment
@@ -2061,6 +2279,7 @@
                                                 <label for="eo_hr_q2">Please select:</label>
                                             </div>
                                         </div>
+                                        <div id="eo_hr_q2_container"></div>
                                         <div class="col-md-12">
                                             <h6 class="profession_header mt-2 mb-2">Does the Applicant have a Human
                                                 Resources or
@@ -2076,6 +2295,7 @@
                                                 <label for="eo_hr_q3">Please select:</label>
                                             </div>
                                         </div>
+                                        <div id="eo_hr_q3_container"></div>
                                         <div class="col-md-12">
                                             <h6 class="profession_header mt-2 mb-2">Does the Applicant have an
                                                 employee handbook?</h6>
@@ -2089,6 +2309,7 @@
                                                 <label for="eo_hr_q4">Please select:</label>
                                             </div>
                                         </div>
+                                        <div id="eo_hr_q4_container"></div>
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -3215,8 +3436,6 @@
                                                     Purchased:</label>
                                             </div>
                                         </div>
-
-
                                     </div>
                                     <div class="row justify-content-center" id="sched_equipment_container"></div>
                                 </div>
@@ -3231,21 +3450,27 @@
                                         <p>Kindly review your application details before submitting.</p>
                                     </div>
                                     <div class="row justify-content-between reviewInfoContainer">
-                                        <div class="col-lg-12" id="personalDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="personalDetailsContainer">
                                             <h5>Personal Information</h5>
                                             <div class="reviewInfoSubContainer" id="personal_information_details">
                                             </div>
                                         </div>
 
+                                        <div class="col-lg-12 mt-2" id="personalDetailsContainer">
+                                            <h5>About Your Company</h5>
+                                            <div class="reviewInfoSubContainer" id="about_your_company_details">
+                                            </div>
+                                        </div>
+
                                         <!-- START GL REVIEW -->
-                                        <div class="col-lg-12" id="glDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="glDetailsContainer">
                                             <h5>General Liability Application</h5>
                                             <div class="reviewInfoSubContainer" id="gl_information_details"></div>
                                         </div>
                                         <!-- END GL REVIEW -->
 
                                         <!-- START WC REVIEW -->
-                                        <div class="col-lg-12" id="wcDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="wcDetailsContainer">
                                             <h5>Worker's Compensation Application</h5>
                                             <div class="reviewInfoSubContainer" id="wc_details_1"></div>
                                             <div class="entryContainer professionEntries">
@@ -3256,7 +3481,7 @@
                                         <!-- END WC REVIEW -->
 
                                         <!-- START AUTO REVIEW -->
-                                        <div class="col-lg-12" id="autoDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="autoDetailsContainer">
                                             <h5>Commercial Auto Application</h5>
                                             <div class="reviewInfoSubContainer" id="auto_vehicle_details_1"></div>
                                             <div class="entryContainer vehicleEntries"></div>
@@ -3266,35 +3491,35 @@
                                         <!-- END AUTO REVIEW -->
 
                                         <!-- START BOND REVIEW -->
-                                        <div class="col-lg-12" id="bondDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="bondDetailsContainer">
                                             <h5>Contractor's License Bond Application</h5>
                                             <div class="reviewInfoSubContainer" id="license_bond_details"></div>
                                         </div>
                                         <!-- END BOND REVIEW -->
 
                                         <!-- START EXCESS REVIEW -->
-                                        <div class="col-lg-12" id="excessDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="excessDetailsContainer">
                                             <h5>Excess Liability Application</h5>
                                             <div class="reviewInfoSubContainer" id="excess_liability_details"></div>
                                         </div>
                                         <!-- END EXCESS REVIEW -->
 
                                         <!-- START TOOLS REVIEW -->
-                                        <div class="col-lg-12" id="toolsDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="toolsDetailsContainer">
                                             <h5>Tools & Equipment Application</h5>
                                             <div class="reviewInfoSubContainer" id="tools_equipment_details"></div>
                                         </div>
                                         <!-- END TOOLS REVIEW -->
 
                                         <!-- START BR REVIEW -->
-                                        <div class="col-lg-12" id="brDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="brDetailsContainer">
                                             <h5>Builder's Risk Application</h5>
                                             <div class="reviewInfoSubContainer" id="builders_risk_details"></div>
                                         </div>
                                         <!-- END BR REVIEW -->
 
                                         <!-- START BOP REVIEW -->
-                                        <div class="col-lg-12" id="bopDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="bopDetailsContainer">
                                             <h5>Business Owner's Policy Application</h5>
                                             <div class="reviewInfoSubContainer" id="bop_details">
                                             </div>
@@ -3302,7 +3527,7 @@
                                         <!-- END BOP REVIEW -->
 
                                         <!-- START COMMERCIAL PROPERTY REVIEW -->
-                                        <div class="col-lg-12" id="cpDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="cpDetailsContainer">
                                             <h5>Commercial Property Application</h5>
                                             <div class="reviewInfoSubContainer" id="commercial_property_details">
                                             </div>
@@ -3310,7 +3535,7 @@
                                         <!-- END COMMERCIAL PROPERTY REVIEW -->
 
                                         <!-- START EO REVIEW -->
-                                        <div class="col-lg-12" id="eoDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="eoDetailsContainer">
                                             <h5>Errors & Omission Application</h5>
                                             <div class="reviewInfoSubContainer" id="error_emissions_details">
                                             </div>
@@ -3318,7 +3543,7 @@
                                         <!-- END EO REVIEW -->
 
                                         <!-- START POLLUTION REVIEW -->
-                                        <div class="col-lg-12" id="pollutionDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="pollutionDetailsContainer">
                                             <h5>Pollution Liability Application</h5>
                                             <div class="reviewInfoSubContainer" id="pollution_liability_details">
                                             </div>
@@ -3326,7 +3551,7 @@
                                         <!-- END POLLUTION REVIEW -->
 
                                         <!-- START EPLI REVIEW -->
-                                        <div class="col-lg-12" id="epliDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="epliDetailsContainer">
                                             <h5>Employment Practice Liability Application</h5>
                                             <div class="reviewInfoSubContainer" id="epli_liability_details">
                                             </div>
@@ -3334,7 +3559,7 @@
                                         <!-- END EPLI REVIEW -->
 
                                         <!-- START CYBER REVIEW -->
-                                        <div class="col-lg-12" id="cyberDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="cyberDetailsContainer">
                                             <h5>Cyber Liability Application</h5>
                                             <div class="reviewInfoSubContainer" id="cyber_liability_details">
                                             </div>
@@ -3342,21 +3567,58 @@
                                         <!-- END CYBER REVIEW -->
 
                                         <!-- START INSTFLOAT REVIEW -->
-                                        <div class="col-lg-12" id="instfloatDetailsContainer">
+                                        <div class="col-lg-12 mt-2" id="instfloatDetailsContainer">
                                             <h5>Installation Floater Application</h5>
                                             <div class="reviewInfoSubContainer" id="instfloat_liability_details">
                                             </div>
                                         </div>
                                         <!-- END INSTFLOAT REVIEW -->
 
-                                        <div class="col-lg-12" id="personalDetailsContainer">
-                                            <h5>About Your Company</h5>
-                                            <div class="reviewInfoSubContainer" id="about_your_company_details">
-                                            </div>
-                                        </div>
-
                                     </div>
                                     <!-- /row -->
+                                    <div class="terms">
+                                        <label class="container_check">Please accept our <a href="#"
+                                                data-bs-toggle="modal" data-bs-target="#terms-txt">Terms and
+                                                conditions</a>
+                                            <input type="checkbox" name="terms" value="Yes"
+                                                class="required">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    <div class="modal fade" id="terms-txt" tabindex="-1" role="dialog"
+                                        aria-labelledby="termsLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title" id="termsLabel">Terms and conditions
+                                                    </h4>
+                                                    <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>
+                                                        By opting-in, you agree to receive newsletters, updates, and
+                                                        promotional offers from Pascal Burke Insurance Brokerage Inc.
+                                                        Your privacy is important to us. We will never share, sell, or
+                                                        disclose your email address to third parties without your
+                                                        explicit consent. You have the right to unsubscribe from our
+                                                        newsletter and email communications at any time by clicking on
+                                                        the "unsubscribe" link at the bottom of any of our emails. By
+                                                        continuing with the opt-in process, you confirm that you have
+                                                        read, understood, and agreed to these terms.
+                                                    </p>
+                                                    <p>
+                                                        You can also view our Terms and Conditions by following this
+                                                        link.
+                                                        <a href="#">Terms and Conditions</a> |
+                                                        <a href="#">Privacy Policy</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <!-- /modal-content -->
+                                        </div>
+                                        <!-- /modal-dialog -->
+                                    </div>
                                 </div>
                                 <!-- /Step -->
 
@@ -3462,6 +3724,7 @@
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+        {{-- <script src="{{ asset('js/common_scripts.min.js') }}"></script> --}}
         <script src="{{ asset('js/common_functions.js') }}"></script>
         <script src="{{ asset('assets/validate.js') }}"></script>
 
