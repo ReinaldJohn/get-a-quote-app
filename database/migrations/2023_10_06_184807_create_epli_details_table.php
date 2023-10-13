@@ -37,7 +37,7 @@ return new class extends Migration
             $table->string('located_at_ny', 255);
             $table->string('located_at_nj', 255);
             $table->decimal('up_to_60k', 10, 2);
-            $table->decimal('60k_to_120k', 10, 2);
+            $table->decimal('between_60k_to_120k', 10, 2);
             $table->decimal('over_120k', 10, 2);
             $table->string('voluntary', 255);
             $table->string('involuntary', 255);

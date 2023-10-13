@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('general_liability_multiple_state_work_details', function (Blueprint $table) {
+        Schema::create('commercial_auto_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('gl_id')->constrained('general_liability_details');
-            $table->string('state', 255);
-            $table->integer('percentage');
+            $table->foreignId('client_info_id')->constrained('client_information');
+            $table->tinyInteger('no_of_vehicle');
+            $table->tinyInteger('no_of_drivers');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('general_liability_multiple_state_work_details');
+        Schema::dropIfExists('commercial_auto_details');
     }
 };

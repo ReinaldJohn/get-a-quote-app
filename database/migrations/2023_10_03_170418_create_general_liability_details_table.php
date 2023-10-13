@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('general_liability_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_info_id')->constrained('client_information');
-            $table->tinyInteger('profession');
+            $table->integer('profession');
             $table->string('specify_profession_if_others', 255)->nullable();
             $table->char('residential', 3);
             $table->char('commercial', 3);

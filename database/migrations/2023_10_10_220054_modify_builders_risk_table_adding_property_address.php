@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('commercial_auto_details', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('comm_auto_id')->constrained('commercial_auto_details');
-            $table->tinyInteger('no_of_vehicle');
-            $table->tinyInteger('no_of_drivers');
-            $table->timestamps();
+        Schema::table('builders_risk_details', function (Blueprint $table) {
+            $table->string('property_address', 255)->after('client_info_id');
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('commercial_auto_details');
+        Schema::table('builders_risk_details', function (Blueprint $table) {
+            $table->dropColumn('property_address');
+        });
     }
 };

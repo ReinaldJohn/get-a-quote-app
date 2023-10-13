@@ -1913,13 +1913,46 @@
                         $('input[name="question_1[]"]:checked').each(
                             function () {
                                 var productKey = $(this).val();
+                                console.log(productKey);
                                 productData[productKey] = {};
 
                                 $("div[id^='" + productKey + "_step_']")
                                     .find("input, select, textarea")
                                     .each(function () {
-                                        productData[productKey][this.name] =
-                                            $(this).val();
+                                        // productData[productKey][this.name] =
+                                        //     $(this).val();
+                                        // var labelForThisInput = $(
+                                        //     "label[for='" + this.id + "']"
+                                        // ).text();
+
+                                        // Dynamic function to traverse up the DOM tree and find the nearest h6
+                                        function findNearestH6(element) {
+                                            let parent = $(element).parent();
+                                            if (parent.length === 0) return ""; // We've reached the top without finding h6
+
+                                            let h6 = parent.find("> h6");
+                                            if (h6.length > 0)
+                                                return h6.text().trim();
+
+                                            return findNearestH6(parent); // Recurse up
+                                        }
+
+                                        // Try to find the closest preceding h6 first
+                                        var header6Content =
+                                            findNearestH6(this);
+
+                                        // If the h6 content is empty or not found, try to find the label
+                                        var labelForThisInput =
+                                            header6Content ||
+                                            $("label[for='" + this.id + "']")
+                                                .text()
+                                                .trim();
+
+                                        productData[productKey][this.name] = {
+                                            value: $(this).val(),
+                                            label: labelForThisInput.trim(),
+                                            h6: header6Content,
+                                        };
                                     });
                             }
                         );
@@ -1929,9 +1962,9 @@
                             method: "post",
                             url: "/quote-form-submit",
                             headers: {
-                                "X-CSRF-TOKEN": document
-                                    .querySelector('meta[name="csrf-token"]')
-                                    .getAttribute("content"),
+                                "X-CSRF-TOKEN": $(
+                                    'meta[name="csrf-token"]'
+                                ).attr("content"),
                                 "Content-Type": "application/json",
                             },
                             data: {
@@ -2164,18 +2197,18 @@
 
             case "comm_prop":
                 $(
-                    "#property_step_1, #property_step_2, #property_step_3, #cpDetailsContainer"
+                    "#comm_prop_step_1, #comm_prop_step_2, #comm_prop_step_3, #cpDetailsContainer"
                 )
                     .removeClass("step wizard-step")
                     .addClass("hidden");
-                $("#property_step_1").find("input").val("");
-                $("#property_step_1").find("select").val("");
+                $("#comm_prop_step_1").find("input").val("");
+                $("#comm_prop_step_1").find("select").val("");
 
-                $("#property_step_2").find("input").val("");
-                $("#property_step_2").find("select").val("");
+                $("#comm_prop_step_2").find("input").val("");
+                $("#comm_prop_step_2").find("select").val("");
 
-                $("#property_step_3").find("input").val("");
-                $("#property_step_3").find("select").val("");
+                $("#comm_prop_step_3").find("input").val("");
+                $("#comm_prop_step_3").find("select").val("");
                 break;
 
             case "eo":
@@ -2316,6 +2349,7 @@
     }
 
     function showSteps(checkboxValue) {
+        console.log(checkboxValue);
         switch (checkboxValue) {
             case "gl":
                 $("#gl_step_1, #gl_step_2, #glDetailsContainer")
@@ -2363,7 +2397,7 @@
                 break;
             case "comm_prop":
                 $(
-                    "#property_step_1, #property_step_2, #property_step_3, #cpDetailsContainer"
+                    "#comm_prop_step_1, #comm_prop_step_2, #comm_prop_step_3, #cpDetailsContainer"
                 )
                     .addClass("step wizard-step")
                     .removeClass("hidden");
@@ -3039,7 +3073,7 @@
     }
 
     function showAYCNoOfLossesContainer() {
-        $("#ayc_no_losses_container").append(`
+        $("#ayc_no_losses_container").html(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <textarea style="resize: none;" name="ayc_no_of_losses_explain" id="ayc_no_of_losses_explain" class="form-control" placeholder="Please explain"></textarea>
@@ -4183,7 +4217,8 @@
                 showAYCNoOfLossesContainer();
             }, 0);
         } else {
-            $("#ayc_no_of_losses_explain").parent().parent().remove();
+            // $("#ayc_no_of_losses_explain").parent().parent().remove();
+            $("#ayc_no_losses_container").empty();
             $(".loader-container").addClass("hidden");
             $(".loader-container").removeClass("active");
         }
@@ -4388,8 +4423,8 @@
     });
     perfectCurrencyFormatter("#bond_amount_of_bond");
     $("#bond_type_of_license").on("change", function () {
-        $(".loader-container").removeClass("hidden");
-        $(".loader-container").addClass("active");
+        $(".loader-container").addClass("hidden");
+        $(".loader-container").removeClass("active");
         if ($(this).val() === "Others") {
             setTimeout(function () {
                 ShowLicBondTypeOfLicIfOthers();

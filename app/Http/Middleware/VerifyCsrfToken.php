@@ -16,5 +16,6 @@ class VerifyCsrfToken extends Middleware
         '/clear-session-data',
         '/set-session-variable',
         '/unset-session-variable',
+        '/quote-form-submit',
     ];
 }

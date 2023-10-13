@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('last_name', 255);
             $table->string('address', 255);
             $table->string('city', 255);
-            $table->integer('state');
+            $table->string('state', 2);
             $table->char('zipcode', 5);
             $table->string('phone_number', 15);
             $table->string('fax_number', 15)->nullable();

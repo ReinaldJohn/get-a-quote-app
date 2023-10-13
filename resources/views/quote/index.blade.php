@@ -1760,7 +1760,7 @@
                                 <!-- /Step -->
 
                                 <!-- Commercial Property Stepper 1 -->
-                                <div class="step" id="property_step_1">
+                                <div class="step" id="comm_prop_step_1">
                                     <div class="question_title">
                                         <h3>Commercial Property Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
@@ -1825,7 +1825,7 @@
                                 <!-- /Step -->
 
                                 <!-- Commercial Property Stepper 2 -->
-                                <div class="step" id="property_step_2">
+                                <div class="step" id="comm_prop_step_2">
                                     <div class="question_title">
                                         <h3>Commercial Property Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
@@ -1961,7 +1961,7 @@
                                 <!-- /Step -->
 
                                 <!-- Commercial Property Stepper 3 -->
-                                <div class="step" id="property_step_3">
+                                <div class="step" id="comm_prop_step_3">
                                     <div class="question_title">
                                         <h3>Commercial Property Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
@@ -2963,8 +2963,8 @@
                                             activities?</h6>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <select class="form-select" name="cyber_engaged_business_activities"
-                                                    id="cyber_engaged_business_activities" aria-label="">
+                                                <select class="form-select" name="cyber_q1"
+                                                    id="cyber_q1" aria-label="cyber_q1">
                                                     <option value="" selected></option>
                                                     <option value="Adult Content">Adult Content</option>
                                                     <option value="Cannabis">Cannabis</option>
@@ -2985,7 +2985,7 @@
                                                         None of the above
                                                     </option>
                                                 </select>
-                                                <label for="cyber_engaged_business_activities">Please select:</label>
+                                                <label for="cyber_q1">Please select:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -2994,21 +2994,6 @@
                                                 fund and wire
                                                 transfers over $25,000 through a secondary means of
                                                 communication prior to execution?</h6>
-                                            <div class="mb-3 form-floating">
-                                                <select class="form-select" name="cyber_q1" id="cyber_q1"
-                                                    aria-label="cyber_q1">
-                                                    <option value="" selected></option>
-                                                    <option value="0">No</option>
-                                                    <option value="1">Yes</option>
-                                                </select>
-                                                <label for="cyber_q1">Please select:</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Do you store your backups offline
-                                                or
-                                                with a cloud
-                                                service provider?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="cyber_q2" id="cyber_q2"
                                                     aria-label="cyber_q2">
@@ -3020,10 +3005,10 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Do you store or process personal,
-                                                health, or credit
-                                                card information of more than 500,000
-                                                Individuals?</h6>
+                                            <h6 class="profession_header mt-2 mb-2">Do you store your backups offline
+                                                or
+                                                with a cloud
+                                                service provider?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="cyber_q3" id="cyber_q3"
                                                     aria-label="cyber_q3">
@@ -3035,9 +3020,10 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Do you enabled multi-factor
-                                                authentication for email
-                                                access and remote network access?</h6>
+                                            <h6 class="profession_header mt-2 mb-2">Do you store or process personal,
+                                                health, or credit
+                                                card information of more than 500,000
+                                                Individuals?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="cyber_q4" id="cyber_q4"
                                                     aria-label="cyber_q4">
@@ -3049,9 +3035,9 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Do you encrypt all sensitive
-                                                information
-                                                at rest?</h6>
+                                            <h6 class="profession_header mt-2 mb-2">Do you enabled multi-factor
+                                                authentication for email
+                                                access and remote network access?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="cyber_q5" id="cyber_q5"
                                                     aria-label="cyber_q5">
@@ -3063,9 +3049,9 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Any relevant claims or incidents
-                                                exceeding $10,000
-                                                within the past three years?</h6>
+                                            <h6 class="profession_header mt-2 mb-2">Do you encrypt all sensitive
+                                                information
+                                                at rest?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="cyber_q6" id="cyber_q6"
                                                     aria-label="cyber_q6">
@@ -3077,10 +3063,9 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Would there be any potential Cyber
-                                                Event, Loss, or
-                                                claim that could fall within the scope of the policy you
-                                                are applying for?</h6>
+                                            <h6 class="profession_header mt-2 mb-2">Any relevant claims or incidents
+                                                exceeding $10,000
+                                                within the past three years?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="cyber_q7" id="cyber_q7"
                                                     aria-label="cyber_q7">
@@ -3089,6 +3074,21 @@
                                                     <option value="1">Yes</option>
                                                 </select>
                                                 <label for="cyber_q7">Please select:</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <h6 class="profession_header mt-2 mb-2">Would there be any potential Cyber
+                                                Event, Loss, or
+                                                claim that could fall within the scope of the policy you
+                                                are applying for?</h6>
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="cyber_q8" id="cyber_q8"
+                                                    aria-label="cyber_q8">
+                                                    <option value="" selected></option>
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                                <label for="cyber_q8">Please select:</label>
                                             </div>
                                         </div>
                                     </div>

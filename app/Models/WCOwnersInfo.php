@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CommercialPropertyInformation extends Model
+class WCOwnersInfo extends Model
 {
     use HasFactory;
 
-    protected $table = 'commercial_property_details';
+    protected $table = 'workers_comp_owners_info_entry_details';
     protected $guarded = [];
 }
