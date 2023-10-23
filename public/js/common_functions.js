@@ -23,6 +23,29 @@
         subtree: true, // Observes all descendants
     });
 
+    var isTermsChecked = false;
+
+    $("#process").css("cursor", "no-drop");
+
+    $("#termsCheckbox").on("change", function () {
+        isTermsChecked = $(this).is(":checked");
+        if (isTermsChecked) {
+            // Enable the submit button
+            $("#process").css("cursor", "pointer");
+        } else {
+            // Disable the submit button
+            $("#process").css("cursor", "no-drop");
+        }
+    });
+
+    $("#process").click(function (e) {
+        if (!isTermsChecked) {
+            e.preventDefault(); // This prevents the button click from doing anything
+            alert("Please accept the terms and conditions"); // Optional: Show a message
+            return false;
+        }
+    });
+
     function updateProfessionContents() {
         var numProfessions = $("#wc_no_of_profession").val();
         var professionData = [];
@@ -702,12 +725,22 @@
                     var wc_fein = $("#wc_fein").val();
                     var wc_dob = $("#wc_dob").val();
 
+                    var wc_no_of_losses = $(
+                        "#wc_no_of_losses option:selected"
+                    ).text();
+                    var wc_amt_of_claims = $("#wc_amt_of_claims").val();
+                    var wc_date_of_loss = $("#wc_date_of_loss").val();
+
                     var workersCompensationInformation2 = {
                         "Gross Receipt": wc_gross_receipt,
                         "Do you hire subcontractor": wc_does_hire_subcon,
                         "Subcontractor cost in a year":
                             wc_subcon_cost_year_if_set,
                         "No. of Employees": wc_num_of_empl,
+                        "Worker's Compensation - # of Losses": wc_no_of_losses,
+                        "Worker's Compensation - Amount of Claim":
+                            wc_amt_of_claims,
+                        "Worker's Compensation - Date of Loss": wc_date_of_loss,
                     };
 
                     var workersCompensationInformation3 = {
@@ -842,8 +875,8 @@
                     var excessLiabilityInformation = {
                         "Excess Limits": excess_limits,
                         "GL Effective Date": excess_gl_eff_date,
-                        "No. of Losses for the Past 5 Years":
-                            excess_no_losses_5years,
+                        // "No. of Losses for the Past 5 Years":
+                        //     excess_no_losses_5years,
                         "Explain Losses": excess_explain_losses,
                         "Insurance Carrier": excess_insurance_carrier,
                         "Policy Number / Quote Number":
@@ -891,8 +924,8 @@
                         Model: tools_equipment_model,
                         "VIN or Serial No.": tools_equipment_vin_or_serial_no,
                         Valuation: tools_equipment_valuation,
-                        "No. of Losses for the Past 5 Years":
-                            tools_no_losses_5years,
+                        // "No. of Losses for the Past 5 Years":
+                        //     tools_no_losses_5years,
                         "If there's a loss, please explain":
                             tools_explain_losses,
                     };
@@ -1629,22 +1662,64 @@
                     var ayc_yrs_exp_contractor = $(
                         "#ayc_yrs_exp_contractor"
                     ).val();
-                    var ayc_no_of_losses = $(
-                        "#ayc_no_of_losses option:selected"
-                    ).text();
-                    var ayc_no_of_losses_explain = $(
-                        "#ayc_no_of_losses_explain"
-                    ).val();
+                    var ayc_yrs_in_business = $("#ayc_yrs_in_business").val();
 
-                    var aboutYourCompanyInformation = {
-                        "Business Ownership Structure": ayc_bop,
-                        "Date Business Started": ayc_date_business_started,
-                        "Years of experience as a contractor":
-                            ayc_yrs_exp_contractor,
-                        "No. of Losses": ayc_no_of_losses,
-                        "Explain Losses (Please include loss amount)":
-                            ayc_no_of_losses_explain,
-                    };
+                    var annual_gross_receipt = $("#annual_gross_receipt").val();
+                    var profession = $("#profession option:selected").text();
+                    var residential_percentage = $(
+                        "#residential_percentage option:selected"
+                    ).text();
+                    var commercial_percentage = $(
+                        "#commercial_percentage option:selected"
+                    ).text();
+                    var new_construction_percentage = $(
+                        "#new_construction_percentage option:selected"
+                    ).text();
+                    var repair_remodel_percentage = $(
+                        "#repair_remodel_percentage option:selected"
+                    ).text();
+
+                    // var ayc_no_of_losses = $(
+                    //     "#ayc_no_of_losses option:selected"
+                    // ).text();
+                    // var ayc_no_of_losses_explain = $(
+                    //     "#ayc_no_of_losses_explain"
+                    // ).val();
+
+                    var aboutYourCompanyInformation = {};
+
+                    aboutYourCompanyInformation[
+                        "Business Ownership Structure"
+                    ] = ayc_bop;
+                    aboutYourCompanyInformation["Date Business Started"] =
+                        ayc_date_business_started;
+                    aboutYourCompanyInformation["Years in Business"] =
+                        ayc_yrs_in_business;
+                    aboutYourCompanyInformation[
+                        "Years of experience as a contractor"
+                    ] = ayc_yrs_exp_contractor;
+
+                    aboutYourCompanyInformation["Annual Gross Receipts"] =
+                        annual_gross_receipt;
+                    aboutYourCompanyInformation["Select a Profession"] =
+                        profession;
+                    aboutYourCompanyInformation["Residential %"] =
+                        residential_percentage;
+                    aboutYourCompanyInformation["Commercial %"] =
+                        commercial_percentage;
+                    aboutYourCompanyInformation["New Construction %"] =
+                        new_construction_percentage;
+                    aboutYourCompanyInformation["Repair / Remodel"] =
+                        repair_remodel_percentage;
+                    // var aboutYourCompanyInformation = {
+                    //     "Business Ownership Structure": ayc_bop,
+                    //     "Date Business Started": ayc_date_business_started,
+                    //     "Years of experience as a contractor":
+                    //         ayc_yrs_exp_contractor,
+                    //     // "No. of Losses": ayc_no_of_losses,
+                    //     // "Explain Losses (Please include loss amount)":
+                    //     //     ayc_no_of_losses_explain,
+                    // };
 
                     function generateAllHTML(targetDiv, informationObjects) {
                         var htmlString = "";
@@ -1661,10 +1736,6 @@
                                         typeof value === "string" &&
                                         value.startsWith("<div")
                                     ) {
-                                        // console.log(
-                                        //     "Appending ownership content"
-                                        // );
-
                                         htmlString += value;
                                     } else if (
                                         info === "Building Construction Type"
@@ -1686,6 +1757,15 @@
                                             "<p>Automatic Sprinkler System: <strong>" +
                                             value +
                                             "</strong></p>";
+                                    } else if (
+                                        info === "Annual Gross Receipts"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>About your Information:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Annual Gross Receipts: <strong>" +
+                                            value +
+                                            "</strong> </p>";
                                     } else if (
                                         info === "Automatic Burglar Alarm"
                                     ) {
@@ -1831,18 +1911,11 @@
                             }
                         });
 
-                        // Check if the targetDiv is the installation floater section
                         if (targetDiv === "#instfloat_liability_details") {
-                            // Call generateScheduledEquipmentHTML to get scheduled equipment data
                             var scheduledEquipmentHTML =
                                 generateScheduledEquipmentHTML();
-                            // Append the scheduled equipment HTML to the existing HTML
                             htmlString += scheduledEquipmentHTML;
                         }
-
-                        // Update the targetDiv with the combined HTML
-                        // console.log("Final HTML String:", htmlString);
-
                         $(targetDiv).html(htmlString);
                     }
 
@@ -1913,18 +1986,12 @@
                         $('input[name="question_1[]"]:checked').each(
                             function () {
                                 var productKey = $(this).val();
-                                console.log(productKey);
+                                // console.log(productKey);
                                 productData[productKey] = {};
 
                                 $("div[id^='" + productKey + "_step_']")
                                     .find("input, select, textarea")
                                     .each(function () {
-                                        // productData[productKey][this.name] =
-                                        //     $(this).val();
-                                        // var labelForThisInput = $(
-                                        //     "label[for='" + this.id + "']"
-                                        // ).text();
-
                                         // Dynamic function to traverse up the DOM tree and find the nearest h6
                                         function findNearestH6(element) {
                                             let parent = $(element).parent();
@@ -1957,6 +2024,26 @@
                             }
                         );
 
+                        // Collecting UTM data from hidden fields
+                        commonData.utm_source = $(
+                            'input[name="utm_source"]'
+                        ).val();
+                        commonData.utm_medium = $(
+                            'input[name="utm_medium"]'
+                        ).val();
+                        commonData.utm_campaign = $(
+                            'input[name="utm_campaign"]'
+                        ).val();
+                        commonData.utm_term = $('input[name="utm_term"]').val();
+                        commonData.utm_content = $(
+                            'input[name="utm_content"]'
+                        ).val();
+
+                        // Collecting terms and conditions acceptance
+                        commonData.terms = $(
+                            'input[name="terms"]:checked'
+                        ).val();
+
                         // Send the data
                         axios({
                             method: "post",
@@ -1975,11 +2062,17 @@
                             .then((response) => {
                                 document.getElementById(
                                     "loader_form"
-                                ).style.display = "none";
+                                ).style.display = "block";
                                 if (response.data.redirect) {
                                     window.location.href =
                                         response.data.redirect;
+                                    document.getElementById(
+                                        "loader_form"
+                                    ).style.display = "none";
                                 } else {
+                                    document.getElementById(
+                                        "loader_form"
+                                    ).style.display = "none";
                                     toastr.success(response.data.message);
                                     window.open("/thankyou", "_blank");
                                     location.reload();
@@ -1989,11 +2082,17 @@
                                 // Error logic
                                 document.getElementById(
                                     "loader_form"
-                                ).style.display = "none";
+                                ).style.display = "block";
                                 if (error.response && error.response.data) {
                                     toastr.error(error.response.data.message);
+                                    document.getElementById(
+                                        "loader_form"
+                                    ).style.display = "none";
                                 } else {
                                     toastr.error("An error occurred");
+                                    document.getElementById(
+                                        "loader_form"
+                                    ).style.display = "none";
                                 }
                             });
                     });
@@ -2097,11 +2196,17 @@
                 break;
 
             case "auto":
-                $("#auto_step_1, #auto_step_2, #autoDetailsContainer")
+                $(
+                    "#auto_step_1, #auto_step_2, #auto_step_3, #autoDetailsContainer"
+                )
                     .removeClass("step wizard-step")
                     .addClass("hidden");
-                $("#auto_step_1, #auto_step_2").find("input").val("");
-                $("#auto_step_1, #auto_step_2").find("select").val("");
+                $("#auto_step_1, #auto_step_2, #auto_step_3")
+                    .find("input")
+                    .val("");
+                $("#auto_step_1, #auto_step_2, #auto_step_3")
+                    .find("select")
+                    .val("");
 
                 // ajax container
                 $("#auto_step_1").find("#auto_vehicles_container").empty();
@@ -2349,7 +2454,7 @@
     }
 
     function showSteps(checkboxValue) {
-        console.log(checkboxValue);
+        // console.log("showSteps: " + checkboxValue);
         switch (checkboxValue) {
             case "gl":
                 $("#gl_step_1, #gl_step_2, #glDetailsContainer")
@@ -2362,7 +2467,9 @@
                     .removeClass("hidden");
                 break;
             case "auto":
-                $("#auto_step_1, #auto_step_2, #autoDetailsContainer")
+                $(
+                    "#auto_step_1, #auto_step_2, #auto_step_3, #autoDetailsContainer"
+                )
                     .addClass("step wizard-step")
                     .removeClass("hidden");
                 break;
@@ -2615,15 +2722,36 @@
                 .then(function (response) {
                     $("#city").val(response.data.state.city);
                     $("#states").val(response.data.state.state_abbr).change();
-                    // console.log(response.data.state.state_abbr);
                 })
                 .catch(function (error) {
-                    console.error("Error fetching state by zipcode:", error);
+                    toastr.error(
+                        "No state and city found. Please input a valid US zipcode."
+                    );
                 });
         }
     }
 
     function perfectCurrencyFormatter(selector) {
+        $(document).on("keydown", selector, function (e) {
+            // Allow: backspace, delete, tab, escape, enter, and .
+            if (
+                $.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                // Allow: Ctrl+A
+                (e.keyCode === 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39) ||
+                // Allow: numpad 0-9
+                (e.keyCode >= 96 && e.keyCode <= 105)
+            ) {
+                return;
+            }
+            // Ensure that it is a number and stop the keypress if not
+            const char = String.fromCharCode(e.which);
+            const pattern = /[0-9\.]/; // Only numbers and decimal point
+            if (!pattern.test(char)) {
+                e.preventDefault();
+            }
+        });
         $(document).on("change", selector, function () {
             var numericValue = $(this).val().replace(/[$,]/g, "");
             numericValue = parseFloat(numericValue || 0);
@@ -2778,7 +2906,7 @@
     // Attach the function to the window.onload event
     window.onload = clearSessionData;
 
-    function setSessionVariable(data) {
+    function setSessionVariable(key, value) {
         const csrfToken = $('meta[name="csrf-token"]').attr("content");
         $.ajax({
             url: "/set-session-variable",
@@ -2786,7 +2914,7 @@
             headers: {
                 "X-CSRF-TOKEN": csrfToken,
             },
-            data: { doesGLandWCChecked: data },
+            data: { key: key, value: value },
             success: function (response) {
                 // console.log('Set Session Variable Message: ' + response.message);
             },
@@ -2796,13 +2924,16 @@
         });
     }
 
-    function unsetSessionVariable() {
+    function unsetSessionVariable(key) {
         const csrfToken = $('meta[name="csrf-token"]').attr("content");
         $.ajax({
             url: "/unset-session-variable",
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": csrfToken,
+            },
+            data: {
+                key: key,
             },
             success: function (response) {
                 // console.log('Unset Session Variable Message: ' + response.message);
@@ -2820,6 +2951,7 @@
         $('input[name="question_1[]"]').change(function () {
             var checkboxValue = $(this).val();
             if ($(this).is(":checked")) {
+                // console.log(checkboxValue);
                 localStorage.setItem(checkboxValue, "checked");
                 if (checkboxValue === "gl") {
                     glChecked = true;
@@ -2837,14 +2969,50 @@
 
             if (glChecked && wcChecked) {
                 // console.log('Both "gl" and "wc" checkboxes are checked.');
-                setSessionVariable(false);
+                setSessionVariable("doesGLandWCChecked", false);
                 $("#wc_step_1").load(location.href + " #wc_step_1");
             } else {
-                unsetSessionVariable();
+                unsetSessionVariable("doesGLandWCChecked");
                 setSessionVariable(true);
                 $("#wc_step_1").load(location.href + " #wc_step_1");
             }
+
+            if (glChecked) {
+                setSessionVariable("doesGLChecked", true);
+                $("#about_your_company_step").load(
+                    location.href + " #about_your_company_step"
+                );
+            } else {
+                unsetSessionVariable("doesGLChecked");
+                setSessionVariable("doesGLChecked", false);
+                $("#about_your_company_step").load(
+                    location.href + " #about_your_company_step"
+                );
+            }
         });
+    }
+
+    function showDriverIfMarried() {
+        $("#auto_driver_if_married_container").append(`
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="auto_driver_spouse_name"
+                        id="auto_driver_spouse_name" class="form-control"
+                        placeholder="auto_driver_spouse_name">
+                    <label for="auto_driver_spouse_name">Spouse Name</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="auto_driver_spouse_dob"
+                        id="auto_driver_spouse_dob" class="form-control"
+                        placeholder="auto_driver_spouse_dob">
+                    <label for="auto_driver_spouse_dob">Spouse Date of Birth</label>
+                </div>
+            </div>
+        `);
+
+        datePickerFormatter("#auto_driver_spouse_dob");
     }
 
     function showSubconContainerForGL() {
@@ -2880,16 +3048,16 @@
         `);
     }
 
-    function showGLNoOfLossesContainer() {
-        $("#gl_explain_losses_container").append(`
-            <div class="col-md-12">
-                <div class="mb-3 form-floating">
-                    <textarea style="resize: none;" name="gl_explain_losses" id="gl_explain_losses" class="form-control" placeholder="Please explain"></textarea>
-                    <label for="gl_explain_losses">Explain Losses (Please include loss amount)</label>
-                </div>
-            </div>
-        `);
-    }
+    // function showGLNoOfLossesContainer() {
+    //     $("#gl_explain_losses_container").append(`
+    //         <div class="col-md-12">
+    //             <div class="mb-3 form-floating">
+    //                 <textarea style="resize: none;" name="gl_explain_losses" id="gl_explain_losses" class="form-control" placeholder="Please explain"></textarea>
+    //                 <label for="gl_explain_losses">Explain Losses (Please include loss amount)</label>
+    //             </div>
+    //         </div>
+    //     `);
+    // }
 
     function showPollutionNoOfLossesContainer() {
         $("#pollution_explain_losses_container").append(`
@@ -2902,7 +3070,7 @@
         `);
     }
 
-    async function showProfessionEntries(a) {
+    async function showProfessionEntries(a, ids = []) {
         try {
             let response = await axios.get("wc/showProfessionEntries", {
                 params: {
@@ -3072,15 +3240,24 @@
         `);
     }
 
-    function showAYCNoOfLossesContainer() {
-        $("#ayc_no_losses_container").html(`
+    function showLossesAdditionalQuestion(name) {
+        $(`#${name}_losses_container`).html(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <textarea style="resize: none;" name="ayc_no_of_losses_explain" id="ayc_no_of_losses_explain" class="form-control" placeholder="Please explain"></textarea>
-                    <label for="ayc_no_of_losses_explain">Explain Losses (Please include loss amount)</label>
+                    <input type="text" name="${name}_amt_of_claims" id="${name}_amt_of_claims" class="form-control" placeholder="Amount of Claims">
+                    <label for="${name}_amt_of_claims">Amount of Claim:</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="mb-3 form-floating">
+                    <input type="text" name="${name}_date_of_loss" id="${name}_date_of_loss" class="form-control" placeholder="Date of Loss">
+                    <label for="${name}_date_of_loss">Date of Loss:</label>
                 </div>
             </div>
         `);
+
+        perfectCurrencyFormatter(`#${name}_amt_of_claims`);
+        datePickerFormatter(`#${name}_date_of_loss`);
     }
 
     function showExcessNoOfLossesContainer() {
@@ -3581,11 +3758,18 @@
 
     let counter = 0;
     let percentages = [];
-    let totalPercentage = 0; // This will keep track of the overall ownership percentage
+    let totalPercentage = 0;
 
     function checkPercentages() {
         const sum = percentages.reduce((a, b) => a + b, 0);
         return sum;
+    }
+
+    function adjustRemainingPercentages(excludedIndex) {
+        const sum = checkPercentages();
+        if (sum < 100) {
+            showMultipleStateWork();
+        }
     }
 
     function checkTotalPercentage() {
@@ -3594,6 +3778,7 @@
 
     function showMultipleStateWork() {
         counter++;
+
         const newElement = $("#gl_multiple_state_work_container").append(`
         <div class="row justify-content-center stateWorkContainer">
             <h6 class="profession_header mt-2 mb-2">State Work Entry No. ${counter}</h6>
@@ -3677,21 +3862,26 @@
         $(`#gl_multiple_states_percentage_${counter}`).on(
             "change",
             function () {
-                const value = parseInt($(this).val(), 10);
+                const index = counter - 1;
+                const value = parseFloat($(this).val());
+
                 if (isNaN(value)) {
                     toastr.error("Please enter a valid number");
-                    return;
-                }
-                const sum = checkPercentages();
-                if (sum + value > 100) {
-                    toastr.error("Total percentage should not exceed 100%.");
                     $(this).val("");
                     return;
                 }
-                percentages[counter - 1] = value;
-                if (sum + value < 100) {
-                    showMultipleStateWork();
+
+                const oldPercentage = percentages[index] || 0;
+                const newTotal = checkPercentages() - oldPercentage + value;
+
+                if (newTotal > 100) {
+                    toastr.error("Total percentage should not exceed 100%");
+                    $(this).val(oldPercentage);
+                    return;
                 }
+
+                percentages[index] = value;
+                adjustRemainingPercentages(index);
             }
         );
     }
@@ -3790,7 +3980,6 @@
 
     function renderOwnersInformationFields() {
         counter++;
-
         const ownersInfo = $("#owners_information_container").append(`
             <div class="row justify-content-center ownersInfo">
                 <div class="col-md-12">
@@ -3879,7 +4068,7 @@
         $(`#wc_ownership_perc_${counter}`).on("change", function () {
             const value = parseInt($(this).val());
             if (!isNaN(value)) {
-                percentages[counter - 1] = value; // store the percentage value
+                percentages[counter - 1] = value;
                 const currentTotal = checkTotalPercentage();
 
                 if (currentTotal < 100) {
@@ -3890,8 +4079,6 @@
                 }
             }
         });
-        // console.log(counter);
-        // return counter;
     }
 
     function showSchedPropertyBRContainer() {
@@ -3924,6 +4111,9 @@
                 </div>
             </div>
         `);
+
+        datePickerFormatter("#br_sched_property_effective_date");
+        datePickerFormatter("#br_sched_property_expiration_date");
     }
 
     function showIfProjectStarted() {
@@ -3983,6 +4173,11 @@
                 </div>
             </div>
         `);
+
+        perfectCurrencyFormatter("#br_cost_of_work_done");
+        perfectCurrencyFormatter("#br_cost_remaining_works");
+        datePickerFormatter("#br_when_will_project_start");
+        datePickerFormatter("#br_when_project_started");
     }
 
     function showReqLimitsIfOthers() {
@@ -4160,28 +4355,33 @@
     });
     // END PERSONAL INFORMATION SCRIPS
 
+    // START ABOUT YOUR COMPANY
+    perfectCurrencyFormatter("#annual_gross_receipt");
+    function handleComputedPercentage(target_val, target_compared) {
+        $(document).on("change", `#${target_val}`, function () {
+            setTimeout(function () {
+                computePercentage(`${target_val}`, `${target_compared}`);
+            }, 0);
+        });
+    }
+    handleComputedPercentage("residential_percentage", "commercial_percentage");
+    handleComputedPercentage("commercial_percentage", "residential_percentage");
+    handleComputedPercentage(
+        "new_construction_percentage",
+        "repair_remodel_percentage"
+    );
+    handleComputedPercentage(
+        "repair_remodel_percentage",
+        "new_construction_percentage"
+    );
+    // END ABOUT YOUR COMPANY
+
     // START GL SCRIPT
     datePickerFormatter("#wc_dob");
-    $("#gl_residential").change(function () {
-        setTimeout(function () {
-            computePercentage("gl_residential", "gl_commercial");
-        }, 0);
-    });
-    $("#gl_commercial").change(function () {
-        setTimeout(function () {
-            computePercentage("gl_commercial", "gl_residential");
-        }, 0);
-    });
-    $("#gl_new_construction").change(function () {
-        setTimeout(function () {
-            computePercentage("gl_new_construction", "gl_repair_remodel");
-        }, 0);
-    });
-    $("#gl_repair_remodel").change(function () {
-        setTimeout(function () {
-            computePercentage("gl_repair_remodel", "gl_new_construction");
-        }, 0);
-    });
+    handleComputedPercentage("gl_residential", "gl_commercial");
+    handleComputedPercentage("gl_commercial", "gl_residential");
+    handleComputedPercentage("gl_new_construction", "gl_repair_remodel");
+    handleComputedPercentage("gl_repair_remodel", "gl_new_construction");
     perfectCurrencyFormatter("#gl_cost_proj_5years");
     perfectCurrencyFormatter("#gl_annual_gross");
     $("#wc_gross_receipt").val($("#gl_annual_gross").val());
@@ -4192,39 +4392,22 @@
         showSubconContainerForGL,
         "gl_subcon_cost"
     );
-    $("#gl_no_losses_5years").on("change", function () {
+    $(document).on("change", "#gl_no_of_losses", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");
         $(".loader-container").addClass("active");
-        if (value >= 1) {
+        if (value === -1) {
             setTimeout(function () {
-                showGLNoOfLossesContainer();
+                showLossesAdditionalQuestion("gl");
                 $(".loader-container").removeClass("active");
                 $(".loader-container").addClass("hidden");
             }, 0);
         } else {
-            $("#gl_explain_losses").parent().parent().remove();
+            $("#gl_losses_container").empty();
             $(".loader-container").addClass("hidden");
             $(".loader-container").removeClass("active");
         }
     });
-    $("#ayc_no_of_losses").on("change", function () {
-        const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showAYCNoOfLossesContainer();
-            }, 0);
-        } else {
-            // $("#ayc_no_of_losses_explain").parent().parent().remove();
-            $("#ayc_no_losses_container").empty();
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-        }
-    });
-
-    // Function to handle changes in annual gross
     function handleAnnualGrossChange() {
         var grossValue = $("#gl_annual_gross").val();
         var convertGrossValue = grossValue.replace(/[^0-9]/g, "");
@@ -4318,6 +4501,8 @@
             showMultipleStateWork();
         } else {
             $(".stateWorkContainer").remove();
+            percentages = [];
+            counter = 0;
         }
     });
 
@@ -4382,35 +4567,83 @@
             }
         }
     });
+
+    $(document).on("change", "#wc_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("wc");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#wc_losses_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
     // END WC SCRIPTS
 
     // START AUTO SCRIPTS
     $(document).ready(function () {
         $("#auto_add_vehicle").trigger("change");
     });
-    $("#auto_add_vehicle").on("change", async function () {
+    $(document).on("change", "#auto_add_vehicle", async function () {
         var numVehicles = $(this).val();
         $("#auto_vehicles_container").empty();
         for (var i = 1; i <= numVehicles; i++) {
             await showAutoVehicleEntries(i);
         }
     });
-    $(document).ready(function () {
-        $("#auto_add_driver").on("change", async function () {
-            const numDrivers = $(this).val();
-            $("#auto_drivers_container").empty();
-            for (let i = 1; i <= numDrivers; i++) {
-                await showAutoDriverEntries(i);
-            }
-        });
-        $("#auto_add_driver").trigger("change");
+    $(document).on("change", "#auto_add_vehicle", async function () {
+        const numDrivers = $(this).val();
+        $("#auto_drivers_container").empty();
+        for (let i = 1; i <= numDrivers; i++) {
+            await showAutoDriverEntries(i);
+        }
+    });
+    $("#auto_add_driver").trigger("change");
+    $(document).on("change", "#auto_driver_marital_status", function () {
+        const value = $(this).val();
+        // console.log(value);
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === "Married") {
+            setTimeout(function () {
+                showDriverIfMarried();
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#auto_driver_if_married_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
+    $(document).on("change", "#auto_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("auto");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#auto_losses_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
     });
     // END AUTO SCRIPTS
 
     // START BOND SCRIPTS
     $("#bond_owners_ssn").ssnFormat();
     datePickerFormatter("#bond_owners_dob");
-    $("#bond_owners_civil_status").on("change", function () {
+    $(document).on("change", "#bond_owners_civil_status", function () {
         const isSelectedMarried = $(this).val() === "Married";
         if (isSelectedMarried) {
             $(".loader-container").addClass("hidden");
@@ -4422,7 +4655,7 @@
         }
     });
     perfectCurrencyFormatter("#bond_amount_of_bond");
-    $("#bond_type_of_license").on("change", function () {
+    $(document).on("change", "#bond_type_of_license", function () {
         $(".loader-container").addClass("hidden");
         $(".loader-container").removeClass("active");
         if ($(this).val() === "Others") {
@@ -4436,11 +4669,27 @@
         }
     });
     datePickerFormatter("#bond_effective_date");
+    $(document).on("change", "#bond_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("bond");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#bond_losses_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
     // END BOND SCRIPTS
 
     // START EXCESS SCRIPTS
     perfectCurrencyFormatter("#excess_policy_premium");
-    $("#excess_no_losses_5years").on("change", function () {
+    $(document).on("change", "#excess_no_losses_5years", function () {
         const value = parseInt($(this).val());
         if (value >= 1) {
             $(".loader-container").addClass("hidden");
@@ -4457,13 +4706,30 @@
     datePickerFormatter("#excess_gl_eff_date");
     datePickerFormatter("#excess_effective_date");
     datePickerFormatter("#excess_expiration_date");
+    $(document).on("change", "#excess_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("excess");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#excess_losses_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
     // END EXCESS SCRIPTS
 
     // START TOOLS SCRIPTS
     miscToolsCurrencyFormatter("#tools_misc_tools");
     perfectCurrencyFormatter("#tools_rented_or_leased_amt");
     scheduledEquipmentCurrencyFormatter("#tools_sched_equipment");
-    $("#tools_no_losses_5years").on("change", function () {
+
+    $(document).on("change", "#tools_no_losses_5years", function () {
         const value = parseInt($(this).val());
         if (value >= 1) {
             $(".loader-container").addClass("hidden");
@@ -4477,62 +4743,75 @@
             $(".loader-container").removeClass("active");
         }
     });
+
+    $(document).on("change", "#tools_equipment_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("tools_equipment");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#tools_equipment_losses_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
     // END TOOLS SCRIPTS
 
     // START BR SCRIPTS
     perfectCurrencyFormatter("#br_value_of_existing_structure");
     perfectCurrencyFormatter("#br_value_of_work_performed");
-    $("#br_scheduled_property_address_builders_risk_coverage").on(
-        "change",
-        function () {
+
+    function handleBRSubQuestions(select_target, fn, sub_container) {
+        $(document).on("change", `#${select_target}`, function () {
             const value = parseInt($(this).val());
             if (value >= 1) {
                 $(".loader-container").addClass("hidden");
                 $(".loader-container").removeClass("active");
                 setTimeout(function () {
-                    showSchedPropertyBRContainer();
-                    datePickerFormatter("#br_sched_property_effective_date");
-                    datePickerFormatter("#br_sched_property_expiration_date");
+                    fn();
                 }, 0);
             } else {
                 $(".loader-container").addClass("hidden");
                 $(".loader-container").removeClass("active");
-                $("#br_sched_property_carrier_name").parent().parent().remove();
-                $("#br_sched_property_effective_date")
-                    .parent()
-                    .parent()
-                    .remove();
-                $("#br_sched_property_expiration_date")
-                    .parent()
-                    .parent()
-                    .remove();
+                $(`#${sub_container}`).empty();
             }
-        }
+        });
+    }
+
+    handleBRSubQuestions(
+        "br_scheduled_property_address_builders_risk_coverage",
+        showSchedPropertyBRContainer,
+        "br_scheduled_property_container"
     );
-    $("#br_has_project_started").on("change", function () {
+
+    handleBRSubQuestions(
+        "br_has_project_started",
+        showIfProjectStarted,
+        "br_project_started_container"
+    );
+
+    datePickerFormatter("#br_when_structure_built");
+    $(document).on("change", "#br_no_of_losses", function () {
         const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
             setTimeout(function () {
-                showIfProjectStarted();
-                perfectCurrencyFormatter("#br_cost_of_work_done");
-                perfectCurrencyFormatter("#br_cost_remaining_works");
-                datePickerFormatter("#br_when_will_project_start");
-                datePickerFormatter("#br_when_project_started");
+                showLossesAdditionalQuestion("br");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
             }, 0);
         } else {
             $(".loader-container").addClass("hidden");
             $(".loader-container").removeClass("active");
-            $("#br_when_project_started").parent().parent().remove();
-            $("#br_what_are_work_done").parent().parent().remove();
-            $("#br_cost_of_work_done").parent().parent().remove();
-            $("#br_what_are_remaining_works").parent().parent().remove();
-            $("#br_cost_remaining_works").parent().parent().remove();
-            $("#br_when_will_project_start").parent().parent().remove();
+            $("#br_losses_container").empty();
         }
     });
-    datePickerFormatter("#br_when_structure_built");
     // END BR SCRIPTS
 
     // START BOP SCRIPTS
@@ -4543,6 +4822,22 @@
     yearPickerFormatter("#bop_last_update_heating_year");
     yearPickerFormatter("#bop_last_update_plumbing_year");
     yearPickerFormatter("#bop_last_update_electrical_year");
+    $(document).on("change", "#bop_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("bop");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#bop_losses_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
     // END BOP SCRIPTS
 
     // START COMM PROP SCRIPTS
@@ -4554,178 +4849,129 @@
     yearPickerFormatter("#property_last_update_heating_year");
     yearPickerFormatter("#property_last_update_plumbing_year");
     yearPickerFormatter("#property_last_update_electrical_year");
+    $(document).on("change", "#property_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("property");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#property_losses_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
     // END COMM PROPS SCRIPTS
 
     // START EO SCRIPTS
     perfectCurrencyFormatter("#eo_ftime_salary_range");
     perfectCurrencyFormatter("#eo_ptime_salary_range");
 
-    $("#eo_requested_limits").on("change", function () {
-        const value = $(this).val();
-        if (value === "Others") {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showReqLimitsIfOthers();
-            }, 0);
-        } else {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            $("#eo_reqlimit_if_others").parent().parent().remove();
-        }
-    });
+    function handleEORequestDeductibleSubQuestions(
+        select_target,
+        fn,
+        sub_container
+    ) {
+        $(document).on("change", `#${select_target}`, function () {
+            const value = $(this).val();
+            if (value === "Others") {
+                $(".loader-container").addClass("hidden");
+                $(".loader-container").removeClass("active");
+                setTimeout(function () {
+                    fn();
+                }, 0);
+            } else {
+                $(".loader-container").addClass("hidden");
+                $(".loader-container").removeClass("active");
+                $(`#${sub_container}`).empty();
+            }
+        });
+    }
 
-    $("#eo_request_deductible").on("change", function () {
-        const value = $(this).val();
-        if (value === "Others") {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showReqDeductibleIfOthers();
-            }, 0);
-        } else {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            $("#eo_reqdeductible_if_others").parent().parent().remove();
-        }
-    });
+    function handleEOSubQuestions(select_target, fn, sub_container) {
+        $(document).on("change", `#${select_target}`, function () {
+            const value = parseInt($(this).val());
+            if (value >= 1) {
+                $(".loader-container").addClass("hidden");
+                $(".loader-container").removeClass("active");
+                setTimeout(function () {
+                    fn();
+                }, 0);
+            } else {
+                $(".loader-container").addClass("hidden");
+                $(".loader-container").removeClass("active");
+                $(`#${sub_container}`).empty();
+            }
+        });
+    }
 
-    $("#eo_business_entity_q1").on("change", function () {
+    handleEORequestDeductibleSubQuestions(
+        "eo_requested_limits",
+        showReqLimitsIfOthers,
+        "eo_requested_limits_others_container"
+    );
+
+    handleEORequestDeductibleSubQuestions(
+        "eo_request_deductible",
+        showReqDeductibleIfOthers,
+        "eo_requested_deductible_others_container"
+    );
+
+    handleEOSubQuestions(
+        "eo_business_entity_q1",
+        showBusinessEntityIfYesQ1,
+        "eo_business_entity_q1_container"
+    );
+
+    handleEOSubQuestions(
+        "eo_business_entity_q2",
+        showBusinessEntityIfYesQ2,
+        "eo_business_entity_q2_container"
+    );
+
+    handleEOSubQuestions(
+        "eo_business_entity_q3",
+        showBusinessEntityIfYesQ3,
+        "eo_business_entity_q3_container"
+    );
+
+    handleEOSubQuestions(
+        "eo_business_entity_q4",
+        showBusinessEntityIfYesQ4,
+        "eo_business_entity_q4_container"
+    );
+
+    handleEOSubQuestions(
+        "eo_business_entity_q5",
+        showBusinessEntityIfYesQ5,
+        "eo_business_entity_q5_container"
+    );
+
+    handleEOSubQuestions("eo_hr_q1", showHRIfYesQ1, "eo_hr_q1_container");
+    handleEOSubQuestions("eo_hr_q2", showHRIfYesQ2, "eo_hr_q2_container");
+    handleEOSubQuestions("eo_hr_q3", showHRIfYesQ3, "eo_hr_q3_container");
+    handleEOSubQuestions("eo_hr_q4", showHRIfYesQ4, "eo_hr_q4_container");
+
+    $(document).on("change", "#eo_no_of_losses", function () {
         const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
             setTimeout(function () {
-                showBusinessEntityIfYesQ1();
+                showLossesAdditionalQuestion("eo");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
             }, 0);
         } else {
             $(".loader-container").addClass("hidden");
             $(".loader-container").removeClass("active");
-            $("#eo_business_entity_q1").parent().parent().remove();
+            $("#eo_losses_container").empty();
         }
     });
-
-    $("#eo_business_entity_q2").on("change", function () {
-        const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showBusinessEntityIfYesQ2();
-            }, 0);
-        } else {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            $("#eo_business_entity_q2").parent().parent().remove();
-        }
-    });
-
-    $("#eo_business_entity_q3").on("change", function () {
-        const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showBusinessEntityIfYesQ3();
-            }, 0);
-        } else {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            $("#eo_business_entity_q3").parent().parent().remove();
-        }
-    });
-
-    $("#eo_business_entity_q4").on("change", function () {
-        const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showBusinessEntityIfYesQ4();
-            }, 0);
-        } else {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            $("#eo_business_entity_q4").parent().parent().remove();
-        }
-    });
-
-    $("#eo_business_entity_q5").on("change", function () {
-        const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showBusinessEntityIfYesQ5();
-            }, 0);
-        } else {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            $("#eo_business_entity_q5").parent().parent().remove();
-        }
-    });
-
-    $("#eo_hr_q1").on("change", function () {
-        const value = parseInt($(this).val());
-        // console.log(value);
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showHRIfYesQ1();
-            }, 0);
-        } else {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            $("#eo_hr_sub_q1").parent().parent().remove();
-        }
-    });
-
-    $("#eo_hr_q2").on("change", function () {
-        const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showHRIfYesQ2();
-            }, 0);
-        } else {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            $("#eo_hr_sub_q2").parent().parent().remove();
-        }
-    });
-
-    $("#eo_hr_q3").on("change", function () {
-        const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showHRIfYesQ3();
-            }, 0);
-        } else {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            $("#eo_hr_sub_q3").parent().parent().remove();
-        }
-    });
-
-    $("#eo_hr_q4").on("change", function () {
-        const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showHRIfYesQ4();
-            }, 0);
-        } else {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            $("#eo_hr_sub_q4").parent().parent().remove();
-        }
-    });
-
     // END EO SCRIPTS
 
     // START POLLUTION SCRIPTS
@@ -4784,7 +5030,43 @@
     datePickerFormatter("#epli_effective_date");
     perfectCurrencyFormatter("#epli_prev_premium_amount");
     perfectCurrencyFormatter("#epli_deductible_amount");
+    $(document).on("change", "#epli_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("epli");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#epli_losses_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
     // END EPLI SCRIPTS
+
+    // START CYBER LIABILITY SCRIPTS
+    $("#cyber_it_contact_number").on("input", formatUSPhone);
+    $(document).on("change", "#cyber_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("cyber");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#cyber_losses_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
+    // END CYBER LIABILITY SCRIPTS
 
     // START INSTALLATION FLOATER SCRIPTS
     perfectCurrencyFormatter("#instfloat_max_value_of_equipment");
@@ -4804,11 +5086,23 @@
         updateEquipmentEntryNames();
     });
     datePickerFormatter("#instfloat_scheduled_equipment_date_purchased_1");
+    $(document).on("change", "#instfloat_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("instfloat");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#instfloat_losses_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
     // END INSTALLATION FLOATER SCRIPTS
-
-    // START CYBER LIABILITY SCRIPTS
-    $("#cyber_it_contact_number").on("input", formatUSPhone);
-    // END CYBER LIABILITY SCRIPTS
 
     // START ABOUT YOUR COMPANY SCRIPTS
     datePickerFormatter("#ayc_date_business_started");

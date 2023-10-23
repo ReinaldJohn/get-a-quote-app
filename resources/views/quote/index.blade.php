@@ -27,6 +27,8 @@
             rel="stylesheet">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+        {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
+
 
         <!-- BASE CSS -->
         <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -196,10 +198,10 @@
                                                     <li>
                                                         <div class="checkbox_radio_container">
                                                             <input type="checkbox" id="question_1_opt_11"
-                                                                name="question_1[]" class="" value="pollution">
+                                                                name="question_1[]" class="" value="pollution" disabled>
                                                             <label class="checkbox" for="question_1_opt_11"></label>
                                                             <label for="question_1_opt_11" class="wrapper">Pollution
-                                                                Application</label>
+                                                                Application (Not yet available)</label>
                                                         </div>
                                                     </li>
                                                     <li>
@@ -375,13 +377,182 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-floating mb-3">
+                                                <input type="text" name="ayc_yrs_in_business"
+                                                    id="ayc_yrs_in_business" class="form-control" placeholder="">
+                                                <label for="ayc_yrs_in_business">Years in Business?</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" name="ayc_yrs_exp_contractor"
                                                     id="ayc_yrs_exp_contractor" class="form-control" placeholder="">
                                                 <label for="ayc_yrs_exp_contractor">Years of experience as a
                                                     contractor?</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
+                                        @if (session('doesGLChecked') !== 'true')
+                                            <div class="col-md-12">
+                                                <h6 class="profession_header mt-2 mb-2">About Your Profession</h6>
+                                                <div class="form-floating mb-3">
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3 form-floating">
+                                                            <input type="text" name="annual_gross_receipt"
+                                                                id="annual_gross_receipt" class="form-control"
+                                                                placeholder="Annual Gross Receipts" maxlength="20">
+                                                            <label for="annual_gross_receipt">Annual Gross
+                                                                Receipts</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3 form-floating">
+                                                            <select class="form-select" name="profession"
+                                                                id="profession" aria-label="profession">
+                                                                <option value selected></option>
+                                                                <optgroup label="All Professions">
+                                                                    @foreach ($professions as $profession)
+                                                                        <option value="{{ $profession['id'] }}">
+                                                                            {{ $profession['name'] }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </optgroup>
+                                                            </select>
+                                                            <label for="profession">Select a Profession</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 form-floating">
+                                                            <select class="form-select" name="residential_percentage"
+                                                                id="residential_percentage"
+                                                                aria-label="residential_percentage">
+                                                                <option value selected></option>
+                                                                <option value="0">0%</option>
+                                                                <option value="5">5%</option>
+                                                                <option value="10">10%</option>
+                                                                <option value="15">15%</option>
+                                                                <option value="20">20%</option>
+                                                                <option value="25">25%</option>
+                                                                <option value="30">30%</option>
+                                                                <option value="35">35%</option>
+                                                                <option value="40">40%</option>
+                                                                <option value="45">45%</option>
+                                                                <option value="50">50%</option>
+                                                                <option value="55">55%</option>
+                                                                <option value="60">60%</option>
+                                                                <option value="65">65%</option>
+                                                                <option value="70">70%</option>
+                                                                <option value="75">75%</option>
+                                                                <option value="80">80%</option>
+                                                                <option value="85">85%</option>
+                                                                <option value="90">90%</option>
+                                                                <option value="95">95%</option>
+                                                                <option value="100">100%</option>
+                                                            </select>
+                                                            <label for="gl_residential">Residential %</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 form-floating">
+                                                            <select class="form-select" name="commercial_percentage"
+                                                                id="commercial_percentage"
+                                                                aria-label="commercial_percentage">
+                                                                <option value selected></option>
+                                                                <option value="0">0%</option>
+                                                                <option value="5">5%</option>
+                                                                <option value="10">10%</option>
+                                                                <option value="15">15%</option>
+                                                                <option value="20">20%</option>
+                                                                <option value="25">25%</option>
+                                                                <option value="30">30%</option>
+                                                                <option value="35">35%</option>
+                                                                <option value="40">40%</option>
+                                                                <option value="45">45%</option>
+                                                                <option value="50">50%</option>
+                                                                <option value="55">55%</option>
+                                                                <option value="60">60%</option>
+                                                                <option value="65">65%</option>
+                                                                <option value="70">70%</option>
+                                                                <option value="75">75%</option>
+                                                                <option value="80">80%</option>
+                                                                <option value="85">85%</option>
+                                                                <option value="90">90%</option>
+                                                                <option value="95">95%</option>
+                                                                <option value="100">100%</option>
+                                                            </select>
+                                                            <label for="commercial_percentage">Commercial %</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 form-floating">
+                                                            <select class="form-select"
+                                                                name="new_construction_percentage"
+                                                                id="new_construction_percentage"
+                                                                aria-label="new_construction_percentage">
+                                                                <option value selected></option>
+                                                                <option value="0">0%</option>
+                                                                <option value="5">5%</option>
+                                                                <option value="10">10%</option>
+                                                                <option value="15">15%</option>
+                                                                <option value="20">20%</option>
+                                                                <option value="25">25%</option>
+                                                                <option value="30">30%</option>
+                                                                <option value="35">35%</option>
+                                                                <option value="40">40%</option>
+                                                                <option value="45">45%</option>
+                                                                <option value="50">50%</option>
+                                                                <option value="55">55%</option>
+                                                                <option value="60">60%</option>
+                                                                <option value="65">65%</option>
+                                                                <option value="70">70%</option>
+                                                                <option value="75">75%</option>
+                                                                <option value="80">80%</option>
+                                                                <option value="85">85%</option>
+                                                                <option value="90">90%</option>
+                                                                <option value="95">95%</option>
+                                                                <option value="100">100%</option>
+                                                            </select>
+                                                            <label for="new_construction_percentage">New Construction
+                                                                %</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3 form-floating">
+                                                            <select class="form-select"
+                                                                name="repair_remodel_percentage"
+                                                                id="repair_remodel_percentage"
+                                                                aria-label="repair_remodel_percentage">
+                                                                <option value selected></option>
+                                                                <option value="0">0%</option>
+                                                                <option value="5">5%</option>
+                                                                <option value="10">10%</option>
+                                                                <option value="15">15%</option>
+                                                                <option value="20">20%</option>
+                                                                <option value="25">25%</option>
+                                                                <option value="30">30%</option>
+                                                                <option value="35">35%</option>
+                                                                <option value="40">40%</option>
+                                                                <option value="45">45%</option>
+                                                                <option value="50">50%</option>
+                                                                <option value="55">55%</option>
+                                                                <option value="60">60%</option>
+                                                                <option value="65">65%</option>
+                                                                <option value="70">70%</option>
+                                                                <option value="75">75%</option>
+                                                                <option value="80">80%</option>
+                                                                <option value="85">85%</option>
+                                                                <option value="90">90%</option>
+                                                                <option value="95">95%</option>
+                                                                <option value="100">100%</option>
+                                                            </select>
+                                                            <label for="repair_remodel_percentage">Repair/Remodel
+                                                                %</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        {{-- <div class="col-md-12">
                                             <div class="form-floating mb-3">
                                                 <select class="form-select" name="ayc_no_of_losses"
                                                     id="ayc_no_of_losses" aria-label="ayc_no_of_losses">
@@ -396,7 +567,7 @@
                                                 <label for="ayc_no_of_losses">No. of Losses</label>
                                             </div>
                                         </div>
-                                        <div id="ayc_no_losses_container"></div>
+                                        <div id="ayc_no_losses_container"></div> --}}
                                     </div>
                                     <!-- /row -->
                                 </div>
@@ -423,11 +594,13 @@
                                                 <select class="form-select" name="gl_profession" id="gl_profession"
                                                     aria-label="gl_profession">
                                                     <option value selected></option>
-                                                    @foreach ($professions as $profession)
-                                                        <option value="{{ $profession['id'] }}">
-                                                            {{ $profession['name'] }}
-                                                        </option>
-                                                    @endforeach
+                                                    <optgroup label="All Professions">
+                                                        @foreach ($professions as $profession)
+                                                            <option value="{{ $profession['id'] }}">
+                                                                {{ $profession['name'] }}
+                                                            </option>
+                                                        @endforeach
+                                                    </optgroup>
                                                 </select>
                                                 <label for="gl_profession">Select a Profession</label>
                                             </div>
@@ -635,12 +808,31 @@
                                         <!--  -->
                                         <div id="gl_subcon_cost_container"></div>
                                         <!--  -->
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="gl_no_of_losses"
+                                                    id="gl_no_of_losses" aria-label="gl_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                <label for="gl_no_of_losses">General Liability - # of Losses</label>
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="gl_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                     <!-- /row -->
                                 </div>
                                 <!-- /Step -->
 
                                 <!-- WC Stepper 1 -->
+                                {{-- <div id="wcContainer"> --}}
+                                {{-- @if (session('doesWCChecked') === 'true') --}}
                                 <div class="step" id="wc_step_1">
                                     <div class="question_title">
                                         <h3>Worker’s Compensation Application</h3>
@@ -685,7 +877,8 @@
                                                         <option value="1">Yes</option>
                                                         <option value="0">No</option>
                                                     </select>
-                                                    <label for="wc_does_hire_subcon">Do you hire subcontractor?</label>
+                                                    <label for="wc_does_hire_subcon">Do you hire
+                                                        subcontractor?</label>
                                                 </div>
                                             </div>
                                             <!--  -->
@@ -700,6 +893,24 @@
                                                 </div>
                                             </div>
                                         @endif
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="wc_no_of_losses"
+                                                    id="wc_no_of_losses" aria-label="wc_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                <label for="wc_no_of_losses">Worker's Compensation - # of
+                                                    Losses</label>
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="wc_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -792,9 +1003,13 @@
                                     </div>
                                     <div id="owners_information_container"></div>
                                 </div>
+                                {{-- @endif --}}
+                                {{-- </div> --}}
                                 <!-- /Step -->
 
                                 <!-- AUTO Stepper 1 -->
+                                {{-- <div id="autoContainer"> --}}
+                                {{-- @if (session('doesAutoChecked') === 'true') --}}
                                 <div class="step" id="auto_step_1">
                                     <div class="question_title">
                                         <h3>Commercial Auto Application</h3>
@@ -805,7 +1020,8 @@
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="auto_add_vehicle"
                                                     id="auto_add_vehicle" aria-label="auto_add_vehicle">
-                                                    <option value="1" selected>1</option>
+                                                    <option selected></option>
+                                                    <option value="1">1</option>
                                                     <option value="2">2</option>
                                                     <option value="3">3</option>
                                                     <option value="4">4</option>
@@ -813,6 +1029,8 @@
                                                     <option value="6">6</option>
                                                     <option value="7">7</option>
                                                     <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
                                                 </select>
                                                 <label for="auto_add_vehicle">Additional Vehicle?</label>
                                             </div>
@@ -833,12 +1051,108 @@
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
+                                                <select class="form-select" name="auto_are_you_the_driver"
+                                                    id="auto_are_you_the_driver" aria-label="auto_are_you_the_driver">
+                                                    <option value="" selected></option>
+                                                    <option value="0">No</option>
+                                                    <option value="1">Yes</option>
+                                                </select>
+                                                <label for="auto_are_you_the_driver">Are you the driver of the
+                                                    vehicle?</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <h6 class="profession_header mt-2 mb-2">Your Information:</h6>
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="auto_driver_full_name"
+                                                    id="auto_driver_full_name" class="form-control"
+                                                    placeholder="auto_driver_full_name">
+                                                <label for="auto_driver_full_name">Full Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="auto_driver_date_of_birth"
+                                                    id="auto_driver_date_of_birth" class="form-control"
+                                                    placeholder="auto_driver_date_of_birth">
+                                                <label for="auto_driver_date_of_birth">Date of Birth</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="auto_driver_marital_status"
+                                                    id="auto_driver_marital_status"
+                                                    aria-label="auto_driver_marital_status">
+                                                    <option value selected></option>
+                                                    <option value="Single">Single</option>
+                                                    <option value="Married">Married</option>
+                                                    <option value="Divorced">Divorced</option>
+                                                </select>
+                                                <label for="auto_driver_marital_status">Marital Status</label>
+                                            </div>
+                                        </div>
+                                        <div id="auto_driver_if_married_container"></div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="auto_driver_license_no"
+                                                    id="auto_driver_license_no" class="form-control"
+                                                    placeholder="auto_driver_license_no">
+                                                <label for="auto_driver_license_no">Driver's License
+                                                    No.</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="auto_driver_years_of_driving_exp"
+                                                    id="auto_driver_years_of_driving_exp" class="form-control"
+                                                    placeholder="auto_driver_years_of_driving_exp">
+                                                <label for="auto_driver_years_of_driving_exp">Years of Driving
+                                                    Experience?</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="auto_no_of_losses"
+                                                    id="auto_no_of_losses" aria-label="auto_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                <label for="auto_no_of_losses">Commercial Auto - # of
+                                                    Losses</label>
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="auto_losses_container"></div>
+                                        <!--  -->
+                                    </div>
+                                </div>
+                                <!-- /Step -->
+
+                                <!-- AUTO Stepper 3 -->
+                                <div class="step" id="auto_step_3">
+                                    <div class="question_title">
+                                        <h3>Commercial Auto Application</h3>
+                                        <p>Please provide the requested information and proceed.</p>
+                                    </div>
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
                                                 <select class="form-select" name="auto_add_driver"
                                                     id="auto_add_driver" aria-label="auto_add_driver">
                                                     <option value="1" selected>1</option>
                                                     <option value="2">2</option>
                                                     <option value="3">3</option>
                                                     <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
                                                 </select>
                                                 <label for="auto_add_driver">Select a number of driver</label>
                                             </div>
@@ -849,8 +1163,12 @@
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- BOND Stepper 1 -->
+                                {{-- <div id="bondContainer"> --}}
+                                {{-- @if (session('doesBondChecked') === 'true') --}}
                                 <div class="step" id="bond_step_1">
                                     <div class="question_title">
                                         <h3>Contractor License Bond Application</h3>
@@ -868,7 +1186,8 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="bond_owners_ssn" id="bond_owners_ssn"
                                                     class="form-control" placeholder="Social Security Number (SSN)">
-                                                <label for="bond_owners_ssn">Social Security Number (SSN)</label>
+                                                <label for="bond_owners_ssn">Social Security Number
+                                                    (SSN)</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -910,7 +1229,8 @@
                                                 <input type="text" name="bond_type_bond_requested"
                                                     id="bond_type_bond_requested" class="form-control"
                                                     placeholder="Type of Bond Requested" maxlength="100">
-                                                <label for="bond_type_bond_requested">Type of Bond Requested</label>
+                                                <label for="bond_type_bond_requested">Type of Bond
+                                                    Requested</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -939,9 +1259,11 @@
                                                 <select class="form-select" name="bond_type_of_license"
                                                     id="bond_type_of_license" aria-label="bond_type_of_license">
                                                     <option value selected></option>
-                                                    <option value="General Contractor">General Contractor</option>
+                                                    <option value="General Contractor">General Contractor
+                                                    </option>
                                                     <option value="Roofer">Roofer</option>
-                                                    <option value="Swimming Pool Contractor">Swimming Pool Contractor
+                                                    <option value="Swimming Pool Contractor">Swimming Pool
+                                                        Contractor
                                                     </option>
                                                     <option value="Others">Others</option>
                                                 </select>
@@ -970,11 +1292,37 @@
                                                 <label for="bond_effective_date">Effective Date</label>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <h6 class="profession_header mt-2 mb-2">Contractor License
+                                                    Bond - # of
+                                                    Losses</h6>
+                                                <select class="form-select" name="bond_no_of_losses"
+                                                    id="bond_no_of_losses" aria-label="bond_no_of_losses"
+                                                    data-placeholder="" data-allow-clear="true"
+                                                    style="width:100%">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                {{-- <label for="bond_no_of_losses">Bond - # of Losses</label> --}}
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="bond_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- EXCESS Stepper 1 -->
+                                {{-- <div id="excessContainer"> --}}
+                                {{-- @if (session('doesExcessChecked') === 'true') --}}
                                 <div class="step" id="excess_step_1">
                                     <div class="question_title">
                                         <h3>Excess Liability Application</h3>
@@ -983,8 +1331,8 @@
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <select class="form-select" name="excess_limits" id="excess_limits"
-                                                    aria-label="excess_limits">
+                                                <select class="form-select" name="excess_limits"
+                                                    id="excess_limits" aria-label="excess_limits">
                                                     <option value selected></option>
                                                     <option value="1000000">$1,000,000</option>
                                                     <option value="2000000">$2,000,000</option>
@@ -1008,23 +1356,41 @@
                                                 <label for="excess_gl_eff_date">GL Effective Date</label>
                                             </div>
                                         </div>
+                                        {{-- <div class="col-md-12">
+                                                    <div class="mb-3 form-floating">
+                                                        <select class="form-select" name="excess_no_losses_5years"
+                                                            id="excess_no_losses_5years" aria-label="excess_no_losses_5years">
+                                                            <option value="0" selected>0</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6+</option>
+                                                        </select>
+                                                        <label for="excess_no_losses_5years"># of Losses for the Past 5
+                                                            Years</label>
+                                                    </div>
+                                                </div>
+                                                <div id="excess_no_losses_5years_container"></div> --}}
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <select class="form-select" name="excess_no_losses_5years"
-                                                    id="excess_no_losses_5years" aria-label="excess_no_losses_5years">
-                                                    <option value="0" selected>0</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                    <option value="5">5</option>
-                                                    <option value="6">6+</option>
+                                                <select class="form-select" name="excess_no_of_losses"
+                                                    id="excess_no_of_losses" aria-label="excess_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
                                                 </select>
-                                                <label for="excess_no_losses_5years"># of Losses for the Past 5
-                                                    Years</label>
+                                                <label for="excess_no_of_losses">Excess Liability - # of
+                                                    Losses</label>
                                             </div>
                                         </div>
-                                        <div id="excess_no_losses_5years_container"></div>
+                                        <!--  -->
+                                        <div id="excess_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -1041,7 +1407,8 @@
                                                 <input type="text" name="excess_insurance_carrier"
                                                     id="excess_insurance_carrier" class="form-control"
                                                     placeholder="Insurance Carrier" maxlength="100">
-                                                <label for="excess_insurance_carrier">Insurance Carrier</label>
+                                                <label for="excess_insurance_carrier">Insurance
+                                                    Carrier</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -1080,8 +1447,12 @@
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- TOOLS Stepper 1 -->
+                                {{-- <div id="toolsContainer"> --}}
+                                {{-- @if (session('doesToolsChecked') === 'true') --}}
                                 <div class="step" id="tools_step_1">
                                     <div class="question_title">
                                         <h3>Tools & Equipment Application</h3>
@@ -1090,9 +1461,11 @@
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <input type="text" name="tools_misc_tools" id="tools_misc_tools"
-                                                    class="form-control" placeholder="$1,500 below">
-                                                <label for="tools_misc_tools">Miscellaneous Tools Amount ($1,500 in
+                                                <input type="text" name="tools_misc_tools"
+                                                    id="tools_misc_tools" class="form-control"
+                                                    placeholder="$1,500 below">
+                                                <label for="tools_misc_tools">Miscellaneous Tools Amount
+                                                    ($1,500 in
                                                     value
                                                     and under)</label>
                                             </div>
@@ -1102,7 +1475,8 @@
                                                 <input type="text" name="tools_rented_or_leased_amt"
                                                     id="tools_rented_or_leased_amt" class="form-control"
                                                     placeholder="$">
-                                                <label for="tools_rented_or_leased_amt">Rented / Leased Equipment
+                                                <label for="tools_rented_or_leased_amt">Rented / Leased
+                                                    Equipment
                                                     Amount</label>
                                             </div>
                                         </div>
@@ -1111,7 +1485,9 @@
                                                 <input type="text" name="tools_sched_equipment"
                                                     id="tools_sched_equipment" class="form-control"
                                                     placeholder="$1,500 above">
-                                                <label for="tools_sched_equipment">Scheduled Equipment ($1,500 in value
+                                                <label for="tools_sched_equipment">Scheduled Equipment ($1,500
+                                                    in
+                                                    value
                                                     and
                                                     above)</label>
                                             </div>
@@ -1127,8 +1503,8 @@
                                         <div class="col-md-4">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="tools_equipment_year"
-                                                    id="tools_equipment_year" class="form-control" placeholder="YYYY"
-                                                    maxlength="4">
+                                                    id="tools_equipment_year" class="form-control"
+                                                    placeholder="YYYY" maxlength="4">
                                                 <label for="tools_equipment_year">Year</label>
                                             </div>
                                         </div>
@@ -1165,28 +1541,52 @@
                                                 <label for="tools_equipment_valuation">Valuation</label>
                                             </div>
                                         </div>
+                                        {{-- <div class="col-md-12">
+                                                    <div class="mb-3 form-floating">
+                                                        <select class="form-select" name="tools_no_losses_5years"
+                                                            id="tools_no_losses_5years" aria-label="tools_no_losses_5years">
+                                                            <option value="0" selected>0</option>
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                            <option value="6">6+</option>
+                                                        </select>
+                                                        <label for="tools_no_losses_5years"># of Losses for the Past 5
+                                                            Years</label>
+                                                    </div>
+                                                </div>
+                                                <div id="tools_no_losses_5years_container"></div> --}}
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <select class="form-select" name="tools_no_losses_5years"
-                                                    id="tools_no_losses_5years" aria-label="tools_no_losses_5years">
-                                                    <option value="0" selected>0</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                    <option value="5">5</option>
-                                                    <option value="6">6+</option>
+                                                <select class="form-select" name="tools_equipment_no_of_losses"
+                                                    id="tools_equipment_no_of_losses"
+                                                    aria-label="tools_equipment_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
                                                 </select>
-                                                <label for="tools_no_losses_5years"># of Losses for the Past 5
-                                                    Years</label>
+                                                <label for="tools_equipment_no_of_losses">Tools & Equipment -
+                                                    # of
+                                                    Losses</label>
                                             </div>
                                         </div>
-                                        <div id="tools_no_losses_5years_container"></div>
+                                        <!--  -->
+                                        <div id="tools_equipment_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- BR Stepper 1 -->
+                                {{-- <div id="brChecked"> --}}
+                                {{-- @if (session('brContainer') === 'true') --}}
                                 <div class="step" id="br_step_1">
                                     <div class="question_title">
                                         <h3>Builder's Risk Application</h3>
@@ -1230,11 +1630,30 @@
                                                     <option value="9">9 Months</option>
                                                     <option value="12 Months">12 Months</option>
                                                 </select>
-                                                <label for="br_period_duration_project">Period of Insurance / Duration
+                                                <label for="br_period_duration_project">Period of Insurance /
+                                                    Duration
                                                     of
                                                     the Project</label>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="br_no_of_losses"
+                                                    id="br_no_of_losses" aria-label="br_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                <label for="br_no_of_losses">Builder's Risk - # of
+                                                    Losses</label>
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="br_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -1254,9 +1673,11 @@
                                                     <option value="Frame">Frame</option>
                                                     <option value="Joisted Masonry">Joisted Masonry</option>
                                                     <option value="Non-Combustible">Non-Combustible</option>
-                                                    <option value="Masonry Non-Combustible">Masonry Non-Combustible
+                                                    <option value="Masonry Non-Combustible">Masonry
+                                                        Non-Combustible
                                                     </option>
-                                                    <option value="Modified Fire Resistive">Modified Fire Resistive
+                                                    <option value="Modified Fire Resistive">Modified Fire
+                                                        Resistive
                                                     </option>
                                                     <option value="Fire Resistive">Fire Resistive</option>
                                                 </select>
@@ -1265,13 +1686,15 @@
                                         </div>
                                         <div class="col-md-12">
                                             <h6 class="profession_header mt-2 mb-2">Complete descriptions of
-                                                operations for the project for which you are currently applying for
+                                                operations for the project for which you are currently applying
+                                                for
                                                 insurance</h6>
                                             <div class="mb-3 form-floating">
                                                 <textarea style="resize: none;" name="br_complete_descops_of_project" id="br_complete_descops_of_project"
                                                     class="form-control"
                                                     placeholder="Complete descriptions of operations for the project for which you are currently applying for insurance"></textarea>
-                                                <label for="br_complete_descops_of_project">Please specify:</label>
+                                                <label for="br_complete_descops_of_project">Please
+                                                    specify:</label>
                                             </div>
                                         </div>
                                     </div>
@@ -1285,7 +1708,8 @@
                                         <p>Please provide the requested information and proceed.</p>
                                     </div>
                                     <div class="row justify-content-center">
-                                        <h5 class="profession_header mt-2 mb-2">Description of Property Use Prior
+                                        <h5 class="profession_header mt-2 mb-2">Description of Property Use
+                                            Prior
                                             to Construction</h5>
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
@@ -1326,7 +1750,8 @@
                                                 <input type="text" name="br_last_update_to_roofing_year"
                                                     id="br_last_update_to_roofing_year" class="form-control"
                                                     placeholder="" maxlength="20">
-                                                <label for="br_last_update_to_roofing_year">Last Update to Roofing
+                                                <label for="br_last_update_to_roofing_year">Last Update to
+                                                    Roofing
                                                     Year</label>
                                             </div>
                                         </div>
@@ -1335,7 +1760,8 @@
                                                 <input type="text" name="br_last_update_to_heating_year"
                                                     id="br_last_update_to_heating_year" class="form-control"
                                                     placeholder="" maxlength="20">
-                                                <label for="br_last_update_to_heating_year">Last Update to Heating
+                                                <label for="br_last_update_to_heating_year">Last Update to
+                                                    Heating
                                                     Year</label>
                                             </div>
                                         </div>
@@ -1353,7 +1779,8 @@
                                                 <input type="text" name="br_last_update_to_plumbing_year"
                                                     id="br_last_update_to_plumbing_year" class="form-control"
                                                     placeholder="" maxlength="20">
-                                                <label for="br_last_update_to_plumbing_year">Last Update to Plumbing
+                                                <label for="br_last_update_to_plumbing_year">Last Update to
+                                                    Plumbing
                                                     Year</label>
                                             </div>
                                         </div>
@@ -1362,7 +1789,8 @@
                                                 <input type="text" name="br_distance_to_nearest_fire_hydrant"
                                                     id="br_distance_to_nearest_fire_hydrant" class="form-control"
                                                     placeholder="" maxlength="20">
-                                                <label for="br_distance_to_nearest_fire_hydrant">Distance to Nearest
+                                                <label for="br_distance_to_nearest_fire_hydrant">Distance to
+                                                    Nearest
                                                     Fire Hydrant</label>
                                             </div>
                                         </div>
@@ -1371,7 +1799,8 @@
                                                 <input type="text" name="br_distance_to_nearest_fire_station"
                                                     id="br_distance_to_nearest_fire_station" class="form-control"
                                                     placeholder="" maxlength="20">
-                                                <label for="br_distance_to_nearest_fire_station">Distance to Nearest
+                                                <label for="br_distance_to_nearest_fire_station">Distance to
+                                                    Nearest
                                                     Fire Station</label>
                                             </div>
                                         </div>
@@ -1450,15 +1879,20 @@
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
-                                                <label for="br_has_project_started">Has the project started?</label>
+                                                <label for="br_has_project_started">Has the project
+                                                    started?</label>
                                             </div>
                                         </div>
                                         <div id="br_project_started_container"></div>
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- BOP Stepper 1 -->
+                                {{-- <div id="bopChecked"> --}}
+                                {{-- @if (session('bopContainer') === 'true') --}}
                                 <div class="step" id="bop_step_1">
                                     <div class="question_title">
                                         <h3>Business Owner's Policy Application</h3>
@@ -1478,7 +1912,8 @@
                                                 <input type="text" name="bop_loss_payee_info"
                                                     id="bop_loss_payee_info" class="form-control"
                                                     placeholder="Loss Payee Information" maxlength="">
-                                                <label for="bop_loss_payee_info">Loss Payee Information</label>
+                                                <label for="bop_loss_payee_info">Loss Payee
+                                                    Information</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -1486,19 +1921,24 @@
                                                 <select class="form-select" name="bop_building_industry"
                                                     id="bop_building_industry" aria-label="bop_building_industry">
                                                     <option value="" selected></option>
-                                                    <option value="Apartments & Condo Assoc">Apartments & Condo Assoc
+                                                    <option value="Apartments & Condo Assoc">Apartments &
+                                                        Condo Assoc
                                                     </option>
-                                                    <option value="Auto Repair / Service & Car Washes">Auto Repair /
+                                                    <option value="Auto Repair / Service & Car Washes">Auto
+                                                        Repair /
                                                         Service & Car Washes</option>
                                                     <option value="Contractors & Landscapers">Contractors &
                                                         Landscapers</option>
-                                                    <option value="Grocery, Convenience Store">Grocery, Convenience
+                                                    <option value="Grocery, Convenience Store">Grocery,
+                                                        Convenience
                                                         Store</option>
                                                     <option value="Gas Stations">Gas Stations</option>
                                                     <option value="Offices">Offices</option>
-                                                    <option value="Restaurants & Hotels">Restaurants & Hotels</option>
+                                                    <option value="Restaurants & Hotels">Restaurants & Hotels
+                                                    </option>
                                                     <option value="Retails Stores">Retails Stores</option>
-                                                    <option value="Service Providers">Service Providers</option>
+                                                    <option value="Service Providers">Service Providers
+                                                    </option>
                                                     <option value="Wholesalers">Wholesalers</option>
                                                 </select>
                                                 <label for="bop_building_industry">Building Industry</label>
@@ -1509,11 +1949,14 @@
                                                 <select class="form-select" name="bop_occupancy"
                                                     id="bop_occupancy" aria-label="bop_occupancy">
                                                     <option value="" selected></option>
-                                                    <option value="Non-Owner Occupied Bldg/Lessors Risk">Non-Owner
+                                                    <option value="Non-Owner Occupied Bldg/Lessors Risk">
+                                                        Non-Owner
                                                         Occupied Bldg/Lessors Risk</option>
-                                                    <option value="Owner Occupied Bldg - 10% or Less">Owner Occupied
+                                                    <option value="Owner Occupied Bldg - 10% or Less">Owner
+                                                        Occupied
                                                         Bldg - 10% or Less</option>
-                                                    <option value="Owner Occupied Bldg - More than 10%">Owner Occupied
+                                                    <option value="Owner Occupied Bldg - More than 10%">Owner
+                                                        Occupied
                                                         Bldg - More than 10%</option>
                                                     <option value="Tenant">Tenant</option>
                                                 </select>
@@ -1526,7 +1969,7 @@
                                                 <input type="text" name="bop_val_cost_bldg"
                                                     id="bop_val_cost_bldg" class="form-control"
                                                     placeholder="Value of Cost of the
-                                                    Building?"
+                                                            Building?"
                                                     maxlength="">
                                                 <label for="bop_val_cost_bldg">Value of Cost of the
                                                     Building?</label>
@@ -1537,12 +1980,31 @@
                                                 <input type="text" name="bop_business_property_limit"
                                                     id="bop_business_property_limit" class="form-control"
                                                     placeholder="What is the Business Property
-                                                    Limit?"
+                                                            Limit?"
                                                     maxlength="">
-                                                <label for="bop_business_property_limit">What is the Business Property
+                                                <label for="bop_business_property_limit">What is the Business
+                                                    Property
                                                     Limit?</label>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="bop_no_of_losses"
+                                                    id="bop_no_of_losses" aria-label="bop_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                <label for="bop_no_of_losses">Business Owner's Policy - # of
+                                                    Losses</label>
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="bop_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -1553,7 +2015,8 @@
                                         <h3>Business Owner's Policy Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
                                     </div>
-                                    <h5 class="profession_header mt-2 mb-2">What is the property contents?</h5>
+                                    <h5 class="profession_header mt-2 mb-2">What is the property contents?
+                                    </h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
@@ -1564,9 +2027,11 @@
                                                     <option value="Frame">Frame</option>
                                                     <option value="Joisted Masonry">Joisted Masonry</option>
                                                     <option value="Non-Combustible">Non-Combustible</option>
-                                                    <option value="Masonry Non-Combustible">Masonry Non-Combustible
+                                                    <option value="Masonry Non-Combustible">Masonry
+                                                        Non-Combustible
                                                     </option>
-                                                    <option value="Modified Fire Resistive">Modified Fire Resistive
+                                                    <option value="Modified Fire Resistive">Modified Fire
+                                                        Resistive
                                                     </option>
                                                     <option value="Fire Resistive">Fire Resistive</option>
                                                 </select>
@@ -1594,7 +2059,8 @@
                                                 <input type="text" name="bop_total_bldg_sqft"
                                                     id="bop_total_bldg_sqft" class="form-control"
                                                     placeholder="Total Building Sq. Ft." maxlength="">
-                                                <label for="bop_total_bldg_sqft">Total Building Sq. Ft.</label>
+                                                <label for="bop_total_bldg_sqft">Total Building Sq.
+                                                    Ft.</label>
                                             </div>
                                         </div>
                                     </div>
@@ -1618,7 +2084,8 @@
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
-                                                <label for="bop_automatic_sprinkler_system">Automatic Sprinkler
+                                                <label for="bop_automatic_sprinkler_system">Automatic
+                                                    Sprinkler
                                                     System:</label>
                                             </div>
                                         </div>
@@ -1632,7 +2099,8 @@
                                                     <option value="Central Station">Central Station</option>
                                                     <option value="Local Alarm">Local Alarm</option>
                                                 </select>
-                                                <label for="bop_automatic_fire_alarm">Automatic Fire Alarm:</label>
+                                                <label for="bop_automatic_fire_alarm">Automatic Fire
+                                                    Alarm:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -1640,9 +2108,10 @@
                                                 <input type="text" name="bop_distance_nearest_fire_hydrant"
                                                     id="bop_distance_nearest_fire_hydrant" class="form-control"
                                                     placeholder="Distance to Nearest
-                                                    Fire Hydrant:"
+                                                            Fire Hydrant:"
                                                     maxlength="">
-                                                <label for="bop_distance_nearest_fire_hydrant">Distance to Nearest
+                                                <label for="bop_distance_nearest_fire_hydrant">Distance to
+                                                    Nearest
                                                     Fire Hydrant:</label>
                                             </div>
                                         </div>
@@ -1651,9 +2120,10 @@
                                                 <input type="text" name="bop_distance_nearest_fire_station"
                                                     id="bop_distance_nearest_fire_station" class="form-control"
                                                     placeholder="Distance to Nearest
-                                                    Fire Station:"
+                                                            Fire Station:"
                                                     maxlength="">
-                                                <label for="bop_distance_nearest_fire_station">Distance to Nearest
+                                                <label for="bop_distance_nearest_fire_station">Distance to
+                                                    Nearest
                                                     Fire Station:</label>
                                             </div>
                                         </div>
@@ -1667,7 +2137,8 @@
                                                     <option value="1">Yes</option>
                                                     <option value="Not Applicable">Not Applicable</option>
                                                 </select>
-                                                <label for="bop_automatic_comm_cooking_ext">Automatic Commercial
+                                                <label for="bop_automatic_comm_cooking_ext">Automatic
+                                                    Commercial
                                                     Cooking
                                                     Extinguishing System:</label>
                                             </div>
@@ -1682,7 +2153,8 @@
                                         <h3>Business Owner's Policy Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
                                     </div>
-                                    <h5 class="profession_header mt-2 mb-2">Protective Safeguards - Burglary and
+                                    <h5 class="profession_header mt-2 mb-2">Protective Safeguards - Burglary
+                                        and
                                         Robbery:</h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
@@ -1692,9 +2164,11 @@
                                                     aria-label="bop_automatic_burglar_alarm">
                                                     <option value="" selected></option>
                                                     <option value="None">None</option>
-                                                    <option value="Central or Police Station">Central or Police
+                                                    <option value="Central or Police Station">Central or
+                                                        Police
                                                         Station</option>
-                                                    <option value="Outside Siren Only">Outside Siren Only</option>
+                                                    <option value="Outside Siren Only">Outside Siren Only
+                                                    </option>
                                                 </select>
                                                 <label for="bop_automatic_burglar_alarm">Automatic Burglar
                                                     Alarm:</label>
@@ -1716,9 +2190,10 @@
                                                 <input type="text" name="bop_last_update_roofing_year"
                                                     id="bop_last_update_roofing_year" class="form-control"
                                                     placeholder="Last Update to Roofing
-                                                    Yr:"
+                                                            Yr:"
                                                     maxlength="">
-                                                <label for="bop_last_update_roofing_year">Last Update to Roofing
+                                                <label for="bop_last_update_roofing_year">Last Update to
+                                                    Roofing
                                                     Yr:</label>
                                             </div>
                                         </div>
@@ -1727,9 +2202,10 @@
                                                 <input type="text" name="bop_last_update_heating_year"
                                                     id="bop_last_update_heating_year" class="form-control"
                                                     placeholder="Last Update to Heating
-                                                    Yr:"
+                                                            Yr:"
                                                     maxlength="">
-                                                <label for="bop_last_update_heating_year">Last Update to Heating
+                                                <label for="bop_last_update_heating_year">Last Update to
+                                                    Heating
                                                     Yr:</label>
                                             </div>
                                         </div>
@@ -1738,9 +2214,10 @@
                                                 <input type="text" name="bop_last_update_plumbing_year"
                                                     id="bop_last_update_plumbing_year" class="form-control"
                                                     placeholder="Last Update to Plumbing
-                                                    Yr:"
+                                                            Yr:"
                                                     maxlength="">
-                                                <label for="bop_last_update_plumbing_year">Last Update to Plumbing
+                                                <label for="bop_last_update_plumbing_year">Last Update to
+                                                    Plumbing
                                                     Yr:</label>
                                             </div>
                                         </div>
@@ -1749,17 +2226,22 @@
                                                 <input type="text" name="bop_last_update_electrical_year"
                                                     id="bop_last_update_electrical_year" class="form-control"
                                                     placeholder="Last Update to Electrical
-                                                    Yr:"
+                                                            Yr:"
                                                     maxlength="">
-                                                <label for="bop_last_update_electrical_year">Last Update to Electrical
+                                                <label for="bop_last_update_electrical_year">Last Update to
+                                                    Electrical
                                                     Yr:</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- Commercial Property Stepper 1 -->
+                                {{-- <div id="propertyContainer"> --}}
+                                {{-- @if (session('doesPropertyChecked') === 'true') --}}
                                 <div class="step" id="comm_prop_step_1">
                                     <div class="question_title">
                                         <h3>Commercial Property Application</h3>
@@ -1772,15 +2254,19 @@
                                                     id="property_business_located"
                                                     aria-label="property_business_located">
                                                     <option value="" selected></option>
-                                                    <option value="Home or Apartment">Home or Apartment</option>
-                                                    <option value="Rented Commercial Space">Rented Commercial Space
+                                                    <option value="Home or Apartment">Home or Apartment
                                                     </option>
-                                                    <option value="Owned Commercial Space">Owned Commercial Space
+                                                    <option value="Rented Commercial Space">Rented Commercial
+                                                        Space
+                                                    </option>
+                                                    <option value="Owned Commercial Space">Owned Commercial
+                                                        Space
                                                     </option>
                                                     <option value="Commercial space owned but rented to others">
                                                         Commercial space owned but rented to others</option>
                                                 </select>
-                                                <label for="property_business_located">Business Location is Located
+                                                <label for="property_business_located">Business Location is
+                                                    Located
                                                     in:</label>
                                             </div>
                                         </div>
@@ -1789,7 +2275,8 @@
                                                 <input type="text" name="property_property_address"
                                                     id="property_property_address" class="form-control"
                                                     placeholder="Property Address" />
-                                                <label for="property_property_address">Property Address</label>
+                                                <label for="property_property_address">Property
+                                                    Address</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -1816,10 +2303,30 @@
                                                 <input type="text" name="property_business_property_limit"
                                                     id="property_business_property_limit" class="form-control"
                                                     placeholder="What is the Business Property Limit?" />
-                                                <label for="property_business_property_limit">What is the Business
+                                                <label for="property_business_property_limit">What is the
+                                                    Business
                                                     Property Limit?</label>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="property_no_of_losses"
+                                                    id="property_no_of_losses" aria-label="property_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                <label for="property_no_of_losses">Business Owner's Policy - #
+                                                    of
+                                                    Losses</label>
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="property_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -1841,7 +2348,8 @@
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
-                                                <label for="property_does_have_more_than_one_location">Do you have
+                                                <label for="property_does_have_more_than_one_location">Do you
+                                                    have
                                                     more than one location?</label>
                                             </div>
                                         </div>
@@ -1869,13 +2377,16 @@
                                                     <option value="Frame">Frame</option>
                                                     <option value="Joisted Masonry">Joisted Masonry</option>
                                                     <option value="Non-Combustible">Non-Combustible</option>
-                                                    <option value="Masonry Non-Combustible">Masonry Non-Combustible
+                                                    <option value="Masonry Non-Combustible">Masonry
+                                                        Non-Combustible
                                                     </option>
-                                                    <option value="Modified Fire Resistive">Modified Fire Resistive
+                                                    <option value="Modified Fire Resistive">Modified Fire
+                                                        Resistive
                                                     </option>
                                                     <option value="Fire Resistive">Fire Resistive</option>
                                                 </select>
-                                                <label for="property_construction_type">Construction Type:</label>
+                                                <label for="property_construction_type">Construction
+                                                    Type:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -1914,7 +2425,8 @@
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
-                                                <label for="property_is_bldg_equipped_with_fire_sprinklers">Is your
+                                                <label for="property_is_bldg_equipped_with_fire_sprinklers">Is
+                                                    your
                                                     building equipped with fire
                                                     sprinklers?</label>
                                             </div>
@@ -1925,7 +2437,8 @@
                                                     id="property_distance_nearest_fire_hydrant" class="form-control"
                                                     placeholder="Distance to
                                                     Nearest Fire Hydrant:" />
-                                                <label for="property_distance_nearest_fire_hydrant">Distance to
+                                                <label for="property_distance_nearest_fire_hydrant">Distance
+                                                    to
                                                     Nearest Fire Hydrant:</label>
                                             </div>
                                         </div>
@@ -1935,7 +2448,8 @@
                                                     id="property_distance_nearest_fire_station" class="form-control"
                                                     placeholder="Distance to
                                                     Nearest Fire Station:" />
-                                                <label for="property_distance_nearest_fire_station">Distance to
+                                                <label for="property_distance_nearest_fire_station">Distance
+                                                    to
                                                     Nearest Fire Station:</label>
                                             </div>
                                         </div>
@@ -1953,7 +2467,8 @@
                                                     <option value="6">6</option>
                                                     <option value="7">7</option>
                                                 </select>
-                                                <label for="property_protection_class">Protection Class:</label>
+                                                <label for="property_protection_class">Protection
+                                                    Class:</label>
                                             </div>
                                         </div>
                                     </div>
@@ -1973,15 +2488,19 @@
                                                     id="property_protective_device"
                                                     aria-label="property_protective_device">
                                                     <option value="" selected></option>
-                                                    <option value="Local Burglar Alarm">Local Burglar Alarm</option>
-                                                    <option value="Central Burglar Alarm">Central Burglar Alarm
+                                                    <option value="Local Burglar Alarm">Local Burglar Alarm
+                                                    </option>
+                                                    <option value="Central Burglar Alarm">Central Burglar
+                                                        Alarm
                                                     </option>
                                                     <option value="Local Fire Alarm">Local Fire Alarm</option>
-                                                    <option value="Central Fire Alarm">Central Fire Alarm</option>
+                                                    <option value="Central Fire Alarm">Central Fire Alarm
+                                                    </option>
                                                     <option value="Fenced">Fenced</option>
                                                     <option value="CCTV">CCTV</option>
                                                 </select>
-                                                <label for="property_protective_device">Select any protective devices
+                                                <label for="property_protective_device">Select any protective
+                                                    devices
                                                     you have:</label>
                                             </div>
                                         </div>
@@ -1992,7 +2511,8 @@
                                                 <input type="text" name="property_last_update_roofing_year"
                                                     id="property_last_update_roofing_year" class="form-control"
                                                     placeholder="Last Update to Roofing Year:" />
-                                                <label for="property_last_update_roofing_year">Last Update to Roofing
+                                                <label for="property_last_update_roofing_year">Last Update to
+                                                    Roofing
                                                     Year:</label>
                                             </div>
                                         </div>
@@ -2001,7 +2521,8 @@
                                                 <input type="text" name="property_last_update_heating_year"
                                                     id="property_last_update_heating_year" class="form-control"
                                                     placeholder="Last Update to Heating Year:" />
-                                                <label for="property_last_update_heating_year">Last Update to Heating
+                                                <label for="property_last_update_heating_year">Last Update to
+                                                    Heating
                                                     Year:</label>
                                             </div>
                                         </div>
@@ -2021,15 +2542,20 @@
                                                 <input type="text" name="property_last_update_electrical_year"
                                                     id="property_last_update_electrical_year" class="form-control"
                                                     placeholder="Last Update to Electrical Year:" />
-                                                <label for="property_last_update_electrical_year">Last Update to
+                                                <label for="property_last_update_electrical_year">Last Update
+                                                    to
                                                     Electrical Year:</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- Errors and Omission Stepper 1 -->
+                                {{-- <div id="eoContainer"> --}}
+                                {{-- @if (session('doesEOChecked') === 'true') --}}
                                 <div class="step" id="eo_step_1">
                                     <div class="question_title">
                                         <h3>Errors and Omission</h3>
@@ -2067,6 +2593,24 @@
                                             </div>
                                         </div>
                                         <div id="eo_requested_deductible_others_container"></div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="eo_no_of_losses"
+                                                    id="eo_no_of_losses" aria-label="eo_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                <label for="eo_no_of_losses">Error's and Omission - # of
+                                                    Losses</label>
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="eo_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -2080,7 +2624,8 @@
                                     <h5 class="profession_header mt-2 mb-2">Business Entity</h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Has the name or ownership of the
+                                            <h6 class="profession_header mt-2 mb-2">Has the name or ownership
+                                                of the
                                                 entity changed
                                                 within
                                                 the last 5 years?</h6>
@@ -2096,7 +2641,8 @@
                                         </div>
                                         <div id="eo_business_entity_q1_container"></div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Has any other business been
+                                            <h6 class="profession_header mt-2 mb-2">Has any other business
+                                                been
                                                 purchased merged or
                                                 consolidated with the entity within the last 5
                                                 years?</h6>
@@ -2112,7 +2658,8 @@
                                         </div>
                                         <div id="eo_business_entity_q2_container"></div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Does any other entity own or
+                                            <h6 class="profession_header mt-2 mb-2">Does any other entity own
+                                                or
                                                 control your
                                                 business?</h6>
                                             <div class="mb-3 form-floating">
@@ -2127,7 +2674,8 @@
                                         </div>
                                         <div id="eo_business_entity_q3_container"></div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Has your company name been changed
+                                            <h6 class="profession_header mt-2 mb-2">Has your company name been
+                                                changed
                                                 during the
                                                 past 5
                                                 years?</h6>
@@ -2143,7 +2691,8 @@
                                         </div>
                                         <div id="eo_business_entity_q4_container"></div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Has any other business purchased,
+                                            <h6 class="profession_header mt-2 mb-2">Has any other business
+                                                purchased,
                                                 merged or
                                                 consolidated with you during the past 5 years?</h6>
                                             <div class="mb-3 form-floating">
@@ -2220,7 +2769,8 @@
                                     <h5 class="profession_header mt-2 mb-2">Employment Practices</h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Has the applicant total number of
+                                            <h6 class="profession_header mt-2 mb-2">Has the applicant total
+                                                number of
                                                 employees
                                                 decreased
                                                 by more than ten percent (10) due to lay off, force
@@ -2249,7 +2799,8 @@
                                     <h5 class="profession_header mt-2 mb-2">Human Resources</h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have written
+                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have
+                                                written
                                                 employment
                                                 agreements
                                                 with all officers?</h6>
@@ -2265,7 +2816,8 @@
                                         </div>
                                         <div id="eo_hr_q1_container"></div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have its
+                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have
+                                                its
                                                 employment
                                                 policies/procedures reviewed by labor or employment
                                                 counsel?</h6>
@@ -2281,7 +2833,8 @@
                                         </div>
                                         <div id="eo_hr_q2_container"></div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have a Human
+                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have a
+                                                Human
                                                 Resources or
                                                 Personnel
                                                 Department?</h6>
@@ -2313,8 +2866,12 @@
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- POLLUTION Stepper 1 -->
+                                {{-- <div id="pollutionContainer"> --}}
+                                {{-- @if (session('doesPollutionChecked') === 'true') --}}
                                 <div class="step" id="pollution_step_1">
                                     <div class="question_title">
                                         <h3>Pollution Liability Application</h3>
@@ -2422,7 +2979,8 @@
                                                     <option value="95">95%</option>
                                                     <option value="100">100%</option>
                                                 </select>
-                                                <label for="pollution_new_construction">New Construction %</label>
+                                                <label for="pollution_new_construction">New Construction
+                                                    %</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -2460,7 +3018,7 @@
                                             <div class="mb-3 form-floating">
                                                 <textarea style="resize: none;" name="pollution_descops" id="pollution_descops" class="form-control"
                                                     placeholder="Detailed Description of
-                                                    Operations"></textarea>
+                                                            Operations"></textarea>
                                                 <label for="pollution_descops">Detailed Description of
                                                     Operations</label>
                                             </div>
@@ -2470,10 +3028,11 @@
                                                 <input type="text" name="pollution_cost_proj_5years"
                                                     id="pollution_cost_proj_5years" class="form-control"
                                                     placeholder="Cost of the Largest Project in
-                                                    the
-                                                    past 5 years?"
+                                                            the
+                                                            past 5 years?"
                                                     maxlength="20">
-                                                <label for="pollution_cost_proj_5years">Cost of the Largest Project in
+                                                <label for="pollution_cost_proj_5years">Cost of the Largest
+                                                    Project in
                                                     the
                                                     past 5 years?</label>
                                             </div>
@@ -2494,7 +3053,8 @@
                                                 <input type="text" name="pollution_annual_gross"
                                                     id="pollution_annual_gross" class="form-control"
                                                     placeholder="Annual Gross Receipts">
-                                                <label for="pollution_annual_gross">Annual Gross Receipts</label>
+                                                <label for="pollution_annual_gross">Annual Gross
+                                                    Receipts</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -2502,7 +3062,8 @@
                                                 <input type="text" name="pollution_no_field_emp"
                                                     id="pollution_no_field_emp" class="form-control"
                                                     placeholder="Number of Field Employees">
-                                                <label for="pollution_no_field_emp">Number of Field Employees</label>
+                                                <label for="pollution_no_field_emp">Number of Field
+                                                    Employees</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -2541,7 +3102,8 @@
                                                     <option value="5">5</option>
                                                     <option value="6">6+</option>
                                                 </select>
-                                                <label for="pollution_no_losses_5years"># of Losses for the Past 5
+                                                <label for="pollution_no_losses_5years"># of Losses for the
+                                                    Past 5
                                                     Years</label>
                                             </div>
                                         </div>
@@ -2551,22 +3113,26 @@
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- EPLI Stepper 1 -->
+                                {{-- <div id="epliContainer"> --}}
+                                {{-- @if (session('doesEPLIChecked') === 'true') --}}
                                 <div class="step" id="epli_step_1">
                                     <div class="question_title">
                                         <h3>Employment Practices Liability Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
                                     </div>
                                     <div class="row justify-content-center">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_fein" id="epli_fein"
                                                     class="form-control" placeholder="FEIN No.:" maxlength="" />
                                                 <label for="epli_fein">FEIN No.:</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_current_epli"
                                                     id="epli_current_epli" class="form-control"
@@ -2574,7 +3140,7 @@
                                                 <label for="epli_current_epli">Current EPLI:</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_prior_carrier"
                                                     id="epli_prior_carrier" class="form-control"
@@ -2582,12 +3148,13 @@
                                                 <label for="epli_prior_carrier">Prior Carrier:</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_prior_carrier_epli"
                                                     id="epli_prior_carrier_epli" class="form-control"
                                                     placeholder="Prior Carrier EPLI:" maxlength="" />
-                                                <label for="epli_prior_carrier_epli">Prior Carrier EPLI:</label>
+                                                <label for="epli_prior_carrier_epli">Prior Carrier
+                                                    EPLI:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -2603,7 +3170,8 @@
                                                 <input type="text" name="epli_prev_premium_amount"
                                                     id="epli_prev_premium_amount" class="form-control"
                                                     placeholder="Previous Premium Amount:" maxlength="" />
-                                                <label for="epli_prev_premium_amount">Previous Premium Amount:</label>
+                                                <label for="epli_prev_premium_amount">Previous Premium
+                                                    Amount:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -2614,6 +3182,24 @@
                                                 <label for="epli_deductible_amount">Deductible Amount:</label>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="epli_no_of_losses"
+                                                    id="epli_no_of_losses" aria-label="epli_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                <label for="epli_no_of_losses">EPLI - # of
+                                                    Losses</label>
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="epli_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -2693,7 +3279,8 @@
                                         <h3>Employment Practices Liability Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
                                     </div>
-                                    <h5 class="profession_header mt-2 mb-2">How many employees are located at:</h5>
+                                    <h5 class="profession_header mt-2 mb-2">How many employees are located at:
+                                    </h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
@@ -2753,7 +3340,8 @@
                                         <h3>Employment Practices Liability Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
                                     </div>
-                                    <h5 class="profession_header mt-2 mb-2">How many percent of employees are in the
+                                    <h5 class="profession_header mt-2 mb-2">How many percent of employees are
+                                        in the
                                         salary range of:</h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
@@ -2790,7 +3378,8 @@
                                         <h3>Employment Practices Liability Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
                                     </div>
-                                    <h5 class="profession_header mt-2 mb-2">How many employees have been terminated in
+                                    <h5 class="profession_header mt-2 mb-2">How many employees have been
+                                        terminated in
                                         the last 12 months:</h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
@@ -2828,11 +3417,13 @@
                                         <h3>Employment Practices Liability Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
                                     </div>
-                                    <h5 class="profession_header mt-2 mb-2">Human Resource Policies and Procedures:
+                                    <h5 class="profession_header mt-2 mb-2">Human Resource Policies and
+                                        Procedures:
                                     </h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have a standard
+                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have a
+                                                standard
                                                 employment application for all applicants?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="epli_hr_q1" id="epli_hr_q1"
@@ -2845,7 +3436,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have an "At
+                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have an
+                                                "At
                                                 Will" provision in the employment application?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="epli_hr_q2" id="epli_hr_q2"
@@ -2871,7 +3463,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have a written
+                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have a
+                                                written
                                                 policy with respect to sexual harassment?
                                             </h6>
                                             <div class="mb-3 form-floating">
@@ -2885,7 +3478,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have a written
+                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have a
+                                                written
                                                 policy with respect to discrimination?
                                             </h6>
                                             <div class="mb-3 form-floating">
@@ -2899,7 +3493,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have written
+                                            <h6 class="profession_header mt-2 mb-2">Does the Applicant have
+                                                written
                                                 annual evaluations for employees?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="epli_hr_q6" id="epli_hr_q6"
@@ -2914,8 +3509,12 @@
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- Cyber Liability Stepper 1 -->
+                                {{-- <div id="cyberContainer"> --}}
+                                {{-- @if (session('doesEPLIChecked') === 'true') --}}
                                 <div class="step" id="cyber_step_1">
                                     <div class="question_title">
                                         <h3>Cyber Liability Application</h3>
@@ -2935,7 +3534,8 @@
                                                 <input type="text" name="cyber_it_contact_number"
                                                     id="cyber_it_contact_number" class="form-control"
                                                     placeholder="IT Contact Number:" maxlength="" />
-                                                <label for="cyber_it_contact_number">IT Contact Number:</label>
+                                                <label for="cyber_it_contact_number">IT Contact
+                                                    Number:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -2946,6 +3546,24 @@
                                                 <label for="cyber_it_contact_email">IT Contact Email:</label>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="cyber_no_of_losses"
+                                                    id="cyber_no_of_losses" aria-label="cyber_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                <label for="cyber_no_of_losses">Cyber Liability - # of
+                                                    Losses</label>
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="cyber_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -2963,8 +3581,8 @@
                                             activities?</h6>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <select class="form-select" name="cyber_q1"
-                                                    id="cyber_q1" aria-label="cyber_q1">
+                                                <select class="form-select" name="cyber_q1" id="cyber_q1"
+                                                    aria-label="cyber_q1">
                                                     <option value="" selected></option>
                                                     <option value="Adult Content">Adult Content</option>
                                                     <option value="Cannabis">Cannabis</option>
@@ -2989,7 +3607,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Is there a system in place for
+                                            <h6 class="profession_header mt-2 mb-2">Is there a system in place
+                                                for
                                                 verifying
                                                 fund and wire
                                                 transfers over $25,000 through a secondary means of
@@ -3005,7 +3624,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Do you store your backups offline
+                                            <h6 class="profession_header mt-2 mb-2">Do you store your backups
+                                                offline
                                                 or
                                                 with a cloud
                                                 service provider?</h6>
@@ -3020,7 +3640,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Do you store or process personal,
+                                            <h6 class="profession_header mt-2 mb-2">Do you store or process
+                                                personal,
                                                 health, or credit
                                                 card information of more than 500,000
                                                 Individuals?</h6>
@@ -3035,7 +3656,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Do you enabled multi-factor
+                                            <h6 class="profession_header mt-2 mb-2">Do you enabled
+                                                multi-factor
                                                 authentication for email
                                                 access and remote network access?</h6>
                                             <div class="mb-3 form-floating">
@@ -3049,7 +3671,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Do you encrypt all sensitive
+                                            <h6 class="profession_header mt-2 mb-2">Do you encrypt all
+                                                sensitive
                                                 information
                                                 at rest?</h6>
                                             <div class="mb-3 form-floating">
@@ -3063,7 +3686,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Any relevant claims or incidents
+                                            <h6 class="profession_header mt-2 mb-2">Any relevant claims or
+                                                incidents
                                                 exceeding $10,000
                                                 within the past three years?</h6>
                                             <div class="mb-3 form-floating">
@@ -3077,7 +3701,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Would there be any potential Cyber
+                                            <h6 class="profession_header mt-2 mb-2">Would there be any
+                                                potential Cyber
                                                 Event, Loss, or
                                                 claim that could fall within the scope of the policy you
                                                 are applying for?</h6>
@@ -3094,8 +3719,12 @@
                                     </div>
                                 </div>
                                 <!-- /Step -->
+                                {{-- @endif --}}
+                                {{-- </div> --}}
 
                                 <!-- Installation Floater Stepper 1 -->
+                                {{-- <div id="instFloatContainer"> --}}
+                                {{-- @if (session('doesInstFloatChecked') === 'true') --}}
                                 <div class="step" id="instfloat_step_1">
                                     <div class="question_title">
                                         <h3>Installation Floater Application</h3>
@@ -3123,7 +3752,8 @@
                                                 <input type="text" name="instfloat_type_of_operation"
                                                     id="instfloat_type_of_operation" class="form-control"
                                                     placeholder="Type of Operation:" maxlength="" />
-                                                <label for="instfloat_type_of_operation">Type of Operation:</label>
+                                                <label for="instfloat_type_of_operation">Type of
+                                                    Operation:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -3134,7 +3764,8 @@
                                                     be working
                                                     with:"
                                                     maxlength="" />
-                                                <label for="instfloat_scheduled_type_of_equipment">Type of Equipment /
+                                                <label for="instfloat_scheduled_type_of_equipment">Type of
+                                                    Equipment /
                                                     materials
                                                     you will
                                                     be working
@@ -3152,9 +3783,29 @@
                                                     <option value="5000">$5,000</option>
                                                     <option value="10000">$10,000</option>
                                                 </select>
-                                                <label for="instfloat_deductible_amount">Deductible Amount:</label>
+                                                <label for="instfloat_deductible_amount">Deductible
+                                                    Amount:</label>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="instfloat_no_of_losses"
+                                                    id="instfloat_no_of_losses" aria-label="instfloat_no_of_losses">
+                                                    <option selected></option>
+                                                    <option value="0">No Losses</option>
+                                                    <option value="1">1 yr. No Losses</option>
+                                                    <option value="3">3 yrs. No Losses</option>
+                                                    <option value="5">5 yrs. No Losses</option>
+                                                    <option value="-1">Have Losses</option>
+                                                </select>
+                                                <label for="instfloat_no_of_losses">Installation Floater - #
+                                                    of
+                                                    Losses</label>
+                                            </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="instfloat_losses_container"></div>
+                                        <!--  -->
                                     </div>
                                 </div>
                                 <!-- /Step -->
@@ -3194,7 +3845,8 @@
                                                     <option value="11 months">11 months</option>
                                                     <option value="12 months">12 months</option>
                                                 </select>
-                                                <label for="instfloat_months_in_storage">Months in storage:</label>
+                                                <label for="instfloat_months_in_storage">Months in
+                                                    storage:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -3218,7 +3870,8 @@
                                                     placeholder="Maximum Value of Building
                                                     storage:"
                                                     maxlength="" />
-                                                <label for="instfloat_max_value_of_bldg_storage">Maximum Value of
+                                                <label for="instfloat_max_value_of_bldg_storage">Maximum Value
+                                                    of
                                                     Building
                                                     storage:</label>
                                             </div>
@@ -3234,7 +3887,8 @@
                                                     <option value="5000">$5,000</option>
                                                     <option value="10000">$10,000</option>
                                                 </select>
-                                                <label for="instfloat_type_security_placed">Type of Security in place
+                                                <label for="instfloat_type_security_placed">Type of Security
+                                                    in place
                                                     withing the
                                                     storage
                                                     building:</label>
@@ -3250,7 +3904,8 @@
                                         <h3>Installation Floater Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
                                     </div>
-                                    <h5 class="profession_header mt-2 mb-2">Unscheduled Equipment for Storage:</h5>
+                                    <h5 class="profession_header mt-2 mb-2">Unscheduled Equipment for Storage:
+                                    </h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
@@ -3293,7 +3948,8 @@
                                     <h5 class="profession_header mt-2 mb-2">Additional Information:</h5>
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Equipment Rented. Loaned to/from
+                                            <h6 class="profession_header mt-2 mb-2">Equipment Rented. Loaned
+                                                to/from
                                                 Others with or without Operators?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="instfloat_additional_info_q1"
@@ -3303,11 +3959,13 @@
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
-                                                <label for="instfloat_additional_info_q1">Please select:</label>
+                                                <label for="instfloat_additional_info_q1">Please
+                                                    select:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Are you Operating Equipment not
+                                            <h6 class="profession_header mt-2 mb-2">Are you Operating
+                                                Equipment not
                                                 listed here?</h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="instfloat_additional_info_q2"
@@ -3317,11 +3975,13 @@
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
-                                                <label for="instfloat_additional_info_q2">Please select:</label>
+                                                <label for="instfloat_additional_info_q2">Please
+                                                    select:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
-                                            <h6 class="profession_header mt-2 mb-2">Property used underground?</h6>
+                                            <h6 class="profession_header mt-2 mb-2">Property used underground?
+                                            </h6>
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="instfloat_additional_info_q3"
                                                     id="instfloat_additional_info_q3"
@@ -3330,7 +3990,8 @@
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
-                                                <label for="instfloat_additional_info_q3">Please select:</label>
+                                                <label for="instfloat_additional_info_q3">Please
+                                                    select:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -3343,7 +4004,8 @@
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
-                                                <label for="instfloat_additional_info_q4">Please select:</label>
+                                                <label for="instfloat_additional_info_q4">Please
+                                                    select:</label>
                                             </div>
                                         </div>
                                     </div>
@@ -3358,7 +4020,8 @@
                                     </div>
 
                                     <div class="d-flex justify-content-between">
-                                        <h5 class="profession_header mt-2 mb-2">Scheduled Equipment for storage:</h5>
+                                        <h5 class="profession_header mt-2 mb-2">Scheduled Equipment for
+                                            storage:</h5>
                                         <button id="add_sched_equipment_entry" class="btn_2">+</button>
                                     </div>
                                     <div class="row justify-content-center">
@@ -3388,7 +4051,8 @@
                                                     placeholder="ID # /
                                                     Serial Number:"
                                                     maxlength="" />
-                                                <label for="instfloat_scheduled_equipment_id_or_serial_1">ID # /
+                                                <label for="instfloat_scheduled_equipment_id_or_serial_1">ID #
+                                                    /
                                                     Serial Number:</label>
                                             </div>
                                         </div>
@@ -3437,10 +4101,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row justify-content-center" id="sched_equipment_container"></div>
+                                    <div class="row justify-content-center" id="sched_equipment_container">
+                                    </div>
                                 </div>
                                 <!-- /Step -->
-
+                                {{-- @endif --}}
+                                {{-- </div> --}}
                                 <!-- End Product Steps -->
 
                                 <!-- Review Form Stepper -->
@@ -3580,8 +4246,8 @@
                                         <label class="container_check">Please accept our <a href="#"
                                                 data-bs-toggle="modal" data-bs-target="#terms-txt">Terms and
                                                 conditions</a>
-                                            <input type="checkbox" name="terms" value="Yes"
-                                                class="required">
+                                            <input type="checkbox" name="terms" id="termsCheckbox"
+                                                value="Yes" class="required">
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
@@ -3623,20 +4289,21 @@
                                 <!-- /Step -->
 
                                 <!-- UTM params -->
-                                {{-- <input type="hidden" name="utm_source" value="{{ session('utm_source') }}">
-                                <input type="hidden" name="utm_medium" value="{{ session('utm_medium') }}">
-                                <input type="hidden" name="utm_campaign" value="{{ session('utm_campaign') }}">
-                                <input type="hidden" name="utm_term" value="{{ session('utm_term') }}">
-                                <input type="hidden" name="utm_content" value="{{ session('utm_content') }}"> --}}
-
+                                <input type="hidden" name="utm_source" value="{{ app('request')->input('utm_source') }}">
+                                <input type="hidden" name="utm_medium" value="{{ app('request')->input('utm_medium') }}">
+                                <input type="hidden" name="utm_campaign" value="{{ app('request')->input('utm_campaign') }}">
+                                <input type="hidden" name="utm_term" value="{{ app('request')->input('utm_term') }}">
+                                <input type="hidden" name="utm_content" value="{{ app('request')->input('utm_content') }}">
                             </div>
                             <!-- /middle-wizard -->
 
                             <div id="bottom-wizard">
                                 <button type="button" name="backward" class="backward btn_1">Previous</button>
                                 <button type="button" name="forward" class="forward btn_1">Next</button>
+
                                 <button type="submit" name="process" id="process"
                                     class="submit btn_1">Submit</button>
+
                             </div>
                             <!-- /bottom-wizard -->
                         </form>
@@ -3724,6 +4391,7 @@
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+        {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
         {{-- <script src="{{ asset('js/common_scripts.min.js') }}"></script> --}}
         <script src="{{ asset('js/common_functions.js') }}"></script>
         <script src="{{ asset('assets/validate.js') }}"></script>

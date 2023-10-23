@@ -20,7 +20,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(192,192,192,0.3);
+    background-color: rgba(192, 192, 192, 0.3);
     z-index: 999;
     pointer-events: auto;
 }
@@ -34,7 +34,7 @@
     height: 50px;
     border-radius: 50%;
     border: 8px solid;
-    border-color: #E4E4ED;
+    border-color: #e4e4ed;
     border-right-color: #064367;
     animation: s2 1s infinite linear;
     pointer-events: none;
@@ -62,8 +62,8 @@
 }
 
 .reviewInfoContainer {
-    width:600px;
-    text-align:center;
+    width: 600px;
+    text-align: center;
 }
 
 .reviewInfoContainer {
@@ -79,22 +79,43 @@
 }
 
 .reviewInfoContainer h6 {
-    text-align:left;
+    text-align: left;
     margin: 10px 0 10px 0;
 }
 
 .reviewInfoContainer p {
     margin: 0;
-    text-align:left;
+    text-align: left;
 }
 
 .reviewInfoSubContainer {
     padding: 15px;
     border-radius: 7px;
-    border: 0.5px solid #000;
+    /* border: 0.5px solid #000; */
 }
 
 .entryContainer {
     padding: 10px !important;
 }
 
+@media (min-width: 320px) and (max-width: 480px) {
+    .reviewInfoContainer {
+        width: auto;
+        text-align: center;
+    }
+
+    .reviewInfoSubContainer {
+        padding: 15px 0 15px 0;
+        border-radius: 7px;
+        /* border: 0.5px solid #000; */
+    }
+
+    .reviewInfoContainer p {
+        margin: 0;
+        text-align: center;
+    }
+
+    .container_check {
+        padding-left: 50px;
+    }
+}

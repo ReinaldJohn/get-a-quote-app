@@ -5,33 +5,35 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Quote;
 use App\Models\Classcodes;
+use App\Models\WCOwnersInfo;
 use Illuminate\Http\Request;
 use App\Models\BOPInformation;
+use App\Models\EPLIInformation;
 use App\Models\ClientInformation;
 use App\Models\WCProfessionEntry;
 use Illuminate\Support\Facades\DB;
 use App\Models\GLMultipleStateWork;
 use Illuminate\Support\Facades\Log;
+use App\Models\CommercialAutoDrivers;
 use App\Models\GLAdditionalQuestions;
+use App\Models\CommercialAutoVehicles;
 use App\Models\LicenseBondInformation;
 use App\Models\BuildersRiskInformation;
 use Illuminate\Support\Facades\Session;
 use App\Models\CommercialAutoInformation;
+use App\Models\CyberLiabilityInformation;
 use App\Models\ToolsEquipmentInformation;
 use App\Models\ExcessLiabilityInformation;
 use App\Models\AboutYourCompanyInformation;
-use App\Models\CommercialAutoDrivers;
-use App\Models\CommercialAutoVehicles;
-use App\Models\CommercialPropertyInformation;
-use App\Models\CyberLiabilityInformation;
-use App\Models\EPLIInformation;
-use App\Models\ErrorsAndEmissionInformation;
 use App\Models\GeneralLiabilityInformation;
-use App\Models\InstallationFloaterInformation;
-use App\Models\InstallationFloaterScheduledEquipment;
+use App\Models\ErrorsAndEmissionInformation;
+use App\Models\CommercialPropertyInformation;
 use App\Models\PollutionLiabilityInformation;
-use App\Models\WCOwnersInfo;
+use App\Models\InstallationFloaterInformation;
 use App\Models\WorkersCompensationInformation;
+use App\Models\InstallationFloaterScheduledEquipment;
+use App\Models\OptInList;
+use Exception;
 
 class QuoteController extends Controller
 {
@@ -39,7 +41,8 @@ class QuoteController extends Controller
 
         $quoteModel = new Quote();
         $states = $quoteModel->getAllStates();
-        $professions = $quoteModel->getAllProfessions();
+        $excludeIds = [995, 996, 997, 998, 999];
+        $professions = $quoteModel->getAllProfessions($excludeIds);
         $currentYear = Carbon::now()->format('Y');
         return view("quote.index", compact('states', 'professions'), ['currentYear' => $currentYear]);
     }
@@ -57,6 +60,38 @@ class QuoteController extends Controller
 
         if ($request->isMethod('get') && $request->has('a')) {
             $a = $request->input('a');
+
+            // IDs you want specifically for WC Professions
+            $ids = [995, 996, 997, 998, 999];
+
+            // Fetch all professions
+            $professions = $quoteModel->getAllProfessions($ids);
+
+            // Fetch specific professions based on the array of IDs
+            $wcProfessions = $quoteModel->getWCProfessions($ids);
+
+            // Initialize output buffer and add general professions
+            ob_start();
+
+            // Add WC professions if they exist
+            if ($wcProfessions && count($wcProfessions) > 0) {
+                echo "<optgroup label='Other Professions'>";
+                foreach ($wcProfessions as $wcProfession) {
+                    echo "<option value='{$wcProfession['id']}'>{$wcProfession['name']}</option>";
+                }
+                echo "</optgroup>";
+            }
+
+            echo "<optgroup label='All Professions'>";
+            foreach ($professions as $profession) {
+                echo "<option value='{$profession['id']}'>{$profession['name']}</option>";
+            }
+            echo "</optgroup>";
+
+            // Get output buffer content and clean the buffer
+            $options = ob_get_clean();
+
+            // Generate the final HTML output
             $output = "
                 <div id='profession_entry_container_{$a}'>
                     <h4 class='profession_header mt-2 mb-2'>Profession Entry No. {$a}</h4>
@@ -64,24 +99,8 @@ class QuoteController extends Controller
                         <div class='col-md-12'>
                             <div class='mb-3 form-floating'>
                                 <select class='form-control wc_profession_{$a}' name='wc_profession_{$a}' id='wc_profession_{$a}' aria-label='wc_profession_{$a}'>
-                                    <option value selected></option> ";
-
-                                        // Start output buffering
-                                        ob_start();
-
-                                        $professions = $quoteModel->getAllProfessions();
-                                        foreach ($professions as $profession) {
-                                            echo "<option value='{$profession['id']}'>{$profession['name']}</option>";
-                                        }
-
-                                        // Get current buffer contents and delete current output buffer
-                                        $options = ob_get_clean();
-
-                                        // Append options to output
-                                        $output .= $options;
-
-            $output .= "
-
+                                    <option value selected></option>
+                                    $options
                                 </select>
                                 <label for='wc_profession_{$a}'>Profession</label>
                             </div>
@@ -285,7 +304,6 @@ class QuoteController extends Controller
                 DB::transaction(function () use ($commonData, $productsData) {
                     $html_body = "";
                     $quoteModel = new Quote();
-
                     $stateAbbr = $quoteModel->getStatesById($commonData['states']);
 
                     $clientInformation = ClientInformation::create([
@@ -303,36 +321,119 @@ class QuoteController extends Controller
                         'contractor_license_no' => $commonData['contractor_license']
                     ]);
 
-                    $templateData['stateAbbr'] = $stateAbbr;
+                    // $utm_source = isset($commonData['utm_source']) ? $commonData['utm_source'] : null;
+                    // $utm_medium = isset($commonData['utm_medium']) ? $commonData['utm_medium'] : null;
+                    // $utm_campaign = isset($commonData['utm_campaign']) ? $commonData['utm_campaign'] : null;
+                    // $utm_term = isset($commonData['utm_term']) ? $commonData['utm_term'] : null;
+                    // $utm_content = isset($commonData['utm_content']) ? $commonData['utm_content'] : null;
+                    // $does_opt_in = "";
+
+                    // if (isset($commonData['terms'])) {
+                    //     if ($commonData['terms'] === 'Yes') {
+                    //         $does_opt_in = 1;
+                    //     } else {
+                    //         $does_opt_in = 0;
+                    //     }
+                    // }
+
+                    DB::beginTransaction();
+                    try {
+                        $does_opt_in = null;
+
+                        if (isset($commonData['terms'])) {
+                            $does_opt_in = $commonData['terms'] === 'Yes' ? 1 : 0;
+                        }
+
+                        $utm_source = isset($commonData['utm_source']) ? $commonData['utm_source'] : null;
+                        $utm_medium = isset($commonData['utm_medium']) ? $commonData['utm_medium'] : null;
+                        $utm_campaign = isset($commonData['utm_campaign']) ? $commonData['utm_campaign'] : null;
+                        $utm_term = isset($commonData['utm_term']) ? $commonData['utm_term'] : null;
+                        $utm_content = isset($commonData['utm_content']) ? $commonData['utm_content'] : null;
+
+                        $utmParamQueries = OptInList::create([
+                            'client_info_id' => $clientInformation->id,
+                            'does_opt_in' => $does_opt_in,
+                            'utm_source' => $utm_source,
+                            'utm_medium' => $utm_medium,
+                            'utm_campaign' => $utm_campaign,
+                            'utm_term' => $utm_term,
+                            'utm_content' => $utm_content,
+                        ]);
+
+                        $templateData['utm_source'] = $utm_source;
+                        $templateData['utm_medium'] = $utm_medium;
+                        $templateData['utm_campaign'] = $utm_campaign;
+                        $templateData['utm_term'] = $utm_term;
+                        $templateData['utm_content'] = $utm_content;
+
+                        Log::info('Successfully saved OPT IN record. Data: ' . json_encode($utmParamQueries));
+                        // Log::info('Session UTM Source in Controller:', ['utm_source' => session('utm_source')]);
+                        // Log::info('Session UTM Source in Controller:', ['utm_source' => $utm_source]);
+                        DB::commit();
+                    } catch (\Exception $e) {
+                        DB::rollBack();
+                        Log::error('Failed to insert UTM Param Queries. Error: ' . $e->getMessage());
+                    }
 
                     try {
+                        $clientInfoId = $clientInformation->id;
+                        $business_ownership_structure = $commonData['ayc_bop'];
+                        $date_business_started = Carbon::createFromFormat('m/d/Y', $commonData['ayc_date_business_started']);
+                        $years_in_business = $commonData['ayc_yrs_in_business'];
+                        $years_exp_as_contractor = $commonData['ayc_yrs_exp_contractor'];
+                        $annual_gross_receipt = isset($commonData['annual_gross_receipt']) ? floatval(preg_replace("/[^-0-9\.]/","", $commonData['annual_gross_receipt'])) : null;
+                        $profession = isset($commonData['profession']) ? $commonData['profession'] : null;
+                        $residential_percentage = isset($commonData['residential_percentage']) ? $commonData['residential_percentage'] : null;
+                        $commercial_percentage = isset($commonData['commercial_percentage']) ? $commonData['commercial_percentage'] : null;
+                        $new_construction_percentage = isset($commonData['new_construction_percentage']) ? $commonData['new_construction_percentage'] : null;
+                        $repair_remodel_percentage = isset($commonData['repair_remodel_percentage']) ? $commonData['repair_remodel_percentage'] : null;
+
+                        // $no_of_losses = $commonData['ayc_no_of_losses'];
+                        // $explain_losses = isset($commonData['ayc_no_of_losses_explain']) ? $commonData['ayc_no_of_losses_explain'] : null;
 
                         $aboutYourCompany = new AboutYourCompanyInformation();
-                        $aboutYourCompany->client_info_id = $clientInformation->id;
-                        $aboutYourCompany->business_ownership_structure = $commonData['ayc_bop'];
-                        $aboutYourCompany->date_business_started = Carbon::createFromFormat('m/d/Y', $commonData['ayc_date_business_started']);
-                        $aboutYourCompany->years_exp_as_contractor = $commonData['ayc_yrs_exp_contractor'];
-                        $aboutYourCompany->no_of_losses = $commonData['ayc_no_of_losses'];
-                        $aboutYourCompany->explain_losses = isset($commonData['ayc_no_of_losses_explain']) ? $commonData['ayc_no_of_losses_explain'] : null;
+                        $aboutYourCompany->client_info_id = $clientInfoId;
+                        $aboutYourCompany->business_ownership_structure = $business_ownership_structure;
+                        $aboutYourCompany->date_business_started = $date_business_started;
+                        $aboutYourCompany->years_in_business = $years_in_business;
+                        $aboutYourCompany->years_exp_as_contractor = $years_exp_as_contractor;
+                        $aboutYourCompany->annual_gross_receipt = $annual_gross_receipt;
+                        $aboutYourCompany->profession = $profession;
+                        $aboutYourCompany->residential_percentage = $residential_percentage;
+                        $aboutYourCompany->commercial_percentage = $commercial_percentage;
+                        $aboutYourCompany->new_construction_percentage = $new_construction_percentage;
+                        $aboutYourCompany->repair_remodel_percentage = $repair_remodel_percentage;
 
-                        $dateBusinessStartedFormatted = Carbon::createFromFormat('m/d/Y', $commonData['ayc_date_business_started']);
-                        $dateBusinessStartedFormatted1 = Carbon::parse($dateBusinessStartedFormatted)->format('F j, Y');
+                        // $aboutYourCompany->no_of_losses = $no_of_losses;
+                        // $aboutYourCompany->explain_losses = $explain_losses;
+                        $aboutYourCompany->save();
 
-                        // Log::info('About to save About Your Company Data: ' . json_encode($aboutYourCompany));
-
-                        $ayc_saving = $aboutYourCompany->save();
-
-                        if (!$ayc_saving) {
-                            throw new \Exception("Failed to save About Your Company. Data: " . json_encode($aboutYourCompany));
-                        }
+                        $dateBusinessStartedFormatted = Carbon::createFromFormat('m/d/Y', $commonData['ayc_date_business_started'])->format('F j, Y');
 
                         Log::info('Successfully saved About Your Company. Record id: ' . $aboutYourCompany->id);
 
+                        $professionName = $quoteModel->getProfessionById($aboutYourCompany->profession);
+
+                        $condition1 = !empty($aboutYourCompany->annual_gross_receipt);
+                        $condition2 = !empty($aboutYourCompany->profession);
+                        $condition3 = !empty($aboutYourCompany->residential_percentage);
+                        $condition4 = !empty($aboutYourCompany->commercial_percentage);
+                        $condition5 = !empty($aboutYourCompany->new_construction_percentage);
+                        $condition6 = !empty($aboutYourCompany->repair_remodel_percentage);
+
+                        $shouldDisplayAboutYourInformation = $condition1 || ($condition1 && $condition2) || ($condition2 && $condition3) || ($condition3 && $condition4) || ($condition4 && $condition5) || ($condition5 && $condition6) || $condition6;
+
+                        $fullName = $clientInformation->first_name . ' ' . $clientInformation->last_name;
+                        $fullAddress = $clientInformation->address . ' ' . $clientInformation->city . ' ' . $clientInformation->state . ', ' . $clientInformation->zipcode;
+
+                        $templateData['fullAddress'] = $fullAddress;
+                        $templateData['fullName'] = $fullName;
+                        $templateData['shouldDisplayAboutYourInformation'] = $shouldDisplayAboutYourInformation;
+                        $templateData['stateAbbr'] = $stateAbbr;
                         $templateData['aboutYourCompany'] = $aboutYourCompany;
-                        $templateData['dateBusinessStartedFormatted1'] = $dateBusinessStartedFormatted1;
+                        $templateData['dateBusinessStartedFormatted'] = $dateBusinessStartedFormatted;
 
-                        // Log::info('Record inserted with id for About Your Company: ' . $aboutYourCompany->id);
-
+                        // Log::info('Successfully saved About Your Company. Record id: ' . $aboutYourCompany->id);
                     } catch (\Exception $e) {
                         Log::error('Failed to insert About Your Company information. Error: ' . $e->getMessage());
                     }
@@ -345,94 +446,103 @@ class QuoteController extends Controller
                             parse_str($productDataStr, $productData);
                         }
                         switch ($product) {
-
                             case 'gl':
                                 try {
-                                    $generalLiability = new GeneralLiabilityInformation();
-                                    $generalLiability->client_info_id = $clientInformation->id;
-                                    $generalLiability->profession = $productData['gl_profession']['value'];
-                                    $generalLiability->annual_gross_receipt = floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_annual_gross']['value']));
-                                    $generalLiability->specify_profession_if_others = isset($productData['gl_specify_profession']) ? $productData['gl_specify_profession']['value'] : null;
-                                    $generalLiability->residential = $productData['gl_residential']['value'];
-                                    $generalLiability->commercial = $productData['gl_commercial']['value'];
-                                    $generalLiability->new_construction = $productData['gl_new_construction']['value'];
-                                    $generalLiability->repair_remodel = $productData['gl_repair_remodel']['value'];
-                                    $generalLiability->detailed_descops = $productData['gl_descops']['value'];
-                                    $generalLiability->multiple_state_work = $productData['gl_multiple_state_work']['value'];
-                                    $generalLiability->cost_of_largest_project = floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_cost_proj_5years']['value']));
-                                    $generalLiability->full_time = $productData['gl_full_time_employees']['value'];
-                                    $generalLiability->part_time = $productData['gl_part_time_employees']['value'];
-                                    $generalLiability->payroll_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_payroll_amt']['value']));
-                                    $generalLiability->does_using_subcontractor = $productData['gl_using_subcon']['value'];
-                                    $generalLiability->subcon_cost = isset($productData['gl_subcon_cost']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_subcon_cost']['value'])) : null;
+                                    $client_info_id = $clientInformation->id;
+                                    $profession = $productData['gl_profession']['value'];
+                                    $annual_gross_receipt = floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_annual_gross']['value']));
+                                    $specify_profession_if_others = isset($productData['gl_specify_profession']) ? $productData['gl_specify_profession']['value'] : null;
+                                    $residential = $productData['gl_residential']['value'];
+                                    $commercial = $productData['gl_commercial']['value'];
+                                    $new_construction = $productData['gl_new_construction']['value'];
+                                    $repair_remodel = $productData['gl_repair_remodel']['value'];
+                                    $detailed_descops = $productData['gl_descops']['value'];
+                                    $multiple_state_work = $productData['gl_multiple_state_work']['value'];
+                                    $cost_of_largest_project = floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_cost_proj_5years']['value']));
+                                    $full_time = $productData['gl_full_time_employees']['value'];
+                                    $part_time = $productData['gl_part_time_employees']['value'];
+                                    $payroll_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_payroll_amt']['value']));
+                                    $does_using_subcontractor = $productData['gl_using_subcon']['value'];
+                                    $subcon_cost = isset($productData['gl_subcon_cost']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_subcon_cost']['value'])) : null;
+                                    $gl_no_of_losses = $productData['gl_no_of_losses']['value'];
+                                    $gl_amount_of_claim = isset($productData['gl_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_amt_of_claims']['value'])) : null;
+                                    $gl_date_of_loss = isset($productData['gl_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['gl_date_of_loss']['value'])->toDateString() : null;
 
+                                    $generalLiability = new GeneralLiabilityInformation();
+                                    $generalLiability->client_info_id = $client_info_id;
+                                    $generalLiability->profession = $profession;
+                                    $generalLiability->specify_profession_if_others = $specify_profession_if_others;
+                                    $generalLiability->annual_gross_receipt = $annual_gross_receipt;
+                                    $generalLiability->residential = $residential;
+                                    $generalLiability->commercial = $commercial;
+                                    $generalLiability->new_construction = $new_construction;
+                                    $generalLiability->repair_remodel = $repair_remodel;
+                                    $generalLiability->detailed_descops = $detailed_descops;
+                                    $generalLiability->multiple_state_work = $multiple_state_work;
+                                    $generalLiability->cost_of_largest_project = $cost_of_largest_project;
+                                    $generalLiability->full_time = $full_time;
+                                    $generalLiability->part_time = $part_time;
+                                    $generalLiability->payroll_amount = $payroll_amount;
+                                    $generalLiability->does_using_subcontractor = $does_using_subcontractor;
+                                    $generalLiability->subcon_cost = $subcon_cost;
+                                    $generalLiability->gl_no_of_losses = $gl_no_of_losses;
+                                    $generalLiability->gl_amount_of_claim = $gl_amount_of_claim;
+                                    $generalLiability->gl_date_of_loss = $gl_date_of_loss;
                                     $generalLiability->save();
 
                                     $professionName = $quoteModel->getProfessionById($productData['gl_profession']['value']);
-                                    $parsedPayrollAmount = floatval($generalLiability->payroll_amount);
-                                    $parsedCostProj5years = floatval($generalLiability->cost_of_largest_project);
-                                    $parsedSubconCost = floatval($generalLiability->subcon_cost);
-
-                                    Log::debug('gl_profession value: ' . $generalLiability->profession);
 
                                     $classcodesModel = new Classcodes();
-
                                     $filteredClasscodes = $classcodesModel->filterClasscodesWithQuestion([178, 184, 226, 190, 115, 188, 189, 114, 229, 119, 56, 196, 146, 51]);
+                                    $templateData['glAdditionalQuestions'] = [];
 
-                                    $templateData['glAdditionalQuestions'] = [];  // Initialize an array
+                                    // if (isset($productData['gl_profession']['value']) && isset()) {
 
-                                    if (in_array((int) $generalLiability->profession, $filteredClasscodes)) {
+                                    // } else {
 
-                                        $templateData['doesHaveAdditionalQuestion'] = true;
+                                    // }
 
-                                        // Get the classcode object.
-                                        $classcode = $classcodesModel->find((int) $productData['gl_profession']['value']);
-                                        if(!$classcode) {
-                                            Log::error("Classcode not found for ID: " . $productData['gl_profession']['value']);
-                                            return;
-                                        }
+                                        if (in_array((int) $profession, $filteredClasscodes)) {
+                                            $classcode = $classcodesModel->find((int) $productData['gl_profession']['value']);
+                                            if(!$classcode) {
+                                                Log::error("Classcode not found for ID: " . $productData['gl_profession']['value']);
+                                                return;
+                                            }
+                                            foreach ($productDataStr as $key => $data) {
+                                                $glAdditionalQuestions = new GLAdditionalQuestions();
+                                                if (strpos($key, 'gl_gross_add_') === 0) {
+                                                    DB::beginTransaction();
+                                                    try {
+                                                        $glProfession = (int) $productData['gl_profession']['value'];
+                                                        $questionLabels = isset($data['h6']) ? $data['h6'] : $data['label'];
+                                                        $questionAnswers = $data['value'];
 
-                                        foreach ($productDataStr as $key => $data) {
-                                            $glAdditionalQuestions = new GLAdditionalQuestions();
-                                            if (strpos($key, 'gl_gross_add_') === 0) {
-                                                DB::beginTransaction();
-                                                try {
+                                                        $glAdditionalQuestions->gl_id = $generalLiability->id;
+                                                        $glAdditionalQuestions->classcode_id = $glProfession;
+                                                        $glAdditionalQuestions->question = $questionLabels;
+                                                        $glAdditionalQuestions->answer = $questionAnswers;
+                                                        $glAdditionalQuestions->save();
 
-                                                    $glProfession = (int) $productData['gl_profession']['value'];
-                                                    $questionLabels = isset($data['h6']) ? $data['h6'] : $data['label'];
-                                                    $questionAnswers = $data['value'];
+                                                        Log::info('Successfully saved glAdditionalQuestions record. Data: ' . json_encode($glAdditionalQuestions));
 
-                                                    $glAdditionalQuestions->gl_id = $generalLiability->id;
-                                                    $glAdditionalQuestions->classcode_id = $glProfession;
-                                                    // Here we're using the related question's content.
-                                                    $glAdditionalQuestions->question = $questionLabels;
-                                                    $glAdditionalQuestions->answer = $questionAnswers;
+                                                        $templateData['glAdditionalQuestions'][] = [
+                                                            'questionLabels' => $questionLabels,
+                                                            'questionAnswers' => $questionAnswers,
+                                                        ];
 
-                                                    $glAdditionalQuestions->save();
-
-                                                    Log::info('Successfully saved glAdditionalQuestions record. Data: ' . json_encode($glAdditionalQuestions));
-
-                                                    $templateData['glAdditionalQuestions'][] = [
-                                                        'questionLabels' => $questionLabels,
-                                                        'questionAnswers' => $questionAnswers,
-                                                    ];
-
-                                                    DB::commit();
-                                                } catch (\Exception $e) {
-                                                    DB::rollBack();  // Rollback the database transaction on error
-                                                    Log::error('Failed to insert glAdditionalQuestions record. Exception: ' . $e->getMessage());
+                                                        DB::commit();
+                                                    } catch (\Exception $e) {
+                                                        DB::rollBack();
+                                                        Log::error('Failed to insert glAdditionalQuestions record. Exception: ' . $e->getMessage());
+                                                    }
                                                 }
                                             }
                                         }
-                                    } else {
-                                        $templateData['doesHaveAdditionalQuestion'] = false;
-                                    }
 
-                                    $templateData['multipleStateWorks'] = [];  // Initialize an array
-
+                                    $templateData['multipleStateWorks'] = [];
                                     foreach ($productDataStr as $key => $data) {
                                         if (strpos($key, 'gl_multiple_states_') === 0) {
-                                            $counter = str_replace('gl_multiple_states_', '', $key); // Get the counter for this set of inputs
+                                            $counter = str_replace('gl_multiple_states_', '', $key);
                                             if (isset($productDataStr['gl_multiple_states_percentage_' . $counter]) && !empty($productDataStr['gl_multiple_states_percentage_' . $counter]['value'])) {
                                                 DB::beginTransaction();
                                                 try {
@@ -445,7 +555,8 @@ class QuoteController extends Controller
                                                     $glMultipleStateWork->percentage = $statePercentage;
                                                     $glMultipleStateWork->save();
 
-                                                    // Store it in the array for the view
+                                                    Log::info('Successfully saved glMultipleStateWork record. Data: ' . json_encode($glMultipleStateWork));
+
                                                     $templateData['multipleStateWorks'][] = [
                                                         'counter' => $counter,
                                                         'state' => $stateWorking,
@@ -461,18 +572,36 @@ class QuoteController extends Controller
                                         }
                                     }
 
-                                    $templateData['fullAddress'] = $clientInformation->address . ' ' . $clientInformation->city . ' ' . $clientInformation->states . ', ' . $clientInformation->zipcode;
                                     $templateData['professionName'] = $professionName;
-                                    $templateData['parsedCostProj5years'] = $parsedCostProj5years;
-                                    $templateData['parsedPayrollAmount'] = $parsedPayrollAmount;
-                                    $templateData['parsedSubconCost'] = $parsedSubconCost;
+                                    $templateData['glNoOfLosses'] = "";
+
+                                    switch($generalLiability->gl_no_of_losses) {
+                                        case '-1':
+                                            $templateData['glNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['glNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['glNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['glNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['glNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+                                    $templateData['glDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['gl_date_of_loss']['value'])->format('F j, Y');
+
+                                    // $templateData['parsedCostProj5years'] = $parsedCostProj5years;
+                                    // $templateData['parsedPayrollAmount'] = $parsedPayrollAmount;
+                                    // $templateData['parsedSubconCost'] = $parsedSubconCost;
                                     $templateData['generalLiability'] = $generalLiability;
                                     $templateData['productType'] = 'gl';
                                     $templateData['stateAbbr'] = $stateAbbr;
                                     $templateData['clientInformation'] = $clientInformation;
-
                                     $html_body .= view('quote.quote-details', $templateData)->render();
-
                                     Log::info('Record inserted with id for GL: ' . $generalLiability->id);
                                 } catch (\Exception $e) {
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
@@ -480,28 +609,51 @@ class QuoteController extends Controller
                                 break;
                             case 'wc':
                                 try {
-                                    $workersCompensation = new WorkersCompensationInformation();
-                                    $workersCompensation->client_info_id = $clientInformation->id;
-                                    $workersCompensation->gross_receipt = floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_gross_receipt']['value']));
-                                    $workersCompensation->does_hire_subcontractor = $productData['wc_does_hire_subcon']['value'];
-                                    $workersCompensation->subcontractor_cost_in_year = isset($productData['wc_subcon_cost_year']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_subcon_cost_year']['value'])) : null;
-                                    $workersCompensation->number_of_employee = $productData['wc_num_of_empl']['value'];
+                                    $clientInfoId = $clientInformation->id;
+                                    $gross_receipt = isset($productData['wc_gross_receipt']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_gross_receipt']['value'])) : null;
+                                    $does_hire_subcontractor = isset($productData['wc_does_hire_subcon']['value']) ? $productData['wc_does_hire_subcon']['value'] : null;
+                                    $subcontractor_cost_in_year = isset($productData['wc_subcon_cost_year']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_subcon_cost_year']['value'])) : null;
+                                    $number_of_employee = isset($productData['wc_num_of_empl']['value']) ? $productData['wc_num_of_empl']['value'] : null;
+                                    $wc_no_of_losses = isset($productData['wc_no_of_losses']['value']) ? $productData['wc_no_of_losses']['value'] : null;
+                                    $wc_amount_of_claim = isset($productData['wc_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_amt_of_claims']['value'])) : null;
+                                    $wc_date_of_loss = isset($productData['wc_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->toDateString() : null;
 
+                                    $workersCompensation = new WorkersCompensationInformation();
+                                    $workersCompensation->client_info_id = $clientInfoId;
+                                    $workersCompensation->gross_receipt = $gross_receipt;
+                                    $workersCompensation->does_hire_subcontractor = $does_hire_subcontractor;
+                                    $workersCompensation->subcontractor_cost_in_year = $subcontractor_cost_in_year;
+                                    $workersCompensation->number_of_employee = $number_of_employee;
+                                    $workersCompensation->wc_no_of_losses = $wc_no_of_losses;
+                                    $workersCompensation->wc_amount_of_claim = $wc_amount_of_claim;
+                                    $workersCompensation->wc_date_of_loss = $wc_date_of_loss;
                                     $workersCompensation->save();
 
+                                    $templateData['professionsInfo'] = [];
                                     foreach ($productDataStr as $key => $data) {
                                         if (strpos($key, 'wc_profession_') === 0) {
                                             $counter = str_replace('wc_profession_', '', $key);
                                             if (isset($productDataStr['wc_profession_' . $counter]) && !empty($productDataStr['wc_annual_payroll_' . $counter]['value'])) {
                                                 DB::beginTransaction();
                                                 try {
+                                                    $profession = $productData['wc_profession_' . $counter]['value'];
+                                                    $annual_payroll = floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_annual_payroll_' . $counter]['value']));
+
                                                     $wcProfessionEntry = new WCProfessionEntry();
                                                     $wcProfessionEntry->wc_id = $workersCompensation->id;
-                                                    $wcProfessionEntry->profession_id = $productData['wc_profession_' . $counter]['value'];
-                                                    $wcProfessionEntry->annual_payroll_of_employee = floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_annual_payroll_' . $counter]['value']));
-
+                                                    $wcProfessionEntry->profession_id = $profession;
+                                                    $wcProfessionEntry->annual_payroll_of_employee = $annual_payroll;
                                                     $wcProfessionEntry->save();
+
                                                     Log::info('Successfully saved wcProfessionEntry record. Data: ' . json_encode($wcProfessionEntry));
+
+                                                    $professionName = $quoteModel->getProfessionById($productData['wc_profession_' . $counter]['value']);
+                                                    $templateData['professionsInfo'][] = [
+                                                        'counter' => $counter,
+                                                        'professionName' => $professionName,
+                                                        'annual_payroll' => $annual_payroll,
+                                                    ];
+
                                                     DB::commit();
                                                 } catch (\Exception $e) {
                                                     Log::error('Failed to insert wcProfessionEntry record. Exception: ' . $e->getMessage());
@@ -510,22 +662,32 @@ class QuoteController extends Controller
                                         }
                                     }
 
-                                    // Handle data without underscores first
                                     $wcOwnersInfo = new WCOwnersInfo();
-
                                     DB::beginTransaction();
                                     try {
-                                        $wcOwnersInfo->wc_id = $workersCompensation->id;
-                                        $wcOwnersInfo->owners_name = $productData['wc_name']['value'];
-                                        $wcOwnersInfo->title_relationship = $productData['wc_title_relationship']['value'];
-                                        $wcOwnersInfo->ownership_percentage = $productData['wc_ownership_perc']['value'];
-                                        $wcOwnersInfo->excluded_or_included = $productData['wc_exc_inc']['value'];
-                                        $wcOwnersInfo->ssn = $productData['wc_ssn']['value'];
-                                        $wcOwnersInfo->fein = $productData['wc_fein']['value'];
-                                        $ownersDateOfBirth = Carbon::createFromFormat('m/d/Y', $productData['wc_dob']['value'])->toDateString();
-                                        $wcOwnersInfo->owners_date_of_birth = $ownersDateOfBirth;
 
+                                        $workersCompensationId = $workersCompensation->id;
+                                        $owners_name = $productData['wc_name']['value'];
+                                        $title_relationship = $productData['wc_title_relationship']['value'];
+                                        $ownership_percentage = $productData['wc_ownership_perc']['value'];
+                                        $excluded_or_included = $productData['wc_exc_inc']['value'];
+                                        $ssn = $productData['wc_ssn']['value'];
+                                        $fein = $productData['wc_fein']['value'];
+                                        $owners_date_of_birth = Carbon::createFromFormat('m/d/Y', $productData['wc_dob']['value'])->toDateString();
+
+                                        $wcOwnersInfo->wc_id = $workersCompensationId;
+                                        $wcOwnersInfo->owners_name = $owners_name;
+                                        $wcOwnersInfo->title_relationship = $title_relationship;
+                                        $wcOwnersInfo->ownership_percentage = $ownership_percentage;
+                                        $wcOwnersInfo->excluded_or_included = $excluded_or_included;
+                                        $wcOwnersInfo->ssn = $ssn;
+                                        $wcOwnersInfo->fein = $fein;
+                                        $wcOwnersInfo->owners_date_of_birth = $owners_date_of_birth;
                                         $wcOwnersInfo->save();
+
+                                        $ownersDobFormatted = Carbon::createFromFormat('m/d/Y', $productData['wc_dob']['value'])->format('F j, Y');
+                                        $templateData['ownersDobFormatted'] = $ownersDobFormatted;
+
                                         Log::info('Successfully saved wcOwnersInfo record. Data: ' . json_encode($wcOwnersInfo));
                                         DB::commit();
                                     } catch (\Exception $e) {
@@ -533,7 +695,7 @@ class QuoteController extends Controller
                                         Log::error('Failed to insert wcOwnersInfo record. Exception: ' . $e->getMessage());
                                     }
 
-                                    // Handle the dynamic underscored keys
+                                    $templateData['ownersInfo'] = [];
                                     foreach ($productDataStr as $key => $data) {
                                         if (strpos($key, 'wc_name_') === 0) {
                                             $counter = str_replace('wc_name_', '', $key);
@@ -543,18 +705,38 @@ class QuoteController extends Controller
 
                                                 DB::beginTransaction();
                                                 try {
-                                                    $wcOwnersInfo->wc_id = $workersCompensation->id;
-                                                    $wcOwnersInfo->owners_name = $productData['wc_name_' . $counter]['value'];
-                                                    $wcOwnersInfo->title_relationship = $productData['wc_title_relationship_' . $counter]['value'];
-                                                    $wcOwnersInfo->ownership_percentage = $productData['wc_ownership_perc_' . $counter]['value'];
-                                                    $wcOwnersInfo->excluded_or_included = $productData['wc_exc_inc_' . $counter]['value'];
-                                                    $wcOwnersInfo->ssn = $productData['wc_ssn_' . $counter]['value'];
-                                                    $wcOwnersInfo->fein = $productData['wc_fein_' . $counter]['value'];
-                                                    $ownersDateOfBirth = Carbon::createFromFormat('m/d/Y', $productData['wc_dob_' . $counter]['value'])->toDateString();
-                                                    $wcOwnersInfo->owners_date_of_birth = $ownersDateOfBirth;
 
+                                                    $owners_name = $productData['wc_name_' . $counter]['value'];
+                                                    $title_relationship = $productData['wc_title_relationship_' . $counter]['value'];
+                                                    $ownership_perc = $productData['wc_ownership_perc_' . $counter]['value'];
+                                                    $excluded_included = $productData['wc_exc_inc_' . $counter]['value'];
+                                                    $ssn = $productData['wc_ssn_' . $counter]['value'];
+                                                    $fein = $productData['wc_fein_' . $counter]['value'];
+                                                    $ownersDateOfBirth[$counter] = Carbon::createFromFormat('m/d/Y', $productData['wc_dob_' . $counter]['value'])->toDateString();
+
+                                                    $wcOwnersInfo->wc_id = $workersCompensation->id;
+                                                    $wcOwnersInfo->owners_name = $owners_name;
+                                                    $wcOwnersInfo->title_relationship = $title_relationship;
+                                                    $wcOwnersInfo->ownership_percentage = $ownership_perc;
+                                                    $wcOwnersInfo->excluded_or_included = $excluded_included;
+                                                    $wcOwnersInfo->ssn = $ssn;
+                                                    $wcOwnersInfo->fein = $fein;
+                                                    $wcOwnersInfo->owners_date_of_birth = $ownersDateOfBirth[$counter];
                                                     $wcOwnersInfo->save();
+
                                                     Log::info('Successfully saved wcOwnersInfo record. Data: ' . json_encode($wcOwnersInfo));
+
+                                                    $templateData['ownersInfo'][] = [
+                                                        'counter' => $counter,
+                                                        'owners_name' => $owners_name,
+                                                        'title_relationship' => $title_relationship,
+                                                        'ownership_perc' => $ownership_perc,
+                                                        'excluded_included' => $excluded_included,
+                                                        'ssn' => $ssn,
+                                                        'fein' => $fein,
+                                                        'ownersDateOfBirth' => Carbon::createFromFormat('m/d/Y', $productData['wc_dob_' . $counter]['value'])->format('F j, Y'),
+                                                    ];
+
                                                     DB::commit();
                                                 } catch (\Exception $e) {
                                                     DB::rollBack();
@@ -564,70 +746,96 @@ class QuoteController extends Controller
                                         }
                                     }
 
+                                    $templateData['wcNoOfLosses'] = "";
 
-                                    // $displayData = [];
-                                    // for ($i = 1; $i <= 8; $i++) {
-                                    //     $profession = $workersCompensation->{'profession_' . $i};
-                                    //     $profession = $quoteModel->getProfessionById($profession);
-                                    //     $annual_payroll_var = 'parsedAnnualPayroll' . $i;
-                                    //     $annual_payroll = isset($$annual_payroll_var) ? $$annual_payroll_var : null;
-                                    //     $full_time = $workersCompensation->{'full_time_' . $i};
-                                    //     $part_time = $workersCompensation->{'part_time_' . $i};
-                                    //     if ($profession || $annual_payroll || $full_time || $part_time) {
-                                    //         $displayData[] = [
-                                    //             'Profession Entry No' => 'Profession Entry No ' . $i,
-                                    //             'Profession' => $profession,
-                                    //             'Annual Payroll' => $annual_payroll,
-                                    //             'Full Time' => $full_time,
-                                    //             'Part Time' => $part_time,
-                                    //         ];
-                                    //     }
-                                    // }
+                                    switch($workersCompensation->wc_no_of_losses) {
+                                        case '-1':
+                                            $templateData['wcNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['wcNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['wcNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['wcNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['wcNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
 
-                                    // $templateData['parsedWCGrossReceipt'] = $parsedWCGrossReceipt;
-                                    // $templateData['parsedWCSubconCostYear'] = $parsedWCSubconCostYear;
-                                    // $templateData['dateOfBirthFormatted'] = $dateOfBirthFormatted;
-                                    // $templateData['displayData'] = $displayData;
+                                    $templateData['wcDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['ownersDobFormatted'] = $ownersDobFormatted;
                                     $templateData['workersCompensation'] = $workersCompensation;
                                     $templateData['productType'] = 'wc';
                                     $templateData['clientInformation'] = $clientInformation;
-
                                     $html_body .= view('quote.quote-details', $templateData)->render();
-
                                     Log::info('Record inserted with id for WC: ' . $workersCompensation->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert WC record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'auto':
                                 try {
-                                    $commercialAuto = new CommercialAutoInformation();
-                                    $commercialAuto->client_info_id = $clientInformation->id;
-                                    $commercialAuto->no_of_vehicle = $productData['auto_add_vehicle']['value'];
-                                    $commercialAuto->no_of_drivers = $productData['auto_add_driver']['value'];
+                                    $client_info_id = $clientInformation->id;
+                                    $no_of_vehicle = $productData['auto_add_vehicle']['value'];
+                                    $no_of_drivers = $productData['auto_add_driver']['value'];
+                                    $auto_no_of_losses = $productData['auto_no_of_losses']['value'];
+                                    $auto_amount_of_claim = isset($productData['auto_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","",  $productData['auto_amt_of_claims']['value'])) : null;
+                                    $auto_date_of_loss = isset($productData['auto_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['auto_date_of_loss']['value'])->toDateString() : null;
 
+                                    $commercialAuto = new CommercialAutoInformation();
+                                    $commercialAuto->client_info_id = $client_info_id;
+                                    $commercialAuto->no_of_vehicle = $no_of_vehicle;
+                                    $commercialAuto->no_of_drivers = $no_of_drivers;
+                                    $commercialAuto->auto_no_of_losses = $auto_no_of_losses;
+                                    $commercialAuto->auto_amount_of_claim = $auto_amount_of_claim;
+                                    $commercialAuto->auto_date_of_loss = $auto_date_of_loss;
                                     $commercialAuto->save();
 
+                                    $templateData['autoVehiclesInfo'] = [];
                                     foreach ($productDataStr as $key => $data) {
                                         if (strpos($key, 'auto_vehicle_year_') === 0) {
-                                            $counter = $commercialAuto->no_of_vehicle;
+                                            $counter = str_replace('auto_vehicle_year_', '', $key);
 
                                             if (isset($productDataStr['auto_vehicle_year_'.$counter]['value']) && isset($productDataStr['auto_vehicle_maker_'.$counter]['value']) && isset($productDataStr['auto_vehicle_model_'.$counter]['value']) && isset($productDataStr['auto_vehicle_vin_'.$counter]['value']) && isset($productDataStr['auto_vehicle_mileage_'.$counter]['value']) && isset($productDataStr['auto_vehicle_garage_add_'.$counter]['value']) && isset($productDataStr['auto_vehicle_coverage_limits_'.$counter]['value'])) {
                                                 $vehicleEntry = new CommercialAutoVehicles();
 
                                                 DB::beginTransaction();
                                                 try {
-                                                    $vehicleEntry->comm_auto_id = $commercialAuto->id;
-                                                    $vehicleEntry->year = $productData['auto_vehicle_year_' . $counter]['value'];
-                                                    $vehicleEntry->maker = $productData['auto_vehicle_maker_' . $counter]['value'];
-                                                    $vehicleEntry->model = $productData['auto_vehicle_model_' . $counter]['value'];
-                                                    $vehicleEntry->vin = $productData['auto_vehicle_vin_' . $counter]['value'];
-                                                    $vehicleEntry->mileage_radius = $productData['auto_vehicle_mileage_' . $counter]['value'];
-                                                    $vehicleEntry->garage_address = $productData['auto_vehicle_garage_add_' . $counter]['value'];
-                                                    $vehicleEntry->coverage_limits = floatval(preg_replace("/[^-0-9\.]/","",  $productData['auto_vehicle_coverage_limits_'.$counter]['value']));
+                                                    $year = $productData['auto_vehicle_year_' . $counter]['value'];
+                                                    $maker = $productData['auto_vehicle_maker_' . $counter]['value'];
+                                                    $model = $productData['auto_vehicle_model_' . $counter]['value'];
+                                                    $vin = $productData['auto_vehicle_vin_' . $counter]['value'];
+                                                    $mileage_radius = $productData['auto_vehicle_mileage_' . $counter]['value'];
+                                                    $garage_address = $productData['auto_vehicle_garage_add_' . $counter]['value'];
+                                                    $coverage_limits = floatval(preg_replace("/[^-0-9\.]/","",  $productData['auto_vehicle_coverage_limits_'.$counter]['value']));
 
+                                                    $vehicleEntry->comm_auto_id = $commercialAuto->id;
+                                                    $vehicleEntry->year = $year;
+                                                    $vehicleEntry->maker = $maker;
+                                                    $vehicleEntry->model = $model;
+                                                    $vehicleEntry->vin = $vin;
+                                                    $vehicleEntry->mileage_radius = $mileage_radius;
+                                                    $vehicleEntry->garage_address = $garage_address;
+                                                    $vehicleEntry->coverage_limits = $coverage_limits;
                                                     $vehicleEntry->save();
+
                                                     Log::info('Successfully saved vehicleEntry record. Data: ' . json_encode($vehicleEntry));
+
+                                                    $templateData['autoVehiclesInfo'][] = [
+                                                        'counter' => $counter,
+                                                        'year' => $year,
+                                                        'maker' => $maker,
+                                                        'model' => $model,
+                                                        'vin' => $vin,
+                                                        'mileage_radius' => $mileage_radius,
+                                                        'garage_address' => $garage_address,
+                                                        'coverage_limits' => $coverage_limits,
+                                                    ];
+
                                                     DB::commit();
                                                 } catch (\Exception $e) {
                                                     DB::rollBack();
@@ -637,46 +845,45 @@ class QuoteController extends Controller
                                         }
                                     }
 
+                                    $templateData['autoDriversInfo'] = [];
                                     foreach ($productDataStr as $key => $data) {
-                                        if (strpos($key, 'auto_vehicle_year_') === 0) {
-                                            $counter = $commercialAuto->no_of_drivers;
-
+                                        if (strpos($key, 'auto_add_drivers_name_') === 0) {
+                                            $counter = str_replace('auto_add_drivers_name_', '', $key);
                                             if (isset($productDataStr['auto_add_drivers_name_'.$counter]['value']) && isset($productDataStr['auto_add_driver_lic_'.$counter]['value']) && isset($productDataStr['auto_add_driver_mileage_radius_'.$counter]['value']) && isset($productDataStr['auto_add_driver_date_birth_'.$counter]['value']) && isset($productDataStr['auto_add_driver_civil_status_'.$counter]['value']) && isset($productDataStr['auto_add_driver_spouse_name_'.$counter]['value']) && isset($productDataStr['auto_add_driver_spouse_dob_'.$counter]['value'])) {
                                                 $driverEntry = new CommercialAutoDrivers();
-
                                                 DB::beginTransaction();
                                                 try {
-                                                    $driverEntry->comm_auto_id = $commercialAuto->id;
-                                                    $driverEntry->drivers_name = $productData['auto_add_drivers_name_' . $counter]['value'];
-                                                    $driverEntry->drivers_license_number = $productData['auto_add_driver_lic_' . $counter]['value'];
-                                                    $driverEntry->mileage_radius = $productData['auto_add_driver_mileage_radius_' . $counter]['value'];
-                                                    $DOBValue = $productData['auto_add_driver_date_birth_' . $counter]['value'] ?? null;
-                                                    if ($DOBValue) {
-                                                        try {
-                                                            $driverEntry->date_of_birth = Carbon::createFromFormat('m/d/Y', $DOBValue)->toDateString();
-                                                        } catch (\Exception $e) {
-                                                            Log::warning('Invalid date format for date_of_birth. Given value: ' . $DOBValue . '. Defaulting to null.');
-                                                            $driverEntry->date_of_birth = null;
-                                                        }
-                                                    } else {
-                                                        $driverEntry->date_of_birth = null;
-                                                    }
-                                                    $driverEntry->civil_status = $productData['auto_add_driver_civil_status_' . $counter]['value'];
-                                                    $driverEntry->spouse_name = isset($productData['auto_add_driver_spouse_name_' . $counter]['value']) ? $productData['auto_add_driver_spouse_name_' . $counter]['value'] : null;
-                                                    $spouseDOBValue = $productData['auto_add_driver_spouse_dob_' . $counter]['value'] ?? null;
-                                                    if ($spouseDOBValue) {
-                                                        try {
-                                                            $driverEntry->spouse_date_of_birth = Carbon::createFromFormat('m/d/Y', $spouseDOBValue);
-                                                        } catch (\Exception $e) {
-                                                            Log::warning('Invalid date format for spouse_dob. Given value: ' . $spouseDOBValue . '. Defaulting to null.');
-                                                            $driverEntry->spouse_date_of_birth = null;
-                                                        }
-                                                    } else {
-                                                        $driverEntry->spouse_date_of_birth = null;
-                                                    }
+                                                    $drivers_name = $productData['auto_add_drivers_name_' . $counter]['value'];
+                                                    $drivers_license_number = $productData['auto_add_driver_lic_' . $counter]['value'];
+                                                    $mileage_radius = $productData['auto_add_driver_mileage_radius_' . $counter]['value'];
+                                                    $date_of_birth = isset($productData['auto_add_driver_date_birth_' . $counter]['value']) ? Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_date_birth_' . $counter]['value'])->toDateString() : null;
+                                                    $civil_status = $productData['auto_add_driver_civil_status_' . $counter]['value'];
+                                                    $spouse_name = isset($productData['auto_add_driver_spouse_name_' . $counter]['value']) ? $productData['auto_add_driver_spouse_name_' . $counter]['value'] : null;
+                                                    $spouse_date_of_birth = isset($productData['auto_add_driver_spouse_dob_' . $counter]['value']) ? Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_spouse_dob_' . $counter]['value']) : null;
 
+                                                    $driverEntry->comm_auto_id = $commercialAuto->id;
+                                                    $driverEntry->drivers_name = $drivers_name;
+                                                    $driverEntry->drivers_license_number = $drivers_license_number;
+                                                    $driverEntry->mileage_radius = $mileage_radius;
+                                                    $driverEntry->date_of_birth = $date_of_birth;
+                                                    $driverEntry->civil_status = $civil_status;
+                                                    $driverEntry->spouse_name = $spouse_name;
+                                                    $driverEntry->spouse_date_of_birth = $spouse_date_of_birth;
                                                     $driverEntry->save();
+
                                                     Log::info('Successfully saved driverEntry record. Data: ' . json_encode($driverEntry));
+
+                                                    $templateData['autoDriversInfo'][] = [
+                                                        'counter' => $counter,
+                                                        'drivers_name' => $drivers_name,
+                                                        'drivers_license_number' => $drivers_license_number,
+                                                        'mileage_radius' => $mileage_radius,
+                                                        'date_of_birth' => Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_date_birth_' . $counter]['value'])->format('F j, Y'),
+                                                        'civil_status' => $civil_status,
+                                                        'spouse_name' => $spouse_name,
+                                                        'spouse_date_of_birth' => Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_spouse_dob_' . $counter]['value'])->format('F j, Y'),
+                                                    ];
+
                                                     DB::commit();
                                                 } catch (\Exception $e) {
                                                     DB::rollBack();
@@ -686,63 +893,31 @@ class QuoteController extends Controller
                                         }
                                     }
 
-                                    // $displayData1 = [];
-                                    // for ($i = 1; $i <= 8; $i++) {
-                                    //     $year = $commercialAuto->{'year_' . $i};
-                                    //     $make = $commercialAuto->{'make_' . $i};
-                                    //     $model = $commercialAuto->{'model_' . $i};
-                                    //     $vin = $commercialAuto->{'vehicle_id_' . $i};
-                                    //     $mileage = $commercialAuto->{'mileage_radius_' . $i};
-                                    //     $garage_address = $commercialAuto->{'garage_address_' . $i};
-                                    //     $coverage_limits_var = 'parsedCoverageLimits' . $i;
-                                    //     $coverage_limits = isset($$coverage_limits_var) ? $$coverage_limits_var : null;
+                                    $templateData['autoNoOfLosses'] = "";
 
-                                    //     if ($year || $make || $model || $vin || $mileage || $garage_address || $coverage_limits) {
-                                    //         $displayData1[] = [
-                                    //             'Vehicle Information Entry No.' => 'Vehicle Information Entry No ' . $i,
-                                    //             'year' => $year,
-                                    //             'make' => $make,
-                                    //             'model' => $model,
-                                    //             'vin' => $vin,
-                                    //             'mileage_radius' => $mileage,
-                                    //             'garage_address' => $garage_address,
-                                    //             'coverage_limits' => $coverage_limits,
-                                    //         ];
-                                    //     }
-                                    // }
+                                    switch($commercialAuto->auto_no_of_losses) {
+                                        case '-1':
+                                            $templateData['autoNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['autoNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['autoNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['autoNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['autoNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
 
-                                    // $displayData2 = [];
-                                    // for ($i = 1; $i <= 4; $i++) {
-                                    //     $drivers_name = $commercialAuto->{'drivers_name_' . $i};
-                                    //     $drivers_lic = $commercialAuto->{'drivers_lic_no_' . $i};
-                                    //     $drivers_mileage_radius = $commercialAuto->{'drivers_mileage_radius_' . $i};
-                                    //     $drivers_date_of_birth = $commercialAuto->{'drivers_dob_' . $i};
-                                    //     $drivers_civil_status = $commercialAuto->{'drivers_civil_status_' . $i};
-                                    //     $drivers_spouse_name = $commercialAuto->{'drivers_spouse_name_' . $i};
-                                    //     $drivers_spouse_dob = $commercialAuto->{'drivers_spouse_dob_' . $i};
-
-                                    //     if ($drivers_name || $drivers_lic || $drivers_mileage_radius || $drivers_date_of_birth || $drivers_civil_status || $drivers_spouse_name || $drivers_spouse_dob) {
-                                    //         $displayData2[] = [
-                                    //             'Driver Information Entry No.' => 'Driver Information Entry No ' . $i,
-                                    //             'drivers_name' => $drivers_name,
-                                    //             'drivers_lic_no' => $drivers_lic,
-                                    //             'mileage_radius' => $drivers_mileage_radius,
-                                    //             'drivers_dob' => $drivers_date_of_birth,
-                                    //             'civil_status' => $drivers_civil_status,
-                                    //             'spouse_name' => $drivers_spouse_name,
-                                    //             'spouse_dob' => $drivers_spouse_dob,
-                                    //         ];
-                                    //     }
-                                    // }
-
-                                    // $templateData['displayData1'] = $displayData1;
-                                    // $templateData['displayData2'] = $displayData2;
+                                    $templateData['autoDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['commercialAuto'] = $commercialAuto;
                                     $templateData['productType'] = 'auto';
                                     $templateData['clientInformation'] = $clientInformation;
-
                                     $html_body .= view('quote.quote-details', $templateData)->render();
-
                                     Log::info('Record inserted with id for AUTO: ' . $commercialAuto->id);
                                 } catch (\Exception $e) {
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
@@ -750,48 +925,73 @@ class QuoteController extends Controller
                                 break;
                             case 'bond':
                                 try {
+                                    $client_info_id = $clientInformation->id;
+                                    $owners_name = $productData['bond_owners_name']['value'];
+                                    $ssn = $productData['bond_owners_ssn']['value'];
+                                    $date_of_birth = Carbon::createFromFormat($productData['bond_owners_dob']['value'])->toDateString();
+                                    $civil_status = $productData['bond_owners_civil_status']['value'];
+                                    $spouse_name = $productData['bond_owners_spouse_name']['value'];
+                                    $spouse_date_of_birth = Carbon::createFromFormat('m/d/Y', $productData['bond_owners_spouse_dob']['value'])->toDateString();
+                                    $spouse_ssn = $productData['bond_owners_spouse_ssn']['value'];
+                                    $type_of_bond_requested = $productData['bond_type_bond_requested']['value'];
+                                    $amount_of_bond = floatval(preg_replace("/[^-0-9\.]/","", $productData['bond_amount_of_bond']['value']));
+                                    $term_of_bond = $productData['bond_term_of_bond']['value'];
+                                    $type_of_license = $productData['bond_type_of_license']['value'];
+                                    $if_other_type_of_license = $productData['bond_if_other_type_of_license'];
+                                    $license_number_or_application_number = $productData['bond_license_or_application_no']['value'];
+                                    $effective_date = Carbon::createFromFormat('m/d/Y', $productData['bond_effective_date']['value'])->toDateString();
+                                    $bond_no_of_losses = $productData['bond_no_of_losses']['value'];
+                                    $bond_amount_of_claim = isset($productData['bond_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['bond_amt_of_claims']['value'])) : null;
+                                    $bond_date_of_loss = isset($productData['bond_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['bond_date_of_loss']['value'])->toDateString() : null;
+
                                     $licenseBond = new LicenseBondInformation();
-                                    $licenseBond->client_info_id = $clientInformation->id;
-                                    $licenseBond->owners_name = $productData['bond_owners_name']['value'];
-                                    $licenseBond->ssn = $productData['bond_owners_ssn']['value'];
-
-                                    $bondOwnersDateOfBirth = Carbon::createFromFormat('m/d/Y', $productData['bond_owners_dob']['value']);
-                                    $licenseBond->date_of_birth = $bondOwnersDateOfBirth->format('Y-m-d');
-                                    $bondOwnersDateOfBirthFormatted = $bondOwnersDateOfBirth->format('F j, Y');
-
-                                    $licenseBond->civil_status = $productData['bond_owners_civil_status']['value'];
-                                    $licenseBond->spouse_name = $productData['bond_owners_spouse_name']['value'];
-
-                                    $bondOwnersSpouseDateOfBirth = Carbon::createFromFormat('m/d/Y', $productData['bond_owners_spouse_dob']['value']);
-                                    $licenseBond->spouse_date_of_birth = $bondOwnersSpouseDateOfBirth->format('Y-m-d');
-                                    $bondOwnersSpouseDateOfBirthFormatted = $bondOwnersSpouseDateOfBirth->format('F j, Y');
-
-                                    $licenseBond->spouse_ssn = $productData['bond_owners_spouse_ssn']['value'];
-                                    $licenseBond->type_of_bond_requested = $productData['bond_type_bond_requested']['value'];
-                                    $licenseBond->amount_of_bond = floatval(preg_replace("/[^-0-9\.]/","", $productData['bond_amount_of_bond']['value']));
-                                    $parsedAmountOfBond = floatval($licenseBond->amount_of_bond);
-
-                                    $licenseBond->term_of_bond = $productData['bond_term_of_bond']['value'];
-                                    $licenseBond->type_of_license = $productData['bond_type_of_license']['value'];
-                                    $licenseBond->if_other_type_of_license = $productData['bond_if_other_type_of_license'];
-                                    $licenseBond->license_number_or_application_number = $productData['bond_license_or_application_no']['value'];
-
-                                    $bondEffectiveDate = Carbon::createFromFormat('m/d/Y', $productData['bond_effective_date']['value']);
-                                    $licenseBond->effective_date = $bondEffectiveDate->format('Y-m-d');
-                                    $bondEffectiveDateFormatted = $bondEffectiveDate->format('F j, Y');
-
+                                    $licenseBond->client_info_id = $client_info_id;
+                                    $licenseBond->owners_name = $owners_name;
+                                    $licenseBond->ssn = $ssn;
+                                    $licenseBond->date_of_birth = $date_of_birth;
+                                    $licenseBond->civil_status = $civil_status;
+                                    $licenseBond->spouse_name = $spouse_name;
+                                    $licenseBond->spouse_date_of_birth = $spouse_date_of_birth;
+                                    $licenseBond->spouse_ssn = $spouse_ssn;
+                                    $licenseBond->type_of_bond_requested = $type_of_bond_requested;
+                                    $licenseBond->amount_of_bond = $amount_of_bond;
+                                    $licenseBond->term_of_bond = $term_of_bond;
+                                    $licenseBond->type_of_license = $type_of_license;
+                                    $licenseBond->if_other_type_of_license = $if_other_type_of_license;
+                                    $licenseBond->license_number_or_application_number = $license_number_or_application_number;
+                                    $licenseBond->effective_date = $effective_date;
+                                    $licenseBond->bond_no_of_losses = $bond_no_of_losses;
+                                    $licenseBond->bond_amount_of_claim = $bond_amount_of_claim;
+                                    $licenseBond->bond_date_of_loss = $bond_date_of_loss;
                                     $licenseBond->save();
 
-                                    $templateData['parsedAmountOfBond'] = $parsedAmountOfBond;
-                                    $templateData['bondOwnersDateOfBirthFormatted'] = $bondOwnersDateOfBirthFormatted;
-                                    $templateData['bondOwnersSpouseDateOfBirthFormatted'] = $bondOwnersSpouseDateOfBirthFormatted;
-                                    $templateData['bondEffectiveDateFormatted'] = $bondEffectiveDateFormatted;
-                                    $templateData['licenseBond'] = $licenseBond;
+                                    $templateData['bondNoOfLosses'] = "";
+
+                                    switch($licenseBond->bond_no_of_losses) {
+                                        case '-1':
+                                            $templateData['bondNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['bondNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['bondNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['bondNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['bondNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+
+                                    $templateData['bondDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['bond_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['ownersDobFormatted'] = Carbon::createFromFormat($productData['bond_owners_dob']['value'])->format('F j, Y');
+                                    $templateData['spouseDobFormatted'] = Carbon::createFromFormat($productData['spouse_date_of_birth']['value'])->format('F j, Y');
+                                    $templateData['bondEffDateFormatted'] = Carbon::createFromFormat($productData['bond_effective_date']['value'])->format('F j, Y');
                                     $templateData['productType'] = 'bond';
                                     $templateData['clientInformation'] = $clientInformation;
-
                                     $html_body .= view('quote.quote-details', $templateData)->render();
-
                                     Log::info('Record inserted with id for BOND: ' . $licenseBond->id);
                                 } catch (\Exception $e) {
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
@@ -799,41 +999,65 @@ class QuoteController extends Controller
                                 break;
                             case 'excess':
                                 try {
+                                    $client_info_id = $clientInformation->id;
+                                    $excess_limits = floatval(preg_replace("/[^-0-9\.]/","", $productData['excess_limits']['value']));
+                                    $gl_effective_date = Carbon::createFromFormat('m/d/Y', $productData['excess_gl_eff_date']['value'])->toDateString();
+                                    // $no_of_losses = $productData['excess_no_losses_5years']['value'];
+                                    // $explain_losses = $productData['excess_explain_losses']['value'];
+                                    $insurance_carrier = $productData['excess_insurance_carrier']['value'];
+                                    $policy_number_or_quote_number = $productData['excess_policy_or_quote_no']['value'];
+                                    $policy_premium = floatval(preg_replace("/[^-0-9\.]/","", $productData['excess_policy_premium']['value']));
+                                    $effective_date = Carbon::createFromFormat('m/d/Y', $productData['excess_effective_date']['value'])->toDateString();
+                                    $expiration_date = Carbon::createFromFormat('m/d/Y', $productData['excess_expiration_date']['value'])->toDateString();
+                                    $excess_no_of_losses = $productData['excess_no_of_losses']['value'];
+                                    $excess_amount_of_claim = isset($productData['excess_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['excess_amt_of_claims']['value'])) : null;
+                                    $excess_date_of_loss = isset($productData['excess_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['excess_date_of_loss']['value'])->toDateString() : null;
+
                                     $excessLiability = new ExcessLiabilityInformation();
-                                    $excessLiability->client_info_id = $clientInformation->id;
-                                    $excessLiability->excess_limits = floatval(preg_replace("/[^-0-9\.]/","", $productData['excess_limits']['value']));
-
-                                    $excessGLEffectiveDate = Carbon::createFromFormat('m/d/Y', $productData['excess_gl_eff_date']['value']);
-                                    $excessLiability->gl_effective_date = $excessGLEffectiveDate->format('Y-m-d');
-                                    $excessGLEffectiveDateFormatted = $excessGLEffectiveDate->format('F j, Y');
-
-                                    $excessLiability->no_of_losses = isset($productData['excess_no_losses_5years']['value']) ? $productData['excess_no_losses_5years']['value'] : null;
-                                    $excessLiability->explain_losses = isset($productData['excess_explain_losses']['value']) ? $productData['excess_explain_losses']['value'] : null;
-                                    $excessLiability->insurance_carrier = $productData['excess_insurance_carrier']['value'];
-                                    $excessLiability->policy_number_or_quote_number = $productData['excess_policy_or_quote_no']['value'];
-                                    $excessLiability->policy_premium = floatval(preg_replace("/[^-0-9\.]/","", $productData['excess_policy_premium']['value']));
-                                    $parsedPolicyPremium = floatval($excessLiability->policy_premium);
-
-                                    $excessEffectiveDate = Carbon::createFromFormat('m/d/Y', $productData['excess_effective_date']['value']);
-                                    $excessLiability->effective_date = $excessEffectiveDate->format('Y-m-d');
-                                    $excessEffectiveDateFormatted = $excessEffectiveDate->format('F j, Y');
-
-                                    $excessExpirationDate = Carbon::createFromFormat('m/d/Y', $productData['excess_expiration_date']['value']);
-                                    $excessLiability->expiration_date = $excessExpirationDate->format('Y-m-d');
-                                    $excessExpirationDateFormatted = $excessExpirationDate->format('F j, Y');
-
+                                    $excessLiability->client_info_id = $client_info_id;
+                                    $excessLiability->excess_limits = $excess_limits;
+                                    $excessLiability->gl_effective_date = $gl_effective_date;
+                                    // $excessLiability->no_of_losses = $no_of_losses;
+                                    // $excessLiability->explain_losses = $explain_losses;
+                                    $excessLiability->insurance_carrier = $insurance_carrier;
+                                    $excessLiability->policy_number_or_quote_number = $policy_number_or_quote_number;
+                                    $excessLiability->policy_premium = $policy_premium;
+                                    $excessLiability->effective_date = $effective_date;
+                                    $excessLiability->expiration_date = $expiration_date;
+                                    $excessLiability->excess_no_of_losses = $excess_no_of_losses;
+                                    $excessLiability->excess_amount_of_claim = $excess_amount_of_claim;
+                                    $excessLiability->excess_date_of_loss = $excess_date_of_loss;
                                     $excessLiability->save();
 
-                                    $templateData['parsedPolicyPremium'] = $parsedPolicyPremium;
-                                    $templateData['excessGLEffectiveDateFormatted'] = $excessGLEffectiveDateFormatted;
-                                    $templateData['excessEffectiveDateFormatted'] = $excessEffectiveDateFormatted;
-                                    $templateData['excessExpirationDateFormatted'] = $excessExpirationDateFormatted;
+                                    $templateData['excessNoOfLosses'] = "";
+
+                                    switch($excessLiability->excess_no_of_losses) {
+                                        case '-1':
+                                            $templateData['excessNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['excessNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['excessNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['excessNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['excessNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+
+                                    $templateData['excessDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['excess_date_of_loss']['value'])->format('F j, Y');
+
+                                    $templateData['excessGLEffectiveDateFormatted'] = Carbon::createFromFormat($productData['excess_gl_eff_date']['value'])->format('F j, Y');
+                                    $templateData['excessEffectiveDateFormatted'] = Carbon::createFromFormat($productData['excess_effective_date']['value'])->format('F j, Y');
+                                    $templateData['excessExpirationDateFormatted'] = Carbon::createFromFormat($productData['excess_expiration_date']['value'])->format('F j, Y');
                                     $templateData['excessLiability'] = $excessLiability;
                                     $templateData['productType'] = 'excess';
                                     $templateData['clientInformation'] = $clientInformation;
-
                                     $html_body .= view('quote.quote-details', $templateData)->render();
-
                                     Log::info('Record inserted with id for EXCESS: ' . $excessLiability->id);
                                 } catch (\Exception $e) {
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
@@ -841,33 +1065,65 @@ class QuoteController extends Controller
                                 break;
                             case 'tools':
                                 try {
-                                    $toolsEquipmentsLiability = new ToolsEquipmentInformation();
-                                    $toolsEquipmentsLiability->client_info_id = $clientInformation->id;
-                                    $toolsEquipmentsLiability->misc_tools = floatval(preg_replace("/[^-0-9\.]/","", $productData['tools_misc_tools']['value']));
-                                    $toolsEquipmentsLiability->rented_or_leased_equipment = floatval(preg_replace("/[^-0-9\.]/","", $productData['tools_rented_or_leased_amt']['value']));
-                                    $toolsEquipmentsLiability->scheduled_equipment = floatval(preg_replace("/[^-0-9\.]/","", $productData['tools_sched_equipment']['value']));
-                                    $toolsEquipmentsLiability->equipment_type = $productData['tools_equipment_type']['value'];
-                                    $toolsEquipmentsLiability->year = $productData['tools_equipment_year']['value'];
-                                    $toolsEquipmentsLiability->maker = $productData['tools_equipment_make']['value'];
-                                    $toolsEquipmentsLiability->model = $productData['tools_equipment_model']['value'];
-                                    $toolsEquipmentsLiability->vin = $productData['tools_equipment_vin_or_serial_no']['value'];
-                                    $toolsEquipmentsLiability->valuation = $productData['tools_equipment_valuation']['value'];
-                                    $toolsEquipmentsLiability->no_of_losses = isset($productData['tools_no_losses_5years']['value']) ? $productData['tools_no_losses_5years']['value'] : null;
-                                    $toolsEquipmentsLiability->explain_losses = isset($productData['tools_explain_losses']['value']) ? $productData['tools_explain_losses']['value'] : null;
+                                    $client_info_id = $clientInformation->id;
+                                    $misc_tools = floatval(preg_replace("/[^-0-9\.]/","", $productData['tools_misc_tools']['value']));
+                                    $rented_or_leased_equipment = floatval(preg_replace("/[^-0-9\.]/","", $productData['tools_rented_or_leased_amt']['value']));
+                                    $scheduled_equipment = floatval(preg_replace("/[^-0-9\.]/","", $productData['tools_sched_equipment']['value']));
+                                    $equipment_type = $productData['tools_equipment_type']['value'];
+                                    $year = $productData['tools_equipment_year']['value'];
+                                    $maker = $productData['tools_equipment_make']['value'];
+                                    $model = $productData['tools_equipment_model']['value'];
+                                    $vin = $productData['tools_equipment_vin_or_serial_no']['value'];
+                                    $valuation = $productData['tools_equipment_valuation']['value'];
+                                    // $no_of_losses = isset($productData['tools_no_losses_5years']['value']) ? $productData['tools_no_losses_5years']['value'] : null;
+                                    // $explain_losses = isset($productData['tools_explain_losses']['value']) ? $productData['tools_explain_losses']['value'] : null;
+                                    $tools_no_of_losses = $productData['tools_no_of_losses']['value'];
+                                    $tools_amount_of_claim = isset($productData['tools_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['tools_amt_of_claims']['value'])) : null;
+                                    $tools_date_of_loss = isset($productData['tools_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['tools_date_of_loss']['value'])->toDateString() : null;
 
+                                    $toolsEquipmentsLiability = new ToolsEquipmentInformation();
+                                    $toolsEquipmentsLiability->client_info_id = $client_info_id;
+                                    $toolsEquipmentsLiability->misc_tools = $misc_tools;
+                                    $toolsEquipmentsLiability->rented_or_leased_equipment = $rented_or_leased_equipment;
+                                    $toolsEquipmentsLiability->scheduled_equipment = $scheduled_equipment;
+                                    $toolsEquipmentsLiability->equipment_type = $equipment_type;
+                                    $toolsEquipmentsLiability->year = $year;
+                                    $toolsEquipmentsLiability->maker = $maker;
+                                    $toolsEquipmentsLiability->model = $model;
+                                    $toolsEquipmentsLiability->vin = $vin;
+                                    $toolsEquipmentsLiability->valuation = $valuation;
+                                    // $toolsEquipmentsLiability->no_of_losses = $no_of_losses;
+                                    // $toolsEquipmentsLiability->explain_losses = $explain_losses;
+                                    $toolsEquipmentsLiability->tools_no_of_losses = $tools_no_of_losses;
+                                    $toolsEquipmentsLiability->tools_amount_of_claim = $tools_amount_of_claim;
+                                    $toolsEquipmentsLiability->tools_date_of_loss = $tools_date_of_loss;
                                     $toolsEquipmentsLiability->save();
 
-                                    $parsedMiscToolsAmount = floatval($toolsEquipmentsLiability->misc_tools_amount);
-                                    $parsedRentedLeasedEquipmentAmount = floatval($toolsEquipmentsLiability->rented_leased_equipment_amount);
+                                    $templateData['toolsNoOfLosses'] = "";
 
-                                    $templateData['parsedMiscToolsAmount'] = $parsedMiscToolsAmount;
-                                    $templateData['parsedRentedLeasedEquipmentAmount'] = $parsedRentedLeasedEquipmentAmount;
+                                    switch($toolsEquipmentsLiability->tools_no_of_losses) {
+                                        case '-1':
+                                            $templateData['toolsNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['toolsNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['toolsNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['toolsNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['toolsNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+
+                                    $templateData['toolsDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['tools_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['toolsEquipmentsLiability'] = $toolsEquipmentsLiability;
                                     $templateData['productType'] = 'tools';
                                     $templateData['clientInformation'] = $clientInformation;
-
                                     $html_body .= view('quote.quote-details', $templateData)->render();
-
                                     Log::info('Record inserted with id for TOOLS: ' . $toolsEquipmentsLiability->id);
                                 } catch (\Exception $e) {
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
@@ -875,29 +1131,55 @@ class QuoteController extends Controller
                                 break;
                             case 'br':
                                 try {
+                                    $client_info_id = $clientInformation->id;
+                                    $property_address = $productData['br_property_address']['value'];
+                                    $value_of_existing_structure = floatval(preg_replace("/[^-0-9\.]/","", $productData['br_value_of_existing_structure']['value']));
+                                    $value_of_work_being_performed = floatval(preg_replace("/[^-0-9\.]/","", $productData['br_value_of_work_performed']['value']));
+                                    $period_of_insurance_or_duration_of_project = $productData['br_period_duration_project']['value'];
+                                    $construction_type = $productData['br_construction_type']['value'];
+                                    $complete_descops = $productData['br_complete_descops_of_project']['value'];
+                                    $square_footage = $productData['br_sq_footage']['value'];
+                                    $number_of_floors = $productData['br_number_of_floors']['value'];
+                                    $number_of_units_dwelling = $productData['br_number_of_units_dwelling']['value'];
+                                    $what_is_anticipated_occupancy = $productData['br_anticipated_occupancy']['value'];
+                                    $last_update_to_roofing_year = $productData['br_last_update_to_roofing_year']['value'];
+                                    $last_update_to_heating_year = $productData['br_last_update_to_heating_year']['value'];
+                                    $last_update_to_electrical_year = $productData['br_last_update_to_electrical_year']['value'];
+                                    $last_update_to_plumbing_year = $productData['br_last_update_to_plumbing_year']['value'];
+                                    $distance_to_nearest_fire_hydrant = $productData['br_distance_to_nearest_fire_hydrant']['value'];
+                                    $distance_to_nearest_fire_station = $productData['br_distance_to_nearest_fire_station']['value'];
+                                    $will_structure_be_occupied_during_renovation = $productData['br_structure_occupied_remodel_renovation']['value'];
+                                    $when_was_structure_built = Carbon::createFromFormat('m/d/Y', $productData['br_when_structure_built']['value']);
+                                    $jobsite_security = $productData['br_jobsite_security']['value'];
+                                    $does_scheduled_property_address_builders_risk_coverage = $productData['br_scheduled_property_address_builders_risk_coverage']['value'];
+                                    $carrier_name = isset($productData['br_sched_property_carrier_name']['value']) ? $productData['br_sched_property_carrier_name']['value'] : null;
+                                    $br_no_of_losses = $productData['br_no_of_losses']['value'];
+                                    $br_amount_of_claim = isset($productData['br_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['br_amt_of_claims']['value'])) : null;
+                                    $br_date_of_loss = isset($productData['br_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['br_date_of_loss']['value'])->toDateString() : null;
+
                                     $buildersRiskLiability = new BuildersRiskInformation();
-                                    $buildersRiskLiability->client_info_id = $clientInformation->id;
-                                    $buildersRiskLiability->property_address = $productData['br_property_address']['value'];
-                                    $buildersRiskLiability->value_of_existing_structure = floatval(preg_replace("/[^-0-9\.]/","", $productData['br_value_of_existing_structure']['value']));
-                                    $buildersRiskLiability->value_of_work_being_performed = floatval(preg_replace("/[^-0-9\.]/","", $productData['br_value_of_work_performed']['value']));
-                                    $buildersRiskLiability->period_of_insurance_or_duration_of_project = $productData['br_period_duration_project']['value'];
-                                    $buildersRiskLiability->construction_type = $productData['br_construction_type']['value'];
-                                    $buildersRiskLiability->complete_descops = $productData['br_complete_descops_of_project']['value'];
-                                    $buildersRiskLiability->square_footage = $productData['br_sq_footage']['value'];
-                                    $buildersRiskLiability->number_of_floors = $productData['br_number_of_floors']['value'];
-                                    $buildersRiskLiability->number_of_units_dwelling = $productData['br_number_of_units_dwelling']['value'];
-                                    $buildersRiskLiability->what_is_anticipated_occupancy = $productData['br_anticipated_occupancy']['value'];
-                                    $buildersRiskLiability->last_update_to_roofing_year = $productData['br_last_update_to_roofing_year']['value'];
-                                    $buildersRiskLiability->last_update_to_heating_year = $productData['br_last_update_to_heating_year']['value'];
-                                    $buildersRiskLiability->last_update_to_electrical_year = $productData['br_last_update_to_electrical_year']['value'];
-                                    $buildersRiskLiability->last_update_to_plumbing_year = $productData['br_last_update_to_plumbing_year']['value'];
-                                    $buildersRiskLiability->distance_to_nearest_fire_hydrant = $productData['br_distance_to_nearest_fire_hydrant']['value'];
-                                    $buildersRiskLiability->distance_to_nearest_fire_station = $productData['br_distance_to_nearest_fire_station']['value'];
-                                    $buildersRiskLiability->will_structure_be_occupied_during_renovation = $productData['br_structure_occupied_remodel_renovation']['value'];
-                                    $buildersRiskLiability->when_was_structure_built = Carbon::createFromFormat('m/d/Y', $productData['br_when_structure_built']['value']);
-                                    $buildersRiskLiability->jobsite_security = $productData['br_jobsite_security']['value'];
-                                    $buildersRiskLiability->does_scheduled_property_address_builders_risk_coverage = $productData['br_scheduled_property_address_builders_risk_coverage']['value'];
-                                    $buildersRiskLiability->carrier_name = isset($productData['br_sched_property_carrier_name']['value']) ? $productData['br_sched_property_carrier_name']['value'] : null;
+                                    $buildersRiskLiability->client_info_id = $client_info_id;
+                                    $buildersRiskLiability->property_address = $property_address;
+                                    $buildersRiskLiability->value_of_existing_structure = $value_of_existing_structure;
+                                    $buildersRiskLiability->value_of_work_being_performed = $value_of_work_being_performed;
+                                    $buildersRiskLiability->period_of_insurance_or_duration_of_project = $period_of_insurance_or_duration_of_project;
+                                    $buildersRiskLiability->construction_type = $construction_type;
+                                    $buildersRiskLiability->complete_descops = $complete_descops;
+                                    $buildersRiskLiability->square_footage = $square_footage;
+                                    $buildersRiskLiability->number_of_floors = $number_of_floors;
+                                    $buildersRiskLiability->number_of_units_dwelling = $number_of_units_dwelling;
+                                    $buildersRiskLiability->what_is_anticipated_occupancy = $what_is_anticipated_occupancy;
+                                    $buildersRiskLiability->last_update_to_roofing_year = $last_update_to_roofing_year;
+                                    $buildersRiskLiability->last_update_to_heating_year = $last_update_to_heating_year;
+                                    $buildersRiskLiability->last_update_to_electrical_year = $last_update_to_electrical_year;
+                                    $buildersRiskLiability->last_update_to_plumbing_year = $last_update_to_plumbing_year;
+                                    $buildersRiskLiability->distance_to_nearest_fire_hydrant = $distance_to_nearest_fire_hydrant;
+                                    $buildersRiskLiability->distance_to_nearest_fire_station = $distance_to_nearest_fire_station;
+                                    $buildersRiskLiability->will_structure_be_occupied_during_renovation = $will_structure_be_occupied_during_renovation;
+                                    $buildersRiskLiability->when_was_structure_built = $when_was_structure_built;
+                                    $buildersRiskLiability->jobsite_security = $jobsite_security;
+                                    $buildersRiskLiability->does_scheduled_property_address_builders_risk_coverage = $does_scheduled_property_address_builders_risk_coverage;
+                                    $buildersRiskLiability->carrier_name = $carrier_name;
 
                                     $effectiveDateValue = $productData['br_sched_property_effective_date']['value'] ?? null;
                                     if ($effectiveDateValue) {
@@ -976,22 +1258,38 @@ class QuoteController extends Controller
                                     } else {
                                         $buildersRiskLiability->when_will_project_start = null;
                                     }
-
-
+                                    $buildersRiskLiability->br_no_of_losses = $br_no_of_losses;
+                                    $buildersRiskLiability->br_amount_of_claim = $br_amount_of_claim;
+                                    $buildersRiskLiability->br_date_of_loss = $br_date_of_loss;
                                     $buildersRiskLiability->save();
 
-                                    // $parsedValueOfExistingStructure = floatval($buildersRiskLiability->value_of_existing_structure);
-                                    // $buildersRiskLiability->value_of_work_performed = floatval(preg_replace("/[^-0-9\.]/","", $productData['br_value_of_work_performed']));
-                                    // $parsedValueOfWorkBeingPerformed = floatval($buildersRiskLiability->value_of_work_performed);
+                                    $templateData['brNoOfLosses'] = "";
 
-                                    // $templateData['parsedValueOfExistingStructure'] = $parsedValueOfExistingStructure;
-                                    // $templateData['parsedValueOfWorkBeingPerformed'] = $parsedValueOfWorkBeingPerformed;
+                                    switch($buildersRiskLiability->br_no_of_losses) {
+                                        case '-1':
+                                            $templateData['brNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['brNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['brNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['brNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['brNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+
+                                    $templateData['brDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['br_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['brEffDateFormatted'] =  Carbon::createFromFormat('m/d/Y', $productData['br_sched_property_effective_date']['value'])->format('F j, Y');
+                                    $templateData['brExpDateFormatted'] =  Carbon::createFromFormat('m/d/Y', $productData['br_sched_property_expiration_date']['value'])->format('F j, Y');
                                     $templateData['buildersRiskLiability'] = $buildersRiskLiability;
                                     $templateData['productType'] = 'br';
                                     $templateData['clientInformation'] = $clientInformation;
-
                                     $html_body .= view('quote.quote-details', $templateData)->render();
-
                                     Log::info('Record inserted with id for BR: ' . $buildersRiskLiability->id);
                                 } catch (\Exception $e) {
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
@@ -999,38 +1297,85 @@ class QuoteController extends Controller
                                 break;
                             case 'bop':
                                 try {
-                                    $businessOwnersPolicy = new BOPInformation();
-                                    $businessOwnersPolicy->client_info_id = $clientInformation->id;
-                                    $businessOwnersPolicy->property_address = $productData['bop_property_address']['value'];
-                                    $businessOwnersPolicy->loss_payee_information = $productData['bop_loss_payee_info']['value'];
-                                    $businessOwnersPolicy->building_industry = $productData['bop_building_industry']['value'];
-                                    $businessOwnersPolicy->who_owns_building = $productData['bop_occupancy']['value'];
-                                    $businessOwnersPolicy->value_of_cost_building = isset($productData['bop_val_cost_bldg']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_val_cost_bldg']['value'])) : null;
-                                    $businessOwnersPolicy->business_property_limit = isset($productData['bop_business_property_limit']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_business_property_limit']['value'])) : null;
-                                    $businessOwnersPolicy->building_construction_type = $productData['bop_bldg_construction_type']['value'];
-                                    $businessOwnersPolicy->year_built = $productData['bop_year_built']['value'];
-                                    $businessOwnersPolicy->no_of_stories = $productData['bop_no_of_stories']['value'];
-                                    $businessOwnersPolicy->total_building_sq_ft = $productData['bop_total_bldg_sqft']['value'];
-                                    $businessOwnersPolicy->automatic_sprinkler_system = $productData['bop_automatic_sprinkler_system']['value'];
-                                    $businessOwnersPolicy->automatic_file_alarm = $productData['bop_automatic_fire_alarm']['value'];
-                                    $businessOwnersPolicy->distance_nearest_fire_hydrant = $productData['bop_distance_nearest_fire_hydrant']['value'];
-                                    $businessOwnersPolicy->distance_nearest_fire_station = $productData['bop_distance_nearest_fire_station']['value'];
-                                    $businessOwnersPolicy->automatic_commercial_cooking_extinguish_system = $productData['bop_automatic_comm_cooking_ext']['value'];
-                                    $businessOwnersPolicy->automatic_burglar_alarm = $productData['bop_automatic_burglar_alarm']['value'];
-                                    $businessOwnersPolicy->security_cameras = $productData['bop_security_cameras']['value'];
-                                    $businessOwnersPolicy->last_update_to_roofing_year = $productData['bop_last_update_roofing_year']['value'];
-                                    $businessOwnersPolicy->last_update_to_heating_year = $productData['bop_last_update_heating_year']['value'];
-                                    $businessOwnersPolicy->last_update_to_electrical_year = $productData['bop_last_update_electrical_year']['value'];
-                                    $businessOwnersPolicy->last_update_to_plumbing_year = $productData['bop_last_update_plumbing_year']['value'];
+                                    $client_info_id = $clientInformation->id;
+                                    $property_address = $productData['bop_property_address']['value'];
+                                    $loss_payee_information = $productData['bop_loss_payee_info']['value'];
+                                    $building_industry = $productData['bop_building_industry']['value'];
+                                    $who_owns_building = $productData['bop_occupancy']['value'];
+                                    $value_of_cost_building = isset($productData['bop_val_cost_bldg']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_val_cost_bldg']['value'])) : null;
+                                    $business_property_limit = isset($productData['bop_business_property_limit']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_business_property_limit']['value'])) : null;
+                                    $building_construction_type = $productData['bop_bldg_construction_type']['value'];
+                                    $year_built = $productData['bop_year_built']['value'];
+                                    $no_of_stories = $productData['bop_no_of_stories']['value'];
+                                    $total_building_sq_ft = $productData['bop_total_bldg_sqft']['value'];
+                                    $automatic_sprinkler_system = $productData['bop_automatic_sprinkler_system']['value'];
+                                    $automatic_file_alarm = $productData['bop_automatic_fire_alarm']['value'];
+                                    $distance_nearest_fire_hydrant = $productData['bop_distance_nearest_fire_hydrant']['value'];
+                                    $distance_nearest_fire_station = $productData['bop_distance_nearest_fire_station']['value'];
+                                    $automatic_commercial_cooking_extinguish_system = $productData['bop_automatic_comm_cooking_ext']['value'];
+                                    $automatic_burglar_alarm = $productData['bop_automatic_burglar_alarm']['value'];
+                                    $security_cameras = $productData['bop_security_cameras']['value'];
+                                    $last_update_to_roofing_year = $productData['bop_last_update_roofing_year']['value'];
+                                    $last_update_to_heating_year = $productData['bop_last_update_heating_year']['value'];
+                                    $last_update_to_electrical_year = $productData['bop_last_update_electrical_year']['value'];
+                                    $last_update_to_plumbing_year = $productData['bop_last_update_plumbing_year']['value'];
+                                    $bop_no_of_losses = $productData['bop_no_of_losses']['value'];
+                                    $bop_amount_of_claim = isset($productData['bop_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_amt_of_claims']['value'])) : null;
+                                    $bop_date_of_loss = isset($productData['bop_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['bop_date_of_loss']['value'])->toDateString() : null;
 
+                                    $businessOwnersPolicy = new BOPInformation();
+                                    $businessOwnersPolicy->client_info_id = $client_info_id;
+                                    $businessOwnersPolicy->property_address = $property_address;
+                                    $businessOwnersPolicy->loss_payee_information = $loss_payee_information;
+                                    $businessOwnersPolicy->building_industry = $building_industry;
+                                    $businessOwnersPolicy->who_owns_building = $who_owns_building;
+                                    $businessOwnersPolicy->value_of_cost_building = $value_of_cost_building;
+                                    $businessOwnersPolicy->business_property_limit = $business_property_limit;
+                                    $businessOwnersPolicy->building_construction_type = $building_construction_type;
+                                    $businessOwnersPolicy->year_built = $year_built;
+                                    $businessOwnersPolicy->no_of_stories = $no_of_stories;
+                                    $businessOwnersPolicy->total_building_sq_ft = $total_building_sq_ft;
+                                    $businessOwnersPolicy->automatic_sprinkler_system = $automatic_sprinkler_system;
+                                    $businessOwnersPolicy->automatic_file_alarm = $automatic_file_alarm;
+                                    $businessOwnersPolicy->distance_nearest_fire_hydrant = $distance_nearest_fire_hydrant;
+                                    $businessOwnersPolicy->distance_nearest_fire_station = $distance_nearest_fire_station;
+                                    $businessOwnersPolicy->automatic_commercial_cooking_extinguish_system = $automatic_commercial_cooking_extinguish_system;
+                                    $businessOwnersPolicy->automatic_burglar_alarm = $automatic_burglar_alarm;
+                                    $businessOwnersPolicy->security_cameras = $security_cameras;
+                                    $businessOwnersPolicy->last_update_to_roofing_year = $last_update_to_roofing_year;
+                                    $businessOwnersPolicy->last_update_to_heating_year = $last_update_to_heating_year;
+                                    $businessOwnersPolicy->last_update_to_electrical_year = $last_update_to_electrical_year;
+                                    $businessOwnersPolicy->last_update_to_plumbing_year = $last_update_to_plumbing_year;
+                                    $businessOwnersPolicy->bop_no_of_losses = $bop_no_of_losses;
+                                    $businessOwnersPolicy->bop_amount_of_claim = $bop_amount_of_claim;
+                                    $businessOwnersPolicy->bop_date_of_loss = $bop_date_of_loss;
                                     $businessOwnersPolicy->save();
 
+                                    $templateData['bopNoOfLosses'] = "";
+
+                                    switch($businessOwnersPolicy->bop_no_of_losses) {
+                                        case '-1':
+                                            $templateData['bopNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['bopNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['bopNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['bopNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['bopNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+
+                                    $templateData['bopDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['bop_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['businessOwnersPolicy'] = $businessOwnersPolicy;
                                     $templateData['productType'] = 'bop';
                                     $templateData['clientInformation'] = $clientInformation;
-
                                     $html_body .= view('quote.quote-details', $templateData)->render();
-
                                     Log::info('Record inserted with id for BOP: ' . $businessOwnersPolicy->id);
                                 } catch (\Exception $e) {
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
@@ -1038,37 +1383,83 @@ class QuoteController extends Controller
                                 break;
                             case 'comm_prop':
                                 try {
-                                    $commercialProperty = new CommercialPropertyInformation();
-                                    $commercialProperty->client_info_id = $clientInformation->id;
-                                    $commercialProperty->business_location_type = $productData['property_business_located']['value'];
-                                    $commercialProperty->property_address = $productData['property_property_address']['value'];
-                                    $commercialProperty->name_of_building_owner = $productData['property_name_of_owner']['value'];
-                                    $commercialProperty->value_cost_of_building = isset($productData['property_value_cost_bldg']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['property_value_cost_bldg']['value'])) : null;
-                                    $commercialProperty->business_property_limit = isset($productData['property_business_property_limit']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['property_business_property_limit']['value'])) : null;
-                                    $commercialProperty->does_have_more_than_one_location = $productData['property_does_have_more_than_one_location']['value'];
-                                    $commercialProperty->are_there_multiple_units_in_building = $productData['property_multiple_units']['value'];
-                                    $commercialProperty->construction_type = $productData['property_construction_type']['value'];
-                                    $commercialProperty->year_built = $productData['property_year_built']['value'];
-                                    $commercialProperty->no_of_stories = $productData['property_no_of_stories']['value'];
-                                    $commercialProperty->total_building_sq_ft = $productData['property_total_bldg_sqft']['value'];
-                                    $commercialProperty->does_building_equipped_with_fire_sprinkler = $productData['property_is_bldg_equipped_with_fire_sprinklers']['value'];
-                                    $commercialProperty->distance_to_nearest_fire_hydrant = $productData['property_distance_nearest_fire_hydrant']['value'];
-                                    $commercialProperty->distance_to_nearest_fire_station = $productData['property_distance_nearest_fire_station']['value'];
-                                    $commercialProperty->protection_class = $productData['property_protection_class']['value'];
-                                    $commercialProperty->protective_devices = $productData['property_protective_device']['value'];
-                                    $commercialProperty->last_update_to_roofing_year = $productData['property_last_update_roofing_year']['value'];
-                                    $commercialProperty->last_update_to_heating_year = $productData['property_last_update_heating_year']['value'];
-                                    $commercialProperty->last_update_to_electrical_year = $productData['property_last_update_plumbing_year']['value'];
-                                    $commercialProperty->last_update_to_plumbing_year = $productData['property_last_update_electrical_year']['value'];
+                                    $client_info_id = $clientInformation->id;
+                                    $business_location_type = $productData['property_business_located']['value'];
+                                    $property_address = $productData['property_property_address']['value'];
+                                    $name_of_building_owner = $productData['property_name_of_owner']['value'];
+                                    $value_cost_of_building = isset($productData['property_value_cost_bldg']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['property_value_cost_bldg']['value'])) : null;
+                                    $business_property_limit = isset($productData['property_business_property_limit']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['property_business_property_limit']['value'])) : null;
+                                    $does_have_more_than_one_location = $productData['property_does_have_more_than_one_location']['value'];
+                                    $are_there_multiple_units_in_building = $productData['property_multiple_units']['value'];
+                                    $construction_type = $productData['property_construction_type']['value'];
+                                    $year_built = $productData['property_year_built']['value'];
+                                    $no_of_stories = $productData['property_no_of_stories']['value'];
+                                    $total_building_sq_ft = $productData['property_total_bldg_sqft']['value'];
+                                    $does_building_equipped_with_fire_sprinkler = $productData['property_is_bldg_equipped_with_fire_sprinklers']['value'];
+                                    $distance_to_nearest_fire_hydrant = $productData['property_distance_nearest_fire_hydrant']['value'];
+                                    $distance_to_nearest_fire_station = $productData['property_distance_nearest_fire_station']['value'];
+                                    $protection_class = $productData['property_protection_class']['value'];
+                                    $protective_devices = $productData['property_protective_device']['value'];
+                                    $last_update_to_roofing_year = $productData['property_last_update_roofing_year']['value'];
+                                    $last_update_to_heating_year = $productData['property_last_update_heating_year']['value'];
+                                    $last_update_to_electrical_year = $productData['property_last_update_plumbing_year']['value'];
+                                    $last_update_to_plumbing_year = $productData['property_last_update_electrical_year']['value'];
+                                    $property_no_of_losses = $productData['property_no_of_losses']['value'];
+                                    $property_amount_of_claim = isset($productData['property_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['property_amt_of_claims']['value'])) : null;
+                                    $property_date_of_loss = isset($productData['property_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['property_date_of_loss']['value'])->toDateString() : null;
 
+                                    $commercialProperty = new CommercialPropertyInformation();
+                                    $commercialProperty->client_info_id = $client_info_id;
+                                    $commercialProperty->business_location_type = $business_location_type;
+                                    $commercialProperty->property_address = $property_address;
+                                    $commercialProperty->name_of_building_owner = $name_of_building_owner;
+                                    $commercialProperty->value_cost_of_building = $value_cost_of_building;
+                                    $commercialProperty->business_property_limit = $business_property_limit;
+                                    $commercialProperty->does_have_more_than_one_location = $does_have_more_than_one_location;
+                                    $commercialProperty->are_there_multiple_units_in_building = $are_there_multiple_units_in_building;
+                                    $commercialProperty->construction_type = $construction_type;
+                                    $commercialProperty->year_built = $year_built;
+                                    $commercialProperty->no_of_stories = $no_of_stories;
+                                    $commercialProperty->total_building_sq_ft = $total_building_sq_ft;
+                                    $commercialProperty->does_building_equipped_with_fire_sprinkler = $does_building_equipped_with_fire_sprinkler;
+                                    $commercialProperty->distance_to_nearest_fire_hydrant = $distance_to_nearest_fire_hydrant;
+                                    $commercialProperty->distance_to_nearest_fire_station = $distance_to_nearest_fire_station;
+                                    $commercialProperty->protection_class = $protection_class;
+                                    $commercialProperty->protective_devices = $protective_devices;
+                                    $commercialProperty->last_update_to_roofing_year = $last_update_to_roofing_year;
+                                    $commercialProperty->last_update_to_heating_year = $last_update_to_heating_year;
+                                    $commercialProperty->last_update_to_electrical_year = $last_update_to_electrical_year;
+                                    $commercialProperty->last_update_to_plumbing_year = $last_update_to_plumbing_year;
+                                    $commercialProperty->property_no_of_losses = $property_no_of_losses;
+                                    $commercialProperty->property_amount_of_claim = $property_amount_of_claim;
+                                    $commercialProperty->property_date_of_loss = $property_date_of_loss;
                                     $commercialProperty->save();
 
+                                    $templateData['propertyNoOfLosses'] = "";
+
+                                    switch($commercialProperty->property_amount_of_claim) {
+                                        case '-1':
+                                            $templateData['propertyNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['propertyNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['propertyNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['propertyNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['propertyNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+
+                                    $templateData['propertyDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['property_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['commercialProperty'] = $commercialProperty;
                                     $templateData['productType'] = 'comm_prop';
                                     $templateData['clientInformation'] = $clientInformation;
-
                                     $html_body .= view('quote.quote-details', $templateData)->render();
-
                                     Log::info('Record inserted with id for COMM PROP: ' . $commercialProperty->id);
                                 } catch (\Exception $e) {
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
@@ -1076,39 +1467,95 @@ class QuoteController extends Controller
                                 break;
                             case 'eo':
                                 try {
-                                    $errorsEmission = new ErrorsAndEmissionInformation();
-                                    $errorsEmission->client_info_id = $clientInformation->id;
-                                    $errorsEmission->requested_limits = $productData['eo_requested_limits']['value'];
-                                    $errorsEmission->requested_limits_if_others = isset($productData['eo_reqlimit_if_others']['value']) ? $productData['eo_reqlimit_if_others']['value'] : null;
-                                    $errorsEmission->requested_deductible = $productData['eo_request_deductible']['value'];
-                                    $errorsEmission->requested_deductible_if_others	= isset($productData['eo_reqdeductible_if_others']['value']) ? $productData['eo_reqdeductible_if_others']['value'] : null;
-                                    $errorsEmission->business_entity_q1 = $productData['eo_business_entity_q1']['value'];
-                                    $errorsEmission->business_entity_sub_q1 = isset($productData['eo_business_entity_sub_q1']['value']) ? $productData['eo_business_entity_sub_q1']['value'] : null;
-                                    $errorsEmission->business_entity_q2 = $productData['eo_business_entity_q2']['value'];
-                                    $errorsEmission->business_entity_sub_q2 = isset($productData['eo_business_entity_sub_q2']['value']) ? $productData['eo_business_entity_sub_q2']['value'] : null;
-                                    $errorsEmission->business_entity_q3 = $productData['eo_business_entity_q3']['value'];
-                                    $errorsEmission->business_entity_sub_q3 = isset($productData['eo_business_entity_sub_q3']['value']) ? $productData['eo_business_entity_sub_q3']['value'] : null;
-                                    $errorsEmission->business_entity_q4 = $productData['eo_business_entity_q4']['value'];
-                                    $errorsEmission->business_entity_sub_q4 = isset($productData['eo_business_entity_sub_q4']['value']) ? $productData['eo_business_entity_sub_q4']['value'] : null;
-                                    $errorsEmission->business_entity_q5 = $productData['eo_business_entity_q5']['value'];
-                                    $errorsEmission->business_entity_sub_q5 = isset($productData['eo_business_entity_sub_q5']['value']) ? $productData['eo_business_entity_sub_q5']['value'] : null;
-                                    $errorsEmission->number_of_employees = $productData['eo_number_employee']['value'];
-                                    $errorsEmission->full_time_employees = $productData['eo_full_time']['value'];
-                                    $errorsEmission->full_time_salary_range = floatval(preg_replace("/[^-0-9\.]/","", $productData['eo_ftime_salary_range']['value']));
-                                    $errorsEmission->part_time_employees = $productData['eo_part_time']['value'];
-                                    $errorsEmission->part_time_salary_range = floatval(preg_replace("/[^-0-9\.]/","", $productData['eo_ptime_salary_range']['value']));
-                                    $errorsEmission->employee_practice_q1 = $productData['eo_emp_practice_q1']['value'];
-                                    $errorsEmission->hr_q1 = $productData['eo_hr_q1']['value'];
-                                    $errorsEmission->hr_sub_q1 = isset($productData['eo_hr_sub_q1']['value']) ? $productData['eo_hr_sub_q1']['value'] : null;
-                                    $errorsEmission->hr_q2 = $productData['eo_hr_q2']['value'];
-                                    $errorsEmission->hr_sub_q2 = isset($productData['eo_hr_sub_q2']['value']) ? $productData['eo_hr_sub_q2']['value'] : null;
-                                    $errorsEmission->hr_q3 = $productData['eo_hr_q3']['value'];
-                                    $errorsEmission->hr_sub_q3 = isset($productData['eo_hr_sub_q3']['value']) ? $productData['eo_hr_sub_q3']['value'] : null;
-                                    $errorsEmission->hr_q4 = $productData['eo_hr_q4']['value'];
-                                    $errorsEmission->hr_sub_q4 = isset($productData['eo_hr_sub_q4']['value']) ? $productData['eo_hr_sub_q4']['value'] : null;
+                                    $client_info_id = $clientInformation->id;
+                                    $requested_limits = $productData['eo_requested_limits']['value'];
+                                    $requested_limits_if_others = isset($productData['eo_reqlimit_if_others']['value']) ? $productData['eo_reqlimit_if_others']['value'] : null;
+                                    $requested_deductible = $productData['eo_request_deductible']['value'];
+                                    $requested_deductible_if_others = isset($productData['eo_reqdeductible_if_others']['value']) ? $productData['eo_reqdeductible_if_others']['value'] : null;
+                                    $business_entity_q1 = $productData['eo_business_entity_q1']['value'];
+                                    $business_entity_sub_q1 = isset($productData['eo_business_entity_sub_q1']['value']) ? $productData['eo_business_entity_sub_q1']['value'] : null;
+                                    $business_entity_q2 = $productData['eo_business_entity_q2']['value'];
+                                    $business_entity_sub_q2 = isset($productData['eo_business_entity_sub_q2']['value']) ? $productData['eo_business_entity_sub_q2']['value'] : null;
+                                    $business_entity_q3 = $productData['eo_business_entity_q3']['value'];
+                                    $business_entity_sub_q3 = isset($productData['eo_business_entity_sub_q3']['value']) ? $productData['eo_business_entity_sub_q3']['value'] : null;
+                                    $business_entity_q4 = $productData['eo_business_entity_q4']['value'];
+                                    $business_entity_sub_q4 = isset($productData['eo_business_entity_sub_q4']['value']) ? $productData['eo_business_entity_sub_q4']['value'] : null;
+                                    $business_entity_q5 = $productData['eo_business_entity_q5']['value'];
+                                    $business_entity_sub_q5 = isset($productData['eo_business_entity_sub_q5']['value']) ? $productData['eo_business_entity_sub_q5']['value'] : null;
+                                    $number_of_employees = $productData['eo_number_employee']['value'];
+                                    $full_time_employees = $productData['eo_full_time']['value'];
+                                    $full_time_salary_range = floatval(preg_replace("/[^-0-9\.]/","", $productData['eo_ftime_salary_range']['value']));
+                                    $part_time_employees = $productData['eo_part_time']['value'];
+                                    $part_time_salary_range = floatval(preg_replace("/[^-0-9\.]/","", $productData['eo_ptime_salary_range']['value']));
+                                    $employee_practice_q1 = $productData['eo_emp_practice_q1']['value'];
+                                    $hr_q1 = $productData['eo_hr_q1']['value'];
+                                    $hr_sub_q1 = isset($productData['eo_hr_sub_q1']['value']) ? $productData['eo_hr_sub_q1']['value'] : null;
+                                    $hr_q2 = $productData['eo_hr_q2']['value'];
+                                    $hr_sub_q2 = isset($productData['eo_hr_sub_q2']['value']) ? $productData['eo_hr_sub_q2']['value'] : null;
+                                    $hr_q3 = $productData['eo_hr_q3']['value'];
+                                    $hr_sub_q3 = isset($productData['eo_hr_sub_q3']['value']) ? $productData['eo_hr_sub_q3']['value'] : null;
+                                    $hr_q4 = $productData['eo_hr_q4']['value'];
+                                    $hr_sub_q4 = isset($productData['eo_hr_sub_q4']['value']) ? $productData['eo_hr_sub_q4']['value'] : null;
+                                    $eo_no_of_losses = $productData['eo_no_of_losses']['value'];
+                                    $eo_amount_of_claim = isset($productData['eo_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['eo_amt_of_claims']['value'])) : null;
+                                    $eo_date_of_loss = isset($productData['eo_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value'])->toDateString() : null;
 
+                                    $errorsEmission = new ErrorsAndEmissionInformation();
+                                    $errorsEmission->client_info_id = $client_info_id;
+                                    $errorsEmission->requested_limits = $requested_limits;
+                                    $errorsEmission->requested_limits_if_others = $requested_limits_if_others;
+                                    $errorsEmission->requested_deductible = $requested_deductible;
+                                    $errorsEmission->requested_deductible_if_others	= $requested_deductible_if_others;
+                                    $errorsEmission->business_entity_q1 = $business_entity_q1;
+                                    $errorsEmission->business_entity_sub_q1 = $business_entity_sub_q1;
+                                    $errorsEmission->business_entity_q2 = $business_entity_q2;
+                                    $errorsEmission->business_entity_sub_q2 = $business_entity_sub_q2;
+                                    $errorsEmission->business_entity_q3 = $business_entity_q3;
+                                    $errorsEmission->business_entity_sub_q3 = $business_entity_sub_q3;
+                                    $errorsEmission->business_entity_q4 = $business_entity_q4;
+                                    $errorsEmission->business_entity_sub_q4 = $business_entity_sub_q4;
+                                    $errorsEmission->business_entity_q5 = $business_entity_q5;
+                                    $errorsEmission->business_entity_sub_q5 = $business_entity_sub_q5;
+                                    $errorsEmission->number_of_employees = $number_of_employees;
+                                    $errorsEmission->full_time_employees = $full_time_employees;
+                                    $errorsEmission->full_time_salary_range = $full_time_salary_range;
+                                    $errorsEmission->part_time_employees = $part_time_employees;
+                                    $errorsEmission->part_time_salary_range = $part_time_salary_range;
+                                    $errorsEmission->employee_practice_q1 = $employee_practice_q1;
+                                    $errorsEmission->hr_q1 = $hr_q1;
+                                    $errorsEmission->hr_sub_q1 = $hr_sub_q1;
+                                    $errorsEmission->hr_q2 = $hr_q2;
+                                    $errorsEmission->hr_sub_q2 = $hr_sub_q2;
+                                    $errorsEmission->hr_q3 = $hr_q3;
+                                    $errorsEmission->hr_sub_q3 = $hr_sub_q3;
+                                    $errorsEmission->hr_q4 = $hr_q4;
+                                    $errorsEmission->hr_sub_q4 = $hr_sub_q4;
+                                    $errorsEmission->eo_no_of_losses = $eo_no_of_losses;
+                                    $errorsEmission->eo_amount_of_claim = $eo_amount_of_claim;
+                                    $errorsEmission->eo_date_of_loss = $eo_date_of_loss;
                                     $errorsEmission->save();
 
+                                    $templateData['eoNoOfLosses'] = "";
+
+                                    switch($errorsEmission->eo_amount_of_claim) {
+                                        case '-1':
+                                            $templateData['eoNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['eoNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['eoNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['eoNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['eoNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+
+                                    $templateData['eoDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['errorsEmission'] = $errorsEmission;
                                     $templateData['productType'] = 'comm_prop';
                                     $templateData['clientInformation'] = $clientInformation;
@@ -1162,44 +1609,104 @@ class QuoteController extends Controller
                                 break;
                             case 'epli':
                                 try {
-                                    $epli = new EPLIInformation();
-                                    $epli->client_info_id = $clientInformation->id;
-                                    $epli->fein = $productData['epli_fein']['value'];
-                                    $epli->current_epli = $productData['epli_current_epli']['value'];
-                                    $epli->prior_carrier = $productData['epli_prior_carrier']['value'];
-                                    $epli->prior_carrier_epli = $productData['epli_prior_carrier_epli']['value'];
+                                    $client_info_id = $clientInformation->id;
+                                    $fein = $productData['epli_fein']['value'];
+                                    $current_epli = $productData['epli_current_epli']['value'];
+                                    $prior_carrier = $productData['epli_prior_carrier']['value'];
+                                    $prior_carrier_epli = $productData['epli_prior_carrier_epli']['value'];
                                     $epli_effective_date = Carbon::createFromFormat('m/d/Y', $productData['epli_effective_date']['value'])->toDateString();
-                                    $epli->effective_date = $epli_effective_date;
-                                    $epli->previous_premium_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_prev_premium_amount']['value']));
-                                    $epli->deductible_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_deductible_amount']['value']));
-                                    $epli->full_time_employee = $productData['epli_full_time']['value'];
-                                    $epli->part_time_employee = $productData['epli_part_time']['value'];
-                                    $epli->independent_contractors = $productData['epli_independent_contractors']['value'];
-                                    $epli->volunteers = $productData['epli_volunteers']['value'];
-                                    $epli->leased_or_seasonal = $productData['epli_leased_seasonal']['value'];
-                                    $epli->non_us_based_employee = $productData['epli_non_us_base_emp']['value'];
-                                    $epli->total_employees = $productData['epli_total_employees']['value'];
-                                    $epli->located_at_ca = $productData['epli_located_at_ca']['value'];
-                                    $epli->located_at_ga = $productData['epli_located_at_ga']['value'];
-                                    $epli->located_at_tx = $productData['epli_located_at_tx']['value'];
-                                    $epli->located_at_fl = $productData['epli_located_at_fl']['value'];
-                                    $epli->located_at_ny = $productData['epli_located_at_ny']['value'];
-                                    $epli->located_at_nj = $productData['epli_located_at_nj']['value'];
-                                    $epli->up_to_60k = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_salary_range_q1']['value']));
-                                    $epli->between_60k_to_120k = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_salary_range_q2']['value']));
-                                    $epli->over_120k = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_salary_range_q3']['value']));
-                                    $epli->voluntary = $productData['epli_emp_terminated_last_12_months_q1']['value'];
-                                    $epli->involuntary = $productData['epli_emp_terminated_last_12_months_q2']['value'];
-                                    $epli->laid_off = $productData['epli_emp_terminated_last_12_months_q3']['value'];
-                                    $epli->hr_policies_and_procedure_q1 = $productData['epli_hr_q1']['value'];
-                                    $epli->hr_policies_and_procedure_q2 = $productData['epli_hr_q2']['value'];
-                                    $epli->hr_policies_and_procedure_q3 = $productData['epli_hr_q3']['value'];
-                                    $epli->hr_policies_and_procedure_q4 = $productData['epli_hr_q4']['value'];
-                                    $epli->hr_policies_and_procedure_q5 = $productData['epli_hr_q5']['value'];
-                                    $epli->hr_policies_and_procedure_q6 = $productData['epli_hr_q6']['value'];
+                                    $previous_premium_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_prev_premium_amount']['value']));
+                                    $deductible_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_deductible_amount']['value']));
+                                    $full_time_employee = $productData['epli_full_time']['value'];
+                                    $part_time_employee = $productData['epli_part_time']['value'];
+                                    $independent_contractors = $productData['epli_independent_contractors']['value'];
+                                    $volunteers = $productData['epli_volunteers']['value'];
+                                    $leased_or_seasonal = $productData['epli_leased_seasonal']['value'];
+                                    $non_us_based_employee = $productData['epli_non_us_base_emp']['value'];
+                                    $total_employees = $productData['epli_total_employees']['value'];
+                                    $located_at_ca = $productData['epli_located_at_ca']['value'];
+                                    $located_at_ga = $productData['epli_located_at_ga']['value'];
+                                    $located_at_tx = $productData['epli_located_at_tx']['value'];
+                                    $located_at_fl = $productData['epli_located_at_fl']['value'];
+                                    $located_at_ny = $productData['epli_located_at_ny']['value'];
+                                    $located_at_nj = $productData['epli_located_at_nj']['value'];
+                                    $up_to_60k = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_salary_range_q1']['value']));
+                                    $between_60k_to_120k = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_salary_range_q2']['value']));
+                                    $over_120k = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_salary_range_q3']['value']));
+                                    $voluntary = $productData['epli_emp_terminated_last_12_months_q1']['value'];
+                                    $involuntary = $productData['epli_emp_terminated_last_12_months_q2']['value'];
+                                    $laid_off = $productData['epli_emp_terminated_last_12_months_q3']['value'];
+                                    $hr_policies_and_procedure_q1 = $productData['epli_hr_q1']['value'];
+                                    $hr_policies_and_procedure_q2 = $productData['epli_hr_q2']['value'];
+                                    $hr_policies_and_procedure_q3 = $productData['epli_hr_q3']['value'];
+                                    $hr_policies_and_procedure_q4 = $productData['epli_hr_q4']['value'];
+                                    $hr_policies_and_procedure_q5 = $productData['epli_hr_q5']['value'];
+                                    $hr_policies_and_procedure_q6 = $productData['epli_hr_q6']['value'];
+                                    $epli_no_of_losses = $productData['epli_no_of_losses']['value'];
+                                    $epli_amount_of_claim = isset($productData['epli_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_amt_of_claims']['value'])) : null;
+                                    $epli_date_of_loss = isset($productData['epli_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value'])->toDateString() : null;
 
+                                    $epli = new EPLIInformation();
+                                    $epli->client_info_id = $client_info_id;
+                                    $epli->fein = $fein;
+                                    $epli->current_epli = $current_epli;
+                                    $epli->prior_carrier = $prior_carrier;
+                                    $epli->prior_carrier_epli = $prior_carrier_epli;
+                                    $epli->effective_date = $epli_effective_date;
+                                    $epli->previous_premium_amount = $previous_premium_amount;
+                                    $epli->deductible_amount = $deductible_amount;
+                                    $epli->full_time_employee = $full_time_employee;
+                                    $epli->part_time_employee = $part_time_employee;
+                                    $epli->independent_contractors = $independent_contractors;
+                                    $epli->volunteers = $volunteers;
+                                    $epli->leased_or_seasonal = $leased_or_seasonal;
+                                    $epli->non_us_based_employee = $non_us_based_employee;
+                                    $epli->total_employees = $total_employees;
+                                    $epli->located_at_ca = $located_at_ca;
+                                    $epli->located_at_ga = $located_at_ga;
+                                    $epli->located_at_tx = $located_at_tx;
+                                    $epli->located_at_fl = $located_at_fl;
+                                    $epli->located_at_ny = $located_at_ny;
+                                    $epli->located_at_nj = $located_at_nj;
+                                    $epli->up_to_60k = $up_to_60k;
+                                    $epli->between_60k_to_120k = $between_60k_to_120k;
+                                    $epli->over_120k = $over_120k;
+                                    $epli->voluntary = $voluntary;
+                                    $epli->involuntary = $involuntary;
+                                    $epli->laid_off = $laid_off;
+                                    $epli->hr_policies_and_procedure_q1 = $hr_policies_and_procedure_q1;
+                                    $epli->hr_policies_and_procedure_q2 = $hr_policies_and_procedure_q2;
+                                    $epli->hr_policies_and_procedure_q3 = $hr_policies_and_procedure_q3;
+                                    $epli->hr_policies_and_procedure_q4 = $hr_policies_and_procedure_q4;
+                                    $epli->hr_policies_and_procedure_q5 = $hr_policies_and_procedure_q5;
+                                    $epli->hr_policies_and_procedure_q6 = $hr_policies_and_procedure_q6;
+                                    $epli->epli_no_of_losses = $epli_no_of_losses;
+                                    $epli->epli_amount_of_claim = $epli_amount_of_claim;
+                                    $epli->epli_date_of_loss = $epli_date_of_loss;
                                     $epli->save();
 
+                                    $templateData['epliNoOfLosses'] = "";
+
+                                    switch($epli->epli_amount_of_claim) {
+                                        case '-1':
+                                            $templateData['epliNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['epliNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['epliNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['epliNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['epliNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+
+                                    $templateData['epliDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['epliEffDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['epli_effective_date']['value'])->format('F j, Y');
                                     $templateData['epli'] = $epli;
                                     $templateData['productType'] = 'epli';
                                     $templateData['clientInformation'] = $clientInformation;
@@ -1211,21 +1718,61 @@ class QuoteController extends Controller
                                 break;
                             case 'cyber':
                                 try {
-                                    $cyberLiability = new CyberLiabilityInformation();
-                                    $cyberLiability->client_info_id = $clientInformation->id;
-                                    $cyberLiability->it_contact_name = $productData['cyber_it_contact_name']['value'];
-                                    $cyberLiability->it_contact_number = $productData['cyber_it_contact_number']['value'];
-                                    $cyberLiability->it_contact_email = $productData['cyber_it_contact_email']['value'];
-                                    $cyberLiability->cyber_q1 = $productData['cyber_q1']['value'];
-                                    $cyberLiability->cyber_q2 = $productData['cyber_q2']['value'];
-                                    $cyberLiability->cyber_q3 = $productData['cyber_q3']['value'];
-                                    $cyberLiability->cyber_q4 = $productData['cyber_q4']['value'];
-                                    $cyberLiability->cyber_q5 = $productData['cyber_q5']['value'];
-                                    $cyberLiability->cyber_q6 = $productData['cyber_q6']['value'];
-                                    $cyberLiability->cyber_q7 = $productData['cyber_q7']['value'];
-                                    $cyberLiability->cyber_q8 = $productData['cyber_q8']['value'];
+                                    $client_info_id = $clientInformation->id;
+                                    $it_contact_name = $productData['cyber_it_contact_name']['value'];
+                                    $it_contact_number = $productData['cyber_it_contact_number']['value'];
+                                    $it_contact_email = $productData['cyber_it_contact_email']['value'];
+                                    $cyber_q1 = $productData['cyber_q1']['value'];
+                                    $cyber_q2 = $productData['cyber_q2']['value'];
+                                    $cyber_q3 = $productData['cyber_q3']['value'];
+                                    $cyber_q4 = $productData['cyber_q4']['value'];
+                                    $cyber_q5 = $productData['cyber_q5']['value'];
+                                    $cyber_q6 = $productData['cyber_q6']['value'];
+                                    $cyber_q7 = $productData['cyber_q7']['value'];
+                                    $cyber_q8 = $productData['cyber_q8']['value'];
+                                    $cyber_no_of_losses = $productData['cyber_no_of_losses']['value'];
+                                    $cyber_amount_of_claim = isset($productData['cyber_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['cyber_amt_of_claims']['value'])) : null;
+                                    $cyber_date_of_loss = isset($productData['cyber_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['cyber_date_of_loss']['value'])->toDateString() : null;
 
+                                    $cyberLiability = new CyberLiabilityInformation();
+                                    $cyberLiability->client_info_id = $client_info_id;
+                                    $cyberLiability->it_contact_name = $it_contact_name;
+                                    $cyberLiability->it_contact_number = $it_contact_number;
+                                    $cyberLiability->it_contact_email = $it_contact_email;
+                                    $cyberLiability->cyber_q1 = $cyber_q1;
+                                    $cyberLiability->cyber_q2 = $cyber_q2;
+                                    $cyberLiability->cyber_q3 = $cyber_q3;
+                                    $cyberLiability->cyber_q4 = $cyber_q4;
+                                    $cyberLiability->cyber_q5 = $cyber_q5;
+                                    $cyberLiability->cyber_q6 = $cyber_q6;
+                                    $cyberLiability->cyber_q7 = $cyber_q7;
+                                    $cyberLiability->cyber_q8 = $cyber_q8;
+                                    $cyberLiability->cyber_no_of_losses = $cyber_no_of_losses;
+                                    $cyberLiability->cyber_amount_of_claim = $cyber_amount_of_claim;
+                                    $cyberLiability->cyber_date_of_loss = $cyber_date_of_loss;
                                     $cyberLiability->save();
+
+                                    $templateData['cyberNoOfLosses'] = "";
+
+                                    switch($cyberLiability->cyber_amount_of_claim) {
+                                        case '-1':
+                                            $templateData['cyberNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['cyberNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['cyberNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['cyberNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['cyberNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+
+                                    $templateData['cyberDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['cyber_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['cyberLiability'] = $cyberLiability;
                                     $templateData['productType'] = 'cyber';
                                     $templateData['clientInformation'] = $clientInformation;
@@ -1237,47 +1784,85 @@ class QuoteController extends Controller
                                 break;
                             case 'instfloat':
                                 try {
-                                    $instFloater = new InstallationFloaterInformation();
-                                    $instFloater->client_info_id = $clientInformation->id;
-                                    $instFloater->territory_of_operation = $productData['instfloat_territory_of_operation']['value'];
-                                    $instFloater->type_of_operation = $productData['instfloat_territory_of_operation']['value'];
-                                    $instFloater->type_of_equipment = $productData['instfloat_type_of_operation']['value'];
-                                    $instFloater->deductible_amount = $productData['instfloat_scheduled_type_of_equipment']['value'];
-                                    $instFloater->location = $productData['instfloat_deductible_amount']['value'];
-                                    $instFloater->months_in_storage = $productData['instfloat_location']['value'];
-                                    $instFloater->max_value_of_equipment_storing = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_months_in_storage']['value']));
-                                    $instFloater->max_value_of_building_storage = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_max_value_of_equipment']['value']));
-                                    $instFloater->type_of_security_placed_in_building = $productData['instfloat_type_security_placed']['value'];
-                                    $instFloater->unsched_type_of_equipment = $productData['instfloat_unscheduled_type_of_equipment']['value'];
-                                    $instFloater->unsched_max_value_of_equipment_storing = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_unscheduled_max_value_equipment_storing']['value']));
-                                    $instFloater->additional_info_q1 = $productData['instfloat_additional_info_q1']['value'];
-                                    $instFloater->additional_info_q2 = $productData['instfloat_additional_info_q2']['value'];
-                                    $instFloater->additional_info_q3 = $productData['instfloat_additional_info_q3']['value'];
-                                    $instFloater->additional_info_q4 = $productData['instfloat_additional_info_q4']['value'];
+                                    $client_info_id = $clientInformation->id;
+                                    $territory_of_operation = $productData['instfloat_territory_of_operation']['value'];
+                                    $type_of_operation = $productData['instfloat_type_of_operation']['value'];
+                                    $type_of_equipment = $productData['instfloat_scheduled_type_of_equipment']['value'];
+                                    $deductible_amount = $productData['instfloat_deductible_amount']['value'];
+                                    $location = $productData['instfloat_location']['value'];
+                                    $months_in_storage = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_months_in_storage']['value']));
+                                    $max_value_of_equipment_storing = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_max_value_of_equipment']['value']));
+                                    $max_value_of_building_storage = $productData['instfloat_max_value_of_bldg_storage']['value'];
+                                    $type_of_security_placed_in_building = $productData['instfloat_type_security_placed']['value'];
+                                    $unsched_type_of_equipment = $productData['instfloat_unscheduled_type_of_equipment']['value'];
+                                    $unsched_max_value_of_equipment_storing = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_unscheduled_max_value_equipment_storing']['value']));
+                                    $additional_info_q1 = $productData['instfloat_additional_info_q1']['value'];
+                                    $additional_info_q2 = $productData['instfloat_additional_info_q2']['value'];
+                                    $additional_info_q3 = $productData['instfloat_additional_info_q3']['value'];
+                                    $additional_info_q4 = $productData['instfloat_additional_info_q4']['value'];
+                                    $instfloat_no_of_losses = $productData['instfloat_no_of_losses']['value'];
+                                    $instfloat_amount_of_claim = isset($productData['instfloat_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_amt_of_claims']['value'])) : null;
+                                    $instfloat_date_of_loss = isset($productData['instfloat_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['instfloat_date_of_loss']['value'])->toDateString() : null;
 
+                                    $instFloater = new InstallationFloaterInformation();
+                                    $instFloater->client_info_id = $client_info_id;
+                                    $instFloater->territory_of_operation = $territory_of_operation;
+                                    $instFloater->type_of_operation = $type_of_operation;
+                                    $instFloater->type_of_equipment = $type_of_equipment;
+                                    $instFloater->deductible_amount = $deductible_amount;
+                                    $instFloater->location = $location;
+                                    $instFloater->months_in_storage = $months_in_storage;
+                                    $instFloater->max_value_of_equipment_storing = $max_value_of_equipment_storing;
+                                    $instFloater->max_value_of_building_storage = $max_value_of_building_storage;
+                                    $instFloater->type_of_security_placed_in_building = $type_of_security_placed_in_building;
+                                    $instFloater->unsched_type_of_equipment = $unsched_type_of_equipment;
+                                    $instFloater->unsched_max_value_of_equipment_storing = $unsched_max_value_of_equipment_storing;
+                                    $instFloater->additional_info_q1 = $additional_info_q1;
+                                    $instFloater->additional_info_q2 = $additional_info_q2;
+                                    $instFloater->additional_info_q3 = $additional_info_q3;
+                                    $instFloater->additional_info_q4 = $additional_info_q4;
+                                    $instFloater->instfloat_no_of_losses = $instfloat_no_of_losses;
+                                    $instFloater->instfloat_amount_of_claim = $instfloat_amount_of_claim;
+                                    $instFloater->instfloat_date_of_loss = $instfloat_date_of_loss;
                                     $instFloater->save();
 
-                                    // Handle the dynamic underscored keys
+                                    $templateData['scheduledEquipmentsInfo'] = [];
                                     foreach ($productDataStr as $key => $data) {
                                         $counter = str_replace('instfloat_scheduled_equipment_type_', '', $key);
-
                                         if (isset($productDataStr['instfloat_scheduled_equipment_type_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_mfg_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_id_or_serial_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_model_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_new_or_used_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_model_year_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])) {
-
                                             $instFloaterSchedEquipment = new InstallationFloaterScheduledEquipment();
-
                                             DB::beginTransaction();
                                             try {
-                                                $instFloaterSchedEquipment->instfloat_id = $instFloater->id;
-                                                $instFloaterSchedEquipment->sched_equip_type = $productData['instfloat_scheduled_equipment_type_' . $counter]['value'];
-                                                $instFloaterSchedEquipment->sched_equip_manufacturer = $productData['instfloat_scheduled_equipment_mfg_' . $counter]['value'];
-                                                $instFloaterSchedEquipment->sched_equip_serial_no = $productData['instfloat_scheduled_equipment_id_or_serial_' . $counter]['value'];
-                                                $instFloaterSchedEquipment->sched_equip_model = $productData['instfloat_scheduled_equipment_model_' . $counter]['value'];
-                                                $instFloaterSchedEquipment->sched_equip_new_or_used = $productData['instfloat_scheduled_equipment_new_or_used_' . $counter]['value'];
-                                                $instFloaterSchedEquipment->sched_equip_model_year = $productData['instfloat_scheduled_equipment_model_year_' . $counter]['value'];
-                                                $schedEquipmentDatePurchased = Carbon::createFromFormat('m/d/Y', $productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])->toDateString();
-                                                $instFloaterSchedEquipment->sched_equip_date_purchased = $schedEquipmentDatePurchased;
+                                                $sched_equip_type = $productData['instfloat_scheduled_equipment_type_' . $counter]['value'];
+                                                $sched_equip_manufacturer = $productData['instfloat_scheduled_equipment_mfg_' . $counter]['value'];
+                                                $sched_equip_serial_no = $productData['instfloat_scheduled_equipment_id_or_serial_' . $counter]['value'];
+                                                $sched_equip_model = $productData['instfloat_scheduled_equipment_model_' . $counter]['value'];
+                                                $sched_equip_new_or_used = $productData['instfloat_scheduled_equipment_new_or_used_' . $counter]['value'];
+                                                $sched_equip_model_year = $productData['instfloat_scheduled_equipment_model_year_' . $counter]['value'];
+                                                $sched_equip_date_purchased = isset($productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value']) ? Carbon::createFromFormat('m/d/Y', $productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])->toDateString() : null;
 
+                                                $instFloaterSchedEquipment->instfloat_id = $instFloater->id;
+                                                $instFloaterSchedEquipment->sched_equip_type = $sched_equip_type;
+                                                $instFloaterSchedEquipment->sched_equip_manufacturer = $sched_equip_manufacturer;
+                                                $instFloaterSchedEquipment->sched_equip_serial_no = $sched_equip_serial_no;
+                                                $instFloaterSchedEquipment->sched_equip_model = $sched_equip_model;
+                                                $instFloaterSchedEquipment->sched_equip_new_or_used = $sched_equip_new_or_used;
+                                                $instFloaterSchedEquipment->sched_equip_model_year = $sched_equip_model_year;
+                                                // $schedEquipmentDatePurchased = Carbon::createFromFormat('m/d/Y', $productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])->toDateString();
+                                                $instFloaterSchedEquipment->sched_equip_date_purchased = $sched_equip_date_purchased;
                                                 $instFloaterSchedEquipment->save();
+
+                                                $templateData['scheduledEquipmentsInfo'][] = [
+                                                    'counter' => $counter,
+                                                    'sched_equip_type' => $sched_equip_type,
+                                                    'sched_equip_manufacturer' => $sched_equip_manufacturer,
+                                                    'sched_equip_serial_no' => $sched_equip_serial_no,
+                                                    'sched_equip_model' => $sched_equip_model,
+                                                    'sched_equip_new_or_used' => $sched_equip_new_or_used,
+                                                    'sched_equip_model_year' => $sched_equip_model_year,
+                                                    'sched_equip_date_purchased' => $sched_equip_date_purchased,
+                                                ];
+
                                                 Log::info('Successfully saved instFloaterSchedEquipment record. Data: ' . json_encode($instFloaterSchedEquipment));
                                                 DB::commit();
                                             } catch (\Exception $e) {
@@ -1287,6 +1872,27 @@ class QuoteController extends Controller
                                         }
                                     }
 
+                                    $templateData['instFloatNoOfLosses'] = "";
+
+                                    switch($instFloaterSchedEquipment->instfloat_amount_of_claim) {
+                                        case '-1':
+                                            $templateData['instFloatNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['instFloatNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['instFloatNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['instFloatNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['instFloatNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+
+                                    $templateData['instFloatDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['instfloat_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['instFloater'] = $instFloater;
                                     $templateData['productType'] = 'instfloat';
                                     $templateData['clientInformation'] = $clientInformation;
@@ -1298,11 +1904,9 @@ class QuoteController extends Controller
                                 break;
                         }
                     }
-
                     $date_created = Carbon::now();
                     $formattedDateCreated = $date_created->format("F j, Y g:ia");
                     $this->sendEmailQuotationDetails($templateData, $formattedDateCreated);
-
                 });
 
                 $request->session()->put('forms_completed', true);
@@ -1364,17 +1968,20 @@ class QuoteController extends Controller
     }
 
     public function setSessionVariable(Request $request) {
-        $data = $request->input('doesGLandWCChecked');
+        $key = $request->input('key');
+        $value = $request->input('value');
         // dd($data);
-        session(['doesGLandWCChecked' => $data]);
+        session([$key => $value]);
         // dd(is_string(session('doesGLandWCChecked')));
 
 
-        return response()->json(['message' => 'Session variable set successfully', 'doesGLandWCCChecked' => $data]);
+        return response()->json(['message' => 'Session variable set successfully']);
     }
 
     public function unsetSessionVariable(Request $request) {
-        Session::forget('doesGLandWCChecked');
+        // Session::forget('doesGLandWCChecked');
+        $key = $request->input('key');
+        Session::forget($key);
         return response()->json(['message' => 'Session variable unset successfully']);
     }
 

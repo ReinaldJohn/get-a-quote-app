@@ -17,8 +17,13 @@ class Quote extends Model
         return $this->select('state_abbr')->distinct()->from('states')->get();
     }
 
-    public function getAllProfessions() {
-        return $this->select('id', 'name')->from('professions')->orderBy('name', 'ASC')->get();
+    public function getAllProfessions($excludeIds = []) {
+        // return $this->select('id', 'name')->from('professions')->orderBy('name', 'ASC')->get();
+        return $this->select('id', 'name')
+                    ->from('professions')
+                    ->whereNotIn('id', $excludeIds) // Excluding IDs
+                    ->orderBy('name', 'ASC')
+                    ->get();
     }
 
     public function getStatesById($id) {
@@ -29,6 +34,15 @@ class Quote extends Model
     public function getProfessionById($id) {
         $profession = $this->select('name')->from('professions')->where('id', $id)->first();
         return $profession ? $profession->name : null;
+    }
+
+    public function getWCProfessions($ids) {
+        // Using whereIn to match against an array of IDs
+        return $this->select('id', 'name')
+                    ->from('professions')
+                    ->whereIn('id', $ids)
+                    ->orderBy('name', 'ASC')
+                    ->get();
     }
 
     public static function getStateByZipcode($zipcode) {

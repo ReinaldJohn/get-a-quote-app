@@ -4,7 +4,7 @@ use App\Http\Controllers\QuoteController;
 use Illuminate\Support\Facades\Route;
 
 // Get a Quote Form
-Route::get('/', [QuoteController::class, 'index'])->name('quote.index');
+
 // Route::middleware(['ajaxMethod'])->group(function () {
     Route::get('/wc/showProfessionEntries', [QuoteController::class, 'showProfessionEntries']);
     Route::get('/auto/showAutoVehicleEntries', [QuoteController::class, 'showVehicleEntries']);
@@ -13,7 +13,11 @@ Route::get('/', [QuoteController::class, 'index'])->name('quote.index');
     Route::post('/clear-session-data', [QuoteController::class, 'clearSessionData']);
     Route::post('/set-session-variable', [QuoteController::class, 'setSessionVariable']);
     Route::post('/unset-session-variable', [QuoteController::class, 'unsetSessionVariable']);
-    Route::post('/quote-form-submit', [QuoteController::class, 'submitQuoteForm']);
+    // Route::group(['middleware' => ['marketingQuery']], function () {
+        Route::get('/', [QuoteController::class, 'index'])->name('quote.index');
+        Route::post('/quote-form-submit', [QuoteController::class, 'submitQuoteForm']);
+    // });
+
     Route::get('/quote-details', function() {
         return view('quote.quote-details');
     });
