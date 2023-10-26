@@ -17,6 +17,10 @@ class Quote extends Model
         return $this->select('state_abbr')->distinct()->from('states')->get();
     }
 
+    // public function getAllDefaultProfessions($id) {
+    //     return $this->select('id', 'name')->from('professions')->orderBy('name', 'ASC')->where('id', $id)->first();
+    // }
+
     public function getAllProfessions($excludeIds = []) {
         // return $this->select('id', 'name')->from('professions')->orderBy('name', 'ASC')->get();
         return $this->select('id', 'name')

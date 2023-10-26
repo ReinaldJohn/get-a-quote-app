@@ -227,17 +227,16 @@
                                                                                                         (Only
                                                                                                         shows if the
                                                                                                         client
-                                                                                                        is not selecting
+                                                                                                        is not selected
                                                                                                         the
                                                                                                         GL
                                                                                                         Product)</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
                                                                                                 <p>Annual Gross Receipt:
                                                                                                     <strong>${{ number_format($aboutYourCompany->annual_gross_receipt, 2) }}</strong>
                                                                                                 </p>
                                                                                                 <p>Profession:
-                                                                                                    <strong>{{ $professionName }}</strong>
+                                                                                                    <strong>{{ $aycProfessionName ?? '' }}</strong>
                                                                                                 </p>
                                                                                                 <p>Residential %:
                                                                                                     <strong>{{ $aboutYourCompany->residential_percentage }}%</strong>
@@ -277,14 +276,14 @@
                                                                                                     <b>${{ number_format($generalLiability->annual_gross_receipt, 2) }}</b>
                                                                                                 </p>
                                                                                                 <p>Profession:
-                                                                                                    <strong>{{ $professionName }}</strong>
+                                                                                                    <strong>{{ $GLProfessionName }}</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
-                                                                                                @if ($professionName)
+                                                                                                @if (!empty($GLProfessionName))
                                                                                                     <p><strong>Additional
                                                                                                             Questions
                                                                                                             for
-                                                                                                            {{ $professionName }}:</strong>
+                                                                                                            {{ $GLProfessionName }}:</strong>
                                                                                                     </p>
                                                                                                     @foreach ($glAdditionalQuestions as $index => $glAdditionalQuestion)
                                                                                                         <p>{{ $glAdditionalQuestion['questionLabels'] }}
@@ -342,11 +341,13 @@
                                                                                                 </p>
                                                                                                 <p>Full Time
                                                                                                     Employees<b>:
-                                                                                                        {{ $generalLiability->full_time }} Employee/s</b>
+                                                                                                        {{ $generalLiability->full_time }}
+                                                                                                        Employee/s</b>
                                                                                                 </p>
                                                                                                 <p>Part Time
                                                                                                     Employees<b>:
-                                                                                                        {{ $generalLiability->part_time }} Employee/s</b>
+                                                                                                        {{ $generalLiability->part_time }}
+                                                                                                        Employee/s</b>
                                                                                                 </p>
                                                                                                 <p>Payroll Amount:
                                                                                                     <strong>${{ number_format($generalLiability->payroll_amount, 2) }}</strong>
@@ -391,25 +392,27 @@
                                                                                         <tr>
                                                                                             <td class="esd-block-text es-p25t es-p40r es-p40l"
                                                                                                 align="left">
-                                                                                                <p>Number of
+                                                                                                {{-- <p>Number of
                                                                                                     Professions:
-                                                                                                    <strong>{{ $workersCompensation->number_of_employee }}</strong>
-                                                                                                </p>
-                                                                                                <p><br></p>
+                                                                                                    <strong>{{ $counter }}</strong>
+                                                                                                </p> --}}
+
                                                                                                 @if (!empty($professionsInfo))
                                                                                                     @foreach ($professionsInfo as $professionInfo)
+                                                                                                        <p><br></p>
                                                                                                         <p><strong>Profession
                                                                                                                 Entry
                                                                                                                 No.
                                                                                                                 {{ $professionInfo['counter'] }}</strong>
                                                                                                         </p>
                                                                                                         <p>Profession:
-                                                                                                            <b>{{ $professionInfo['professionName'] }}</b>
+                                                                                                            <b>{{ $professionInfo['professionName'] ?? '' }}</b>
                                                                                                         </p>
                                                                                                         <p>Annual
                                                                                                             Payroll:
                                                                                                             <strong>${{ number_format($professionInfo['annual_payroll'], 2) }}</strong>
                                                                                                         </p>
+                                                                                                        <p><br></p>
                                                                                                     @endforeach
                                                                                                 @endif
 
@@ -432,8 +435,36 @@
                                                                                                         {{ $workersCompensation->number_of_employee }}</b>
                                                                                                 </p>
                                                                                                 <p><br></p>
+                                                                                                <p><strong>Owner's
+                                                                                                        Information</strong>
+                                                                                                </p>
+                                                                                                <p>Owner's Name:
+                                                                                                    <strong>{{ $wcOwnersInfo->owners_name }}</strong>
+                                                                                                </p>
+                                                                                                <p>Title /
+                                                                                                    Relationship:
+                                                                                                    <strong>{{ $wcOwnersInfo->title_relationship }}</strong>
+                                                                                                </p>
+                                                                                                <p>Ownership:
+                                                                                                    <strong>{{ $wcOwnersInfo->ownership_percentage }}%</strong>
+                                                                                                </p>
+                                                                                                <p>Excluded /
+                                                                                                    Included:
+                                                                                                    <strong>{{ $wcOwnersInfo->excluded_or_included }}</strong>
+                                                                                                </p>
+                                                                                                <p>SSN:
+                                                                                                    <strong>{{ $wcOwnersInfo->ssn }}</strong>
+                                                                                                </p>
+                                                                                                <p>FEIN:
+                                                                                                    <strong>{{ $wcOwnersInfo->fein }}</strong>
+                                                                                                </p>
+                                                                                                <p>Date of
+                                                                                                    Birth:
+                                                                                                    <strong>{{ $ownersDobFormatted }}</strong>
+                                                                                                </p>
                                                                                                 @if (!empty($ownersInfo))
                                                                                                     @foreach ($ownersInfo as $ownerInfo)
+                                                                                                        <p><br></p>
                                                                                                         <p><strong>Owner's
                                                                                                                 Information</strong>
                                                                                                         </p>
@@ -461,6 +492,7 @@
                                                                                                             Birth:
                                                                                                             <strong>{{ $ownersDobFormatted }}</strong>
                                                                                                         </p>
+                                                                                                        <p><br></p>
                                                                                                     @endforeach
                                                                                                 @endif
                                                                                                 <p><br></p>
@@ -523,6 +555,42 @@
                                                                                         <tr>
                                                                                             <td class="esd-block-text es-p25t es-p40r es-p40l"
                                                                                                 align="left">
+                                                                                                <p>Are you the Driver of
+                                                                                                    the Vehicle?
+                                                                                                    <strong>{{ $commercialAuto->are_you_driver === '1' ? 'Yes' : 'No' }}</strong>
+                                                                                                </p>
+                                                                                                <p><br></p>
+                                                                                                <p><strong>Client /
+                                                                                                        Driver
+                                                                                                        Information:</strong>
+                                                                                                </p>
+                                                                                                <p>Full Name:
+                                                                                                    <strong>{{ $commercialAuto->client_full_name }}</strong>
+                                                                                                </p>
+                                                                                                <p>Date of Birth:
+                                                                                                    <strong>{{ $clientDateOfBirth }}</strong>
+                                                                                                </p>
+                                                                                                <p>Marital Status:
+                                                                                                    <strong>{{ $commercialAuto->client_marital_status }}</strong>
+                                                                                                </p>
+                                                                                                @if ($commercialAuto->client_marital_status === 'Married')
+                                                                                                    <p>Spouse's Name:
+                                                                                                        <strong>{{ $commercialAuto->client_spouse_name }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Spouse's Date of
+                                                                                                        Birth:
+                                                                                                        <strong>{{ $driversSpouseDateOfBirthFormatted }}</strong>
+                                                                                                    </p>
+                                                                                                @endif
+                                                                                                <p>Driver's License No.:
+                                                                                                    <strong>{{ $commercialAuto->client_license_no }}</strong>
+                                                                                                </p>
+                                                                                                <p>Years of Driving
+                                                                                                    Experience:
+                                                                                                    <strong>{{ $commercialAuto->client_years_of_driving_exp }}
+                                                                                                        year/s</strong>
+                                                                                                </p>
+                                                                                                <p><br></p>
                                                                                                 <p>Number of Vehicles:
                                                                                                     <strong>{{ $commercialAuto->no_of_vehicle }}</strong>
                                                                                                 </p>
@@ -568,46 +636,46 @@
                                                                                                     <strong>{{ $commercialAuto->no_of_drivers }}</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
-                                                                                                @if (!empty($autoDriversInfo))
-                                                                                                    @foreach ($autoDriversInfo as $autoDriverInfo)
-                                                                                                        <p><strong>Driver
-                                                                                                                information
-                                                                                                                Entry
-                                                                                                                No.
-                                                                                                                {{ $autoDriverInfo['counter'] }}</strong>
-                                                                                                        </p>
-                                                                                                        <p>Driver's
+                                                                                                {{-- @if (!empty($autoDriversInfo)) --}}
+                                                                                                @foreach ($autoDriversInfo as $autoDriverInfo)
+                                                                                                    <p><strong>Driver
+                                                                                                            information
+                                                                                                            Entry
+                                                                                                            No.
+                                                                                                            {{ $autoDriverInfo['counter'] }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Driver's
+                                                                                                        Name:
+                                                                                                        <b>{{ $autoDriverInfo['drivers_name'] }}</b>
+                                                                                                    </p>
+                                                                                                    <p>Driver's
+                                                                                                        License
+                                                                                                        Number:&nbsp;<strong>{{ $autoDriverInfo['drivers_license_number'] }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Mileage /
+                                                                                                        Radius:
+                                                                                                        <strong>{{ $autoDriverInfo['mileage_radius'] }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Date of
+                                                                                                        Birth:
+                                                                                                        <strong>{{ $autoDriverInfo['date_of_birth'] }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Civil Status:
+                                                                                                        <strong>{{ $autoDriverInfo['civil_status'] }}</strong>
+                                                                                                    </p>
+                                                                                                    @if ($autoDriverInfo['civil_status'] === 'Married')
+                                                                                                        <p>Spouse's
                                                                                                             Name:
-                                                                                                            <b>{{ $autoDriverInfo['drivers_name'] }}</b>
+                                                                                                            <strong>{{ $autoDriverInfo['spouse_name'] }}</strong>
                                                                                                         </p>
-                                                                                                        <p>Driver's
-                                                                                                            License
-                                                                                                            Number:&nbsp;<strong>{{ $autoDriverInfo['drivers_license_number'] }}</strong>
-                                                                                                        </p>
-                                                                                                        <p>Mileage /
-                                                                                                            Radius:
-                                                                                                            <strong>{{ $autoDriverInfo['mileage_radius'] }}</strong>
-                                                                                                        </p>
-                                                                                                        <p>Date of
+                                                                                                        <p>Spouse's
+                                                                                                            Date of
                                                                                                             Birth:
-                                                                                                            <strong>{{ $autoDriverInfo['date_of_birth'] }}</strong>
+                                                                                                            <strong>{{ $autoDriverInfo['spouse_date_of_birth'] }}</strong>
                                                                                                         </p>
-                                                                                                        <p>Civil Status:
-                                                                                                            <strong>{{ $autoDriverInfo['civil_status'] }}</strong>
-                                                                                                        </p>
-                                                                                                        @if ($autoDriverInfo['civil_status'] === 'Married')
-                                                                                                            <p>Spouse's
-                                                                                                                Name:
-                                                                                                                <strong>{{ $autoDriverInfo['spouse_name'] }}</strong>
-                                                                                                            </p>
-                                                                                                            <p>Spouse's
-                                                                                                                Date of
-                                                                                                                Birth:
-                                                                                                                <strong>{{ $autoDriverInfo['spouse_date_of_birth'] }}</strong>
-                                                                                                            </p>
-                                                                                                        @endif
-                                                                                                    @endforeach
-                                                                                                @endif
+                                                                                                    @endif
+                                                                                                @endforeach
+                                                                                                {{-- @endif --}}
                                                                                                 <p><br></p>
                                                                                                 <p>Commercial Auto -
                                                                                                     #
@@ -739,18 +807,18 @@
                                                                                             <td class="esd-block-text es-p25t es-p40r es-p40l"
                                                                                                 align="left">
                                                                                                 <p>Excess Limits:
-                                                                                                    <strong>${{ number($excessLiability->excess_limits, 2) }}</strong>
+                                                                                                    <strong>${{ number_format($excessLiability->excess_limits, 2) }}</strong>
                                                                                                 </p>
                                                                                                 <p>GL Effective
                                                                                                     Date:&nbsp;<strong>{{ $excessGLEffectiveDateFormatted }}</strong>
                                                                                                 </p>
-                                                                                                <p>No. of Losses for the
+                                                                                                {{-- <p>No. of Losses for the
                                                                                                     past 5
                                                                                                     years:&nbsp;<strong>{{ $excessLiability->no_of_losses }}</strong>
                                                                                                 </p>
                                                                                                 <p>Explain Losses:
                                                                                                     <strong>{{ $excessLiability->explain_losses }}</strong>
-                                                                                                </p>
+                                                                                                </p> --}}
                                                                                                 <p>Insurance
                                                                                                     Carrier:<strong>{{ $excessLiability->insurance_carrier }}</strong>
                                                                                                 </p>
@@ -784,6 +852,12 @@
                                                                                                         <strong>{{ $excessDateOfLoss }}</strong>
                                                                                                     </p>
                                                                                                 @endif
+                                                                                                <p><br></p>
+                                                                                                {{-- <p>Excess Liability - # of Losses: <strong>{{ $excessLiability->excess_no_of_losses }}</strong></p>
+                                                                                                @if ($excessLiability->excess_no_of_losses === '-1')
+                                                                                                <p>Excess Liability - Amount of Claim: <strong>${{ number_format($excessLiability->excess_amount_of_claim, 2) }}</strong></p>
+                                                                                                <p>Excess Liability - Date of Loss: <strong>{{ $excessDateOfLoss }}</strong></p>
+                                                                                                @endif --}}
                                                                                             </td>
                                                                                         </tr>
                                                                                     @endif
@@ -918,7 +992,6 @@
                                                                                                         to
                                                                                                         Construction</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
                                                                                                 <p>Square Footage:
                                                                                                     <strong>{{ $buildersRiskLiability->square_footage }}
                                                                                                         sq ft.</strong>
@@ -929,7 +1002,8 @@
                                                                                                 </p>
                                                                                                 <p>Number of Units in
                                                                                                     Dwelling:
-                                                                                                    <strong>{{ $buildersRiskLiability->number_of_units_dwelling }}</strong>
+                                                                                                    <strong>{{ $buildersRiskLiability->number_of_units_dwelling }}
+                                                                                                        units</strong>
                                                                                                 </p>
                                                                                                 <p>What is the
                                                                                                     Anticipated
@@ -976,7 +1050,7 @@
                                                                                                 <p>When was the
                                                                                                     structure
                                                                                                     built:
-                                                                                                    <strong>{{ $buildersRiskLiability->when_was_structure_built }}</strong>
+                                                                                                    <strong>{{ $brStructureBuilt }}</strong>
                                                                                                 </p>
                                                                                                 <p>Jobsite Security:
                                                                                                     <strong>{{ $buildersRiskLiability->jobsite_security }}</strong>
@@ -989,7 +1063,6 @@
                                                                                                     <strong>{{ $buildersRiskLiability->does_scheduled_property_address_builders_risk_coverage ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
                                                                                                 @if ($buildersRiskLiability->does_scheduled_property_address_builders_risk_coverage)
-                                                                                                    <p><br></p>
                                                                                                     <p><strong>Additional
                                                                                                             questions if
                                                                                                             the
@@ -1002,7 +1075,7 @@
                                                                                                             Risk
                                                                                                             Coverage:</strong>
                                                                                                     </p>
-                                                                                                    <p><br></p>
+
                                                                                                     <p>Carrier Name:
                                                                                                         <strong>{{ $buildersRiskLiability->carrier_name }}</strong>
                                                                                                     </p>
@@ -1012,7 +1085,6 @@
                                                                                                     <p>Expiration Date:
                                                                                                         <strong>{{ $brExpDateFormatted }}</strong>
                                                                                                     </p>
-                                                                                                    <p><br></p>
                                                                                                 @endif
                                                                                                 <p>Residential /
                                                                                                     Commercial:
@@ -1030,11 +1102,10 @@
                                                                                                             project is
                                                                                                             started:</strong>
                                                                                                     </p>
-                                                                                                    <p><br></p>
                                                                                                     <p>When has the
                                                                                                         project
                                                                                                         started:
-                                                                                                        <strong>{{ $buildersRiskLiability->when_has_project_started }}</strong>
+                                                                                                        <strong>{{ $brWhenHasProjectStarted }}</strong>
                                                                                                     </p>
                                                                                                     <p>What are the work
                                                                                                         done:
@@ -1055,7 +1126,7 @@
                                                                                                     </p>
                                                                                                     <p>When will project
                                                                                                         start:
-                                                                                                        <strong>{{ $buildersRiskLiability->when_will_project_start }}</strong>
+                                                                                                        <strong>{{ $brWhenWillProjectStart }}</strong>
                                                                                                     </p>
                                                                                                     <p><br></p>
                                                                                                     <p>Builder's Risk -
@@ -1119,14 +1190,14 @@
                                                                                                 </p>
                                                                                                 <p>What is the Business
                                                                                                     Property Limit?
-                                                                                                    <strong>{{ $businessOwnersPolicy->business_property_limit }}</strong>
+                                                                                                    <strong>${{ number_format($businessOwnersPolicy->business_property_limit, 2) }}</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
                                                                                                 <p><b>What is the
                                                                                                         property
                                                                                                         contents?</b>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Building Construction
                                                                                                     Type:
                                                                                                     <strong>{{ $businessOwnersPolicy->building_construction_type }}</strong>
@@ -1145,10 +1216,10 @@
                                                                                                 <p><b>Protective
                                                                                                         Safeguards
                                                                                                         - Fire:</b></p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Automatic Sprinkler
                                                                                                     System:
-                                                                                                    <strong>{{ $businessOwnersPolicy->automatic_sprinkler_system }}</strong>
+                                                                                                    <strong>{{ $businessOwnersPolicy->automatic_sprinkler_system ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
                                                                                                 <p>Automatic Fire Alarm:
                                                                                                     <strong>{{ $businessOwnersPolicy->automatic_file_alarm }}</strong>
@@ -1167,7 +1238,7 @@
                                                                                                     Cooking
                                                                                                     Extinguishing
                                                                                                     System:
-                                                                                                    <strong>{{ $businessOwnersPolicy->automatic_commercial_cooking_extinguish_system }}</strong>
+                                                                                                    <strong>{{ $businessOwnersPolicy->automatic_commercial_cooking_extinguish_system ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
                                                                                                 <p><b>Protective
@@ -1180,7 +1251,7 @@
                                                                                                     <strong>{{ $businessOwnersPolicy->automatic_burglar_alarm }}</strong>
                                                                                                 </p>
                                                                                                 <p>Security Cameras:
-                                                                                                    <strong>{{ $businessOwnersPolicy->security_cameras }}</strong>
+                                                                                                    <strong>{{ $businessOwnersPolicy->security_cameras ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
                                                                                                 <p>Last update to
                                                                                                     roofing
@@ -1263,14 +1334,14 @@
                                                                                                 </p>
                                                                                                 <p>Do you have more than
                                                                                                     one
-                                                                                                    location?<strong>&nbsp;{{ $commercialProperty->does_have_more_than_one_location }}</strong><br>
+                                                                                                    location?<strong>&nbsp;{{ $commercialProperty->does_have_more_than_one_location ? 'Yes' : 'No' }}</strong><br>
                                                                                                 </p>
                                                                                                 <p><strong></strong>Are
                                                                                                     there multiple units
                                                                                                     (residential or
                                                                                                     commercial) in your
                                                                                                     building:
-                                                                                                    <strong>{{ $commercialProperty->are_there_multiple_units_in_building }}</strong><br>
+                                                                                                    <strong>{{ $commercialProperty->are_there_multiple_units_in_building ? 'Yes' : 'No' }}</strong><br>
                                                                                                 </p>
                                                                                                 <p><strong></strong>Construction
                                                                                                     Type:
@@ -1293,7 +1364,7 @@
                                                                                                     building equipped
                                                                                                     with
                                                                                                     fire sprinklers?
-                                                                                                    <strong>{{ $commercialProperty->does_building_equipped_with_fire_sprinkler }}</strong><br>
+                                                                                                    <strong>{{ $commercialProperty->does_building_equipped_with_fire_sprinkler ? 'Yes' : 'No' }}</strong><br>
                                                                                                 </p>
                                                                                                 <p><strong></strong>Distance
                                                                                                     to Nearest Fire
@@ -1396,7 +1467,7 @@
                                                                                                 <p><strong>Business
                                                                                                         Entity</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Has the name or
                                                                                                     ownership
                                                                                                     of the entity
@@ -1405,7 +1476,7 @@
                                                                                                     years?
                                                                                                     <strong>{{ $errorsEmission->business_entity_q1 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><strong></strong><br>
+
                                                                                                 </p>
                                                                                                 @if ($errorsEmission->business_entity_q1)
                                                                                                     <p>If Yes, please
@@ -1413,7 +1484,7 @@
                                                                                                         <strong>{!! $errorsEmission->business_entity_sub_q1 !!}</strong>
                                                                                                     </p>
                                                                                                 @endif
-                                                                                                <p><br></p>
+
                                                                                                 <p>Has any other
                                                                                                     business
                                                                                                     been purchased
@@ -1425,7 +1496,7 @@
                                                                                                     years?
                                                                                                     <strong>{{ $errorsEmission->business_entity_q2 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><strong></strong><br>
+
                                                                                                 </p>
                                                                                                 @if ($errorsEmission->business_entity_q2)
                                                                                                     <p>If Yes, please
@@ -1433,14 +1504,14 @@
                                                                                                         <strong>{!! $errorsEmission->business_entity_sub_q2 !!}</strong>
                                                                                                     </p>
                                                                                                 @endif
-                                                                                                <p><br></p>
+
                                                                                                 <p>Does any other entity
                                                                                                     own
                                                                                                     or control your
                                                                                                     business?
                                                                                                     <strong>{{ $errorsEmission->business_entity_q3 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><strong></strong><br>
+
                                                                                                 </p>
                                                                                                 @if ($errorsEmission->business_entity_q3)
                                                                                                     <p>If Yes, please
@@ -1448,14 +1519,14 @@
                                                                                                         <strong>{!! $errorsEmission->business_entity_sub_q3 !!}</strong>
                                                                                                     </p>
                                                                                                 @endif
-                                                                                                <p><br></p>
+
                                                                                                 <p>Has your company name
                                                                                                     been changed during
                                                                                                     the
                                                                                                     past 5 years?
                                                                                                     <strong>{{ $errorsEmission->business_entity_q4 ? 'Yes' : No }}</strong>
                                                                                                 </p>
-                                                                                                <p><strong></strong><br>
+
                                                                                                 </p>
                                                                                                 @if ($errorsEmission->business_entity_q4)
                                                                                                     <p>If Yes, please
@@ -1463,7 +1534,7 @@
                                                                                                         <strong>{!! $errorsEmission->business_entity_sub_q4 !!}</strong>
                                                                                                     </p>
                                                                                                 @endif
-                                                                                                <p><br></p>
+
                                                                                                 <p>Has any other
                                                                                                     business
                                                                                                     purchased, merged or
@@ -1473,7 +1544,7 @@
                                                                                                     years?
                                                                                                     <strong>{{ $errorsEmission->business_entity_q5 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><strong></strong><br>
+
                                                                                                 </p>
                                                                                                 @if ($errorsEmission->business_entity_q5)
                                                                                                     <p>If Yes, please
@@ -1482,7 +1553,7 @@
                                                                                                     </p>
                                                                                                 @endif
 
-                                                                                                <p><br></p>
+
                                                                                                 {{-- <p>Has any other
                                                                                                     business
                                                                                                     purchased, merged or
@@ -1500,7 +1571,7 @@
                                                                                                 </p> --}}
                                                                                                 <p><strong>Employees</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Number of Employees:
                                                                                                     <strong>{{ $errorsEmission->number_of_employees }}</strong>
                                                                                                 </p>
@@ -1518,11 +1589,11 @@
                                                                                                     Range:
                                                                                                     <strong>${{ number_format($errorsEmission->part_time_salary_range, 2) }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p><strong>Employment
                                                                                                         Practices</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Has the applicant
                                                                                                     total
                                                                                                     number of employees
@@ -1537,7 +1608,7 @@
                                                                                                     in the past 1 year?
                                                                                                     <strong>{{ $errorsEmission->employee_practice_q1 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 {{-- <p><strong></strong>If
                                                                                                     Yes,
                                                                                                     please explain:
@@ -1546,7 +1617,7 @@
                                                                                                 <p><strong>Human
                                                                                                         Resource</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Does the Applicant
                                                                                                     have
                                                                                                     written employment
@@ -1554,14 +1625,14 @@
                                                                                                     officers?
                                                                                                     <strong>{{ $errorsEmission->hr_q1 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 @if ($errorsEmission->hr_q1)
                                                                                                     <p>If Yes, please
                                                                                                         explain:
                                                                                                         <strong>{!! $errorsEmission->hr_sub_q1 !!}</strong>
                                                                                                     </p>
                                                                                                 @endif
-                                                                                                <p><br></p>
+
                                                                                                 <p>Does the Applicant
                                                                                                     have
                                                                                                     its employment
@@ -1570,14 +1641,14 @@
                                                                                                     employment counsel?
                                                                                                     <strong>{{ $errorsEmission->hr_q2 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 @if ($errorsEmission->hr_q2)
                                                                                                     <p>If Yes, please
                                                                                                         explain:
                                                                                                         <strong>{!! $errorsEmission->hr_sub_q2 !!}</strong>
                                                                                                     </p>
                                                                                                 @endif
-                                                                                                <p><br></p>
+
                                                                                                 <p>Does the Applicant
                                                                                                     have a
                                                                                                     Human Resources or
@@ -1585,7 +1656,7 @@
                                                                                                     Department?
                                                                                                     <strong>{{ $errorsEmission->hr_q3 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 @if ($errorsEmission->hr_q3)
                                                                                                     <p>If
                                                                                                         Yes,
@@ -1593,21 +1664,21 @@
                                                                                                         <strong>{!! $errorsEmission->hr_sub_q3 !!}</strong>
                                                                                                     </p>
                                                                                                 @endif
-                                                                                                <p><br></p>
+
                                                                                                 <p>Does the Applicant
                                                                                                     have
                                                                                                     an employee
                                                                                                     handbook?
                                                                                                     <strong>{{ $errorsEmission->hr_q4 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 @if ($errorsEmission->hr_q4)
                                                                                                     <p>If Yes, please
                                                                                                         explain:
                                                                                                         <strong>{!! $errorsEmission->hr_sub_q4 !!}</strong>
                                                                                                     </p>
                                                                                                 @endif
-                                                                                                <p><br></p>
+
                                                                                                 <p>Errors and Omission -
                                                                                                     # of Losses:
                                                                                                     <strong>{{ $eoNoOfLosses }}</strong>
@@ -1856,7 +1927,7 @@
                                                                                                         in
                                                                                                         the salary range
                                                                                                         of:</strong></p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Up to $60,000:
                                                                                                     <strong>{{ $epli->up_to_60k }}</strong>
                                                                                                 </p>
@@ -1873,7 +1944,7 @@
                                                                                                         terminated in
                                                                                                         the
                                                                                                         last 12
-                                                                                                        months:</strong><br><br>
+                                                                                                        months:</strong>
                                                                                                 </p>
                                                                                                 <p>Voluntary:
                                                                                                     <strong>{{ $epli->voluntary }}</strong>
@@ -1890,7 +1961,7 @@
                                                                                                         Policies and
                                                                                                         Procedures:</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Does the Applicant
                                                                                                     have a
                                                                                                     standard employment
@@ -1898,7 +1969,7 @@
                                                                                                     applicants?
                                                                                                     <strong>{{ $epli->hr_policies_and_procedure_q1 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Does the Applicant
                                                                                                     have
                                                                                                     an "At Will"
@@ -1913,7 +1984,7 @@
                                                                                                     handbook?
                                                                                                     <strong>{{ $epli->hr_policies_and_procedure_q3 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Does the Applicant
                                                                                                     have a
                                                                                                     written policy with
@@ -1921,7 +1992,7 @@
                                                                                                     harassment?
                                                                                                     <strong>{{ $epli->hr_policies_and_procedure_q4 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><strong></strong><br>
+
                                                                                                 </p>
                                                                                                 <p>Does the Applicant
                                                                                                     have a
@@ -1930,7 +2001,7 @@
                                                                                                     discrimination?
                                                                                                     <strong>{{ $epli->hr_policies_and_procedure_q5 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Does the Applicant
                                                                                                     have
                                                                                                     written annual
@@ -1938,7 +2009,7 @@
                                                                                                     employees?
                                                                                                     <strong>{{ $epli->hr_policies_and_procedure_q6 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>EPLI - # of Losses:
                                                                                                     <strong>{{ $epliNoOfLosses }}</strong>
                                                                                                 </p>
@@ -1989,7 +2060,7 @@
                                                                                                     activities?
                                                                                                     <strong>{{ $cyberLiability->cyber_q1 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Is there a system in
                                                                                                     place for verifying
                                                                                                     fund
@@ -2002,7 +2073,7 @@
                                                                                                     execution?
                                                                                                     <strong>{{ $cyberLiability->cyber_q2 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Do you store your
                                                                                                     backups
                                                                                                     offline or with a
@@ -2010,7 +2081,7 @@
                                                                                                     service provider?
                                                                                                     <strong>{{ $cyberLiability->cyber_q3 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Do you store or
                                                                                                     process
                                                                                                     personal, health, or
@@ -2020,7 +2091,7 @@
                                                                                                     Individuals?
                                                                                                     <strong>{{ $cyberLiability->cyber_q4 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Do you enabled
                                                                                                     multi-factor
                                                                                                     authentication for
@@ -2029,14 +2100,14 @@
                                                                                                     network access?
                                                                                                     <strong>{{ $cyberLiability->cyber_q5 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Do you encrypt all
                                                                                                     sensitive
                                                                                                     information at
                                                                                                     rest?
                                                                                                     <strong>{{ $cyberLiability->cyber_q6 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Any relevant claims
                                                                                                     or
                                                                                                     incidents exceeding
@@ -2045,7 +2116,7 @@
                                                                                                     three years?
                                                                                                     <strong>{{ $cyberLiability->cyber_q7 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Would there be any
                                                                                                     potential Cyber
                                                                                                     Event,
@@ -2057,12 +2128,12 @@
                                                                                                     are applying
                                                                                                     for?&nbsp;<strong>{{ $cyberLiability->cyber_q8 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Cyber Liability - #
                                                                                                     of Losses:
                                                                                                     <strong>{{ $cyberNoOfLosses }}</strong>
                                                                                                 </p>
-                                                                                                @if ($cyber->cyber_no_of_losses === '-1')
+                                                                                                @if ($cyberLiability->cyber_no_of_losses === '-1')
                                                                                                     <p>Cyber Liability -
                                                                                                         Amount of Claim:
                                                                                                         <strong>${{ number_format($cyberLiability->cyber_amount_of_claim, 2) }}</strong>
@@ -2105,19 +2176,29 @@
                                                                                                     working with:
                                                                                                     <strong>{{ $instFloater->type_of_equipment }}</strong>
                                                                                                 </p>
+                                                                                                @php
+                                                                                                    $deductibleAmount = $instFloater->deductible_amount;
+                                                                                                    $deductibleValues = explode('-', $deductibleAmount);
+                                                                                                    $minValue = number_format((int) $deductibleValues[0], 0);
+                                                                                                    $maxValue = number_format((int) $deductibleValues[1], 0);
+                                                                                                @endphp
                                                                                                 <p>Deductible Amount:
-                                                                                                    <strong>{{ $instFloater->deductible_amount }}</strong>
+                                                                                                    {{-- <strong>{{ $instFloater->deductible_amount }}</strong> --}}
+                                                                                                    <strong>${{ $minValue }}
+                                                                                                        -
+                                                                                                        ${{ $maxValue }}</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
                                                                                                 <p><strong>Equipment
                                                                                                         Storage</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Location:
                                                                                                     <strong>{{ $instFloater->location }}</strong>
                                                                                                 </p>
                                                                                                 <p>Months in storage:
-                                                                                                    <strong>{{ $instFloater->months_in_storage }}</strong>
+                                                                                                    <strong>{{ $instFloater->months_in_storage }}
+                                                                                                        month/s</strong>
                                                                                                 </p>
                                                                                                 <p>Maximum value of
                                                                                                     equipment that you
@@ -2130,6 +2211,12 @@
                                                                                                     storage:
                                                                                                     <strong>${{ number_format($instFloater->max_value_of_building_storage, 2) }}</strong>
                                                                                                 </p>
+                                                                                                {{-- @php
+                                                                                                    $deductibleAmount = $instFloater->deductible_amount;
+                                                                                                    $deductibleValues = explode('-', $deductibleAmount);
+                                                                                                    $minValue = number_format((int) $deductibleValues[0], 0);
+                                                                                                    $maxValue = number_format((int) $deductibleValues[1], 0);
+                                                                                                @endphp                                                                                                 --}}
                                                                                                 <p>Type of security in
                                                                                                     place
                                                                                                     within the storage
@@ -2146,7 +2233,7 @@
                                                                                                     equipment that you
                                                                                                     will
                                                                                                     be storing:
-                                                                                                    <strong>{{ $instFloater->unsched_max_value_of_equipment_storing }}</strong>
+                                                                                                    <strong>${{ number_format($instFloater->unsched_max_value_of_equipment_storing, 2) }}</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
                                                                                                 <p><strong>Unscheduled
@@ -2163,7 +2250,7 @@
                                                                                                     equipment that you
                                                                                                     will
                                                                                                     be storing:
-                                                                                                    <strong>{{ $instFloater->unsched_max_value_of_equipment_storing }}</strong>
+                                                                                                    <strong>${{ number_format($instFloater->unsched_max_value_of_equipment_storing, 2) }}</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
                                                                                                 <p><strong>Additional
@@ -2176,18 +2263,18 @@
                                                                                                     without Operators?
                                                                                                     <strong>{{ $instFloater->additional_info_q1 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Are you Operating
                                                                                                     Equipment not listed
                                                                                                     here?
                                                                                                     <strong>{{ $instFloater->additional_info_q2 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Property used
                                                                                                     underground?
                                                                                                     <strong>{{ $instFloater->additional_info_q3 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 <p>Any work done afloat?
                                                                                                     <strong>{{ $instFloater->additional_info_q4 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
@@ -2195,7 +2282,7 @@
                                                                                                         Equipment for
                                                                                                         storage:</strong>
                                                                                                 </p>
-                                                                                                <p><br></p>
+
                                                                                                 @if (!empty($scheduledEquipmentsInfo))
                                                                                                     @foreach ($scheduledEquipmentsInfo as $scheduledEquipmentInfo)
                                                                                                         <p><strong>Scheduled
@@ -2226,6 +2313,7 @@
                                                                                                             purchased:
                                                                                                             <strong>{{ $scheduledEquipmentInfo['sched_equip_date_purchased'] }}</strong>
                                                                                                         </p>
+                                                                                                        <p><br></p>
                                                                                                     @endforeach
                                                                                                 @endif
                                                                                                 <p><br></p>

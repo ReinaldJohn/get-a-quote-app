@@ -122,154 +122,154 @@ class QuoteController extends Controller
         // return response()->json(['data' => '']);
     }
 
-    public function showVehicleEntries(Request $request) {
+    // public function showVehicleEntries(Request $request) {
 
-        if ($request->isMethod('get') && $request->has('a')) {
+    //     if ($request->isMethod('get') && $request->has('a')) {
 
-            $a = $request->input('a');
-            // dd($a);
+    //         $a = $request->input('a');
+    //         // dd($a);
 
-            $output = "
-                <h4 class='profession_header mt-2 mb-2'>Vehicle Entry No. {$a}</h4>
-                <div class='row justify-content-center'>
-                    <div class='col-md-4'>
-                        <div class='mb-3 form-floating'>
-                            <input type='text' name='auto_vehicle_year_{$a}' id='auto_vehicle_year_{$a}' class='form-control' placeholder='' maxlength='4'>
-                            <label for='auto_vehicle_year_{$a}'>Year</label>
-                        </div>
-                    </div>
-                    <div class='col-md-4'>
-                        <div class='mb-3 form-floating'>
-                            <input type='text' name='auto_vehicle_maker_{$a}' id='auto_vehicle_maker_{$a}' class='form-control' placeholder='' maxlength='100'>
-                            <label for='auto_vehicle_maker_{$a}'>Maker</label>
-                        </div>
-                    </div>
-                    <div class='col-md-4'>
-                        <div class='mb-3 form-floating'>
-                            <input type='text' name='auto_vehicle_model_{$a}' id='auto_vehicle_model_{$a}' class='form-control' placeholder='' maxlength='100'>
-                            <label for='auto_vehicle_model_{$a}'>Model</label>
-                        </div>
-                    </div>
-                    <div class='col-md-6'>
-                        <div class='mb-3 form-floating'>
-                            <input type='text' name='auto_vehicle_vin_{$a}' id='auto_vehicle_vin_{$a}' class='form-control' placeholder='' maxlength='100'>
-                            <label for='auto_vehicle_vin_{$a}'>Vehicle Identification Number (VIN)</label>
-                        </div>
-                    </div>
-                    <div class='col-md-6'>
-                        <div class='mb-3 form-floating'>
-                            <input type='text' name='auto_vehicle_mileage_{$a}' id='auto_vehicle_mileage_{$a}' class='form-control' placeholder='' maxlength='100'>
-                            <label for='auto_vehicle_mileage_{$a}'>Mileage / Radius</label>
-                        </div>
-                    </div>
-                    <div class='col-md-12'>
-                        <div class='mb-3 form-floating'>
-                            <input type='text' name='auto_vehicle_garage_add_{$a}' id='auto_vehicle_garage_add_{$a}' class='form-control' placeholder=''>
-                            <label for='auto_vehicle_garage_add_{$a}'>Garage Address</label>
-                        </div>
-                    </div>
-                    <div class='col-md-12'>
-                        <div class='mb-3 form-floating'>
-                            <select class='form-control' name='auto_vehicle_coverage_limits_{$a}' id='auto_vehicle_coverage_limits_{$a}' aria-label='auto_vehicle_coverage_limits_{$a}'>
-                                <option value selected></option>
-                                <option value='100,000'>$100,000</option>
-                                <option value='300,000'>$300,000</option>
-                                <option value='500,000'>$500,000</option>
-                                <option value='1,000,000'>$1,000,000</option>
-                            </select>
-                            <label for='auto_vehicle_coverage_limits_{$a}'>Coverage Limits</label>
-                        </div>
-                    </div>
-                </div>
-            ";
+    //         $output = "
+    //             <h4 class='profession_header mt-2 mb-2'>Vehicle Entry No. {$a}</h4>
+    //             <div class='row justify-content-center'>
+    //                 <div class='col-md-4'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <input type='text' name='auto_vehicle_year_{$a}' id='auto_vehicle_year_{$a}' class='form-control' placeholder='' maxlength='4'>
+    //                         <label for='auto_vehicle_year_{$a}'>Year</label>
+    //                     </div>
+    //                 </div>
+    //                 <div class='col-md-4'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <input type='text' name='auto_vehicle_maker_{$a}' id='auto_vehicle_maker_{$a}' class='form-control' placeholder='' maxlength='100'>
+    //                         <label for='auto_vehicle_maker_{$a}'>Maker</label>
+    //                     </div>
+    //                 </div>
+    //                 <div class='col-md-4'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <input type='text' name='auto_vehicle_model_{$a}' id='auto_vehicle_model_{$a}' class='form-control' placeholder='' maxlength='100'>
+    //                         <label for='auto_vehicle_model_{$a}'>Model</label>
+    //                     </div>
+    //                 </div>
+    //                 <div class='col-md-6'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <input type='text' name='auto_vehicle_vin_{$a}' id='auto_vehicle_vin_{$a}' class='form-control' placeholder='' maxlength='100'>
+    //                         <label for='auto_vehicle_vin_{$a}'>Vehicle Identification Number (VIN)</label>
+    //                     </div>
+    //                 </div>
+    //                 <div class='col-md-6'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <input type='text' name='auto_vehicle_mileage_{$a}' id='auto_vehicle_mileage_{$a}' class='form-control' placeholder='' maxlength='100'>
+    //                         <label for='auto_vehicle_mileage_{$a}'>Mileage / Radius</label>
+    //                     </div>
+    //                 </div>
+    //                 <div class='col-md-12'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <input type='text' name='auto_vehicle_garage_add_{$a}' id='auto_vehicle_garage_add_{$a}' class='form-control' placeholder=''>
+    //                         <label for='auto_vehicle_garage_add_{$a}'>Garage Address</label>
+    //                     </div>
+    //                 </div>
+    //                 <div class='col-md-12'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <select class='form-control' name='auto_vehicle_coverage_limits_{$a}' id='auto_vehicle_coverage_limits_{$a}' aria-label='auto_vehicle_coverage_limits_{$a}'>
+    //                             <option value selected></option>
+    //                             <option value='100,000'>$100,000</option>
+    //                             <option value='300,000'>$300,000</option>
+    //                             <option value='500,000'>$500,000</option>
+    //                             <option value='1,000,000'>$1,000,000</option>
+    //                         </select>
+    //                         <label for='auto_vehicle_coverage_limits_{$a}'>Coverage Limits</label>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         ";
 
-            return response()->json(['data' => $output]);
-        }
-        return response()->json(['data' => '']);
-    }
+    //         return response()->json(['data' => $output]);
+    //     }
+    //     return response()->json(['data' => '']);
+    // }
 
-    public function showDriverEntries(Request $request) {
+    // public function showDriverEntries(Request $request) {
 
-        if ($request->isMethod('get') && $request->has('a')) {
+    //     if ($request->isMethod('get') && $request->has('a')) {
 
-            $a = $request->input('a');
+    //         $a = $request->input('a');
 
-            $output = "
+    //         $output = "
 
-                <h4 class='profession_header mt-2 mb-2'>Driver Information Entry No. {$a}</h4>
-                <div class='row justify-content-center'>
-                    <div class='col-md-12'>
-                        <div class='mb-3 form-floating'>
-                            <input type='text' name='auto_add_drivers_name_{$a}' id='auto_add_drivers_name_{$a}' class='form-control' placeholder='' maxlength='100'>
-                            <label for='auto_add_drivers_name_{$a}'>Driver's Name</label>
-                        </div>
-                    </div>
-                    <div class='col-md-12'>
-                        <div class='mb-3 form-floating'>
-                            <input type='text' name='auto_add_driver_lic_{$a}' id='auto_add_driver_lic_{$a}' class='form-control ' placeholder='' maxlength='50'>
-                            <label for='auto_add_driver_lic_{$a}'>Driver's License Number</label>
-                        </div>
-                    </div>
-                    <div class='col-md-12'>
-                        <div class='mb-3 form-floating'>
-                            <input type='text' name='auto_add_driver_mileage_radius_{$a}' id='auto_add_driver_mileage_radius_{$a}' class='form-control ' placeholder='' maxlength='100'>
-                            <label for='auto_add_driver_mileage_radius_{$a}'>Mileage / Radius</label>
-                        </div>
-                    </div>
-                    <div class='col-md-12'>
-                        <div class='mb-3 form-floating'>
-                            <input type='text' name='auto_add_driver_date_birth_{$a}' id='auto_add_driver_date_birth_{$a}' class='form-control driver_birthdate' placeholder=''>
-                            <label for='auto_add_driver_date_birth_{$a}'>Date of Birth</label>
-                        </div>
-                    </div>
-                    <div class='col-md-12'>
-                        <div class='mb-3 form-floating'>
-                            <select class='form-select ' name='auto_add_driver_civil_status_{$a}' id='auto_add_driver_civil_status_{$a}' aria-label='auto_add_driver_civil_status_{$a}'>
-                                <option value selected></option>
-                                <option value='Single'>Single</option>
-                                <option value='Married'>Married</option>
-                                <option value='Divorced'>Divorced</option>
-                            </select>
-                            <label for='auto_add_driver_civil_status_{$a}'>Civil Status</label>
-                        </div>
-                    </div>
-                    <div id='auto_driver_if_married_container_{$a}'></div>
-                </div>
+    //             <h4 class='profession_header mt-2 mb-2'>Driver Information Entry No. {$a}</h4>
+    //             <div class='row justify-content-center'>
+    //                 <div class='col-md-12'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <input type='text' name='auto_add_drivers_name_{$a}' id='auto_add_drivers_name_{$a}' class='form-control' placeholder='' maxlength='100'>
+    //                         <label for='auto_add_drivers_name_{$a}'>Driver's Name</label>
+    //                     </div>
+    //                 </div>
+    //                 <div class='col-md-12'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <input type='text' name='auto_add_driver_lic_{$a}' id='auto_add_driver_lic_{$a}' class='form-control ' placeholder='' maxlength='50'>
+    //                         <label for='auto_add_driver_lic_{$a}'>Driver's License Number</label>
+    //                     </div>
+    //                 </div>
+    //                 <div class='col-md-12'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <input type='text' name='auto_add_driver_mileage_radius_{$a}' id='auto_add_driver_mileage_radius_{$a}' class='form-control ' placeholder='' maxlength='100'>
+    //                         <label for='auto_add_driver_mileage_radius_{$a}'>Mileage / Radius</label>
+    //                     </div>
+    //                 </div>
+    //                 <div class='col-md-12'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <input type='text' name='auto_add_driver_date_birth_{$a}' id='auto_add_driver_date_birth_{$a}' class='form-control driver_birthdate' placeholder=''>
+    //                         <label for='auto_add_driver_date_birth_{$a}'>Date of Birth</label>
+    //                     </div>
+    //                 </div>
+    //                 <div class='col-md-12'>
+    //                     <div class='mb-3 form-floating'>
+    //                         <select class='form-select ' name='auto_add_driver_civil_status_{$a}' id='auto_add_driver_civil_status_{$a}' aria-label='auto_add_driver_civil_status_{$a}'>
+    //                             <option value selected></option>
+    //                             <option value='Single'>Single</option>
+    //                             <option value='Married'>Married</option>
+    //                             <option value='Divorced'>Divorced</option>
+    //                         </select>
+    //                         <label for='auto_add_driver_civil_status_{$a}'>Civil Status</label>
+    //                     </div>
+    //                 </div>
+    //                 <div id='auto_driver_if_married_container_{$a}'></div>
+    //             </div>
 
-            ";
+    //         ";
 
-            return response()->json(['data' => $output]);
-        }
-        return response()->json(['data' => '']);
-    }
+    //         return response()->json(['data' => $output]);
+    //     }
+    //     return response()->json(['data' => '']);
+    // }
 
-    public function showSpouseInformationForm(Request $request) {
+    // public function showSpouseInformationForm(Request $request) {
 
-        if ($request->isMethod('get') && $request->has('a')) {
+    //     if ($request->isMethod('get') && $request->has('a')) {
 
-            $a = $request->input('a');
+    //         $a = $request->input('a');
 
-            $output = "
+    //         $output = "
 
-                <div class='col-md-12'>
-                    <div class='mb-3 form-floating'>
-                        <input type='text' name='auto_add_driver_spouse_name_{$a}' id='auto_add_driver_spouse_name_{$a}' class='form-control ' placeholder='' maxlength='100'>
-                        <label for='auto_add_driver_spouse_name_{$a}'>Spouse's Name</label>
-                    </div>
-                </div>
-                <div class='col-md-12'>
-                    <div class='mb-3 form-floating'>
-                        <input type='text' name='auto_add_driver_spouse_dob_{$a}' id='auto_add_driver_spouse_dob_{$a}' class='form-control spouse_datebirth ' placeholder=''>
-                        <label for='auto_add_driver_spouse_dob_{$a}'>Spouse's Date of Birth</label>
-                    </div>
-                </div>
+    //             <div class='col-md-12'>
+    //                 <div class='mb-3 form-floating'>
+    //                     <input type='text' name='auto_add_driver_spouse_name_{$a}' id='auto_add_driver_spouse_name_{$a}' class='form-control ' placeholder='' maxlength='100'>
+    //                     <label for='auto_add_driver_spouse_name_{$a}'>Spouse's Name</label>
+    //                 </div>
+    //             </div>
+    //             <div class='col-md-12'>
+    //                 <div class='mb-3 form-floating'>
+    //                     <input type='text' name='auto_add_driver_spouse_dob_{$a}' id='auto_add_driver_spouse_dob_{$a}' class='form-control spouse_datebirth ' placeholder=''>
+    //                     <label for='auto_add_driver_spouse_dob_{$a}'>Spouse's Date of Birth</label>
+    //                 </div>
+    //             </div>
 
-            ";
+    //         ";
 
-            return response()->json(['data' => $output]);
-        }
-        return response()->json(['data' => '']);
-    }
+    //         return response()->json(['data' => $output]);
+    //     }
+    //     return response()->json(['data' => '']);
+    // }
 
     public function submitQuoteForm(Request $request) {
         if ($request->isMethod('post')) {
@@ -367,8 +367,6 @@ class QuoteController extends Controller
                         $templateData['utm_content'] = $utm_content;
 
                         Log::info('Successfully saved OPT IN record. Data: ' . json_encode($utmParamQueries));
-                        // Log::info('Session UTM Source in Controller:', ['utm_source' => session('utm_source')]);
-                        // Log::info('Session UTM Source in Controller:', ['utm_source' => $utm_source]);
                         DB::commit();
                     } catch (\Exception $e) {
                         DB::rollBack();
@@ -412,7 +410,7 @@ class QuoteController extends Controller
 
                         Log::info('Successfully saved About Your Company. Record id: ' . $aboutYourCompany->id);
 
-                        $professionName = $quoteModel->getProfessionById($aboutYourCompany->profession);
+                        $professionName = $quoteModel->getProfessionById((int)$profession);
 
                         $condition1 = !empty($aboutYourCompany->annual_gross_receipt);
                         $condition2 = !empty($aboutYourCompany->profession);
@@ -426,6 +424,7 @@ class QuoteController extends Controller
                         $fullName = $clientInformation->first_name . ' ' . $clientInformation->last_name;
                         $fullAddress = $clientInformation->address . ' ' . $clientInformation->city . ' ' . $clientInformation->state . ', ' . $clientInformation->zipcode;
 
+                        $templateData['aycProfessionName'] = $professionName;
                         $templateData['fullAddress'] = $fullAddress;
                         $templateData['fullName'] = $fullName;
                         $templateData['shouldDisplayAboutYourInformation'] = $shouldDisplayAboutYourInformation;
@@ -465,8 +464,20 @@ class QuoteController extends Controller
                                     $does_using_subcontractor = $productData['gl_using_subcon']['value'];
                                     $subcon_cost = isset($productData['gl_subcon_cost']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_subcon_cost']['value'])) : null;
                                     $gl_no_of_losses = $productData['gl_no_of_losses']['value'];
-                                    $gl_amount_of_claim = isset($productData['gl_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_amt_of_claims']['value'])) : null;
-                                    $gl_date_of_loss = isset($productData['gl_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['gl_date_of_loss']['value'])->toDateString() : null;
+                                    $gl_amount_of_claim = null;
+                                    if (isset($productData['gl_amt_of_claims']['value']) && !empty($productData['gl_amt_of_claims']['value'])) {
+                                        try {
+                                            $gl_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $gl_amount_of_claim = null;
+                                        }
+                                    }
+                                    $gl_date_of_loss = null;
+                                    if (isset($productData['gl_date_of_loss']['value']) && !empty($productData['gl_date_of_loss']['value'])) {
+                                        $gl_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['gl_date_of_loss']['value']);
+                                    } else {
+                                         $gl_date_of_loss = null;
+                                    }
 
                                     $generalLiability = new GeneralLiabilityInformation();
                                     $generalLiability->client_info_id = $client_info_id;
@@ -490,17 +501,11 @@ class QuoteController extends Controller
                                     $generalLiability->gl_date_of_loss = $gl_date_of_loss;
                                     $generalLiability->save();
 
-                                    $professionName = $quoteModel->getProfessionById($productData['gl_profession']['value']);
+                                    $GLProfessionName = $quoteModel->getProfessionById([(int)$productData['gl_profession']['value']]);
 
                                     $classcodesModel = new Classcodes();
                                     $filteredClasscodes = $classcodesModel->filterClasscodesWithQuestion([178, 184, 226, 190, 115, 188, 189, 114, 229, 119, 56, 196, 146, 51]);
                                     $templateData['glAdditionalQuestions'] = [];
-
-                                    // if (isset($productData['gl_profession']['value']) && isset()) {
-
-                                    // } else {
-
-                                    // }
 
                                         if (in_array((int) $profession, $filteredClasscodes)) {
                                             $classcode = $classcodesModel->find((int) $productData['gl_profession']['value']);
@@ -572,7 +577,7 @@ class QuoteController extends Controller
                                         }
                                     }
 
-                                    $templateData['professionName'] = $professionName;
+                                    $templateData['GLProfessionName'] = $GLProfessionName;
                                     $templateData['glNoOfLosses'] = "";
 
                                     switch($generalLiability->gl_no_of_losses) {
@@ -592,7 +597,7 @@ class QuoteController extends Controller
                                             $templateData['glNoOfLosses'] = "No Losses";
                                             break;
                                     }
-                                    $templateData['glDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['gl_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['glDateOfLoss'] = $gl_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $gl_date_of_loss)->format('F j, Y');
 
                                     // $templateData['parsedCostProj5years'] = $parsedCostProj5years;
                                     // $templateData['parsedPayrollAmount'] = $parsedPayrollAmount;
@@ -615,8 +620,24 @@ class QuoteController extends Controller
                                     $subcontractor_cost_in_year = isset($productData['wc_subcon_cost_year']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_subcon_cost_year']['value'])) : null;
                                     $number_of_employee = isset($productData['wc_num_of_empl']['value']) ? $productData['wc_num_of_empl']['value'] : null;
                                     $wc_no_of_losses = isset($productData['wc_no_of_losses']['value']) ? $productData['wc_no_of_losses']['value'] : null;
-                                    $wc_amount_of_claim = isset($productData['wc_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_amt_of_claims']['value'])) : null;
-                                    $wc_date_of_loss = isset($productData['wc_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->toDateString() : null;
+
+                                    // $wc_amount_of_claim = isset($productData['wc_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_amt_of_claims']['value'])) : null;
+                                    // $wc_date_of_loss = isset($productData['wc_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->toDateString() : null;
+
+                                    $wc_amount_of_claim = null;
+                                    if (isset($productData['wc_amt_of_claims']['value']) && !empty($productData['wc_amt_of_claims']['value'])) {
+                                        try {
+                                            $wc_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $wc_amount_of_claim = null;
+                                        }
+                                    }
+                                    $wc_date_of_loss = null;
+                                    if (isset($productData['wc_date_of_loss']['value']) && !empty($productData['wc_date_of_loss']['value'])) {
+                                        $wc_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value']);
+                                    } else {
+                                         $wc_date_of_loss = null;
+                                    }
 
                                     $workersCompensation = new WorkersCompensationInformation();
                                     $workersCompensation->client_info_id = $clientInfoId;
@@ -647,10 +668,11 @@ class QuoteController extends Controller
 
                                                     Log::info('Successfully saved wcProfessionEntry record. Data: ' . json_encode($wcProfessionEntry));
 
-                                                    $professionName = $quoteModel->getProfessionById($productData['wc_profession_' . $counter]['value']);
+                                                    $wcProfessionName = $quoteModel->getProfessionById($productData['wc_profession_' . $counter]['value']);
+
                                                     $templateData['professionsInfo'][] = [
                                                         'counter' => $counter,
-                                                        'professionName' => $professionName,
+                                                        'professionName' => $wcProfessionName,
                                                         'annual_payroll' => $annual_payroll,
                                                     ];
 
@@ -665,7 +687,6 @@ class QuoteController extends Controller
                                     $wcOwnersInfo = new WCOwnersInfo();
                                     DB::beginTransaction();
                                     try {
-
                                         $workersCompensationId = $workersCompensation->id;
                                         $owners_name = $productData['wc_name']['value'];
                                         $title_relationship = $productData['wc_title_relationship']['value'];
@@ -687,7 +708,7 @@ class QuoteController extends Controller
 
                                         $ownersDobFormatted = Carbon::createFromFormat('m/d/Y', $productData['wc_dob']['value'])->format('F j, Y');
                                         $templateData['ownersDobFormatted'] = $ownersDobFormatted;
-
+                                        $templateData['wcOwnersInfo'] = $wcOwnersInfo;
                                         Log::info('Successfully saved wcOwnersInfo record. Data: ' . json_encode($wcOwnersInfo));
                                         DB::commit();
                                     } catch (\Exception $e) {
@@ -727,7 +748,7 @@ class QuoteController extends Controller
                                                     Log::info('Successfully saved wcOwnersInfo record. Data: ' . json_encode($wcOwnersInfo));
 
                                                     $templateData['ownersInfo'][] = [
-                                                        'counter' => $counter,
+                                                        // 'counter' => $counter,
                                                         'owners_name' => $owners_name,
                                                         'title_relationship' => $title_relationship,
                                                         'ownership_perc' => $ownership_perc,
@@ -766,7 +787,10 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['wcDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->format('F j, Y');
+                                    // $templateData['wcDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->format('F j, Y');
+
+                                    $templateData['wcDateOfLoss'] = $wc_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $wc_date_of_loss)->format('F j, Y');
+                                    $templateData['wcProfessionName'] = $wcProfessionName;
                                     $templateData['ownersDobFormatted'] = $ownersDobFormatted;
                                     $templateData['workersCompensation'] = $workersCompensation;
                                     $templateData['productType'] = 'wc';
@@ -780,14 +804,42 @@ class QuoteController extends Controller
                             case 'auto':
                                 try {
                                     $client_info_id = $clientInformation->id;
+                                    $are_you_driver = $productData['auto_are_you_the_driver']['value'];
+                                    $client_full_name = $productData['auto_driver_full_name']['value'];
+                                    $client_date_of_birth = Carbon::createFromFormat('m/d/Y', $productData['auto_driver_date_of_birth']['value']);
+                                    $client_marital_status = $productData['auto_driver_marital_status']['value'];
+                                    $client_spouse_name = isset($productData['auto_driver_spouse_name']['value']) ? $productData['auto_driver_spouse_name']['value'] : null;
+                                    $client_spouse_date_of_birth = isset($productData['auto_driver_spouse_dob']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['auto_driver_spouse_dob']['value']) : null;
+                                    $client_license_no = $productData['auto_driver_license_no']['value'];
+                                    $client_years_of_driving_exp = $productData['auto_driver_years_of_driving_exp']['value'];
                                     $no_of_vehicle = $productData['auto_add_vehicle']['value'];
                                     $no_of_drivers = $productData['auto_add_driver']['value'];
                                     $auto_no_of_losses = $productData['auto_no_of_losses']['value'];
-                                    $auto_amount_of_claim = isset($productData['auto_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","",  $productData['auto_amt_of_claims']['value'])) : null;
-                                    $auto_date_of_loss = isset($productData['auto_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['auto_date_of_loss']['value'])->toDateString() : null;
+                                    $auto_amount_of_claim = null;
+                                    if (isset($productData['auto_amt_of_claims']['value']) && !empty($productData['auto_amt_of_claims']['value'])) {
+                                        try {
+                                            $auto_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['auto_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $auto_amount_of_claim = null;
+                                        }
+                                    }
+                                    $auto_date_of_loss = null;
+                                    if (isset($productData['auto_date_of_loss']['value']) && !empty($productData['auto_date_of_loss']['value'])) {
+                                        $auto_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['auto_date_of_loss']['value']);
+                                    } else {
+                                         $auto_date_of_loss = null;
+                                    }
 
                                     $commercialAuto = new CommercialAutoInformation();
                                     $commercialAuto->client_info_id = $client_info_id;
+                                    $commercialAuto->are_you_driver = $are_you_driver;
+                                    $commercialAuto->client_full_name = $client_full_name;
+                                    $commercialAuto->client_date_of_birth = $client_date_of_birth;
+                                    $commercialAuto->client_marital_status = $client_marital_status;
+                                    $commercialAuto->client_spouse_name = $client_spouse_name;
+                                    $commercialAuto->client_spouse_date_of_birth = $client_spouse_date_of_birth;
+                                    $commercialAuto->client_license_no = $client_license_no;
+                                    $commercialAuto->client_years_of_driving_exp = $client_years_of_driving_exp;
                                     $commercialAuto->no_of_vehicle = $no_of_vehicle;
                                     $commercialAuto->no_of_drivers = $no_of_drivers;
                                     $commercialAuto->auto_no_of_losses = $auto_no_of_losses;
@@ -795,6 +847,7 @@ class QuoteController extends Controller
                                     $commercialAuto->auto_date_of_loss = $auto_date_of_loss;
                                     $commercialAuto->save();
 
+                                    $templateData['driversSpouseDateOfBirthFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['auto_driver_spouse_dob']['value'])->format('F j, Y');
                                     $templateData['autoVehiclesInfo'] = [];
                                     foreach ($productDataStr as $key => $data) {
                                         if (strpos($key, 'auto_vehicle_year_') === 0) {
@@ -846,52 +899,55 @@ class QuoteController extends Controller
                                     }
 
                                     $templateData['autoDriversInfo'] = [];
-                                    foreach ($productDataStr as $key => $data) {
-                                        if (strpos($key, 'auto_add_drivers_name_') === 0) {
-                                            $counter = str_replace('auto_add_drivers_name_', '', $key);
-                                            if (isset($productDataStr['auto_add_drivers_name_'.$counter]['value']) && isset($productDataStr['auto_add_driver_lic_'.$counter]['value']) && isset($productDataStr['auto_add_driver_mileage_radius_'.$counter]['value']) && isset($productDataStr['auto_add_driver_date_birth_'.$counter]['value']) && isset($productDataStr['auto_add_driver_civil_status_'.$counter]['value']) && isset($productDataStr['auto_add_driver_spouse_name_'.$counter]['value']) && isset($productDataStr['auto_add_driver_spouse_dob_'.$counter]['value'])) {
-                                                $driverEntry = new CommercialAutoDrivers();
-                                                DB::beginTransaction();
-                                                try {
-                                                    $drivers_name = $productData['auto_add_drivers_name_' . $counter]['value'];
-                                                    $drivers_license_number = $productData['auto_add_driver_lic_' . $counter]['value'];
-                                                    $mileage_radius = $productData['auto_add_driver_mileage_radius_' . $counter]['value'];
-                                                    $date_of_birth = isset($productData['auto_add_driver_date_birth_' . $counter]['value']) ? Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_date_birth_' . $counter]['value'])->toDateString() : null;
-                                                    $civil_status = $productData['auto_add_driver_civil_status_' . $counter]['value'];
-                                                    $spouse_name = isset($productData['auto_add_driver_spouse_name_' . $counter]['value']) ? $productData['auto_add_driver_spouse_name_' . $counter]['value'] : null;
-                                                    $spouse_date_of_birth = isset($productData['auto_add_driver_spouse_dob_' . $counter]['value']) ? Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_spouse_dob_' . $counter]['value']) : null;
+                                    // if (isset($productDataStr['auto_add_drivers_name_'.$counter]['value'])) {
+                                        foreach ($productDataStr as $key => $data) {
+                                            if (strpos($key, 'auto_add_drivers_name_') === 0) {
+                                                $counter = str_replace('auto_add_drivers_name_', '', $key);
+                                                // dd($counter);
+                                                // if (isset($productDataStr['auto_add_drivers_name_'.$counter]['value']) && isset($productDataStr['auto_add_driver_lic_'.$counter]['value']) && isset($productDataStr['auto_add_driver_mileage_radius_'.$counter]['value']) && isset($productDataStr['auto_add_driver_date_birth_'.$counter]['value']) && isset($productDataStr['auto_add_driver_civil_status_'.$counter]['value']) && isset($productDataStr['auto_add_driver_spouse_name_'.$counter]['value']) && isset($productDataStr['auto_add_driver_spouse_dob_'.$counter]['value'])) {
+                                                    $driverEntry = new CommercialAutoDrivers();
+                                                    DB::beginTransaction();
+                                                    try {
+                                                        $drivers_name = $productData['auto_add_drivers_name_' . $counter]['value'];
+                                                        $drivers_license_number = $productData['auto_add_driver_lic_' . $counter]['value'];
+                                                        $mileage_radius = $productData['auto_add_driver_mileage_radius_' . $counter]['value'];
+                                                        $date_of_birth = isset($productData['auto_add_driver_date_birth_' . $counter]['value']) ? Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_date_birth_' . $counter]['value']) : null;
+                                                        $civil_status = $productData['auto_add_driver_civil_status_' . $counter]['value'];
+                                                        $spouse_name = isset($productData['auto_add_driver_spouse_name_' . $counter]['value']) ? $productData['auto_add_driver_spouse_name_' . $counter]['value'] : null;
+                                                        $spouse_date_of_birth = isset($productData['auto_add_driver_spouse_dob_' . $counter]['value']) ? Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_spouse_dob_' . $counter]['value']) : null;
 
-                                                    $driverEntry->comm_auto_id = $commercialAuto->id;
-                                                    $driverEntry->drivers_name = $drivers_name;
-                                                    $driverEntry->drivers_license_number = $drivers_license_number;
-                                                    $driverEntry->mileage_radius = $mileage_radius;
-                                                    $driverEntry->date_of_birth = $date_of_birth;
-                                                    $driverEntry->civil_status = $civil_status;
-                                                    $driverEntry->spouse_name = $spouse_name;
-                                                    $driverEntry->spouse_date_of_birth = $spouse_date_of_birth;
-                                                    $driverEntry->save();
+                                                        $driverEntry->comm_auto_id = $commercialAuto->id;
+                                                        $driverEntry->drivers_name = $drivers_name;
+                                                        $driverEntry->drivers_license_number = $drivers_license_number;
+                                                        $driverEntry->mileage_radius = $mileage_radius;
+                                                        $driverEntry->date_of_birth = $date_of_birth;
+                                                        $driverEntry->civil_status = $civil_status;
+                                                        $driverEntry->spouse_name = $spouse_name;
+                                                        $driverEntry->spouse_date_of_birth = $spouse_date_of_birth;
+                                                        $driverEntry->save();
 
-                                                    Log::info('Successfully saved driverEntry record. Data: ' . json_encode($driverEntry));
+                                                        Log::info('Successfully saved driverEntry record. Data: ' . json_encode($driverEntry));
 
-                                                    $templateData['autoDriversInfo'][] = [
-                                                        'counter' => $counter,
-                                                        'drivers_name' => $drivers_name,
-                                                        'drivers_license_number' => $drivers_license_number,
-                                                        'mileage_radius' => $mileage_radius,
-                                                        'date_of_birth' => Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_date_birth_' . $counter]['value'])->format('F j, Y'),
-                                                        'civil_status' => $civil_status,
-                                                        'spouse_name' => $spouse_name,
-                                                        'spouse_date_of_birth' => Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_spouse_dob_' . $counter]['value'])->format('F j, Y'),
-                                                    ];
+                                                        $templateData['autoDriversInfo'][] = [
+                                                            'counter' => $counter,
+                                                            'drivers_name' => $drivers_name,
+                                                            'drivers_license_number' => $drivers_license_number,
+                                                            'mileage_radius' => $mileage_radius,
+                                                            'date_of_birth' => Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_date_birth_' . $counter])->format('F j, Y'),
+                                                            'civil_status' => $civil_status,
+                                                            'spouse_name' => $spouse_name,
+                                                            'spouse_date_of_birth' => Carbon::createFromFormat('m/d/Y', $productData['auto_add_driver_spouse_dob_' . $counter])->format('F j, Y'),
+                                                        ];
 
-                                                    DB::commit();
-                                                } catch (\Exception $e) {
-                                                    DB::rollBack();
-                                                    Log::error('Failed to insert driverEntry record. Exception: ' . $e->getMessage());
-                                                }
+                                                        DB::commit();
+                                                    } catch (\Exception $e) {
+                                                        DB::rollBack();
+                                                        Log::error('Failed to insert driverEntry record. Exception: ' . $e->getMessage());
+                                                    }
+                                                // }
                                             }
                                         }
-                                    }
+                                    // }
 
                                     $templateData['autoNoOfLosses'] = "";
 
@@ -913,7 +969,10 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['autoDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->format('F j, Y');
+                                    // $templateData['autoDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->format('F j, Y');
+
+                                    $templateData['autoDateOfLoss'] = $auto_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $auto_date_of_loss)->format('F j, Y');
+                                    $templateData['clientDateOfBirth'] = $client_date_of_birth;
                                     $templateData['commercialAuto'] = $commercialAuto;
                                     $templateData['productType'] = 'auto';
                                     $templateData['clientInformation'] = $clientInformation;
@@ -928,7 +987,7 @@ class QuoteController extends Controller
                                     $client_info_id = $clientInformation->id;
                                     $owners_name = $productData['bond_owners_name']['value'];
                                     $ssn = $productData['bond_owners_ssn']['value'];
-                                    $date_of_birth = Carbon::createFromFormat($productData['bond_owners_dob']['value'])->toDateString();
+                                    $date_of_birth = Carbon::createFromFormat('m/d/Y', $productData['bond_owners_dob']['value'])->toDateString();
                                     $civil_status = $productData['bond_owners_civil_status']['value'];
                                     $spouse_name = $productData['bond_owners_spouse_name']['value'];
                                     $spouse_date_of_birth = Carbon::createFromFormat('m/d/Y', $productData['bond_owners_spouse_dob']['value'])->toDateString();
@@ -937,12 +996,24 @@ class QuoteController extends Controller
                                     $amount_of_bond = floatval(preg_replace("/[^-0-9\.]/","", $productData['bond_amount_of_bond']['value']));
                                     $term_of_bond = $productData['bond_term_of_bond']['value'];
                                     $type_of_license = $productData['bond_type_of_license']['value'];
-                                    $if_other_type_of_license = $productData['bond_if_other_type_of_license'];
+                                    $if_other_type_of_license = isset($productData['bond_if_other_type_of_license']) ? $productData['bond_if_other_type_of_license'] : null;
                                     $license_number_or_application_number = $productData['bond_license_or_application_no']['value'];
                                     $effective_date = Carbon::createFromFormat('m/d/Y', $productData['bond_effective_date']['value'])->toDateString();
                                     $bond_no_of_losses = $productData['bond_no_of_losses']['value'];
-                                    $bond_amount_of_claim = isset($productData['bond_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['bond_amt_of_claims']['value'])) : null;
-                                    $bond_date_of_loss = isset($productData['bond_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['bond_date_of_loss']['value'])->toDateString() : null;
+                                    $bond_amount_of_claim = null;
+                                    if (isset($productData['bond_amt_of_claims']['value']) && !empty($productData['bond_amt_of_claims']['value'])) {
+                                        try {
+                                            $bond_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['bond_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $bond_amount_of_claim = null;
+                                        }
+                                    }
+                                    $bond_date_of_loss = null;
+                                    if (isset($productData['bond_date_of_loss']['value']) && !empty($productData['bond_date_of_loss']['value'])) {
+                                        $bond_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['bond_date_of_loss']['value']);
+                                    } else {
+                                         $bond_date_of_loss = null;
+                                    }
 
                                     $licenseBond = new LicenseBondInformation();
                                     $licenseBond->client_info_id = $client_info_id;
@@ -985,10 +1056,12 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['bondDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['bond_date_of_loss']['value'])->format('F j, Y');
-                                    $templateData['ownersDobFormatted'] = Carbon::createFromFormat($productData['bond_owners_dob']['value'])->format('F j, Y');
-                                    $templateData['spouseDobFormatted'] = Carbon::createFromFormat($productData['spouse_date_of_birth']['value'])->format('F j, Y');
-                                    $templateData['bondEffDateFormatted'] = Carbon::createFromFormat($productData['bond_effective_date']['value'])->format('F j, Y');
+                                    // $templateData['bondDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['bond_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['bondDateOfLoss'] = $bond_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $bond_date_of_loss)->format('F j, Y');
+                                    $templateData['licenseBond'] = $licenseBond;
+                                    $templateData['ownersDobFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['bond_owners_dob']['value'])->format('F j, Y');
+                                    $templateData['spouseDobFormatted'] = $spouse_date_of_birth === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['bond_owners_spouse_dob']['value'])->format('F j, Y');
+                                    $templateData['bondEffDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['bond_effective_date']['value'])->format('F j, Y');
                                     $templateData['productType'] = 'bond';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
@@ -1002,23 +1075,31 @@ class QuoteController extends Controller
                                     $client_info_id = $clientInformation->id;
                                     $excess_limits = floatval(preg_replace("/[^-0-9\.]/","", $productData['excess_limits']['value']));
                                     $gl_effective_date = Carbon::createFromFormat('m/d/Y', $productData['excess_gl_eff_date']['value'])->toDateString();
-                                    // $no_of_losses = $productData['excess_no_losses_5years']['value'];
-                                    // $explain_losses = $productData['excess_explain_losses']['value'];
                                     $insurance_carrier = $productData['excess_insurance_carrier']['value'];
                                     $policy_number_or_quote_number = $productData['excess_policy_or_quote_no']['value'];
                                     $policy_premium = floatval(preg_replace("/[^-0-9\.]/","", $productData['excess_policy_premium']['value']));
                                     $effective_date = Carbon::createFromFormat('m/d/Y', $productData['excess_effective_date']['value'])->toDateString();
                                     $expiration_date = Carbon::createFromFormat('m/d/Y', $productData['excess_expiration_date']['value'])->toDateString();
                                     $excess_no_of_losses = $productData['excess_no_of_losses']['value'];
-                                    $excess_amount_of_claim = isset($productData['excess_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['excess_amt_of_claims']['value'])) : null;
-                                    $excess_date_of_loss = isset($productData['excess_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['excess_date_of_loss']['value'])->toDateString() : null;
+                                    $excess_amount_of_claim = null;
+                                    if (isset($productData['excess_amt_of_claims']['value']) && !empty($productData['excess_amt_of_claims']['value'])) {
+                                        try {
+                                            $excess_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['excess_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $excess_amount_of_claim = null;
+                                        }
+                                    }
+                                    $excess_date_of_loss = null;
+                                    if (isset($productData['excess_date_of_loss']['value']) && !empty($productData['excess_date_of_loss']['value'])) {
+                                        $excess_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['excess_date_of_loss']['value']);
+                                    } else {
+                                         $excess_date_of_loss = null;
+                                    }
 
                                     $excessLiability = new ExcessLiabilityInformation();
                                     $excessLiability->client_info_id = $client_info_id;
                                     $excessLiability->excess_limits = $excess_limits;
                                     $excessLiability->gl_effective_date = $gl_effective_date;
-                                    // $excessLiability->no_of_losses = $no_of_losses;
-                                    // $excessLiability->explain_losses = $explain_losses;
                                     $excessLiability->insurance_carrier = $insurance_carrier;
                                     $excessLiability->policy_number_or_quote_number = $policy_number_or_quote_number;
                                     $excessLiability->policy_premium = $policy_premium;
@@ -1049,11 +1130,11 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['excessDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['excess_date_of_loss']['value'])->format('F j, Y');
-
-                                    $templateData['excessGLEffectiveDateFormatted'] = Carbon::createFromFormat($productData['excess_gl_eff_date']['value'])->format('F j, Y');
-                                    $templateData['excessEffectiveDateFormatted'] = Carbon::createFromFormat($productData['excess_effective_date']['value'])->format('F j, Y');
-                                    $templateData['excessExpirationDateFormatted'] = Carbon::createFromFormat($productData['excess_expiration_date']['value'])->format('F j, Y');
+                                    // $templateData['excessDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['excess_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['excessDateOfLoss'] = $excess_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $excess_date_of_loss)->format('F j, Y');
+                                    $templateData['excessGLEffectiveDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['excess_gl_eff_date']['value'])->format('F j, Y');
+                                    $templateData['excessEffectiveDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['excess_effective_date']['value'])->format('F j, Y');
+                                    $templateData['excessExpirationDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['excess_expiration_date']['value'])->format('F j, Y');
                                     $templateData['excessLiability'] = $excessLiability;
                                     $templateData['productType'] = 'excess';
                                     $templateData['clientInformation'] = $clientInformation;
@@ -1075,11 +1156,22 @@ class QuoteController extends Controller
                                     $model = $productData['tools_equipment_model']['value'];
                                     $vin = $productData['tools_equipment_vin_or_serial_no']['value'];
                                     $valuation = $productData['tools_equipment_valuation']['value'];
-                                    // $no_of_losses = isset($productData['tools_no_losses_5years']['value']) ? $productData['tools_no_losses_5years']['value'] : null;
-                                    // $explain_losses = isset($productData['tools_explain_losses']['value']) ? $productData['tools_explain_losses']['value'] : null;
-                                    $tools_no_of_losses = $productData['tools_no_of_losses']['value'];
-                                    $tools_amount_of_claim = isset($productData['tools_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['tools_amt_of_claims']['value'])) : null;
-                                    $tools_date_of_loss = isset($productData['tools_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['tools_date_of_loss']['value'])->toDateString() : null;
+                                    $tools_no_of_losses = $productData['tools_equipment_no_of_losses']['value'];
+
+                                    $tools_amount_of_claim = null;
+                                    if (isset($productData['tools_amt_of_claims']['value']) && !empty($productData['tools_amt_of_claims']['value'])) {
+                                        try {
+                                            $tools_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['tools_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $tools_amount_of_claim = null;
+                                        }
+                                    }
+                                    $tools_date_of_loss = null;
+                                    if (isset($productData['tools_date_of_loss']['value']) && !empty($productData['tools_date_of_loss']['value'])) {
+                                        $tools_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['tools_date_of_loss']['value']);
+                                    } else {
+                                         $tools_date_of_loss = null;
+                                    }
 
                                     $toolsEquipmentsLiability = new ToolsEquipmentInformation();
                                     $toolsEquipmentsLiability->client_info_id = $client_info_id;
@@ -1092,8 +1184,6 @@ class QuoteController extends Controller
                                     $toolsEquipmentsLiability->model = $model;
                                     $toolsEquipmentsLiability->vin = $vin;
                                     $toolsEquipmentsLiability->valuation = $valuation;
-                                    // $toolsEquipmentsLiability->no_of_losses = $no_of_losses;
-                                    // $toolsEquipmentsLiability->explain_losses = $explain_losses;
                                     $toolsEquipmentsLiability->tools_no_of_losses = $tools_no_of_losses;
                                     $toolsEquipmentsLiability->tools_amount_of_claim = $tools_amount_of_claim;
                                     $toolsEquipmentsLiability->tools_date_of_loss = $tools_date_of_loss;
@@ -1119,7 +1209,8 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['toolsDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['tools_date_of_loss']['value'])->format('F j, Y');
+                                    // $templateData['toolsDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['tools_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['toolsDateOfLoss'] = $tools_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $tools_date_of_loss)->format('F j, Y');
                                     $templateData['toolsEquipmentsLiability'] = $toolsEquipmentsLiability;
                                     $templateData['productType'] = 'tools';
                                     $templateData['clientInformation'] = $clientInformation;
@@ -1154,8 +1245,24 @@ class QuoteController extends Controller
                                     $does_scheduled_property_address_builders_risk_coverage = $productData['br_scheduled_property_address_builders_risk_coverage']['value'];
                                     $carrier_name = isset($productData['br_sched_property_carrier_name']['value']) ? $productData['br_sched_property_carrier_name']['value'] : null;
                                     $br_no_of_losses = $productData['br_no_of_losses']['value'];
-                                    $br_amount_of_claim = isset($productData['br_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['br_amt_of_claims']['value'])) : null;
-                                    $br_date_of_loss = isset($productData['br_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['br_date_of_loss']['value'])->toDateString() : null;
+
+                                    // $br_amount_of_claim = isset($productData['br_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['br_amt_of_claims']['value'])) : null;
+                                    // $br_date_of_loss = isset($productData['br_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['br_date_of_loss']['value'])->toDateString() : null;
+
+                                    $br_amount_of_claim = null;
+                                    if (isset($productData['br_amt_of_claim']['value']) && !empty($productData['br_amt_of_claim']['value'])) {
+                                        try {
+                                            $br_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['br_amt_of_claim']['value']));
+                                        } catch (\Exception $e) {
+                                            $br_amount_of_claim = null;
+                                        }
+                                    }
+                                    $br_date_of_loss = null;
+                                    if (isset($productData['br_date_of_loss']['value']) && !empty($productData['br_date_of_loss']['value'])) {
+                                        $br_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['br_date_of_loss']['value']);
+                                    } else {
+                                         $br_date_of_loss = null;
+                                    }
 
                                     $buildersRiskLiability = new BuildersRiskInformation();
                                     $buildersRiskLiability->client_info_id = $client_info_id;
@@ -1283,7 +1390,10 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['brDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['br_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['brStructureBuilt'] = Carbon::createFromFormat('m/d/Y', $productData['br_when_structure_built']['value'])->format('F j, Y');
+                                    $templateData['brWhenWillProjectStart'] = $whenProjectStart === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['br_when_will_project_start']['value'])->format('F j, Y');
+                                    $templateData['brWhenHasProjectStarted'] = $whenHasProjectStarted === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['br_when_project_started']['value'])->format('F j, Y');
+                                    $templateData['brDateOfLoss'] = $br_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $br_date_of_loss)->format('F j, Y');
                                     $templateData['brEffDateFormatted'] =  Carbon::createFromFormat('m/d/Y', $productData['br_sched_property_effective_date']['value'])->format('F j, Y');
                                     $templateData['brExpDateFormatted'] =  Carbon::createFromFormat('m/d/Y', $productData['br_sched_property_expiration_date']['value'])->format('F j, Y');
                                     $templateData['buildersRiskLiability'] = $buildersRiskLiability;
@@ -1320,8 +1430,23 @@ class QuoteController extends Controller
                                     $last_update_to_electrical_year = $productData['bop_last_update_electrical_year']['value'];
                                     $last_update_to_plumbing_year = $productData['bop_last_update_plumbing_year']['value'];
                                     $bop_no_of_losses = $productData['bop_no_of_losses']['value'];
-                                    $bop_amount_of_claim = isset($productData['bop_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_amt_of_claims']['value'])) : null;
-                                    $bop_date_of_loss = isset($productData['bop_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['bop_date_of_loss']['value'])->toDateString() : null;
+                                    // $bop_amount_of_claim = isset($productData['bop_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_amt_of_claims']['value'])) : null;
+                                    // $bop_date_of_loss = isset($productData['bop_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['bop_date_of_loss']['value'])->toDateString() : null;
+
+                                    $bop_amount_of_claim = null;
+                                    if (isset($productData['bop_amt_of_claims']['value']) && !empty($productData['bop_amt_of_claims']['value'])) {
+                                        try {
+                                            $bop_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $bop_amount_of_claim = null;
+                                        }
+                                    }
+                                    $bop_date_of_loss = null;
+                                    if (isset($productData['bop_date_of_loss']['value']) && !empty($productData['bop_date_of_loss']['value'])) {
+                                        $bop_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['bop_date_of_loss']['value']);
+                                    } else {
+                                         $bop_date_of_loss = null;
+                                    }
 
                                     $businessOwnersPolicy = new BOPInformation();
                                     $businessOwnersPolicy->client_info_id = $client_info_id;
@@ -1371,7 +1496,10 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['bopDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['bop_date_of_loss']['value'])->format('F j, Y');
+                                    // $templateData['bopDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['bop_date_of_loss']['value'])->format('F j, Y');
+
+                                    $templateData['bopDateOfLoss'] = $bop_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $bop_date_of_loss)->format('F j, Y');
+
                                     $templateData['businessOwnersPolicy'] = $businessOwnersPolicy;
                                     $templateData['productType'] = 'bop';
                                     $templateData['clientInformation'] = $clientInformation;
@@ -1405,8 +1533,23 @@ class QuoteController extends Controller
                                     $last_update_to_electrical_year = $productData['property_last_update_plumbing_year']['value'];
                                     $last_update_to_plumbing_year = $productData['property_last_update_electrical_year']['value'];
                                     $property_no_of_losses = $productData['property_no_of_losses']['value'];
-                                    $property_amount_of_claim = isset($productData['property_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['property_amt_of_claims']['value'])) : null;
-                                    $property_date_of_loss = isset($productData['property_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['property_date_of_loss']['value'])->toDateString() : null;
+                                    // $property_amount_of_claim = isset($productData['property_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['property_amt_of_claims']['value'])) : null;
+                                    // $property_date_of_loss = isset($productData['property_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['property_date_of_loss']['value'])->toDateString() : null;
+
+                                    $property_amount_of_claim = null;
+                                    if (isset($productData['property_amt_of_claims']['value']) && !empty($productData['property_amt_of_claims']['value'])) {
+                                        try {
+                                            $property_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['property_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $property_amount_of_claim = null;
+                                        }
+                                    }
+                                    $property_date_of_loss = null;
+                                    if (isset($productData['property_date_of_loss']['value']) && !empty($productData['property_date_of_loss']['value'])) {
+                                        $property_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['property_date_of_loss']['value']);
+                                    } else {
+                                         $property_date_of_loss = null;
+                                    }
 
                                     $commercialProperty = new CommercialPropertyInformation();
                                     $commercialProperty->client_info_id = $client_info_id;
@@ -1437,7 +1580,7 @@ class QuoteController extends Controller
 
                                     $templateData['propertyNoOfLosses'] = "";
 
-                                    switch($commercialProperty->property_amount_of_claim) {
+                                    switch($commercialProperty->property_no_of_losses) {
                                         case '-1':
                                             $templateData['propertyNoOfLosses'] = "Have Losses";
                                             break;
@@ -1455,7 +1598,10 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['propertyDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['property_date_of_loss']['value'])->format('F j, Y');
+                                    // $templateData['propertyDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['property_date_of_loss']['value'])->format('F j, Y');
+
+                                    $templateData['propertyDateOfLoss'] = $property_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $property_date_of_loss)->format('F j, Y');
+
                                     $templateData['commercialProperty'] = $commercialProperty;
                                     $templateData['productType'] = 'comm_prop';
                                     $templateData['clientInformation'] = $clientInformation;
@@ -1497,8 +1643,24 @@ class QuoteController extends Controller
                                     $hr_q4 = $productData['eo_hr_q4']['value'];
                                     $hr_sub_q4 = isset($productData['eo_hr_sub_q4']['value']) ? $productData['eo_hr_sub_q4']['value'] : null;
                                     $eo_no_of_losses = $productData['eo_no_of_losses']['value'];
-                                    $eo_amount_of_claim = isset($productData['eo_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['eo_amt_of_claims']['value'])) : null;
-                                    $eo_date_of_loss = isset($productData['eo_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value'])->toDateString() : null;
+
+                                    // $eo_amount_of_claim = isset($productData['eo_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['eo_amt_of_claims']['value'])) : null;
+                                    // $eo_date_of_loss = isset($productData['eo_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value'])->toDateString() : null;
+
+                                    $eo_amount_of_claim = null;
+                                    if (isset($productData['eo_amt_of_claims']['value']) && !empty($productData['eo_amt_of_claims']['value'])) {
+                                        try {
+                                            $eo_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['eo_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $eo_amount_of_claim = null;
+                                        }
+                                    }
+                                    $eo_date_of_loss = null;
+                                    if (isset($productData['eo_date_of_loss']['value']) && !empty($productData['eo_date_of_loss']['value'])) {
+                                        $eo_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value']);
+                                    } else {
+                                         $eo_date_of_loss = null;
+                                    }
 
                                     $errorsEmission = new ErrorsAndEmissionInformation();
                                     $errorsEmission->client_info_id = $client_info_id;
@@ -1537,7 +1699,7 @@ class QuoteController extends Controller
 
                                     $templateData['eoNoOfLosses'] = "";
 
-                                    switch($errorsEmission->eo_amount_of_claim) {
+                                    switch($errorsEmission->eo_no_of_losses) {
                                         case '-1':
                                             $templateData['eoNoOfLosses'] = "Have Losses";
                                             break;
@@ -1555,9 +1717,10 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['eoDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value'])->format('F j, Y');
+                                    // $templateData['eoDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['eoDateOfLoss'] = $eo_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['errorsEmission'] = $errorsEmission;
-                                    $templateData['productType'] = 'comm_prop';
+                                    $templateData['productType'] = 'eo';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for EO: ' . $errorsEmission->id);
@@ -1643,8 +1806,23 @@ class QuoteController extends Controller
                                     $hr_policies_and_procedure_q5 = $productData['epli_hr_q5']['value'];
                                     $hr_policies_and_procedure_q6 = $productData['epli_hr_q6']['value'];
                                     $epli_no_of_losses = $productData['epli_no_of_losses']['value'];
-                                    $epli_amount_of_claim = isset($productData['epli_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_amt_of_claims']['value'])) : null;
-                                    $epli_date_of_loss = isset($productData['epli_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value'])->toDateString() : null;
+                                    // $epli_amount_of_claim = isset($productData['epli_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_amt_of_claims']['value'])) : null;
+                                    // $epli_date_of_loss = isset($productData['epli_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value'])->toDateString() : null;
+
+                                    $epli_amount_of_claim = null;
+                                    if (isset($productData['epli_amt_of_claims']['value']) && !empty($productData['epli_amt_of_claims']['value'])) {
+                                        try {
+                                            $epli_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $epli_amount_of_claim = null;
+                                        }
+                                    }
+                                    $epli_date_of_loss = null;
+                                    if (isset($productData['epli_date_of_loss']['value']) && !empty($productData['epli_date_of_loss']['value'])) {
+                                        $epli_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value']);
+                                    } else {
+                                        $epli_date_of_loss = null;
+                                    }
 
                                     $epli = new EPLIInformation();
                                     $epli->client_info_id = $client_info_id;
@@ -1687,7 +1865,7 @@ class QuoteController extends Controller
 
                                     $templateData['epliNoOfLosses'] = "";
 
-                                    switch($epli->epli_amount_of_claim) {
+                                    switch($epli->epli_no_of_losses) {
                                         case '-1':
                                             $templateData['epliNoOfLosses'] = "Have Losses";
                                             break;
@@ -1705,7 +1883,8 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['epliDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value'])->format('F j, Y');
+                                    // $templateData['epliDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['epliDateOfLoss'] = $epli_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $epli_date_of_loss)->format('F j, Y');
                                     $templateData['epliEffDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['epli_effective_date']['value'])->format('F j, Y');
                                     $templateData['epli'] = $epli;
                                     $templateData['productType'] = 'epli';
@@ -1731,8 +1910,23 @@ class QuoteController extends Controller
                                     $cyber_q7 = $productData['cyber_q7']['value'];
                                     $cyber_q8 = $productData['cyber_q8']['value'];
                                     $cyber_no_of_losses = $productData['cyber_no_of_losses']['value'];
-                                    $cyber_amount_of_claim = isset($productData['cyber_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['cyber_amt_of_claims']['value'])) : null;
-                                    $cyber_date_of_loss = isset($productData['cyber_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['cyber_date_of_loss']['value'])->toDateString() : null;
+                                    // $cyber_amount_of_claim = isset($productData['cyber_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['cyber_amt_of_claims']['value'])) : null;
+                                    // $cyber_date_of_loss = isset($productData['cyber_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['cyber_date_of_loss']['value'])->toDateString() : null;
+
+                                    $cyber_amount_of_claim = null;
+                                    if (isset($productData['cyber_amt_of_claims']['value']) && !empty($productData['cyber_amt_of_claims']['value'])) {
+                                        try {
+                                            $cyber_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['cyber_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $cyber_amount_of_claim = null;
+                                        }
+                                    }
+                                    $cyber_date_of_loss = null;
+                                    if (isset($productData['cyber_date_of_loss']['value']) && !empty($productData['cyber_date_of_loss']['value'])) {
+                                        $cyber_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['cyber_date_of_loss']['value']);
+                                    } else {
+                                         $cyber_date_of_loss = null;
+                                    }
 
                                     $cyberLiability = new CyberLiabilityInformation();
                                     $cyberLiability->client_info_id = $client_info_id;
@@ -1754,7 +1948,7 @@ class QuoteController extends Controller
 
                                     $templateData['cyberNoOfLosses'] = "";
 
-                                    switch($cyberLiability->cyber_amount_of_claim) {
+                                    switch($cyberLiability->cyber_no_of_losses) {
                                         case '-1':
                                             $templateData['cyberNoOfLosses'] = "Have Losses";
                                             break;
@@ -1772,7 +1966,8 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['cyberDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['cyber_date_of_loss']['value'])->format('F j, Y');
+                                    // $templateData['cyberDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['cyber_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['cyberDateOfLoss'] = $cyber_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $cyber_date_of_loss)->format('F j, Y');
                                     $templateData['cyberLiability'] = $cyberLiability;
                                     $templateData['productType'] = 'cyber';
                                     $templateData['clientInformation'] = $clientInformation;
@@ -1792,7 +1987,7 @@ class QuoteController extends Controller
                                     $location = $productData['instfloat_location']['value'];
                                     $months_in_storage = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_months_in_storage']['value']));
                                     $max_value_of_equipment_storing = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_max_value_of_equipment']['value']));
-                                    $max_value_of_building_storage = $productData['instfloat_max_value_of_bldg_storage']['value'];
+                                    $max_value_of_building_storage = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_max_value_of_bldg_storage']['value']));
                                     $type_of_security_placed_in_building = $productData['instfloat_type_security_placed']['value'];
                                     $unsched_type_of_equipment = $productData['instfloat_unscheduled_type_of_equipment']['value'];
                                     $unsched_max_value_of_equipment_storing = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_unscheduled_max_value_equipment_storing']['value']));
@@ -1801,8 +1996,23 @@ class QuoteController extends Controller
                                     $additional_info_q3 = $productData['instfloat_additional_info_q3']['value'];
                                     $additional_info_q4 = $productData['instfloat_additional_info_q4']['value'];
                                     $instfloat_no_of_losses = $productData['instfloat_no_of_losses']['value'];
-                                    $instfloat_amount_of_claim = isset($productData['instfloat_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_amt_of_claims']['value'])) : null;
-                                    $instfloat_date_of_loss = isset($productData['instfloat_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['instfloat_date_of_loss']['value'])->toDateString() : null;
+                                    // $instfloat_amount_of_claim = isset($productData['instfloat_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_amt_of_claims']['value'])) : null;
+                                    // $instfloat_date_of_loss = isset($productData['instfloat_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['instfloat_date_of_loss']['value'])->toDateString() : null;
+
+                                    $instfloat_amount_of_claim = null;
+                                    if (isset($productData['instfloat_amt_of_claims']['value']) && !empty($productData['instfloat_amt_of_claims']['value'])) {
+                                        try {
+                                            $instfloat_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $instfloat_amount_of_claim = null;
+                                        }
+                                    }
+                                    $instfloat_date_of_loss = null;
+                                    if (isset($productData['instfloat_date_of_loss']['value']) && !empty($productData['instfloat_date_of_loss']['value'])) {
+                                        $gl_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['instfloat_date_of_loss']['value']);
+                                    } else {
+                                         $instfloat_date_of_loss = null;
+                                    }
 
                                     $instFloater = new InstallationFloaterInformation();
                                     $instFloater->client_info_id = $client_info_id;
@@ -1860,7 +2070,7 @@ class QuoteController extends Controller
                                                     'sched_equip_model' => $sched_equip_model,
                                                     'sched_equip_new_or_used' => $sched_equip_new_or_used,
                                                     'sched_equip_model_year' => $sched_equip_model_year,
-                                                    'sched_equip_date_purchased' => $sched_equip_date_purchased,
+                                                    'sched_equip_date_purchased' => Carbon::createFromFormat('m/d/Y', $productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])->format('F j, Y'),
                                                 ];
 
                                                 Log::info('Successfully saved instFloaterSchedEquipment record. Data: ' . json_encode($instFloaterSchedEquipment));
@@ -1874,7 +2084,7 @@ class QuoteController extends Controller
 
                                     $templateData['instFloatNoOfLosses'] = "";
 
-                                    switch($instFloaterSchedEquipment->instfloat_amount_of_claim) {
+                                    switch($instFloaterSchedEquipment->instfloat_no_of_losses) {
                                         case '-1':
                                             $templateData['instFloatNoOfLosses'] = "Have Losses";
                                             break;
@@ -1892,7 +2102,8 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    $templateData['instFloatDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['instfloat_date_of_loss']['value'])->format('F j, Y');
+                                    // $templateData['instFloatDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['instfloat_date_of_loss']['value'])->format('F j, Y');
+                                    $templateData['instFloatDateOfLoss'] = $instfloat_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['instfloat_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['instFloater'] = $instFloater;
                                     $templateData['productType'] = 'instfloat';
                                     $templateData['clientInformation'] = $clientInformation;

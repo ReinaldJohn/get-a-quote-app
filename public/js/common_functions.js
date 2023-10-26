@@ -12,7 +12,9 @@
     });
 
     let observer = new MutationObserver(() => {
-        // $("#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea")
+        // $(
+        //     "#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea"
+        // )
         //     .not("#fax_number, #personal_website, #contractor_license")
         //     .prop("required", true);
     });
@@ -29,21 +31,7 @@
 
     $("#termsCheckbox").on("change", function () {
         isTermsChecked = $(this).is(":checked");
-        if (isTermsChecked) {
-            // Enable the submit button
-            $("#process").css("cursor", "pointer");
-        } else {
-            // Disable the submit button
-            $("#process").css("cursor", "no-drop");
-        }
-    });
-
-    $("#process").click(function (e) {
-        if (!isTermsChecked) {
-            e.preventDefault(); // This prevents the button click from doing anything
-            alert("Please accept the terms and conditions"); // Optional: Show a message
-            return false;
-        }
+        $("#process").css("cursor", isTermsChecked ? "pointer" : "no-drop");
     });
 
     function updateProfessionContents() {
@@ -420,6 +408,30 @@
                     } else {
                         var gl_using_subcon_if_set = "";
                     }
+
+                    var gl_no_of_losses = $(
+                        "#gl_no_of_losses option:selected"
+                    ).text();
+
+                    var gl_amt_of_claims = "";
+                    var gl_date_of_loss = "";
+
+                    if (gl_no_of_losses === "Have Losses") {
+                        gl_amt_of_claims = $("#gl_amt_of_claims").val();
+                        gl_date_of_loss = $("#gl_date_of_loss").val();
+                    } else {
+                        gl_amt_of_claims = "";
+                        gl_date_of_loss = "";
+                    }
+
+                    generalLiabilityInformation[
+                        "General Liability - # of Losses"
+                    ] = gl_no_of_losses;
+                    generalLiabilityInformation["Amount of Claim"] =
+                        gl_amt_of_claims;
+                    generalLiabilityInformation["Date of Loss"] =
+                        gl_date_of_loss;
+
                     generalLiabilityInformation["Annual Gross Receipts"] =
                         gl_annual_gross;
 
@@ -731,6 +743,20 @@
                     var wc_amt_of_claims = $("#wc_amt_of_claims").val();
                     var wc_date_of_loss = $("#wc_date_of_loss").val();
 
+                    var wc_no_of_losses = $(
+                        "#wc_no_of_losses option:selected"
+                    ).text();
+                    var wc_amt_of_claims = "";
+                    var wc_date_of_loss = "";
+
+                    if (wc_no_of_losses === "Have Losses") {
+                        wc_amt_of_claims = $("#wc_amt_of_claims").val();
+                        wc_date_of_loss = $("#wc_date_of_loss").val();
+                    } else {
+                        wc_amt_of_claims = "";
+                        wc_date_of_loss = "";
+                    }
+
                     var workersCompensationInformation2 = {
                         "Gross Receipt": wc_gross_receipt,
                         "Do you hire subcontractor": wc_does_hire_subcon,
@@ -738,9 +764,8 @@
                             wc_subcon_cost_year_if_set,
                         "No. of Employees": wc_num_of_empl,
                         "Worker's Compensation - # of Losses": wc_no_of_losses,
-                        "Worker's Compensation - Amount of Claim":
-                            wc_amt_of_claims,
-                        "Worker's Compensation - Date of Loss": wc_date_of_loss,
+                        "Amount of Claim": wc_amt_of_claims,
+                        "Date of Loss": wc_date_of_loss,
                     };
 
                     var workersCompensationInformation3 = {
@@ -762,8 +787,70 @@
 
                     updateOwnersInfoContents();
 
-                    // AUTO Step 1 & 2
+                    // AUTO Step 1 & 3
                     updateVehicleContents();
+                    var auto_are_you_the_driver = $(
+                        "#auto_are_you_the_driver option:selected"
+                    ).text();
+                    var auto_driver_full_name = $(
+                        "#auto_driver_full_name"
+                    ).val();
+                    var auto_driver_date_of_birth = $(
+                        "#auto_driver_date_of_birth"
+                    ).val();
+                    var auto_driver_marital_status = $(
+                        "#auto_driver_marital_status option:selected"
+                    ).text();
+                    var auto_driver_spouse_name = "";
+                    var auto_driver_spouse_dob = "";
+                    var auto_driver_license_no = $(
+                        "#auto_driver_license_no"
+                    ).val();
+                    var auto_driver_years_of_driving_exp = $(
+                        "#auto_driver_years_of_driving_exp"
+                    ).val();
+                    var auto_no_of_losses = $(
+                        "#auto_no_of_losses option:selected"
+                    ).text();
+                    var auto_amt_of_claims = "";
+                    var auto_date_of_loss = "";
+
+                    if (auto_driver_marital_status === "Married") {
+                        auto_driver_spouse_name = $(
+                            "#auto_driver_spouse_name"
+                        ).val();
+                        auto_driver_spouse_dob = $(
+                            "#auto_driver_spouse_dob"
+                        ).val();
+                    } else {
+                        auto_driver_spouse_name = "";
+                        auto_driver_spouse_dob = "";
+                    }
+
+                    if (auto_no_of_losses === "Have Losses") {
+                        auto_amt_of_claims = $("#auto_amt_of_claims").val();
+                        auto_date_of_loss = $("#auto_date_of_loss").val();
+                    } else {
+                        auto_amt_of_claims = "";
+                        auto_date_of_loss = "";
+                    }
+
+                    var commercialAutoInformation = {
+                        "Are you the driver of the vehicle?":
+                            auto_are_you_the_driver,
+                        "Driver Full Name": auto_driver_full_name,
+                        "Date of Birth": auto_driver_date_of_birth,
+                        "Marital Status": auto_driver_marital_status,
+                        "Spouse Name": auto_driver_spouse_name,
+                        "Spouse Date of Birth": auto_driver_spouse_dob,
+                        "Driver's License No.": auto_driver_license_no,
+                        "Years of Driving Experience":
+                            auto_driver_years_of_driving_exp,
+                        "Commercial Auto - # of Losses": auto_no_of_losses,
+                        "Amount of Claim": auto_amt_of_claims,
+                        "Date of Loss": auto_date_of_loss,
+                    };
+
                     updateDriversContents();
 
                     // BOND 1 & 2
@@ -819,6 +906,20 @@
                     ).val();
                     var bond_effective_date = $("#bond_effective_date").val();
 
+                    var bond_no_of_losses = $(
+                        "#bond_no_of_losses option:selected"
+                    ).text();
+                    var bond_amt_of_claims = "";
+                    var bond_date_of_loss = "";
+
+                    if (bond_no_of_losses === "Have Losses") {
+                        bond_amt_of_claims = $("#bond_amt_of_claims").val();
+                        bond_date_of_loss = $("#bond_date_of_loss").val();
+                    } else {
+                        bond_amt_of_claims = "";
+                        bond_date_of_loss = "";
+                    }
+
                     var contractorLicenseBondInformation = {
                         "Owner's Name": bond_owners_name,
                         "Social Security Number (SSN)": bond_owners_ssn,
@@ -836,6 +937,10 @@
                         "License Number or Application Number":
                             bond_license_or_application_no,
                         "Effective Date": bond_effective_date,
+                        "Contractor License Bond - # of Losses":
+                            bond_no_of_losses,
+                        "Amount of Claim": bond_amt_of_claims,
+                        "Date of Loss": bond_date_of_loss,
                     };
 
                     // Excess Step 1 & 2
@@ -843,19 +948,18 @@
                         "#excess_limits option:selected"
                     ).text();
                     var excess_gl_eff_date = $("#excess_gl_eff_date").val();
-                    var excess_no_losses_5years = $(
-                        "#excess_no_losses_5years option:selected"
+                    var excess_no_of_losses = $(
+                        "#excess_no_of_losses option:selected"
                     ).text();
-                    var excess_explain_losses = "";
-
-                    if (excess_no_losses_5years >= 0) {
-                        excess_explain_losses = $(
-                            "#excess_explain_losses"
-                        ).val();
+                    var excess_amt_of_claims = "";
+                    var excess_date_of_loss = "";
+                    if (excess_no_of_losses === "Have Losses") {
+                        excess_amt_of_claims = $("#excess_amt_of_claims").val();
+                        excess_date_of_loss = $("#excess_date_of_loss").val();
                     } else {
-                        excess_explain_losses = "";
+                        excess_amt_of_claims = "";
+                        excess_date_of_loss = "";
                     }
-
                     var excess_insurance_carrier = $(
                         "#excess_insurance_carrier"
                     ).val();
@@ -875,15 +979,15 @@
                     var excessLiabilityInformation = {
                         "Excess Limits": excess_limits,
                         "GL Effective Date": excess_gl_eff_date,
-                        // "No. of Losses for the Past 5 Years":
-                        //     excess_no_losses_5years,
-                        "Explain Losses": excess_explain_losses,
                         "Insurance Carrier": excess_insurance_carrier,
                         "Policy Number / Quote Number":
                             excess_policy_or_quote_no,
                         "Policy Premium": excess_policy_premium,
                         "Effective Date": excess_effective_date,
                         "Expiration Date": excess_expiration_date,
+                        "Excess Liability - # of Losses": excess_no_of_losses,
+                        "Amount of Claim": excess_amt_of_claims,
+                        "Date of Loss": excess_date_of_loss,
                     };
 
                     // Tools Step 1 & 2
@@ -906,10 +1010,29 @@
                     var tools_equipment_valuation = $(
                         "#tools_equipment_valuation"
                     ).val();
-                    var tools_no_losses_5years = $(
-                        "#tools_no_losses_5years option:selected"
+
+                    var tools_equipment_no_of_losses = $(
+                        "#tools_equipment_no_of_losses option:selected"
                     ).text();
-                    var tools_explain_losses = $("#tools_explain_losses").val();
+                    var tools_equipment_amt_of_claims = "";
+                    var tools_equipment_date_of_loss = "";
+
+                    if (tools_equipment_no_of_losses === "Have Losses") {
+                        tools_equipment_amt_of_claims = $(
+                            "#tools_equipment_amt_of_claims"
+                        ).val();
+                        tools_equipment_date_of_loss = $(
+                            "#tools_equipment_date_of_loss"
+                        ).val();
+                    } else {
+                        tools_equipment_amt_of_claims = "";
+                        tools_equipment_date_of_loss = "";
+                    }
+
+                    // var tools_no_losses_5years = $(
+                    //     "#tools_no_losses_5years option:selected"
+                    // ).text();
+                    // var tools_explain_losses = $("#tools_explain_losses").val();
 
                     var toolsEquipmentInformation = {
                         "Miscellaneous Tools Amount ($1,500 in value and under)":
@@ -924,10 +1047,13 @@
                         Model: tools_equipment_model,
                         "VIN or Serial No.": tools_equipment_vin_or_serial_no,
                         Valuation: tools_equipment_valuation,
+                        "Tools - # of Losses": tools_equipment_no_of_losses,
+                        "Amount of Claim": tools_equipment_amt_of_claims,
+                        "Date of Loss": tools_equipment_date_of_loss,
                         // "No. of Losses for the Past 5 Years":
                         //     tools_no_losses_5years,
-                        "If there's a loss, please explain":
-                            tools_explain_losses,
+                        // "If there's a loss, please explain":
+                        //     tools_explain_losses,
                     };
 
                     // Builders Risk Step 1 & 2
@@ -941,6 +1067,20 @@
                     var br_period_duration_project = $(
                         "#br_period_duration_project option:selected"
                     ).text();
+
+                    var br_no_of_losses = $(
+                        "#br_no_of_losses option:selected"
+                    ).text();
+                    var br_amt_of_claims = "";
+                    var br_date_of_loss = "";
+
+                    if (br_no_of_losses === "Have Losses") {
+                        br_amt_of_claims = $("#br_amt_of_claims").val();
+                        br_date_of_loss = $("#br_date_of_loss").val();
+                    } else {
+                        br_amt_of_claims = "";
+                        br_date_of_loss = "";
+                    }
 
                     var br_construction_type = $(
                         "#br_construction_type option:selected"
@@ -1022,6 +1162,9 @@
                     ).val();
 
                     var buildersRiskInformation = {
+                        "BR - # of Losses": br_no_of_losses,
+                        "Amount of Claim": br_amt_of_claims,
+                        "Date of Loss": br_date_of_loss,
                         "Property Address": br_property_address,
                         "Value of Existing Structure":
                             br_value_of_existing_structure,
@@ -1085,6 +1228,20 @@
                         "#bop_business_property_limit"
                     ).val();
 
+                    var bop_no_of_losses = $(
+                        "#bop_no_of_losses option:selected"
+                    ).text();
+                    var bop_amt_of_claims = "";
+                    var bop_date_of_loss = "";
+
+                    if (bop_no_of_losses === "Have Losses") {
+                        bop_amt_of_claims = $("#bop_amt_of_claims").val();
+                        bop_date_of_loss = $("#bop_date_of_loss").val();
+                    } else {
+                        bop_amt_of_claims = "";
+                        bop_date_of_loss = "";
+                    }
+
                     // BOP Step 2
                     var bop_bldg_construction_type = $(
                         "#bop_bldg_construction_type option:selected"
@@ -1138,6 +1295,9 @@
                         "Value of Cost of the Building?": bop_val_cost_bldg,
                         "What is the Business Property Limit?":
                             bop_business_property_limit,
+                        "BOP - # of Losses": bop_no_of_losses,
+                        "Amount of Claim": bop_amt_of_claims,
+                        "Date of Loss": bop_date_of_loss,
                         "Building Construction Type":
                             bop_bldg_construction_type,
                         "Year Built": bop_year_built,
@@ -1181,6 +1341,24 @@
                     var property_business_property_limit = $(
                         "#property_business_property_limit"
                     ).val();
+
+                    var property_no_of_losses = $(
+                        "#property_no_of_losses option:selected"
+                    ).text();
+                    var property_amt_of_claims = "";
+                    var property_date_of_loss = "";
+
+                    if (property_no_of_losses === "Have Losses") {
+                        property_amt_of_claims = $(
+                            "#property_amt_of_claims"
+                        ).val();
+                        property_date_of_loss = $(
+                            "#property_date_of_loss"
+                        ).val();
+                    } else {
+                        property_amt_of_claims = "";
+                        property_date_of_loss = "";
+                    }
 
                     // Commercial Property Step 2
                     var property_does_have_more_than_one_location = $(
@@ -1230,6 +1408,10 @@
                     ).val();
 
                     var commercialPropertyInformation = {
+                        "Commercial Property - # of Losses":
+                            property_no_of_losses,
+                        "Amount of Claim": property_amt_of_claims,
+                        "Date of Loss": property_date_of_loss,
                         "Business Location is Located in":
                             property_business_located,
                         "Property Address": property_property_address,
@@ -1272,31 +1454,95 @@
                     var eo_requested_limits = $(
                         "#eo_requested_limits option:selected"
                     ).text();
-                    var eo_reqlimit_if_others = $(
-                        "#eo_reqlimit_if_others"
-                    ).val();
+                    var eo_reqlimit_if_others = "";
+                    if (eo_requested_limits === "Others") {
+                        eo_reqlimit_if_others = $(
+                            "#eo_reqlimit_if_others"
+                        ).val();
+                    } else {
+                        eo_reqlimit_if_others = "";
+                    }
                     var eo_request_deductible = $(
                         "#eo_request_deductible option:selected"
                     ).text();
-                    var eo_reqdeductible_if_others = $(
-                        "#eo_reqdeductible_if_others"
-                    ).val();
+                    var eo_reqdeductible_if_others = "";
+                    if (eo_request_deductible === "Others") {
+                        eo_reqdeductible_if_others = $(
+                            "#eo_reqdeductible_if_others"
+                        ).val();
+                    } else {
+                        eo_reqdeductible_if_others = "";
+                    }
+
+                    var eo_no_of_losses = $(
+                        "#eo_no_of_losses option:selected"
+                    ).text();
+                    var eo_amt_of_claims = "";
+                    var eo_date_of_loss = "";
+                    if (eo_no_of_losses === "Have Losses") {
+                        eo_amt_of_claims = $("#eo_amt_of_claims").val();
+                        eo_date_of_loss = $("#eo_date_of_loss").val();
+                    } else {
+                        eo_amt_of_claims = "";
+                        eo_date_of_loss = "";
+                    }
                     // EO Step 2
                     var eo_business_entity_q1 = $(
                         "#eo_business_entity_q1 option:selected"
                     ).text();
+                    var eo_business_entity_sub_q1 = "";
+                    if (eo_business_entity_q1 === "Yes") {
+                        eo_business_entity_sub_q1 = $(
+                            "#eo_business_entity_sub_q1"
+                        ).val();
+                    } else {
+                        eo_business_entity_sub_q1 = "";
+                    }
                     var eo_business_entity_q2 = $(
                         "#eo_business_entity_q2 option:selected"
                     ).text();
+                    var eo_business_entity_sub_q2 = "";
+                    if (eo_business_entity_q2 === "Yes") {
+                        eo_business_entity_sub_q2 = $(
+                            "#eo_business_entity_sub_q2"
+                        ).val();
+                    } else {
+                        eo_business_entity_sub_q2 = "";
+                    }
                     var eo_business_entity_q3 = $(
                         "#eo_business_entity_q3 option:selected"
                     ).text();
+                    var eo_business_entity_sub_q3 = "";
+                    if (eo_business_entity_q3 === "Yes") {
+                        eo_business_entity_sub_q3 = $(
+                            "#eo_business_entity_sub_q3"
+                        ).val();
+                    } else {
+                        eo_business_entity_sub_q3 = "";
+                    }
+                    var eo_business_entity_sub_q4 = "";
                     var eo_business_entity_q4 = $(
                         "#eo_business_entity_q4 option:selected"
                     ).text();
+                    var eo_business_entity_sub_q4 = "";
+                    if (eo_business_entity_q4 === "Yes") {
+                        eo_business_entity_sub_q4 = $(
+                            "#eo_business_entity_sub_q4"
+                        ).val();
+                    } else {
+                        eo_business_entity_sub_q4 = "";
+                    }
                     var eo_business_entity_q5 = $(
                         "#eo_business_entity_q5 option:selected"
                     ).text();
+                    var eo_business_entity_sub_q5 = "";
+                    if (eo_business_entity_q5 === "Yes") {
+                        eo_business_entity_sub_q5 = $(
+                            "#eo_business_entity_sub_q5"
+                        ).val();
+                    } else {
+                        eo_business_entity_sub_q5 = "";
+                    }
                     // EO Step 3
                     var eo_number_employee = $("#eo_number_employee").val();
                     var eo_full_time = $("#eo_full_time").val();
@@ -1313,31 +1559,65 @@
                     ).text();
                     // EO Step 5
                     var eo_hr_q1 = $("#eo_hr_q1 option:selected").text();
-                    var eo_hr_sub_q1 = $("#eo_hr_sub_q1").val();
+                    var eo_hr_sub_q1 = "";
+                    if (eo_hr_q1 === "Yes") {
+                        eo_hr_sub_q1 = $("#eo_hr_sub_q1").val();
+                    } else {
+                        eo_hr_sub_q1 = "";
+                    }
                     var eo_hr_q2 = $("#eo_hr_q2 option:selected").text();
-                    var eo_hr_sub_q2 = $("#eo_hr_sub_q2").val();
+                    var eo_hr_sub_q2 = "";
+                    if (eo_hr_q2 === "Yes") {
+                        eo_hr_sub_q2 = $("#eo_hr_sub_q2").val();
+                    } else {
+                        eo_hr_sub_q2 = "";
+                    }
                     var eo_hr_q3 = $("#eo_hr_q3 option:selected").text();
-                    var eo_hr_sub_q3 = $("#eo_hr_sub_q3").val();
+                    var eo_hr_sub_q3 = "";
+                    if (eo_hr_sub_q3 === "Yes") {
+                        eo_hr_sub_q3 = $("#eo_hr_sub_q3").val();
+                    } else {
+                        eo_hr_sub_q3;
+                    }
                     var eo_hr_q4 = $("#eo_hr_q4 option:selected").text();
-                    var eo_hr_sub_q4 = $("#eo_hr_sub_q4").val();
+                    var eo_hr_sub_q4 = "";
+                    if (eo_hr_q4 === "Yes") {
+                        eo_hr_sub_q4 = $("#eo_hr_sub_q4").val();
+                    } else {
+                        eo_hr_sub_q4 = "";
+                    }
 
                     var errorsEmissionInformation = {
                         "Requested Limits": eo_requested_limits,
-                        "If Others, Please indicate": eo_reqlimit_if_others,
+                        "(Requested Limits) Explanation/Indication":
+                            eo_reqlimit_if_others,
                         "Requested Deductible (Per Claim)":
                             eo_request_deductible,
-                        "If Others, Please indicate":
+                        "(Requested Deductible) Explanation/Indication":
                             eo_reqdeductible_if_others,
+                        "EO - # of Losses": eo_no_of_losses,
+                        "Amount of Claim": eo_amt_of_claims,
+                        "Date of Loss": eo_date_of_loss,
                         "Has the name or ownership of the entity changed within the last 5 years":
                             eo_business_entity_q1,
+                        "(Has the name or ownership of the entity changed within the last 5 years?) Explanation/Indication":
+                            eo_business_entity_sub_q1,
                         "Has any other business been purchased merged or consolidated with the entity within the last 5 years":
                             eo_business_entity_q2,
+                        "(Has any other business been purchased merged or consolidated with the entity within the last 5 years?) Explanation/Indication":
+                            eo_business_entity_sub_q2,
                         "Does any other entity own or control your business":
                             eo_business_entity_q3,
+                        "(Does any other entity own or control your business) Explanation/Indication":
+                            eo_business_entity_sub_q3,
                         "Has your company name been changed during the past 5 years":
                             eo_business_entity_q4,
+                        "(Has your company name been changed during the past 5 years?) Explanation/Indication":
+                            eo_business_entity_sub_q4,
                         "Has any other business purchased, merged or consolidated with you during the past 5 years":
                             eo_business_entity_q5,
+                        "(Has any other business purchased, merged or consolidated with you during the past 5 years?) Explanation/Indication":
+                            eo_business_entity_sub_q5,
                         "Number of Employees": eo_number_employee,
                         "Full Time": eo_full_time,
                         "Full Time Salary Range": eo_ftime_salary_range,
@@ -1347,16 +1627,20 @@
                             eo_emp_practice_q1,
                         "Does the Applicant have written employment agreements with all officers":
                             eo_hr_q1,
-                        "If Yes, Please explain": eo_hr_sub_q1,
+                        "(Does the Applicant have written employment agreements with all officers) Explanation/Indication":
+                            eo_hr_sub_q1,
                         "Does the Applicant have its employment policies/procedures reviewed by labor or employment counsel":
                             eo_hr_q2,
-                        "If Yes, Please explain": eo_hr_sub_q2,
+                        "(Does the Applicant have its employment policies/procedures reviewed by labor or employment counsel?) Explanation/Indication":
+                            eo_hr_sub_q2,
                         "Does the Applicant have a Human Resources or Personnel Department":
                             eo_hr_q3,
-                        "If Yes, Please explain": eo_hr_sub_q3,
+                        "(Does the Applicant have a Human Resources or Personnel Department?) Explanation/Indication":
+                            eo_hr_sub_q3,
                         "Does the Applicant have an employee handbook":
                             eo_hr_q4,
-                        "If Yes, Please explain": eo_hr_sub_q4,
+                        "(Does the Applicant have an employee handbook?) Explanation/Indication":
+                            eo_hr_sub_q4,
                     };
 
                     // Pollution Step 1 & 2
@@ -1451,6 +1735,18 @@
                         "#epli_deductible_amount"
                     ).val();
 
+                    var epli_no_of_losses = $(
+                        "#epli_no_of_losses option:selected"
+                    ).text();
+                    var epli_amt_of_claims = "";
+                    var epli_date_of_loss = "";
+                    if (epli_no_of_losses === "Have Losses") {
+                        epli_amt_of_claims = $("#epli_amt_of_claims").val();
+                        epli_date_of_loss = $("#epli_date_of_loss").val();
+                    } else {
+                        epli_amt_of_claims = "";
+                        epli_date_of_loss = "";
+                    }
                     // EPLI Step 2
                     var epli_full_time = $("#epli_full_time").val();
                     var epli_part_time = $("#epli_part_time").val();
@@ -1502,6 +1798,9 @@
                         "Effective Date": epli_effective_date,
                         "Previous Premium Amount": epli_prev_premium_amount,
                         "Deductible Amount": epli_deductible_amount,
+                        "EPLI - # of Losses": epli_no_of_losses,
+                        "Amount of Claim": epli_amt_of_claims,
+                        "Date of Loss": epli_date_of_loss,
                         "EPLI - Full Time": epli_full_time,
                         "Part Time": epli_part_time,
                         "Independent Contractors": epli_independent_contractors,
@@ -1547,6 +1846,18 @@
                         "#cyber_it_contact_email"
                     ).val();
 
+                    var cyber_no_of_losses = $(
+                        "#cyber_no_of_losses option:selected"
+                    ).text();
+                    var cyber_amt_of_claims = "";
+                    var cyber_date_of_loss = "";
+                    if (cyber_no_of_losses === "Have Losses") {
+                        cyber_amt_of_claims = $("#cyber_amt_of_claims").val();
+                        cyber_date_of_loss = $("#cyber_date_of_loss").val();
+                    } else {
+                        cyber_amt_of_claims = "";
+                        cyber_date_of_loss = "";
+                    }
                     // Cyber Step 2
                     var cyber_engaged_business_activities = $(
                         "#cyber_engaged_business_activities option:selected"
@@ -1560,6 +1871,9 @@
                     var cyber_q7 = $("#cyber_q7 option:selected").text();
 
                     var cyberLiabilityInformation = {
+                        "Cyber Liabilty - # of Losses": cyber_no_of_losses,
+                        "Amount of Claim": cyber_amt_of_claims,
+                        "Date of Loss": cyber_date_of_loss,
                         "IT Contact Name": cyber_it_contact_name,
                         "IT Contact Number": cyber_it_contact_number,
                         "IT Contact Email": cyber_it_contact_email,
@@ -1583,8 +1897,8 @@
 
                     // Installation Floater Step 1 - 5
                     var instfloat_territory_of_operation = $(
-                        "#instfloat_territory_of_operation"
-                    ).val();
+                        "#instfloat_territory_of_operation option:selected"
+                    ).text();
                     var instfloat_type_of_operation = $(
                         "#instfloat_type_of_operation"
                     ).val();
@@ -1592,8 +1906,28 @@
                         "#instfloat_scheduled_type_of_equipment"
                     ).val();
                     var instfloat_deductible_amount = $(
-                        "#instfloat_deductible_amount"
-                    ).val();
+                        "#instfloat_deductible_amount option:selected"
+                    ).text();
+                    var instfloat_no_of_losses = $(
+                        "#instfloat_no_of_losses option:selected"
+                    ).text();
+                    var instfloat_amt_of_claims = "";
+                    var instfloat_date_of_loss = "";
+                    if (instfloat_no_of_losses === "Have Losses") {
+                        instfloat_amt_of_claims = $(
+                            "#instfloat_amt_of_claims"
+                        ).val();
+                        instfloat_date_of_loss = $(
+                            "#instfloat_date_of_loss"
+                        ).val();
+                    } else {
+                        instfloat_amt_of_claims = "";
+                        instfloat_date_of_loss = "";
+                    }
+
+                    // var instfloat_date_of_loss = $(
+                    //     "#instfloat_date_of_loss"
+                    // ).val();
                     var instfloat_location = $("#instfloat_location").val();
                     var instfloat_months_in_storage = $(
                         "#instfloat_months_in_storage"
@@ -1614,17 +1948,17 @@
                         "#instfloat_unscheduled_max_value_equipment_storing"
                     ).val();
                     var instfloat_additional_info_q1 = $(
-                        "#instfloat_additional_info_q1"
-                    ).val();
+                        "#instfloat_additional_info_q1 option:selected"
+                    ).text();
                     var instfloat_additional_info_q2 = $(
-                        "#instfloat_additional_info_q2"
-                    ).val();
+                        "#instfloat_additional_info_q2 option:selected"
+                    ).text();
                     var instfloat_additional_info_q3 = $(
-                        "#instfloat_additional_info_q3"
-                    ).val();
+                        "#instfloat_additional_info_q3 option:selected"
+                    ).text();
                     var instfloat_additional_info_q4 = $(
-                        "#instfloat_additional_info_q4"
-                    ).val();
+                        "#instfloat_additional_info_q4 option:selected"
+                    ).text();
 
                     var instFloatInformation = {
                         "Territory of Operation":
@@ -1645,13 +1979,17 @@
                             instfloat_unscheduled_type_of_equipment,
                         "Maximum Value of equipment that you will be storing":
                             instfloat_unscheduled_max_value_equipment_storing,
-                        "Equipment Rented. Loaned to / from Others with or without Operators?":
+                        "Equipment Rented Loaned to / from Others with or without Operators?":
                             instfloat_additional_info_q1,
                         "Are you Operating Equipment not listed here?":
                             instfloat_additional_info_q2,
                         "Property used underground?":
                             instfloat_additional_info_q3,
                         "Any work done afloat?": instfloat_additional_info_q4,
+                        "Installation Floater - # of Losses":
+                            instfloat_no_of_losses,
+                        "Amount of Claim": instfloat_amt_of_claims,
+                        "Date of Loss": instfloat_date_of_loss,
                     };
 
                     // About Your Company Step
@@ -1730,6 +2068,7 @@
                         ) {
                             for (var info in informationObject) {
                                 var value = informationObject[info];
+                                // console.log(value);
 
                                 if (value || typeof value === "object") {
                                     if (
@@ -1775,14 +2114,59 @@
                                             "<p>Automatic Burglar Alarm: <strong>" +
                                             value +
                                             "</strong></p>";
+                                        // EO
                                     } else if (
                                         info ===
                                         "Has the name or ownership of the entity changed within the last 5 years"
                                     ) {
+                                        // console.log(value);
                                         htmlString +=
                                             "<h6><strong>Business Entity:</strong></h6>";
                                         htmlString +=
                                             "<p>Has the name or ownership of the entity changed within the last 5 years?: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Has any other business been purchased merged or consolidated with the entity within the last 5 years"
+                                    ) {
+                                        htmlString +=
+                                            "<p>Has any other business been purchased merged or consolidated with the entity within the last 5 years?: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Does any other entity own or control your business"
+                                    ) {
+                                        htmlString +=
+                                            "<p>Does any other entity own or control your business?: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (info === "Location") {
+                                        htmlString +=
+                                            "<h6><strong>Scheduled Storage:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Location: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Type of Equipment / materials you will be working with"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Unscheduled Equipment for Storage:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Type of Equipment / materials you will be working with: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Equipment Rented Loaned to / from Others with or without Operators?"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Additional Information:</strong></h6>";
+                                        htmlString +=
+                                            "<p>Equipment Rented. Loaned to/from Others with or without Operators?: <strong>" +
                                             value +
                                             "</strong></p>";
                                     } else if (info === "Number of Employees") {
@@ -1819,6 +2203,13 @@
                                             "<p>Full Time: <strong>" +
                                             value +
                                             "</strong></p>";
+                                    } else if (info === "Location") {
+                                        htmlString +=
+                                            "<h6><strong>Equipment Storage</strong></h6>";
+                                        htmlString +=
+                                            "<p>Location: <strong>" +
+                                            value +
+                                            "</strong></p>";
                                     } else if (info === "CA") {
                                         htmlString +=
                                             "<h6><strong>How many employees are located at:</strong></h6>";
@@ -1831,6 +2222,100 @@
                                             "<h6><strong>How many percent of employees are in the salary range of:</strong></h6>";
                                         htmlString +=
                                             "<p>Up to $60,000: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Installation Floater - # of Losses"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Installation Floater - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info === "Cyber Liabilty - # of Losses"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Cyber Liability - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (info === "EPLI - # of Losses") {
+                                        htmlString +=
+                                            "<h6><strong>EPLI - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (info === "EO - # of Losses") {
+                                        htmlString +=
+                                            "<h6><strong>Errors and Omission - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Commercial Property - # of Losses"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Commercial Property - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (info === "BOP - # of Losses") {
+                                        htmlString +=
+                                            "<h6><strong>Business Owner's Policy - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (info === "BR - # of Losses") {
+                                        htmlString +=
+                                            "<h6><strong>Builder's Risk - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (info === "Tools - # of Losses") {
+                                        htmlString +=
+                                            "<h6><strong>Tools and Equipment - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Excess Liability - # of Losses"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Excess Liability - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Contractor License Bond - # of Losses"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Contractor License Bond - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Worker's Compensation - # of Losses"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Worker's Compensation - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
                                             value +
                                             "</strong></p>";
                                     } else if (
@@ -1864,6 +2349,25 @@
                                             "</strong></h6>"; // 'index' will be from the forEach loop
                                         htmlString +=
                                             "<p>Profession: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info === "Commercial Auto - # of Losses"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Commercial Auto - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "General Liability - # of Losses"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>General Liability - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
                                             value +
                                             "</strong></p>";
                                     } else if (info === "Annual Payroll") {
@@ -1933,6 +2437,10 @@
                         ownersInfo,
                     ]);
 
+                    generateAllHTML("#auto_other_details", [
+                        commercialAutoInformation,
+                    ]);
+
                     generateAllHTML("#license_bond_details", [
                         contractorLicenseBondInformation,
                     ]);
@@ -1970,131 +2478,164 @@
 
                     $("#process").on("click", function (e) {
                         e.preventDefault();
-                        var commonData = {};
-                        var productData = {};
+                        if (!isTermsChecked) {
+                            // event.preventDefault(); // This prevents the button click from doing anything
+                            // alert("Please accept the terms and conditions"); // Optional: Show a message
+                            toastr.warning(
+                                "Please accept the terms and conditions."
+                            );
+                            return false;
+                        } else {
+                            var commonData = {};
+                            var productData = {};
 
-                        // Gather data for commonData from #personal_information_step and #about_your_company_step
-                        $(
-                            "#personal_information_step, #about_your_company_step"
-                        )
-                            .find("input, select, textarea")
-                            .each(function () {
-                                commonData[this.name] = $(this).val();
-                            });
+                            // Gather data for commonData from #personal_information_step and #about_your_company_step
+                            $(
+                                "#personal_information_step, #about_your_company_step"
+                            )
+                                .find("input, select, textarea")
+                                .each(function () {
+                                    commonData[this.name] = $(this).val();
+                                });
 
-                        // Serialize products data into an object
-                        $('input[name="question_1[]"]:checked').each(
-                            function () {
-                                var productKey = $(this).val();
-                                // console.log(productKey);
-                                productData[productKey] = {};
+                            // Serialize products data into an object
+                            $('input[name="question_1[]"]:checked').each(
+                                function () {
+                                    var productKey = $(this).val();
+                                    // console.log(productKey);
+                                    productData[productKey] = {};
 
-                                $("div[id^='" + productKey + "_step_']")
-                                    .find("input, select, textarea")
-                                    .each(function () {
-                                        // Dynamic function to traverse up the DOM tree and find the nearest h6
-                                        function findNearestH6(element) {
-                                            let parent = $(element).parent();
-                                            if (parent.length === 0) return ""; // We've reached the top without finding h6
+                                    $("div[id^='" + productKey + "_step_']")
+                                        .find("input, select, textarea")
+                                        .each(function () {
+                                            // Dynamic function to traverse up the DOM tree and find the nearest h6
+                                            function findNearestH6(element) {
+                                                let parent =
+                                                    $(element).parent();
+                                                if (parent.length === 0)
+                                                    return ""; // We've reached the top without finding h6
 
-                                            let h6 = parent.find("> h6");
-                                            if (h6.length > 0)
-                                                return h6.text().trim();
+                                                let h6 = parent.find("> h6");
+                                                if (h6.length > 0)
+                                                    return h6.text().trim();
 
-                                            return findNearestH6(parent); // Recurse up
-                                        }
+                                                return findNearestH6(parent); // Recurse up
+                                            }
 
-                                        // Try to find the closest preceding h6 first
-                                        var header6Content =
-                                            findNearestH6(this);
+                                            // Try to find the closest preceding h6 first
+                                            var header6Content =
+                                                findNearestH6(this);
 
-                                        // If the h6 content is empty or not found, try to find the label
-                                        var labelForThisInput =
-                                            header6Content ||
-                                            $("label[for='" + this.id + "']")
-                                                .text()
-                                                .trim();
+                                            // If the h6 content is empty or not found, try to find the label
+                                            var labelForThisInput =
+                                                header6Content ||
+                                                $(
+                                                    "label[for='" +
+                                                        this.id +
+                                                        "']"
+                                                )
+                                                    .text()
+                                                    .trim();
 
-                                        productData[productKey][this.name] = {
-                                            value: $(this).val(),
-                                            label: labelForThisInput.trim(),
-                                            h6: header6Content,
-                                        };
-                                    });
-                            }
-                        );
-
-                        // Collecting UTM data from hidden fields
-                        commonData.utm_source = $(
-                            'input[name="utm_source"]'
-                        ).val();
-                        commonData.utm_medium = $(
-                            'input[name="utm_medium"]'
-                        ).val();
-                        commonData.utm_campaign = $(
-                            'input[name="utm_campaign"]'
-                        ).val();
-                        commonData.utm_term = $('input[name="utm_term"]').val();
-                        commonData.utm_content = $(
-                            'input[name="utm_content"]'
-                        ).val();
-
-                        // Collecting terms and conditions acceptance
-                        commonData.terms = $(
-                            'input[name="terms"]:checked'
-                        ).val();
-
-                        // Send the data
-                        axios({
-                            method: "post",
-                            url: "/quote-form-submit",
-                            headers: {
-                                "X-CSRF-TOKEN": $(
-                                    'meta[name="csrf-token"]'
-                                ).attr("content"),
-                                "Content-Type": "application/json",
-                            },
-                            data: {
-                                common: commonData,
-                                products: productData,
-                            },
-                        })
-                            .then((response) => {
-                                document.getElementById(
-                                    "loader_form"
-                                ).style.display = "block";
-                                if (response.data.redirect) {
-                                    window.location.href =
-                                        response.data.redirect;
-                                    document.getElementById(
-                                        "loader_form"
-                                    ).style.display = "none";
-                                } else {
-                                    document.getElementById(
-                                        "loader_form"
-                                    ).style.display = "none";
-                                    toastr.success(response.data.message);
-                                    window.open("/thankyou", "_blank");
-                                    location.reload();
+                                            productData[productKey][this.name] =
+                                                {
+                                                    value: $(this).val(),
+                                                    label: labelForThisInput.trim(),
+                                                    h6: header6Content,
+                                                };
+                                        });
                                 }
+                            );
+
+                            // Collecting UTM data from hidden fields
+                            commonData.utm_source = $(
+                                'input[name="utm_source"]'
+                            ).val();
+                            commonData.utm_medium = $(
+                                'input[name="utm_medium"]'
+                            ).val();
+                            commonData.utm_campaign = $(
+                                'input[name="utm_campaign"]'
+                            ).val();
+                            commonData.utm_term = $(
+                                'input[name="utm_term"]'
+                            ).val();
+                            commonData.utm_content = $(
+                                'input[name="utm_content"]'
+                            ).val();
+
+                            // Collecting terms and conditions acceptance
+                            commonData.terms = $(
+                                'input[name="terms"]:checked'
+                            ).val();
+
+                            // Send the data
+                            axios({
+                                method: "post",
+                                url: "/quote-form-submit",
+                                headers: {
+                                    "X-CSRF-TOKEN": $(
+                                        'meta[name="csrf-token"]'
+                                    ).attr("content"),
+                                    "Content-Type": "application/json",
+                                },
+                                data: {
+                                    common: commonData,
+                                    products: productData,
+                                },
                             })
-                            .catch((error) => {
-                                // Error logic
-                                document.getElementById(
-                                    "loader_form"
-                                ).style.display = "block";
-                                if (error.response && error.response.data) {
-                                    toastr.error(error.response.data.message);
-                                    document.getElementById(
-                                        "loader_form"
-                                    ).style.display = "none";
-                                } else {
-                                    toastr.error("An error occurred");
-                                    document.getElementById(
-                                        "loader_form"
-                                    ).style.display = "none";
-                                }
-                            });
+                                .then((response) => {
+                                    $(".loader-container").addClass("active");
+                                    $(".loader-container").removeClass(
+                                        "hidden"
+                                    );
+                                    if (response.data.redirect) {
+                                        window.location.href =
+                                            response.data.redirect;
+                                        $(".loader-container").addClass(
+                                            "hidden"
+                                        );
+                                        $(".loader-container").removeClass(
+                                            "active"
+                                        );
+                                    } else {
+                                        $(".loader-container").addClass(
+                                            "hidden"
+                                        );
+                                        $(".loader-container").removeClass(
+                                            "active"
+                                        );
+                                        toastr.success(response.data.message);
+                                        window.open("/thankyou", "_blank");
+                                        // location.reload();
+                                    }
+                                })
+                                .catch((error) => {
+                                    $(".loader-container").addClass("active");
+                                    $(".loader-container").removeClass(
+                                        "hidden"
+                                    );
+                                    if (error.response && error.response.data) {
+                                        toastr.error(
+                                            error.response.data.message
+                                        );
+                                        $(".loader-container").addClass(
+                                            "hidden"
+                                        );
+                                        $(".loader-container").removeClass(
+                                            "active"
+                                        );
+                                    } else {
+                                        toastr.error("An error occurred");
+                                        $(".loader-container").addClass(
+                                            "hidden"
+                                        );
+                                        $(".loader-container").removeClass(
+                                            "active"
+                                        );
+                                    }
+                                });
+                        }
                     });
                 }
                 return !inputs.length || !!inputs.valid();
@@ -2979,14 +3520,14 @@
 
             if (glChecked) {
                 setSessionVariable("doesGLChecked", true);
-                $("#about_your_company_step").load(
-                    location.href + " #about_your_company_step"
+                $("#about_you_profession").load(
+                    location.href + " #about_you_profession"
                 );
             } else {
                 unsetSessionVariable("doesGLChecked");
                 setSessionVariable("doesGLChecked", false);
-                $("#about_your_company_step").load(
-                    location.href + " #about_your_company_step"
+                $("#about_you_profession").load(
+                    location.href + " #about_you_profession"
                 );
             }
         });
@@ -3114,71 +3655,206 @@
         }
     }
 
-    async function showAutoVehicleEntries(a) {
-        try {
-            let response = await axios.get("auto/showAutoVehicleEntries", {
-                params: {
-                    a: a,
-                },
-            });
+    // async function showAutoVehicleEntries(a) {
+    //     try {
+    //         let response = await axios.get("auto/showAutoVehicleEntries", {
+    //             params: {
+    //                 a: a,
+    //             },
+    //         });
 
-            let data = response.data.data;
+    //         let data = response.data.data;
 
-            if (data) {
-                $("#auto_vehicles_container").append(data);
-            }
-        } catch (error) {
-            // Handle any errors here
-            console.error(error);
-        }
+    //         if (data) {
+    //             $("#auto_vehicles_container").append(data);
+    //         }
+    //     } catch (error) {
+    //         // Handle any errors here
+    //         console.error(error);
+    //     }
+    // }
+
+    function showAutoVehicleEntries(a) {
+        $("#auto_vehicles_container").append(`
+            <h4 class='profession_header mt-2 mb-2'>Vehicle Entry No. ${a}</h4>
+            <div class='row justify-content-center'>
+                <div class='col-md-4'>
+                    <div class='mb-3 form-floating'>
+                        <input type='text' name='auto_vehicle_year_${a}' id='auto_vehicle_year_${a}' class='form-control' placeholder='' maxlength='4'>
+                        <label for='auto_vehicle_year_${a}'>Year</label>
+                    </div>
+                </div>
+                <div class='col-md-4'>
+                    <div class='mb-3 form-floating'>
+                        <input type='text' name='auto_vehicle_maker_${a}' id='auto_vehicle_maker_${a}' class='form-control' placeholder='' maxlength='100'>
+                        <label for='auto_vehicle_maker_${a}'>Maker</label>
+                    </div>
+                </div>
+                <div class='col-md-4'>
+                    <div class='mb-3 form-floating'>
+                        <input type='text' name='auto_vehicle_model_${a}' id='auto_vehicle_model_${a}' class='form-control' placeholder='' maxlength='100'>
+                        <label for='auto_vehicle_model_${a}'>Model</label>
+                    </div>
+                </div>
+                <div class='col-md-6'>
+                    <div class='mb-3 form-floating'>
+                        <input type='text' name='auto_vehicle_vin_${a}' id='auto_vehicle_vin_${a}' class='form-control' placeholder='' maxlength='100'>
+                        <label for='auto_vehicle_vin_${a}'>Vehicle Identification Number (VIN)</label>
+                    </div>
+                </div>
+                <div class='col-md-6'>
+                    <div class='mb-3 form-floating'>
+                        <input type='text' name='auto_vehicle_mileage_${a}' id='auto_vehicle_mileage_${a}' class='form-control' placeholder='' maxlength='100'>
+                        <label for='auto_vehicle_mileage_${a}'>Mileage / Radius</label>
+                    </div>
+                </div>
+                <div class='col-md-12'>
+                    <div class='mb-3 form-floating'>
+                        <input type='text' name='auto_vehicle_garage_add_${a}' id='auto_vehicle_garage_add_${a}' class='form-control' placeholder=''>
+                        <label for='auto_vehicle_garage_add_${a}'>Garage Address</label>
+                    </div>
+                </div>
+                <div class='col-md-12'>
+                    <div class='mb-3 form-floating'>
+                        <select class='form-control' name='auto_vehicle_coverage_limits_${a}' id='auto_vehicle_coverage_limits_${a}' aria-label='auto_vehicle_coverage_limits_${a}'>
+                            <option value selected></option>
+                            <option value='100,000'>$100,000</option>
+                            <option value='300,000'>$300,000</option>
+                            <option value='500,000'>$500,000</option>
+                            <option value='1,000,000'>$1,000,000</option>
+                        </select>
+                        <label for='auto_vehicle_coverage_limits_${a}'>Coverage Limits</label>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        yearPickerFormatter(`#auto_vehicle_year_${a}`);
     }
 
-    async function showAutoDriverEntries(a) {
-        try {
-            const response = await axios.get("auto/showAutoDriverEntries", {
-                params: {
-                    a: a,
-                },
-            });
+    // async function showAutoDriverEntries(a) {
+    //     try {
+    //         const response = await axios.get("auto/showAutoDriverEntries", {
+    //             params: {
+    //                 a: a,
+    //             },
+    //         });
 
-            const data = response.data.data;
+    //         const data = response.data.data;
 
-            if (data) {
-                $("#auto_drivers_container").append(data);
-                datePickerFormatter(".driver_birthdate");
-            }
+    //         if (data) {
+    //             $("#auto_drivers_container").append(data);
+    //             datePickerFormatter(".driver_birthdate");
+    //         }
 
-            // If Married status
-            $(`#auto_add_driver_civil_status_${a}`).on(
-                "change",
-                async function () {
-                    const selectedOption = $(this).val();
-                    const containerId = `auto_driver_if_married_container_${a}`;
+    //         // If Married status
+    //         $(`#auto_add_driver_civil_status_${a}`).on(
+    //             "change",
+    //             async function () {
+    //                 const selectedOption = $(this).val();
+    //                 const containerId = `auto_driver_if_married_container_${a}`;
 
-                    if (selectedOption === "Married") {
-                        try {
-                            const spouseResponse = await axios.get(
-                                "auto/showSpouseInformationForm",
-                                {
-                                    params: {
-                                        a: a,
-                                    },
-                                }
-                            );
+    //                 if (selectedOption === "Married") {
+    //                     try {
+    //                         const spouseResponse = await axios.get(
+    //                             "auto/showSpouseInformationForm",
+    //                             {
+    //                                 params: {
+    //                                     a: a,
+    //                                 },
+    //                             }
+    //                         );
 
-                            $(`#${containerId}`).html(spouseResponse.data.data);
-                            datePickerFormatter(".spouse_datebirth");
-                        } catch (error) {
-                            console.error(error);
-                        }
-                    } else {
-                        $(`#${containerId}`).empty();
-                    }
+    //                         $(`#${containerId}`).html(spouseResponse.data.data);
+    //                         datePickerFormatter(".spouse_datebirth");
+    //                     } catch (error) {
+    //                         console.error(error);
+    //                     }
+    //                 } else {
+    //                     $(`#${containerId}`).empty();
+    //                 }
+    //             }
+    //         );
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
+
+    function showAutoDriverEntries(a) {
+        $("#auto_drivers_container").append(`
+            <h4 class="profession_header mt-2 mb-2">Driver Information Entry No. ${a}</h4>
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="auto_add_drivers_name_${a}" id="auto_add_drivers_name_${a}" class="form-control" placeholder="" maxlength="100">
+                        <label for="auto_add_drivers_name_${a}">Driver"s Name</label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="auto_add_driver_lic_${a}" id="auto_add_driver_lic_${a}" class="form-control" placeholder="" maxlength="50">
+                        <label for="auto_add_driver_lic_${a}">Driver"s License Number</label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="auto_add_driver_mileage_radius_${a}" id="auto_add_driver_mileage_radius_${a}" class="form-control" placeholder="" maxlength="100">
+                        <label for="auto_add_driver_mileage_radius_${a}">Mileage / Radius</label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="auto_add_driver_date_birth_${a}" id="auto_add_driver_date_birth_${a}" class="form-control" placeholder="">
+                        <label for="auto_add_driver_date_birth_${a}">Date of Birth</label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <select class="form-select" name="auto_add_driver_civil_status_${a}" id="auto_add_driver_civil_status_${a}" aria-label="auto_add_driver_civil_status_${a}">
+                            <option value selected></option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                        </select>
+                        <label for="auto_add_driver_civil_status_${a}">Civil Status</label>
+                    </div>
+                </div>
+                <div id="auto_driver_if_married_container_${a}"></div>
+            </div>
+        `);
+
+        $(document).on(
+            "change",
+            `#auto_add_driver_civil_status_${a}`,
+            function () {
+                var auto_add_driver_civil_status = $(this).val();
+                if (auto_add_driver_civil_status === "Married") {
+                    $(`#auto_driver_if_married_container_${a}`).append(`
+                        <div class="col-md-12">
+                            <div class="mb-3 form-floating">
+                                <input type="text" name="auto_driver_spouse_name_${a}"
+                                    id="auto_driver_spouse_name_${a}" class="form-control"
+                                    placeholder="">
+                                <label for="auto_driver_spouse_name_${a}">Spouse Name</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3 form-floating">
+                                <input type="text" name="auto_driver_spouse_dob_${a}"
+                                    id="auto_driver_spouse_dob_${a}" class="form-control"
+                                    placeholder="">
+                                <label for="auto_driver_spouse_dob_${a}">Spouse Date of Birth</label>
+                            </div>
+                        </div>
+                    `);
+                    datePickerFormatter(`#auto_driver_spouse_dob_${a}`);
+                } else {
+                    $(`#auto_driver_if_married_container_${a}`).empty();
                 }
-            );
-        } catch (error) {
-            console.error(error);
-        }
+            }
+        );
+
+        datePickerFormatter(`#auto_add_driver_date_birth_${a}`);
     }
 
     function renderingYesNoDivs(a, func, b) {
@@ -4043,7 +4719,7 @@
                     <div class="mb-3 form-floating">
                         <input type="text" name="wc_ssn_${counter}" id="wc_ssn_${counter}"
                             class="form-control" placeholder="SSN">
-                        <label for="wc_ssn">SSN</label>
+                        <label for="wc_ssn_${counter}">SSN</label>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -4079,6 +4755,10 @@
                 }
             }
         });
+
+        $(`#wc_ssn_${counter}`).ssnFormat();
+        $(`#wc_fein_${counter}`).feinFormat();
+        datePickerFormatter(`#wc_dob_${counter}`);
     }
 
     function showSchedPropertyBRContainer() {
@@ -4553,9 +5233,9 @@
                 counter = 0;
                 percentages = [];
                 renderOwnersInformationFields();
-                $(`input[name^="wc_ssn_"]`).ssnFormat();
-                $(`input[name^="wc_fein_"]`).feinFormat();
-                datePickerFormatter(`input[name^="wc_dob_"]`);
+                // $(`input[name^="wc_ssn_"]`).ssnFormat();
+                // $(`input[name^="wc_fein_"]`).feinFormat();
+                // datePickerFormatter(`input[name^="wc_dob_"]`);
             } else if (value == 100) {
                 totalPercentage = value;
                 $("#owners_information_container").empty();
@@ -4587,24 +5267,26 @@
     // END WC SCRIPTS
 
     // START AUTO SCRIPTS
+    datePickerFormatter("#auto_driver_date_of_birth");
     $(document).ready(function () {
         $("#auto_add_vehicle").trigger("change");
     });
-    $(document).on("change", "#auto_add_vehicle", async function () {
+    $(document).on("change", "#auto_add_vehicle", function () {
         var numVehicles = $(this).val();
         $("#auto_vehicles_container").empty();
         for (var i = 1; i <= numVehicles; i++) {
-            await showAutoVehicleEntries(i);
+            showAutoVehicleEntries(i);
         }
     });
-    $(document).on("change", "#auto_add_vehicle", async function () {
+    $(document).on("change", "#auto_add_driver", function () {
         const numDrivers = $(this).val();
+        // console.log(numDrivers);
         $("#auto_drivers_container").empty();
         for (let i = 1; i <= numDrivers; i++) {
-            await showAutoDriverEntries(i);
+            showAutoDriverEntries(i);
         }
     });
-    $("#auto_add_driver").trigger("change");
+
     $(document).on("change", "#auto_driver_marital_status", function () {
         const value = $(this).val();
         // console.log(value);
@@ -4622,6 +5304,7 @@
             $(".loader-container").removeClass("active");
         }
     });
+
     $(document).on("change", "#auto_no_of_losses", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");
@@ -4812,6 +5495,11 @@
             $("#br_losses_container").empty();
         }
     });
+
+    yearPickerFormatter("#br_last_update_to_roofing_year");
+    yearPickerFormatter("#br_last_update_to_heating_year");
+    yearPickerFormatter("#br_last_update_to_electrical_year");
+    yearPickerFormatter("#br_last_update_to_plumbing_year");
     // END BR SCRIPTS
 
     // START BOP SCRIPTS
@@ -5027,6 +5715,7 @@
     // END POLLUTION SCRIPTS
 
     // START EPLI SCRIPTS
+    $("#epli_fein").feinFormat();
     datePickerFormatter("#epli_effective_date");
     perfectCurrencyFormatter("#epli_prev_premium_amount");
     perfectCurrencyFormatter("#epli_deductible_amount");

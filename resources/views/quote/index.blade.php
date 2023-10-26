@@ -195,15 +195,16 @@
                                                                 Omission</label>
                                                         </div>
                                                     </li>
-                                                    <li>
+                                                    {{-- <li>
                                                         <div class="checkbox_radio_container">
                                                             <input type="checkbox" id="question_1_opt_11"
-                                                                name="question_1[]" class="" value="pollution" disabled>
+                                                                name="question_1[]" class="" value="pollution"
+                                                                disabled>
                                                             <label class="checkbox" for="question_1_opt_11"></label>
                                                             <label for="question_1_opt_11" class="wrapper">Pollution
                                                                 Application (Not yet available)</label>
                                                         </div>
-                                                    </li>
+                                                    </li> --}}
                                                     <li>
                                                         <div class="checkbox_radio_container">
                                                             <input type="checkbox" id="question_1_opt_12"
@@ -391,7 +392,7 @@
                                             </div>
                                         </div>
                                         @if (session('doesGLChecked') !== 'true')
-                                            <div class="col-md-12">
+                                            <div class="col-md-12" id="about_you_profession">
                                                 <h6 class="profession_header mt-2 mb-2">About Your Profession</h6>
                                                 <div class="form-floating mb-3">
                                                     <div class="col-md-12">
@@ -1294,9 +1295,9 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <h6 class="profession_header mt-2 mb-2">Contractor License
+                                                {{-- <h6 class="profession_header mt-2 mb-2">Contractor License
                                                     Bond - # of
-                                                    Losses</h6>
+                                                    Losses</h6> --}}
                                                 <select class="form-select" name="bond_no_of_losses"
                                                     id="bond_no_of_losses" aria-label="bond_no_of_losses"
                                                     data-placeholder="" data-allow-clear="true"
@@ -1308,7 +1309,9 @@
                                                     <option value="5">5 yrs. No Losses</option>
                                                     <option value="-1">Have Losses</option>
                                                 </select>
-                                                {{-- <label for="bond_no_of_losses">Bond - # of Losses</label> --}}
+                                                <label for="bond_no_of_losses">Contractor License
+                                                    Bond - # of
+                                                    Losses</label>
                                             </div>
                                         </div>
                                         <!--  -->
@@ -2872,7 +2875,7 @@
                                 <!-- POLLUTION Stepper 1 -->
                                 {{-- <div id="pollutionContainer"> --}}
                                 {{-- @if (session('doesPollutionChecked') === 'true') --}}
-                                <div class="step" id="pollution_step_1">
+                                {{-- <div class="step" id="pollution_step_1">
                                     <div class="question_title">
                                         <h3>Pollution Liability Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
@@ -3038,11 +3041,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- /Step -->
 
                                 <!-- POLLUTION Stepper 2 -->
-                                <div class="step" id="pollution_step_2">
+                                {{-- <div class="step" id="pollution_step_2">
                                     <div class="question_title">
                                         <h3>Pollution Liability Application</h3>
                                         <p>Please provide the requested information and proceed.</p>
@@ -3111,7 +3114,7 @@
                                         <div id="pollution_explain_losses_container"></div>
                                         <!--  -->
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- /Step -->
                                 {{-- @endif --}}
                                 {{-- </div> --}}
@@ -3882,10 +3885,18 @@
                                                     id="instfloat_type_security_placed"
                                                     aria-label="instfloat_type_security_placed">
                                                     <option value selected></option>
-                                                    <option value="500-1000">$500 - $1,000</option>
-                                                    <option value="2500">$2,500</option>
-                                                    <option value="5000">$5,000</option>
-                                                    <option value="10000">$10,000</option>
+                                                    <option value="Automatic Sprinkler System">Automatic Sprinkler
+                                                        System</option>
+                                                    <option value="Automatic Fire Alarm">Automatic Fire Alarm</option>
+                                                    <option value="Security Service">Security Service</option>
+                                                    <option value="Burglar or Electronic Security System (Connected)">
+                                                        Burglar or Electronic Security System (Connected)</option>
+                                                    <option
+                                                        value="Burglar or Electronic Security System (Not Connected)">
+                                                        Burglar or Electronic Security System (Not Connected)</option>
+                                                    <option value="Fenced Jobsite">Fenced Jobsite</option>
+                                                    <option value="Exteror Lighting">Exteror Lighting</option>
+                                                    <option value="None">None</option>
                                                 </select>
                                                 <label for="instfloat_type_security_placed">Type of Security
                                                     in place
@@ -4149,6 +4160,7 @@
                                         <!-- START AUTO REVIEW -->
                                         <div class="col-lg-12 mt-2" id="autoDetailsContainer">
                                             <h5>Commercial Auto Application</h5>
+                                            <div class="reviewInfoSubContainer" id="auto_other_details"></div>
                                             <div class="reviewInfoSubContainer" id="auto_vehicle_details_1"></div>
                                             <div class="entryContainer vehicleEntries"></div>
                                             <div class="reviewInfoSubContainer" id="auto_driver_details_1"></div>
@@ -4209,11 +4221,11 @@
                                         <!-- END EO REVIEW -->
 
                                         <!-- START POLLUTION REVIEW -->
-                                        <div class="col-lg-12 mt-2" id="pollutionDetailsContainer">
+                                        {{-- <div class="col-lg-12 mt-2" id="pollutionDetailsContainer">
                                             <h5>Pollution Liability Application</h5>
                                             <div class="reviewInfoSubContainer" id="pollution_liability_details">
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <!-- END POLLUTION REVIEW -->
 
                                         <!-- START EPLI REVIEW -->
@@ -4289,11 +4301,16 @@
                                 <!-- /Step -->
 
                                 <!-- UTM params -->
-                                <input type="hidden" name="utm_source" value="{{ app('request')->input('utm_source') }}">
-                                <input type="hidden" name="utm_medium" value="{{ app('request')->input('utm_medium') }}">
-                                <input type="hidden" name="utm_campaign" value="{{ app('request')->input('utm_campaign') }}">
-                                <input type="hidden" name="utm_term" value="{{ app('request')->input('utm_term') }}">
-                                <input type="hidden" name="utm_content" value="{{ app('request')->input('utm_content') }}">
+                                <input type="hidden" name="utm_source"
+                                    value="{{ app('request')->input('utm_source') }}">
+                                <input type="hidden" name="utm_medium"
+                                    value="{{ app('request')->input('utm_medium') }}">
+                                <input type="hidden" name="utm_campaign"
+                                    value="{{ app('request')->input('utm_campaign') }}">
+                                <input type="hidden" name="utm_term"
+                                    value="{{ app('request')->input('utm_term') }}">
+                                <input type="hidden" name="utm_content"
+                                    value="{{ app('request')->input('utm_content') }}">
                             </div>
                             <!-- /middle-wizard -->
 
