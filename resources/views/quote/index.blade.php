@@ -1066,8 +1066,7 @@
                                             <h6 class="profession_header mt-2 mb-2">Your Information:</h6>
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="auto_driver_full_name"
-                                                    id="auto_driver_full_name" class="form-control"
-                                                    placeholder="auto_driver_full_name">
+                                                    id="auto_driver_full_name" class="form-control" placeholder="">
                                                 <label for="auto_driver_full_name">Full Name</label>
                                             </div>
                                         </div>

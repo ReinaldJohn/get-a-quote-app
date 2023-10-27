@@ -3488,6 +3488,17 @@
     function getCheckboxValue() {
         var glChecked = false;
         var wcChecked = false;
+        var autoChecked = false;
+        var bondChecked = false;
+        var excessChecked = false;
+        var toolsChecked = false;
+        var brChecked = false;
+        var bopChecked = false;
+        var propertyChecked = false;
+        var eoChecked = false;
+        var epliChecked = false;
+        var cyberChecked = false;
+        var instFloatChecked = false;
 
         $('input[name="question_1[]"]').change(function () {
             var checkboxValue = $(this).val();
@@ -3498,6 +3509,28 @@
                     glChecked = true;
                 } else if (checkboxValue === "wc") {
                     wcChecked = true;
+                } else if (checkboxValue === "auto") {
+                    autoChecked = true;
+                } else if (checkboxValue === "bond") {
+                    bondChecked = true;
+                } else if (checkboxValue === "excess") {
+                    excessChecked = true;
+                } else if (checkboxValue === "tools") {
+                    toolsChecked = true;
+                } else if (checkboxValue === "br") {
+                    brChecked = true;
+                } else if (checkboxValue === "bop") {
+                    bopChecked = true;
+                } else if (checkboxValue === "comm_prop") {
+                    propertyChecked = true;
+                } else if (checkboxValue === "eo") {
+                    eoChecked = true;
+                } else if (checkboxValue === "epli") {
+                    epliChecked = true;
+                } else if (checkboxValue === "cyber") {
+                    cyberChecked = true;
+                } else if (checkboxValue === "instfloat") {
+                    instFloatChecked = true;
                 }
             } else {
                 localStorage.setItem(checkboxValue, "unchecked");
@@ -3505,6 +3538,28 @@
                     glChecked = false;
                 } else if (checkboxValue === "wc") {
                     wcChecked = false;
+                } else if (checkboxValue === "auto") {
+                    autoChecked = false;
+                } else if (checkboxValue === "bond") {
+                    bondChecked = false;
+                } else if (checkboxValue === "excess") {
+                    excessChecked = false;
+                } else if (checkboxValue === "tools") {
+                    toolsChecked = false;
+                } else if (checkboxValue === "br") {
+                    brChecked = false;
+                } else if (checkboxValue === "bop") {
+                    bopChecked = false;
+                } else if (checkboxValue === "comm_prop") {
+                    propertyChecked = false;
+                } else if (checkboxValue === "eo") {
+                    eoChecked = false;
+                } else if (checkboxValue === "epli") {
+                    epliChecked = false;
+                } else if (checkboxValue === "cyber") {
+                    cyberChecked = false;
+                } else if (checkboxValue === "instfloat") {
+                    instFloatChecked = false;
                 }
             }
 
@@ -3516,6 +3571,26 @@
                 unsetSessionVariable("doesGLandWCChecked");
                 setSessionVariable(true);
                 $("#wc_step_1").load(location.href + " #wc_step_1");
+            }
+
+            if (glChecked && autoChecked) {
+                $("#firstname, #lastname").change(function () {
+                    var firstname = $("#firstname").val();
+                    var lastname = $("#lastname").val();
+                    const fullname = firstname + " " + lastname;
+
+                    $("#auto_driver_full_name").val(fullname);
+                });
+            }
+
+            if (glChecked && bondChecked) {
+                $("#firstname, #lastname").change(function () {
+                    var firstname = $("#firstname").val();
+                    var lastname = $("#lastname").val();
+                    const fullname = firstname + " " + lastname;
+
+                    $("#bond_owners_name").val(fullname);
+                });
             }
 
             if (glChecked) {
