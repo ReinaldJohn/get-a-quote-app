@@ -1865,7 +1865,22 @@
                                                                                                     <strong>${{ number_format($epli->previous_premium_amount, 2) }}</strong>
                                                                                                 </p>
                                                                                                 <p>Deductible Amount:
-                                                                                                    <strong>${{ number_format($epli->deductible_amount, 2) }}</strong>
+                                                                                                    @if ($epli->deductible_amount === 'Others')
+                                                                                                        <strong>Others</strong>
+                                                                                                        <p>If
+                                                                                                            others,
+                                                                                                            please
+                                                                                                            indicate
+                                                                                                            the
+                                                                                                            deductible
+                                                                                                            per
+                                                                                                            claim
+                                                                                                            amount:
+                                                                                                            <strong>${{ number_format($epli->deductible_amount_if_others, 2) }}</strong>
+                                                                                                        </p>
+                                                                                                    @else
+                                                                                                        <strong>${{ number_format($epli->deductible_amount, 2) }}</strong>
+                                                                                                    @endif
                                                                                                 </p>
                                                                                                 <p><br></p>
                                                                                                 <p><strong>How many
@@ -1873,27 +1888,34 @@
                                                                                                         are:</strong><br><br>
                                                                                                 </p>
                                                                                                 <p>Full Time:
-                                                                                                    <strong>{{ $epli->full_time_employee }}</strong>
+                                                                                                    <strong>{{ $epli->full_time_employee }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>Part Time:
-                                                                                                    <strong>{{ $epli->part_time_employee }}</strong>
+                                                                                                    <strong>{{ $epli->part_time_employee }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>Independent
                                                                                                     Contractors:
-                                                                                                    <strong>{{ $epli->independent_contractors }}</strong>
+                                                                                                    <strong>{{ $epli->independent_contractors }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>Volunteers:
-                                                                                                    <strong>{{ $epli->volunteers }}</strong>
+                                                                                                    <strong>{{ $epli->volunteers }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>Leased or Seasonal:
-                                                                                                    <strong>{{ $epli->leased_or_seasonal }}</strong>
+                                                                                                    <strong>{{ $epli->leased_or_seasonal }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>Non-US based
                                                                                                     Employee:
-                                                                                                    <strong>{{ $epli->non_us_based_employee }}</strong>
+                                                                                                    <strong>{{ $epli->non_us_based_employee }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>Total Employees:
-                                                                                                    <strong>{{ $epli->total_employees }}</strong>
+                                                                                                    <strong>{{ $epli->total_employees }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
                                                                                                 <p><br></p>
@@ -1903,22 +1925,28 @@
                                                                                                         at:</strong><br><br>
                                                                                                 </p>
                                                                                                 <p>CA:
-                                                                                                    <strong>{{ $epli->located_at_ca }}</strong>
+                                                                                                    <strong>{{ $epli->located_at_ca }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>GA:
-                                                                                                    <strong>{{ $epli->located_at_ga }}</strong>
+                                                                                                    <strong>{{ $epli->located_at_ga }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>TX:
-                                                                                                    <strong>{{ $epli->located_at_tx }}</strong>
+                                                                                                    <strong>{{ $epli->located_at_tx }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>FL:
-                                                                                                    <strong>{{ $epli->located_at_fl }}</strong>
+                                                                                                    <strong>{{ $epli->located_at_fl }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>NY:
-                                                                                                    <strong>{{ $epli->located_at_ny }}</strong>
+                                                                                                    <strong>{{ $epli->located_at_ny }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>NJ:
-                                                                                                    <strong>{{ $epli->located_at_nj }}</strong>
+                                                                                                    <strong>{{ $epli->located_at_nj }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
                                                                                                 <p><strong>How many
@@ -1929,13 +1957,13 @@
                                                                                                         of:</strong></p>
 
                                                                                                 <p>Up to $60,000:
-                                                                                                    <strong>{{ $epli->up_to_60k }}</strong>
+                                                                                                    <strong>{{ $epli->up_to_60k }}%</strong>
                                                                                                 </p>
                                                                                                 <p>$60,000 - $120,000:
-                                                                                                    <strong>{{ $epli->between_60k_to_120k }}</strong>
+                                                                                                    <strong>{{ $epli->between_60k_to_120k }}%</strong>
                                                                                                 </p>
                                                                                                 <p>Over $120,000:
-                                                                                                    <strong>{{ $epli->over_120k }}</strong>
+                                                                                                    <strong>{{ $epli->over_120k }}%</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
                                                                                                 <p><strong>How many
@@ -1947,13 +1975,16 @@
                                                                                                         months:</strong>
                                                                                                 </p>
                                                                                                 <p>Voluntary:
-                                                                                                    <strong>{{ $epli->voluntary }}</strong>
+                                                                                                    <strong>{{ $epli->voluntary }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>Involuntary:
-                                                                                                    <strong>{{ $epli->involuntary }}</strong>
+                                                                                                    <strong>{{ $epli->involuntary }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p>Laid-off:
-                                                                                                    <strong>{{ $epli->laid_off }}</strong>
+                                                                                                    <strong>{{ $epli->laid_off }}
+                                                                                                        Employee/s</strong>
                                                                                                 </p>
                                                                                                 <p><br></p>
                                                                                                 <p><strong>Human

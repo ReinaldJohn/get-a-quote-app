@@ -1735,6 +1735,15 @@
                         "#epli_deductible_amount"
                     ).val();
 
+                    var epli_deductible_claim_if_others = "";
+                    if (epli_deductible_amount === "Others") {
+                        epli_deductible_claim_if_others = $(
+                            "#epli_deductible_claim_if_others"
+                        ).val();
+                    } else {
+                        epli_deductible_claim_if_others = "";
+                    }
+
                     var epli_no_of_losses = $(
                         "#epli_no_of_losses option:selected"
                     ).text();
@@ -1798,6 +1807,8 @@
                         "Effective Date": epli_effective_date,
                         "Previous Premium Amount": epli_prev_premium_amount,
                         "Deductible Amount": epli_deductible_amount,
+                        "If others, please indicate the deductible per claim amount":
+                            epli_deductible_claim_if_others,
                         "EPLI - # of Losses": epli_no_of_losses,
                         "Amount of Claim": epli_amt_of_claims,
                         "Date of Loss": epli_date_of_loss,
@@ -3563,36 +3574,6 @@
                 }
             }
 
-            if (glChecked && wcChecked) {
-                // console.log('Both "gl" and "wc" checkboxes are checked.');
-                setSessionVariable("doesGLandWCChecked", false);
-                $("#wc_step_1").load(location.href + " #wc_step_1");
-            } else {
-                unsetSessionVariable("doesGLandWCChecked");
-                setSessionVariable(true);
-                $("#wc_step_1").load(location.href + " #wc_step_1");
-            }
-
-            if (glChecked && autoChecked) {
-                $("#firstname, #lastname").change(function () {
-                    var firstname = $("#firstname").val();
-                    var lastname = $("#lastname").val();
-                    const fullname = firstname + " " + lastname;
-
-                    $("#auto_driver_full_name").val(fullname);
-                });
-            }
-
-            if (glChecked && bondChecked) {
-                $("#firstname, #lastname").change(function () {
-                    var firstname = $("#firstname").val();
-                    var lastname = $("#lastname").val();
-                    const fullname = firstname + " " + lastname;
-
-                    $("#bond_owners_name").val(fullname);
-                });
-            }
-
             if (glChecked) {
                 setSessionVariable("doesGLChecked", true);
                 $("#about_you_profession").load(
@@ -3604,6 +3585,80 @@
                 $("#about_you_profession").load(
                     location.href + " #about_you_profession"
                 );
+            }
+
+            if (glChecked && wcChecked) {
+                setSessionVariable("doesGLandWCChecked", false);
+                $("#wc_step_1").load(location.href + " #wc_step_1");
+            } else {
+                unsetSessionVariable("doesGLandWCChecked");
+                setSessionVariable(true);
+                $("#wc_step_1").load(location.href + " #wc_step_1");
+                // $("#firstname, #lastname").change(function () {
+                //     var firstname = $("#firstname").val();
+                //     var lastname = $("#lastname").val();
+                //     const fullname = firstname + " " + lastname;
+                //     $("#wc_name").val(fullname);
+                // });
+            }
+
+            if (wcChecked) {
+                $("#firstname, #lastname").change(function () {
+                    var firstname = $("#firstname").val();
+                    var lastname = $("#lastname").val();
+                    const fullname = firstname + " " + lastname;
+                    $("#wc_name").val(fullname);
+                });
+            }
+
+            if (autoChecked) {
+                $("#firstname, #lastname").change(function () {
+                    var firstname = $("#firstname").val();
+                    var lastname = $("#lastname").val();
+                    const fullname = firstname + " " + lastname;
+                    $("#auto_driver_full_name").val(fullname);
+                });
+            }
+
+            if (bondChecked) {
+                $("#firstname, #lastname").change(function () {
+                    var firstname = $("#firstname").val();
+                    var lastname = $("#lastname").val();
+                    const fullname = firstname + " " + lastname;
+                    $("#bond_owners_name").val(fullname);
+                });
+            }
+
+            if (wcChecked && bondChecked) {
+                $("#wc_ssn").change(function () {
+                    var wc_ssn = $("#wc_ssn").val();
+                    const ssn = wc_ssn;
+                    $("#bond_owners_ssn").val(ssn);
+                });
+            }
+
+            if (wcChecked && epliChecked) {
+                $("#wc_fein").change(function () {
+                    var wc_fein = $("#wc_fein").val();
+                    const fein = wc_fein;
+                    $("#epli_fein").val(fein);
+                });
+            }
+
+            if (wcChecked && autoChecked) {
+                $("#wc_dob").change(function () {
+                    var wc_dob = $("#wc_dob").val();
+                    const wc_date_of_birth = wc_dob;
+                    $("#auto_driver_date_of_birth").val(wc_date_of_birth);
+                });
+            }
+
+            if (wcChecked && bondChecked) {
+                $("#wc_dob").change(function () {
+                    var wc_dob = $("#wc_dob").val();
+                    const wc_date_of_birth = wc_dob;
+                    $("#bond_owners_dob").val(wc_date_of_birth);
+                });
             }
         });
     }
@@ -4505,6 +4560,21 @@
                 </div>
             </div>
         `);
+    }
+
+    function showEPLIDeductiblePerClaimIfOthers() {
+        $("#epli_deductible_amount_if_others_container").append(`
+            <div class="row justify-content-center appendedQuestion">
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="epli_deductible_claim_if_others" id="epli_deductible_claim_if_others" class="form-control" placeholder="" maxlength="">
+                        <label for="epli_deductible_claim_if_others">If others, please indicate the deductible per claim amount:</label>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        perfectCurrencyFormatter("#epli_deductible_claim_if_others");
     }
 
     let counter = 0;
@@ -5793,7 +5863,25 @@
     $("#epli_fein").feinFormat();
     datePickerFormatter("#epli_effective_date");
     perfectCurrencyFormatter("#epli_prev_premium_amount");
-    perfectCurrencyFormatter("#epli_deductible_amount");
+    // perfectCurrencyFormatter("#epli_deductible_amount");
+
+    $(document).on("change", "#epli_deductible_amount", function () {
+        const value = $(this).val();
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === "Others") {
+            setTimeout(function () {
+                showEPLIDeductiblePerClaimIfOthers();
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#epli_deductible_amount_if_others_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
+
     $(document).on("change", "#epli_no_of_losses", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");

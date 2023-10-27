@@ -1600,7 +1600,7 @@
                                                 <input type="text" name="br_property_address"
                                                     id="br_property_address" class="form-control"
                                                     placeholder="Property Address">
-                                                <label for="br_property_address">Property Address</label>
+                                                <label for="br_property_address">Project Address</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -3178,12 +3178,21 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <input type="text" name="epli_deductible_amount"
+                                                {{-- <input type="text" name="epli_deductible_amount"
                                                     id="epli_deductible_amount" class="form-control"
-                                                    placeholder="Deductible Amount:" maxlength="" />
-                                                <label for="epli_deductible_amount">Deductible Amount:</label>
+                                                    placeholder="Deductible Amount:" maxlength="" /> --}}
+                                                <select class="form-select" name="epli_deductible_amount"
+                                                    id="epli_deductible_amount" aria-label="epli_deductible_amount">
+                                                    <option selected></option>
+                                                    <option value="5000">$5,000</option>
+                                                    <option value="10000">$10,000</option>
+                                                    <option value="25000">$25,000</option>
+                                                    <option value="Others">Others</option>
+                                                </select>
+                                                <label for="epli_deductible_amount">Deductible Per Claim:</label>
                                             </div>
                                         </div>
+                                        <div id="epli_deductible_amount_if_others_container"></div>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="epli_no_of_losses"
@@ -3776,7 +3785,7 @@
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <select class="form-select" name="instfloat_deductible_amount"
+                                                {{-- <select class="form-select" name="instfloat_deductible_amount"
                                                     id="instfloat_deductible_amount"
                                                     aria-label="instfloat_deductible_amount">
                                                     <option value selected></option>
@@ -3784,9 +3793,19 @@
                                                     <option value="2500">$2,500</option>
                                                     <option value="5000">$5,000</option>
                                                     <option value="10000">$10,000</option>
+                                                </select> --}}
+                                                <select class="form-select" name="instfloat_deductible_amount"
+                                                    id="instfloat_deductible_amount"
+                                                    aria-label="instfloat_deductible_amount">
+                                                    <option selected></option>
+                                                    <option value="500-2500">$500 / $2,500</option>
+                                                    <option value="1000-2500">$1,000 / $2,500</option>
+                                                    <option value="2500-2500">$2,500 / $2,500</option>
+                                                    <option value="5000-5000">$5,000 / $5,000</option>
+                                                    <option value="10000-10000">$10,000 / $10,000</option>
                                                 </select>
                                                 <label for="instfloat_deductible_amount">Deductible
-                                                    Amount:</label>
+                                                    Amount (AOP/Theft):</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">

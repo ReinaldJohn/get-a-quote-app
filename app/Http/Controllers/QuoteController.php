@@ -1777,9 +1777,18 @@ class QuoteController extends Controller
                                     $current_epli = $productData['epli_current_epli']['value'];
                                     $prior_carrier = $productData['epli_prior_carrier']['value'];
                                     $prior_carrier_epli = $productData['epli_prior_carrier_epli']['value'];
-                                    $epli_effective_date = Carbon::createFromFormat('m/d/Y', $productData['epli_effective_date']['value'])->toDateString();
+                                    $epli_effective_date = Carbon::createFromFormat('m/d/Y', $productData['epli_effective_date']['value']);
                                     $previous_premium_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_prev_premium_amount']['value']));
-                                    $deductible_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_deductible_amount']['value']));
+                                    $deductible_amount = "";
+                                    $deductible_claim_if_others = "";
+                                    if ($productData['epli_deductible_amount']['value'] === "Others") {
+                                        $deductible_amount = $productData['epli_deductible_amount']['value'];
+                                        $deductible_claim_if_others = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_deductible_claim_if_others']['value']));
+                                    } else {
+                                        $deductible_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_deductible_amount']['value']));
+                                        $deductible_claim_if_others = null;
+                                    }
+
                                     $full_time_employee = $productData['epli_full_time']['value'];
                                     $part_time_employee = $productData['epli_part_time']['value'];
                                     $independent_contractors = $productData['epli_independent_contractors']['value'];
@@ -1806,23 +1815,23 @@ class QuoteController extends Controller
                                     $hr_policies_and_procedure_q5 = $productData['epli_hr_q5']['value'];
                                     $hr_policies_and_procedure_q6 = $productData['epli_hr_q6']['value'];
                                     $epli_no_of_losses = $productData['epli_no_of_losses']['value'];
-                                    // $epli_amount_of_claim = isset($productData['epli_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_amt_of_claims']['value'])) : null;
-                                    // $epli_date_of_loss = isset($productData['epli_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value'])->toDateString() : null;
+                                    $epli_amount_of_claim = isset($productData['epli_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_amt_of_claims']['value'])) : null;
+                                    $epli_date_of_loss = isset($productData['epli_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value']) : null;
 
-                                    $epli_amount_of_claim = null;
-                                    if (isset($productData['epli_amt_of_claims']['value']) && !empty($productData['epli_amt_of_claims']['value'])) {
-                                        try {
-                                            $epli_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
-                                            $epli_amount_of_claim = null;
-                                        }
-                                    }
-                                    $epli_date_of_loss = null;
-                                    if (isset($productData['epli_date_of_loss']['value']) && !empty($productData['epli_date_of_loss']['value'])) {
-                                        $epli_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value']);
-                                    } else {
-                                        $epli_date_of_loss = null;
-                                    }
+                                    // $epli_amount_of_claim = null;
+                                    // if (isset($productData['epli_amt_of_claims']['value']) && !empty($productData['epli_amt_of_claims']['value'])) {
+                                    //     try {
+                                    //         $epli_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_amt_of_claims']['value']));
+                                    //     } catch (\Exception $e) {
+                                    //         $epli_amount_of_claim = null;
+                                    //     }
+                                    // }
+                                    // $epli_date_of_loss = null;
+                                    // if (isset($productData['epli_date_of_loss']['value']) && !empty($productData['epli_date_of_loss']['value'])) {
+                                    //     $epli_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value']);
+                                    // } else {
+                                    //     $epli_date_of_loss = null;
+                                    // }
 
                                     $epli = new EPLIInformation();
                                     $epli->client_info_id = $client_info_id;
@@ -1833,6 +1842,7 @@ class QuoteController extends Controller
                                     $epli->effective_date = $epli_effective_date;
                                     $epli->previous_premium_amount = $previous_premium_amount;
                                     $epli->deductible_amount = $deductible_amount;
+                                    $epli->deductible_amount_if_others = $deductible_claim_if_others;
                                     $epli->full_time_employee = $full_time_employee;
                                     $epli->part_time_employee = $part_time_employee;
                                     $epli->independent_contractors = $independent_contractors;
@@ -1884,7 +1894,7 @@ class QuoteController extends Controller
                                     }
 
                                     // $templateData['epliDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value'])->format('F j, Y');
-                                    $templateData['epliDateOfLoss'] = $epli_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $epli_date_of_loss)->format('F j, Y');
+                                    $templateData['epliDateOfLoss'] = $epli_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['epliEffDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['epli_effective_date']['value'])->format('F j, Y');
                                     $templateData['epli'] = $epli;
                                     $templateData['productType'] = 'epli';
@@ -2181,7 +2191,7 @@ class QuoteController extends Controller
     public function setSessionVariable(Request $request) {
         $key = $request->input('key');
         $value = $request->input('value');
-        // dd($data);
+        // dd($key,$value);
         session([$key => $value]);
         // dd(is_string(session('doesGLandWCChecked')));
 
