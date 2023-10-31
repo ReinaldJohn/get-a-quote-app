@@ -2163,7 +2163,7 @@ class QuoteController extends Controller
                 "sender" => "PBIBINS Get a Quote Form <web@pbibinc.com>",
                 "subject" => "PBIBINS Get a Quote Details - {$formattedDateCreated}",
                 "to" => [
-                    "rj@pbibinc.com <rj@pbibinc.com>"
+                    "insure@pbibinc.com <insure@pbibinc.com>"
                 ]
             ]),
             CURLOPT_HTTPHEADER => array(

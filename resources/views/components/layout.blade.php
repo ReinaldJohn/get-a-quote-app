@@ -105,15 +105,18 @@
         <!-- /modal -->
 
         {{-- Main JS files --}}
+
         <script src="{{ asset('js/app.js') }}"></script>
         <script src="{{ asset('js/bootstrap.js') }}"></script>
         <script src="{{ asset('js/common_scripts.min.js') }}"></script>
+        {{-- JQuery Datepicker --}}
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        {{-- Axios --}}
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="{{ asset('js/common.js') }}"></script>
         <script src="{{ asset('assets/validate.js') }}"></script>
         <!-- TOASTR -->
         <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
-        {{-- Axios --}}
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         {{-- Flatpicker --}}
         <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
         {{-- Plugins --}}
