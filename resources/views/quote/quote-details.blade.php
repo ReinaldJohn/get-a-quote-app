@@ -255,6 +255,7 @@
                                                                                         </td>
                                                                                     </tr>
                                                                                     {{-- End About your Company --}}
+                                                                                    @foreach ($productKeyData as $productType)
                                                                                     {{-- Start GL Section --}}
                                                                                     @if ($productType === 'gl')
                                                                                         <tr>
@@ -1524,7 +1525,7 @@
                                                                                                     been changed during
                                                                                                     the
                                                                                                     past 5 years?
-                                                                                                    <strong>{{ $errorsEmission->business_entity_q4 ? 'Yes' : No }}</strong>
+                                                                                                    <strong>{{ $errorsEmission->business_entity_q4 ? 'Yes' : 'No' }}</strong>
                                                                                                 </p>
 
                                                                                                 </p>
@@ -2397,6 +2398,7 @@
                                                                                             </td>
                                                                                         </tr>
                                                                                     @endif
+                                                                                    @endforeach
                                                                                     {{-- End Instfloat Section --}}
                                                                                     @if (!empty($utm_source))
                                                                                         <tr>

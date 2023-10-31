@@ -300,8 +300,15 @@ class QuoteController extends Controller
 
             $productsData = $formData['products'];
 
+            if (isset($formData['productKeyData'])) {
+                $productKeyData = $formData['productKeyData'];
+            } else {
+                Log::error('Missing productKeyData key in formData.');
+                return response()->json(['status' => 'error', 'message' => 'Missing productKeyData key in formData.'], 400);
+            }
+
             try {
-                DB::transaction(function () use ($commonData, $productsData) {
+                DB::transaction(function () use ($commonData, $productsData, $productKeyData) {
                     $html_body = "";
                     $quoteModel = new Quote();
                     $stateAbbr = $quoteModel->getStatesById($commonData['states']);
@@ -320,21 +327,6 @@ class QuoteController extends Controller
                         'website' => $commonData['personal_website'],
                         'contractor_license_no' => $commonData['contractor_license']
                     ]);
-
-                    // $utm_source = isset($commonData['utm_source']) ? $commonData['utm_source'] : null;
-                    // $utm_medium = isset($commonData['utm_medium']) ? $commonData['utm_medium'] : null;
-                    // $utm_campaign = isset($commonData['utm_campaign']) ? $commonData['utm_campaign'] : null;
-                    // $utm_term = isset($commonData['utm_term']) ? $commonData['utm_term'] : null;
-                    // $utm_content = isset($commonData['utm_content']) ? $commonData['utm_content'] : null;
-                    // $does_opt_in = "";
-
-                    // if (isset($commonData['terms'])) {
-                    //     if ($commonData['terms'] === 'Yes') {
-                    //         $does_opt_in = 1;
-                    //     } else {
-                    //         $does_opt_in = 0;
-                    //     }
-                    // }
 
                     DB::beginTransaction();
                     try {
@@ -437,6 +429,7 @@ class QuoteController extends Controller
                         Log::error('Failed to insert About Your Company information. Error: ' . $e->getMessage());
                     }
 
+                    $templateData['productKeyData'] = $productKeyData;
                     foreach ($productsData as $product => $productDataStr) {
                         $productData = [];
                         if (is_array($productDataStr)) {
@@ -444,6 +437,7 @@ class QuoteController extends Controller
                         } else {
                             parse_str($productDataStr, $productData);
                         }
+                        // $templateData['productTypes'] = [];
                         switch ($product) {
                             case 'gl':
                                 try {
@@ -479,6 +473,8 @@ class QuoteController extends Controller
                                          $gl_date_of_loss = null;
                                     }
 
+
+
                                     $generalLiability = new GeneralLiabilityInformation();
                                     $generalLiability->client_info_id = $client_info_id;
                                     $generalLiability->profession = $profession;
@@ -499,20 +495,23 @@ class QuoteController extends Controller
                                     $generalLiability->gl_no_of_losses = $gl_no_of_losses;
                                     $generalLiability->gl_amount_of_claim = $gl_amount_of_claim;
                                     $generalLiability->gl_date_of_loss = $gl_date_of_loss;
-                                    $generalLiability->save();
+                                    $doesGeneralLiabilitySaved = $generalLiability->save();
 
-                                    $GLProfessionName = $quoteModel->getProfessionById([(int)$productData['gl_profession']['value']]);
+                                    if ($doesGeneralLiabilitySaved) {
+                                        $GLProfessionName = $quoteModel->getProfessionById([(int)$productData['gl_profession']['value']]);
 
-                                    $classcodesModel = new Classcodes();
-                                    $filteredClasscodes = $classcodesModel->filterClasscodesWithQuestion([178, 184, 226, 190, 115, 188, 189, 114, 229, 119, 56, 196, 146, 51]);
-                                    $templateData['glAdditionalQuestions'] = [];
+                                        $classcodesModel = new Classcodes();
+                                        $filteredClasscodes = $classcodesModel->filterClasscodesWithQuestion([178, 184, 226, 190, 115, 188, 189, 114, 229, 119, 56, 196, 146, 51]);
+                                        $templateData['glAdditionalQuestions'] = [];
 
                                         if (in_array((int) $profession, $filteredClasscodes)) {
                                             $classcode = $classcodesModel->find((int) $productData['gl_profession']['value']);
+
                                             if(!$classcode) {
                                                 Log::error("Classcode not found for ID: " . $productData['gl_profession']['value']);
                                                 return;
                                             }
+
                                             foreach ($productDataStr as $key => $data) {
                                                 $glAdditionalQuestions = new GLAdditionalQuestions();
                                                 if (strpos($key, 'gl_gross_add_') === 0) {
@@ -544,37 +543,40 @@ class QuoteController extends Controller
                                             }
                                         }
 
-                                    $templateData['multipleStateWorks'] = [];
-                                    foreach ($productDataStr as $key => $data) {
-                                        if (strpos($key, 'gl_multiple_states_') === 0) {
-                                            $counter = str_replace('gl_multiple_states_', '', $key);
-                                            if (isset($productDataStr['gl_multiple_states_percentage_' . $counter]) && !empty($productDataStr['gl_multiple_states_percentage_' . $counter]['value'])) {
-                                                DB::beginTransaction();
-                                                try {
-                                                    $stateWorking = $data['value'];
-                                                    $statePercentage = $productDataStr['gl_multiple_states_percentage_' . $counter]['value'];
+                                        $templateData['multipleStateWorks'] = [];
+                                        foreach ($productDataStr as $key => $data) {
+                                            if (strpos($key, 'gl_multiple_states_') === 0) {
+                                                $counter = str_replace('gl_multiple_states_', '', $key);
+                                                if (isset($productDataStr['gl_multiple_states_percentage_' . $counter]) && !empty($productDataStr['gl_multiple_states_percentage_' . $counter]['value'])) {
+                                                    DB::beginTransaction();
+                                                    try {
+                                                        $stateWorking = $data['value'];
+                                                        $statePercentage = $productDataStr['gl_multiple_states_percentage_' . $counter]['value'];
 
-                                                    $glMultipleStateWork = new GLMultipleStateWork();
-                                                    $glMultipleStateWork->gl_id = $generalLiability->id;
-                                                    $glMultipleStateWork->state = $stateWorking;
-                                                    $glMultipleStateWork->percentage = $statePercentage;
-                                                    $glMultipleStateWork->save();
+                                                        $glMultipleStateWork = new GLMultipleStateWork();
+                                                        $glMultipleStateWork->gl_id = $generalLiability->id;
+                                                        $glMultipleStateWork->state = $stateWorking;
+                                                        $glMultipleStateWork->percentage = $statePercentage;
+                                                        $glMultipleStateWork->save();
 
-                                                    Log::info('Successfully saved glMultipleStateWork record. Data: ' . json_encode($glMultipleStateWork));
+                                                        Log::info('Successfully saved glMultipleStateWork record. Data: ' . json_encode($glMultipleStateWork));
 
-                                                    $templateData['multipleStateWorks'][] = [
-                                                        'counter' => $counter,
-                                                        'state' => $stateWorking,
-                                                        'percentage' => $statePercentage
-                                                    ];
+                                                        $templateData['multipleStateWorks'][] = [
+                                                            'counter' => $counter,
+                                                            'state' => $stateWorking,
+                                                            'percentage' => $statePercentage
+                                                        ];
 
-                                                    DB::commit();
-                                                } catch (\Exception $e) {
-                                                    DB::rollBack();
-                                                    Log::error('Failed to insert glMultipleStateWork record. Exception: ' . $e->getMessage());
+                                                        DB::commit();
+                                                    } catch (\Exception $e) {
+                                                        DB::rollBack();
+                                                        Log::error('Failed to insert glMultipleStateWork record. Exception: ' . $e->getMessage());
+                                                    }
                                                 }
                                             }
                                         }
+                                    } else {
+                                        Log::warning('Failed to insert GL Record: ' . $doesGeneralLiabilitySaved);
                                     }
 
                                     $templateData['GLProfessionName'] = $GLProfessionName;
@@ -597,19 +599,19 @@ class QuoteController extends Controller
                                             $templateData['glNoOfLosses'] = "No Losses";
                                             break;
                                     }
-                                    $templateData['glDateOfLoss'] = $gl_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $gl_date_of_loss)->format('F j, Y');
+                                    $templateData['glDateOfLoss'] = $gl_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['gl_date_of_loss']['value'])->format('F j, Y');
 
                                     // $templateData['parsedCostProj5years'] = $parsedCostProj5years;
                                     // $templateData['parsedPayrollAmount'] = $parsedPayrollAmount;
                                     // $templateData['parsedSubconCost'] = $parsedSubconCost;
                                     $templateData['generalLiability'] = $generalLiability;
-                                    $templateData['productType'] = 'gl';
+                                    // $templateData['productTypes'][] = 'gl';
                                     $templateData['stateAbbr'] = $stateAbbr;
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for GL: ' . $generalLiability->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert GL record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'wc':
@@ -648,10 +650,11 @@ class QuoteController extends Controller
                                     $workersCompensation->wc_no_of_losses = $wc_no_of_losses;
                                     $workersCompensation->wc_amount_of_claim = $wc_amount_of_claim;
                                     $workersCompensation->wc_date_of_loss = $wc_date_of_loss;
-                                    $workersCompensation->save();
+                                    $doesWorkersCompensationSaved = $workersCompensation->save();
 
-                                    $templateData['professionsInfo'] = [];
-                                    foreach ($productDataStr as $key => $data) {
+                                    if ($doesWorkersCompensationSaved) {
+                                        $templateData['professionsInfo'] = [];
+                                        foreach ($productDataStr as $key => $data) {
                                         if (strpos($key, 'wc_profession_') === 0) {
                                             $counter = str_replace('wc_profession_', '', $key);
                                             if (isset($productDataStr['wc_profession_' . $counter]) && !empty($productDataStr['wc_annual_payroll_' . $counter]['value'])) {
@@ -682,86 +685,87 @@ class QuoteController extends Controller
                                                 }
                                             }
                                         }
-                                    }
+                                        }
 
-                                    $wcOwnersInfo = new WCOwnersInfo();
-                                    DB::beginTransaction();
-                                    try {
-                                        $workersCompensationId = $workersCompensation->id;
-                                        $owners_name = $productData['wc_name']['value'];
-                                        $title_relationship = $productData['wc_title_relationship']['value'];
-                                        $ownership_percentage = $productData['wc_ownership_perc']['value'];
-                                        $excluded_or_included = $productData['wc_exc_inc']['value'];
-                                        $ssn = $productData['wc_ssn']['value'];
-                                        $fein = $productData['wc_fein']['value'];
-                                        $owners_date_of_birth = Carbon::createFromFormat('m/d/Y', $productData['wc_dob']['value'])->toDateString();
+                                        $wcOwnersInfo = new WCOwnersInfo();
+                                        DB::beginTransaction();
+                                        try {
+                                            $workersCompensationId = $workersCompensation->id;
+                                            $owners_name = $productData['wc_name']['value'];
+                                            $title_relationship = $productData['wc_title_relationship']['value'];
+                                            $ownership_percentage = $productData['wc_ownership_perc']['value'];
+                                            $excluded_or_included = $productData['wc_exc_inc']['value'];
+                                            $ssn = $productData['wc_ssn']['value'];
+                                            $fein = $productData['wc_fein']['value'];
+                                            $owners_date_of_birth = Carbon::createFromFormat('m/d/Y', $productData['wc_dob']['value'])->toDateString();
 
-                                        $wcOwnersInfo->wc_id = $workersCompensationId;
-                                        $wcOwnersInfo->owners_name = $owners_name;
-                                        $wcOwnersInfo->title_relationship = $title_relationship;
-                                        $wcOwnersInfo->ownership_percentage = $ownership_percentage;
-                                        $wcOwnersInfo->excluded_or_included = $excluded_or_included;
-                                        $wcOwnersInfo->ssn = $ssn;
-                                        $wcOwnersInfo->fein = $fein;
-                                        $wcOwnersInfo->owners_date_of_birth = $owners_date_of_birth;
-                                        $wcOwnersInfo->save();
+                                            $wcOwnersInfo->wc_id = $workersCompensationId;
+                                            $wcOwnersInfo->owners_name = $owners_name;
+                                            $wcOwnersInfo->title_relationship = $title_relationship;
+                                            $wcOwnersInfo->ownership_percentage = $ownership_percentage;
+                                            $wcOwnersInfo->excluded_or_included = $excluded_or_included;
+                                            $wcOwnersInfo->ssn = $ssn;
+                                            $wcOwnersInfo->fein = $fein;
+                                            $wcOwnersInfo->owners_date_of_birth = $owners_date_of_birth;
+                                            $wcOwnersInfo->save();
 
-                                        $ownersDobFormatted = Carbon::createFromFormat('m/d/Y', $productData['wc_dob']['value'])->format('F j, Y');
-                                        $templateData['ownersDobFormatted'] = $ownersDobFormatted;
-                                        $templateData['wcOwnersInfo'] = $wcOwnersInfo;
-                                        Log::info('Successfully saved wcOwnersInfo record. Data: ' . json_encode($wcOwnersInfo));
-                                        DB::commit();
-                                    } catch (\Exception $e) {
-                                        DB::rollBack();
-                                        Log::error('Failed to insert wcOwnersInfo record. Exception: ' . $e->getMessage());
-                                    }
+                                            $ownersDobFormatted = Carbon::createFromFormat('m/d/Y', $productData['wc_dob']['value'])->format('F j, Y');
+                                            $templateData['ownersDobFormatted'] = $ownersDobFormatted;
+                                            $templateData['wcOwnersInfo'] = $wcOwnersInfo;
+                                            Log::info('Successfully saved wcOwnersInfo record. Data: ' . json_encode($wcOwnersInfo));
+                                            DB::commit();
+                                        } catch (\Exception $e) {
+                                            DB::rollBack();
+                                            Log::error('Failed to insert wcOwnersInfo record. Exception: ' . $e->getMessage());
+                                        }
 
-                                    $templateData['ownersInfo'] = [];
-                                    foreach ($productDataStr as $key => $data) {
-                                        if (strpos($key, 'wc_name_') === 0) {
-                                            $counter = str_replace('wc_name_', '', $key);
+                                        $templateData['ownersInfo'] = [];
+                                        foreach ($productDataStr as $key => $data) {
+                                            if (strpos($key, 'wc_name_') === 0) {
+                                                $counter = str_replace('wc_name_', '', $key);
 
-                                            if (isset($productDataStr['wc_name_' . $counter]['value']) && !empty($productDataStr['wc_title_relationship_' . $counter]['value']) && !empty($productDataStr['wc_ownership_perc_' . $counter]['value']) && !empty($productDataStr['wc_exc_inc_' . $counter]['value']) && !empty($productDataStr['wc_ssn_' . $counter]['value']) && !empty($productDataStr['wc_fein_' . $counter]['value']) && !empty($productDataStr['wc_dob_' . $counter]['value'])) {
-                                                $wcOwnersInfo = new WCOwnersInfo();
+                                                if (isset($productDataStr['wc_name_' . $counter]['value']) && !empty($productDataStr['wc_title_relationship_' . $counter]['value']) && !empty($productDataStr['wc_ownership_perc_' . $counter]['value']) && !empty($productDataStr['wc_exc_inc_' . $counter]['value']) && !empty($productDataStr['wc_ssn_' . $counter]['value']) && !empty($productDataStr['wc_fein_' . $counter]['value']) && !empty($productDataStr['wc_dob_' . $counter]['value'])) {
+                                                    $wcOwnersInfo = new WCOwnersInfo();
 
-                                                DB::beginTransaction();
-                                                try {
+                                                    DB::beginTransaction();
+                                                    try {
 
-                                                    $owners_name = $productData['wc_name_' . $counter]['value'];
-                                                    $title_relationship = $productData['wc_title_relationship_' . $counter]['value'];
-                                                    $ownership_perc = $productData['wc_ownership_perc_' . $counter]['value'];
-                                                    $excluded_included = $productData['wc_exc_inc_' . $counter]['value'];
-                                                    $ssn = $productData['wc_ssn_' . $counter]['value'];
-                                                    $fein = $productData['wc_fein_' . $counter]['value'];
-                                                    $ownersDateOfBirth[$counter] = Carbon::createFromFormat('m/d/Y', $productData['wc_dob_' . $counter]['value'])->toDateString();
+                                                        $owners_name = $productData['wc_name_' . $counter]['value'];
+                                                        $title_relationship = $productData['wc_title_relationship_' . $counter]['value'];
+                                                        $ownership_perc = $productData['wc_ownership_perc_' . $counter]['value'];
+                                                        $excluded_included = $productData['wc_exc_inc_' . $counter]['value'];
+                                                        $ssn = $productData['wc_ssn_' . $counter]['value'];
+                                                        $fein = $productData['wc_fein_' . $counter]['value'];
+                                                        $ownersDateOfBirth[$counter] = Carbon::createFromFormat('m/d/Y', $productData['wc_dob_' . $counter]['value'])->toDateString();
 
-                                                    $wcOwnersInfo->wc_id = $workersCompensation->id;
-                                                    $wcOwnersInfo->owners_name = $owners_name;
-                                                    $wcOwnersInfo->title_relationship = $title_relationship;
-                                                    $wcOwnersInfo->ownership_percentage = $ownership_perc;
-                                                    $wcOwnersInfo->excluded_or_included = $excluded_included;
-                                                    $wcOwnersInfo->ssn = $ssn;
-                                                    $wcOwnersInfo->fein = $fein;
-                                                    $wcOwnersInfo->owners_date_of_birth = $ownersDateOfBirth[$counter];
-                                                    $wcOwnersInfo->save();
+                                                        $wcOwnersInfo->wc_id = $workersCompensation->id;
+                                                        $wcOwnersInfo->owners_name = $owners_name;
+                                                        $wcOwnersInfo->title_relationship = $title_relationship;
+                                                        $wcOwnersInfo->ownership_percentage = $ownership_perc;
+                                                        $wcOwnersInfo->excluded_or_included = $excluded_included;
+                                                        $wcOwnersInfo->ssn = $ssn;
+                                                        $wcOwnersInfo->fein = $fein;
+                                                        $wcOwnersInfo->owners_date_of_birth = $ownersDateOfBirth[$counter];
+                                                        $wcOwnersInfo->save();
 
-                                                    Log::info('Successfully saved wcOwnersInfo record. Data: ' . json_encode($wcOwnersInfo));
+                                                        Log::info('Successfully saved wcOwnersInfo record. Data: ' . json_encode($wcOwnersInfo));
 
-                                                    $templateData['ownersInfo'][] = [
-                                                        // 'counter' => $counter,
-                                                        'owners_name' => $owners_name,
-                                                        'title_relationship' => $title_relationship,
-                                                        'ownership_perc' => $ownership_perc,
-                                                        'excluded_included' => $excluded_included,
-                                                        'ssn' => $ssn,
-                                                        'fein' => $fein,
-                                                        'ownersDateOfBirth' => Carbon::createFromFormat('m/d/Y', $productData['wc_dob_' . $counter]['value'])->format('F j, Y'),
-                                                    ];
+                                                        $templateData['ownersInfo'][] = [
+                                                            // 'counter' => $counter,
+                                                            'owners_name' => $owners_name,
+                                                            'title_relationship' => $title_relationship,
+                                                            'ownership_perc' => $ownership_perc,
+                                                            'excluded_included' => $excluded_included,
+                                                            'ssn' => $ssn,
+                                                            'fein' => $fein,
+                                                            'ownersDateOfBirth' => Carbon::createFromFormat('m/d/Y', $productData['wc_dob_' . $counter]['value'])->format('F j, Y'),
+                                                        ];
 
-                                                    DB::commit();
-                                                } catch (\Exception $e) {
-                                                    DB::rollBack();
-                                                    Log::error('Failed to insert wcOwnersInfo record. Exception: ' . $e->getMessage());
+                                                        DB::commit();
+                                                    } catch (\Exception $e) {
+                                                        DB::rollBack();
+                                                        Log::error('Failed to insert wcOwnersInfo record. Exception: ' . $e->getMessage());
+                                                    }
                                                 }
                                             }
                                         }
@@ -789,11 +793,11 @@ class QuoteController extends Controller
 
                                     // $templateData['wcDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->format('F j, Y');
 
-                                    $templateData['wcDateOfLoss'] = $wc_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $wc_date_of_loss)->format('F j, Y');
+                                    $templateData['wcDateOfLoss'] = $wc_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['wcProfessionName'] = $wcProfessionName;
                                     $templateData['ownersDobFormatted'] = $ownersDobFormatted;
                                     $templateData['workersCompensation'] = $workersCompensation;
-                                    $templateData['productType'] = 'wc';
+                                    // $templateData['productTypes'][] = 'wc';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for WC: ' . $workersCompensation->id);
@@ -845,66 +849,66 @@ class QuoteController extends Controller
                                     $commercialAuto->auto_no_of_losses = $auto_no_of_losses;
                                     $commercialAuto->auto_amount_of_claim = $auto_amount_of_claim;
                                     $commercialAuto->auto_date_of_loss = $auto_date_of_loss;
-                                    $commercialAuto->save();
+                                    $doesCommercialAutoSaved = $commercialAuto->save();
 
-                                    $templateData['driversSpouseDateOfBirthFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['auto_driver_spouse_dob']['value'])->format('F j, Y');
-                                    $templateData['autoVehiclesInfo'] = [];
-                                    foreach ($productDataStr as $key => $data) {
-                                        if (strpos($key, 'auto_vehicle_year_') === 0) {
-                                            $counter = str_replace('auto_vehicle_year_', '', $key);
+                                    if ($doesCommercialAutoSaved) {
+                                        $templateData['driversSpouseDateOfBirthFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['auto_driver_spouse_dob']['value'])->format('F j, Y');
+                                        $templateData['autoVehiclesInfo'] = [];
+                                        foreach ($productDataStr as $key => $data) {
+                                            if (strpos($key, 'auto_vehicle_year_') === 0) {
+                                                $counter = str_replace('auto_vehicle_year_', '', $key);
 
-                                            if (isset($productDataStr['auto_vehicle_year_'.$counter]['value']) && isset($productDataStr['auto_vehicle_maker_'.$counter]['value']) && isset($productDataStr['auto_vehicle_model_'.$counter]['value']) && isset($productDataStr['auto_vehicle_vin_'.$counter]['value']) && isset($productDataStr['auto_vehicle_mileage_'.$counter]['value']) && isset($productDataStr['auto_vehicle_garage_add_'.$counter]['value']) && isset($productDataStr['auto_vehicle_coverage_limits_'.$counter]['value'])) {
-                                                $vehicleEntry = new CommercialAutoVehicles();
+                                                if (isset($productDataStr['auto_vehicle_year_'.$counter]['value']) && isset($productDataStr['auto_vehicle_maker_'.$counter]['value']) && isset($productDataStr['auto_vehicle_model_'.$counter]['value']) && isset($productDataStr['auto_vehicle_vin_'.$counter]['value']) && isset($productDataStr['auto_vehicle_mileage_'.$counter]['value']) && isset($productDataStr['auto_vehicle_garage_add_'.$counter]['value']) && isset($productDataStr['auto_vehicle_coverage_limits_'.$counter]['value'])) {
+                                                    $vehicleEntry = new CommercialAutoVehicles();
 
-                                                DB::beginTransaction();
-                                                try {
-                                                    $year = $productData['auto_vehicle_year_' . $counter]['value'];
-                                                    $maker = $productData['auto_vehicle_maker_' . $counter]['value'];
-                                                    $model = $productData['auto_vehicle_model_' . $counter]['value'];
-                                                    $vin = $productData['auto_vehicle_vin_' . $counter]['value'];
-                                                    $mileage_radius = $productData['auto_vehicle_mileage_' . $counter]['value'];
-                                                    $garage_address = $productData['auto_vehicle_garage_add_' . $counter]['value'];
-                                                    $coverage_limits = floatval(preg_replace("/[^-0-9\.]/","",  $productData['auto_vehicle_coverage_limits_'.$counter]['value']));
+                                                    DB::beginTransaction();
+                                                    try {
+                                                        $year = $productData['auto_vehicle_year_' . $counter]['value'];
+                                                        $maker = $productData['auto_vehicle_maker_' . $counter]['value'];
+                                                        $model = $productData['auto_vehicle_model_' . $counter]['value'];
+                                                        $vin = $productData['auto_vehicle_vin_' . $counter]['value'];
+                                                        $mileage_radius = $productData['auto_vehicle_mileage_' . $counter]['value'];
+                                                        $garage_address = $productData['auto_vehicle_garage_add_' . $counter]['value'];
+                                                        $coverage_limits = floatval(preg_replace("/[^-0-9\.]/","",  $productData['auto_vehicle_coverage_limits_'.$counter]['value']));
 
-                                                    $vehicleEntry->comm_auto_id = $commercialAuto->id;
-                                                    $vehicleEntry->year = $year;
-                                                    $vehicleEntry->maker = $maker;
-                                                    $vehicleEntry->model = $model;
-                                                    $vehicleEntry->vin = $vin;
-                                                    $vehicleEntry->mileage_radius = $mileage_radius;
-                                                    $vehicleEntry->garage_address = $garage_address;
-                                                    $vehicleEntry->coverage_limits = $coverage_limits;
-                                                    $vehicleEntry->save();
+                                                        $vehicleEntry->comm_auto_id = $commercialAuto->id;
+                                                        $vehicleEntry->year = $year;
+                                                        $vehicleEntry->maker = $maker;
+                                                        $vehicleEntry->model = $model;
+                                                        $vehicleEntry->vin = $vin;
+                                                        $vehicleEntry->mileage_radius = $mileage_radius;
+                                                        $vehicleEntry->garage_address = $garage_address;
+                                                        $vehicleEntry->coverage_limits = $coverage_limits;
+                                                        $vehicleEntry->save();
 
-                                                    Log::info('Successfully saved vehicleEntry record. Data: ' . json_encode($vehicleEntry));
+                                                        Log::info('Successfully saved vehicleEntry record. Data: ' . json_encode($vehicleEntry));
 
-                                                    $templateData['autoVehiclesInfo'][] = [
-                                                        'counter' => $counter,
-                                                        'year' => $year,
-                                                        'maker' => $maker,
-                                                        'model' => $model,
-                                                        'vin' => $vin,
-                                                        'mileage_radius' => $mileage_radius,
-                                                        'garage_address' => $garage_address,
-                                                        'coverage_limits' => $coverage_limits,
-                                                    ];
+                                                        $templateData['autoVehiclesInfo'][] = [
+                                                            'counter' => $counter,
+                                                            'year' => $year,
+                                                            'maker' => $maker,
+                                                            'model' => $model,
+                                                            'vin' => $vin,
+                                                            'mileage_radius' => $mileage_radius,
+                                                            'garage_address' => $garage_address,
+                                                            'coverage_limits' => $coverage_limits,
+                                                        ];
 
-                                                    DB::commit();
-                                                } catch (\Exception $e) {
-                                                    DB::rollBack();
-                                                    Log::error('Failed to insert vehicleEntry record. Exception: ' . $e->getMessage());
+                                                        DB::commit();
+                                                    } catch (\Exception $e) {
+                                                        DB::rollBack();
+                                                        Log::error('Failed to insert vehicleEntry record. Exception: ' . $e->getMessage());
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
 
-                                    $templateData['autoDriversInfo'] = [];
-                                    // if (isset($productDataStr['auto_add_drivers_name_'.$counter]['value'])) {
+                                        $templateData['autoDriversInfo'] = [];
                                         foreach ($productDataStr as $key => $data) {
                                             if (strpos($key, 'auto_add_drivers_name_') === 0) {
                                                 $counter = str_replace('auto_add_drivers_name_', '', $key);
                                                 // dd($counter);
-                                                // if (isset($productDataStr['auto_add_drivers_name_'.$counter]['value']) && isset($productDataStr['auto_add_driver_lic_'.$counter]['value']) && isset($productDataStr['auto_add_driver_mileage_radius_'.$counter]['value']) && isset($productDataStr['auto_add_driver_date_birth_'.$counter]['value']) && isset($productDataStr['auto_add_driver_civil_status_'.$counter]['value']) && isset($productDataStr['auto_add_driver_spouse_name_'.$counter]['value']) && isset($productDataStr['auto_add_driver_spouse_dob_'.$counter]['value'])) {
+                                                if (isset($productDataStr['auto_add_drivers_name_'.$counter]['value']) && isset($productDataStr['auto_add_driver_lic_'.$counter]['value']) && isset($productDataStr['auto_add_driver_mileage_radius_'.$counter]['value']) && isset($productDataStr['auto_add_driver_date_birth_'.$counter]['value']) && isset($productDataStr['auto_add_driver_civil_status_'.$counter]['value']) && isset($productDataStr['auto_add_driver_spouse_name_'.$counter]['value']) && isset($productDataStr['auto_add_driver_spouse_dob_'.$counter]['value'])) {
                                                     $driverEntry = new CommercialAutoDrivers();
                                                     DB::beginTransaction();
                                                     try {
@@ -944,10 +948,10 @@ class QuoteController extends Controller
                                                         DB::rollBack();
                                                         Log::error('Failed to insert driverEntry record. Exception: ' . $e->getMessage());
                                                     }
-                                                // }
+                                                }
                                             }
                                         }
-                                    // }
+                                    }
 
                                     $templateData['autoNoOfLosses'] = "";
 
@@ -969,17 +973,15 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    // $templateData['autoDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->format('F j, Y');
-
-                                    $templateData['autoDateOfLoss'] = $auto_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $auto_date_of_loss)->format('F j, Y');
+                                    $templateData['autoDateOfLoss'] = $auto_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['auto_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['clientDateOfBirth'] = $client_date_of_birth;
                                     $templateData['commercialAuto'] = $commercialAuto;
-                                    $templateData['productType'] = 'auto';
+                                    // $templateData['productTypes'][] = 'auto';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for AUTO: ' . $commercialAuto->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert AUTO record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'bond':
@@ -987,18 +989,18 @@ class QuoteController extends Controller
                                     $client_info_id = $clientInformation->id;
                                     $owners_name = $productData['bond_owners_name']['value'];
                                     $ssn = $productData['bond_owners_ssn']['value'];
-                                    $date_of_birth = Carbon::createFromFormat('m/d/Y', $productData['bond_owners_dob']['value'])->toDateString();
+                                    $date_of_birth = Carbon::createFromFormat('m/d/Y', $productData['bond_owners_dob']['value']);
                                     $civil_status = $productData['bond_owners_civil_status']['value'];
-                                    $spouse_name = $productData['bond_owners_spouse_name']['value'];
-                                    $spouse_date_of_birth = Carbon::createFromFormat('m/d/Y', $productData['bond_owners_spouse_dob']['value'])->toDateString();
-                                    $spouse_ssn = $productData['bond_owners_spouse_ssn']['value'];
+                                    $spouse_name = isset($productData['bond_owners_spouse_name']['value']) ? $productData['bond_owners_spouse_name']['value'] : null;
+                                    $spouse_date_of_birth = isset($productData['bond_owners_spouse_dob']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['bond_owners_spouse_dob']['value']) : null;
+                                    $spouse_ssn = isset($productData['bond_owners_spouse_ssn']['value']) ? $productData['bond_owners_spouse_ssn']['value'] : null;
                                     $type_of_bond_requested = $productData['bond_type_bond_requested']['value'];
                                     $amount_of_bond = floatval(preg_replace("/[^-0-9\.]/","", $productData['bond_amount_of_bond']['value']));
                                     $term_of_bond = $productData['bond_term_of_bond']['value'];
                                     $type_of_license = $productData['bond_type_of_license']['value'];
-                                    $if_other_type_of_license = isset($productData['bond_if_other_type_of_license']) ? $productData['bond_if_other_type_of_license'] : null;
+                                    $if_other_type_of_license = isset($productData['bond_if_other_type_of_license']['value']) ? $productData['bond_if_other_type_of_license']['value'] : null;
                                     $license_number_or_application_number = $productData['bond_license_or_application_no']['value'];
-                                    $effective_date = Carbon::createFromFormat('m/d/Y', $productData['bond_effective_date']['value'])->toDateString();
+                                    $effective_date = Carbon::createFromFormat('m/d/Y', $productData['bond_effective_date']['value']);
                                     $bond_no_of_losses = $productData['bond_no_of_losses']['value'];
                                     $bond_amount_of_claim = null;
                                     if (isset($productData['bond_amt_of_claims']['value']) && !empty($productData['bond_amt_of_claims']['value'])) {
@@ -1015,26 +1017,36 @@ class QuoteController extends Controller
                                          $bond_date_of_loss = null;
                                     }
 
-                                    $licenseBond = new LicenseBondInformation();
-                                    $licenseBond->client_info_id = $client_info_id;
-                                    $licenseBond->owners_name = $owners_name;
-                                    $licenseBond->ssn = $ssn;
-                                    $licenseBond->date_of_birth = $date_of_birth;
-                                    $licenseBond->civil_status = $civil_status;
-                                    $licenseBond->spouse_name = $spouse_name;
-                                    $licenseBond->spouse_date_of_birth = $spouse_date_of_birth;
-                                    $licenseBond->spouse_ssn = $spouse_ssn;
-                                    $licenseBond->type_of_bond_requested = $type_of_bond_requested;
-                                    $licenseBond->amount_of_bond = $amount_of_bond;
-                                    $licenseBond->term_of_bond = $term_of_bond;
-                                    $licenseBond->type_of_license = $type_of_license;
-                                    $licenseBond->if_other_type_of_license = $if_other_type_of_license;
-                                    $licenseBond->license_number_or_application_number = $license_number_or_application_number;
-                                    $licenseBond->effective_date = $effective_date;
-                                    $licenseBond->bond_no_of_losses = $bond_no_of_losses;
-                                    $licenseBond->bond_amount_of_claim = $bond_amount_of_claim;
-                                    $licenseBond->bond_date_of_loss = $bond_date_of_loss;
-                                    $licenseBond->save();
+                                    DB::beginTransaction();
+                                    try {
+                                        $licenseBond = new LicenseBondInformation();
+                                        $licenseBond->client_info_id = $client_info_id;
+                                        $licenseBond->owners_name = $owners_name;
+                                        $licenseBond->ssn = $ssn;
+                                        $licenseBond->date_of_birth = $date_of_birth;
+                                        $licenseBond->civil_status = $civil_status;
+                                        $licenseBond->spouse_name = $spouse_name;
+                                        $licenseBond->spouse_date_of_birth = $spouse_date_of_birth;
+                                        $licenseBond->spouse_ssn = $spouse_ssn;
+                                        $licenseBond->type_of_bond_requested = $type_of_bond_requested;
+                                        $licenseBond->amount_of_bond = $amount_of_bond;
+                                        $licenseBond->term_of_bond = $term_of_bond;
+                                        $licenseBond->type_of_license = $type_of_license;
+                                        $licenseBond->if_other_type_of_license = $if_other_type_of_license;
+                                        $licenseBond->license_number_or_application_number = $license_number_or_application_number;
+                                        $licenseBond->effective_date = $effective_date;
+                                        $licenseBond->bond_no_of_losses = $bond_no_of_losses;
+                                        $licenseBond->bond_amount_of_claim = $bond_amount_of_claim;
+                                        $licenseBond->bond_date_of_loss = $bond_date_of_loss;
+                                        $doesLicenseBondSaved = $licenseBond->save();
+
+                                        Log::info('Successfully saved LicenseBondInformation record. Data: ' . json_encode($doesLicenseBondSaved));
+                                        DB::commit();
+                                    } catch (\Exception $e) {
+                                        DB::rollBack();
+                                        Log::error('Failed to insert LicenseBondInformation record. Exception: ' . $e->getMessage());
+
+                                    }
 
                                     $templateData['bondNoOfLosses'] = "";
 
@@ -1057,17 +1069,17 @@ class QuoteController extends Controller
                                     }
 
                                     // $templateData['bondDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['bond_date_of_loss']['value'])->format('F j, Y');
-                                    $templateData['bondDateOfLoss'] = $bond_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $bond_date_of_loss)->format('F j, Y');
+                                    $templateData['bondDateOfLoss'] = $bond_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['bond_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['licenseBond'] = $licenseBond;
                                     $templateData['ownersDobFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['bond_owners_dob']['value'])->format('F j, Y');
                                     $templateData['spouseDobFormatted'] = $spouse_date_of_birth === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['bond_owners_spouse_dob']['value'])->format('F j, Y');
                                     $templateData['bondEffDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['bond_effective_date']['value'])->format('F j, Y');
-                                    $templateData['productType'] = 'bond';
+                                    // $templateData['productTypes'][] = 'bond';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for BOND: ' . $licenseBond->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert BOND record. Exception: ', ['exception' => $e]);
                                 }
                                 break;
                             case 'excess':
@@ -1131,17 +1143,17 @@ class QuoteController extends Controller
                                     }
 
                                     // $templateData['excessDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['excess_date_of_loss']['value'])->format('F j, Y');
-                                    $templateData['excessDateOfLoss'] = $excess_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $excess_date_of_loss)->format('F j, Y');
+                                    $templateData['excessDateOfLoss'] = $excess_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['excess_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['excessGLEffectiveDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['excess_gl_eff_date']['value'])->format('F j, Y');
                                     $templateData['excessEffectiveDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['excess_effective_date']['value'])->format('F j, Y');
                                     $templateData['excessExpirationDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['excess_expiration_date']['value'])->format('F j, Y');
                                     $templateData['excessLiability'] = $excessLiability;
-                                    $templateData['productType'] = 'excess';
+                                    // $templateData['productTypes'][] = 'excess';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for EXCESS: ' . $excessLiability->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert EXCESS record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'tools':
@@ -1210,14 +1222,14 @@ class QuoteController extends Controller
                                     }
 
                                     // $templateData['toolsDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['tools_date_of_loss']['value'])->format('F j, Y');
-                                    $templateData['toolsDateOfLoss'] = $tools_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $tools_date_of_loss)->format('F j, Y');
+                                    $templateData['toolsDateOfLoss'] = $tools_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['tools_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['toolsEquipmentsLiability'] = $toolsEquipmentsLiability;
-                                    $templateData['productType'] = 'tools';
+                                    // $templateData['productTypes'][] = 'tools';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for TOOLS: ' . $toolsEquipmentsLiability->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert TOOLS record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'br':
@@ -1245,9 +1257,6 @@ class QuoteController extends Controller
                                     $does_scheduled_property_address_builders_risk_coverage = $productData['br_scheduled_property_address_builders_risk_coverage']['value'];
                                     $carrier_name = isset($productData['br_sched_property_carrier_name']['value']) ? $productData['br_sched_property_carrier_name']['value'] : null;
                                     $br_no_of_losses = $productData['br_no_of_losses']['value'];
-
-                                    // $br_amount_of_claim = isset($productData['br_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['br_amt_of_claims']['value'])) : null;
-                                    // $br_date_of_loss = isset($productData['br_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['br_date_of_loss']['value'])->toDateString() : null;
 
                                     $br_amount_of_claim = null;
                                     if (isset($productData['br_amt_of_claim']['value']) && !empty($productData['br_amt_of_claim']['value'])) {
@@ -1294,7 +1303,6 @@ class QuoteController extends Controller
                                             // The date is in 'Y-m-d H:i:s' format, use directly
                                             $buildersRiskLiability->effective_date = $effectiveDateValue;
                                         } else {
-                                            // Try converting from 'm/d/Y'
                                             try {
                                                 $buildersRiskLiability->effective_date = Carbon::createFromFormat('m/d/Y', $effectiveDateValue)->toDateString();
                                             } catch (\Exception $e) {
@@ -1309,10 +1317,8 @@ class QuoteController extends Controller
                                     $expirationDateValue = $productData['br_sched_property_expiration_date']['value'] ?? null;
                                     if ($expirationDateValue) {
                                         if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $expirationDateValue)) {
-                                            // The date is in 'Y-m-d H:i:s' format, use directly
                                             $buildersRiskLiability->expiration_date = $expirationDateValue;
                                         } else {
-                                            // Try converting from 'm/d/Y'
                                             try {
                                                 $buildersRiskLiability->expiration_date = Carbon::createFromFormat('m/d/Y', $expirationDateValue)->toDateString();
                                             } catch (\Exception $e) {
@@ -1393,16 +1399,16 @@ class QuoteController extends Controller
                                     $templateData['brStructureBuilt'] = Carbon::createFromFormat('m/d/Y', $productData['br_when_structure_built']['value'])->format('F j, Y');
                                     $templateData['brWhenWillProjectStart'] = $whenProjectStart === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['br_when_will_project_start']['value'])->format('F j, Y');
                                     $templateData['brWhenHasProjectStarted'] = $whenHasProjectStarted === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['br_when_project_started']['value'])->format('F j, Y');
-                                    $templateData['brDateOfLoss'] = $br_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $br_date_of_loss)->format('F j, Y');
+                                    $templateData['brDateOfLoss'] = $br_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['br_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['brEffDateFormatted'] =  Carbon::createFromFormat('m/d/Y', $productData['br_sched_property_effective_date']['value'])->format('F j, Y');
                                     $templateData['brExpDateFormatted'] =  Carbon::createFromFormat('m/d/Y', $productData['br_sched_property_expiration_date']['value'])->format('F j, Y');
                                     $templateData['buildersRiskLiability'] = $buildersRiskLiability;
-                                    $templateData['productType'] = 'br';
+                                    // $templateData['productTypes'][] = 'br';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for BR: ' . $buildersRiskLiability->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert BR record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'bop':
@@ -1430,8 +1436,6 @@ class QuoteController extends Controller
                                     $last_update_to_electrical_year = $productData['bop_last_update_electrical_year']['value'];
                                     $last_update_to_plumbing_year = $productData['bop_last_update_plumbing_year']['value'];
                                     $bop_no_of_losses = $productData['bop_no_of_losses']['value'];
-                                    // $bop_amount_of_claim = isset($productData['bop_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_amt_of_claims']['value'])) : null;
-                                    // $bop_date_of_loss = isset($productData['bop_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['bop_date_of_loss']['value'])->toDateString() : null;
 
                                     $bop_amount_of_claim = null;
                                     if (isset($productData['bop_amt_of_claims']['value']) && !empty($productData['bop_amt_of_claims']['value'])) {
@@ -1496,17 +1500,15 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    // $templateData['bopDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['bop_date_of_loss']['value'])->format('F j, Y');
-
-                                    $templateData['bopDateOfLoss'] = $bop_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $bop_date_of_loss)->format('F j, Y');
+                                    $templateData['bopDateOfLoss'] = $bop_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['bop_date_of_loss']['value'])->format('F j, Y');
 
                                     $templateData['businessOwnersPolicy'] = $businessOwnersPolicy;
-                                    $templateData['productType'] = 'bop';
+                                    // $templateData['productTypes'][] = 'bop';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for BOP: ' . $businessOwnersPolicy->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert BOP record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'comm_prop':
@@ -1533,8 +1535,6 @@ class QuoteController extends Controller
                                     $last_update_to_electrical_year = $productData['property_last_update_plumbing_year']['value'];
                                     $last_update_to_plumbing_year = $productData['property_last_update_electrical_year']['value'];
                                     $property_no_of_losses = $productData['property_no_of_losses']['value'];
-                                    // $property_amount_of_claim = isset($productData['property_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['property_amt_of_claims']['value'])) : null;
-                                    // $property_date_of_loss = isset($productData['property_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['property_date_of_loss']['value'])->toDateString() : null;
 
                                     $property_amount_of_claim = null;
                                     if (isset($productData['property_amt_of_claims']['value']) && !empty($productData['property_amt_of_claims']['value'])) {
@@ -1598,17 +1598,14 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    // $templateData['propertyDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['property_date_of_loss']['value'])->format('F j, Y');
-
-                                    $templateData['propertyDateOfLoss'] = $property_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $property_date_of_loss)->format('F j, Y');
-
+                                    $templateData['propertyDateOfLoss'] = $property_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['property_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['commercialProperty'] = $commercialProperty;
-                                    $templateData['productType'] = 'comm_prop';
+                                    // $templateData['productTypes'][] = 'comm_prop';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for COMM PROP: ' . $commercialProperty->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert COMM PROP record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'eo':
@@ -1643,9 +1640,6 @@ class QuoteController extends Controller
                                     $hr_q4 = $productData['eo_hr_q4']['value'];
                                     $hr_sub_q4 = isset($productData['eo_hr_sub_q4']['value']) ? $productData['eo_hr_sub_q4']['value'] : null;
                                     $eo_no_of_losses = $productData['eo_no_of_losses']['value'];
-
-                                    // $eo_amount_of_claim = isset($productData['eo_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['eo_amt_of_claims']['value'])) : null;
-                                    // $eo_date_of_loss = isset($productData['eo_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value'])->toDateString() : null;
 
                                     $eo_amount_of_claim = null;
                                     if (isset($productData['eo_amt_of_claims']['value']) && !empty($productData['eo_amt_of_claims']['value'])) {
@@ -1717,15 +1711,14 @@ class QuoteController extends Controller
                                             break;
                                     }
 
-                                    // $templateData['eoDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['eoDateOfLoss'] = $eo_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['eo_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['errorsEmission'] = $errorsEmission;
-                                    $templateData['productType'] = 'eo';
+                                    // $templateData['productTypes'][] = 'eo';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for EO: ' . $errorsEmission->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert EO record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'pollution':
@@ -1760,14 +1753,14 @@ class QuoteController extends Controller
                                     $templateData['parsedPollutionPayrollAmount'] = $parsedPollutionPayrollAmount;
                                     $templateData['parsedPollutionSubcontractorCost'] = $parsedPollutionSubcontractorCost;
                                     $templateData['pollutionLiability'] = $pollutionLiability;
-                                    $templateData['productType'] = 'pollution';
+                                    // $templateData['productTypes'][] = 'pollution';
                                     $templateData['clientInformation'] = $clientInformation;
 
                                     $html_body .= view('quote.quote-details', $templateData)->render();
 
                                     Log::info('Record inserted with id for POLLUTION: ' . $pollutionLiability->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert POLLUTION record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'epli':
@@ -1817,21 +1810,6 @@ class QuoteController extends Controller
                                     $epli_no_of_losses = $productData['epli_no_of_losses']['value'];
                                     $epli_amount_of_claim = isset($productData['epli_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_amt_of_claims']['value'])) : null;
                                     $epli_date_of_loss = isset($productData['epli_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value']) : null;
-
-                                    // $epli_amount_of_claim = null;
-                                    // if (isset($productData['epli_amt_of_claims']['value']) && !empty($productData['epli_amt_of_claims']['value'])) {
-                                    //     try {
-                                    //         $epli_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_amt_of_claims']['value']));
-                                    //     } catch (\Exception $e) {
-                                    //         $epli_amount_of_claim = null;
-                                    //     }
-                                    // }
-                                    // $epli_date_of_loss = null;
-                                    // if (isset($productData['epli_date_of_loss']['value']) && !empty($productData['epli_date_of_loss']['value'])) {
-                                    //     $epli_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value']);
-                                    // } else {
-                                    //     $epli_date_of_loss = null;
-                                    // }
 
                                     $epli = new EPLIInformation();
                                     $epli->client_info_id = $client_info_id;
@@ -1897,12 +1875,12 @@ class QuoteController extends Controller
                                     $templateData['epliDateOfLoss'] = $epli_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['epli_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['epliEffDateFormatted'] = Carbon::createFromFormat('m/d/Y', $productData['epli_effective_date']['value'])->format('F j, Y');
                                     $templateData['epli'] = $epli;
-                                    $templateData['productType'] = 'epli';
+                                    // $templateData['productTypes'][] = 'epli';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for EPLI: ' . $epli->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert EPLI record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'cyber':
@@ -1977,14 +1955,14 @@ class QuoteController extends Controller
                                     }
 
                                     // $templateData['cyberDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['cyber_date_of_loss']['value'])->format('F j, Y');
-                                    $templateData['cyberDateOfLoss'] = $cyber_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $cyber_date_of_loss)->format('F j, Y');
+                                    $templateData['cyberDateOfLoss'] = $cyber_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['cyber_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['cyberLiability'] = $cyberLiability;
-                                    $templateData['productType'] = 'cyber';
+                                    // $templateData['productTypes'][] = 'cyber';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for CYBER: ' . $cyberLiability->id);
                                 } catch (\Exception $e) {
-                                    Log::error('Failed to insert record. Exception: ' . $e->getMessage());
+                                    Log::error('Failed to insert CYBER record. Exception: ' . $e->getMessage());
                                 }
                                 break;
                             case 'instfloat':
@@ -2044,50 +2022,65 @@ class QuoteController extends Controller
                                     $instFloater->instfloat_no_of_losses = $instfloat_no_of_losses;
                                     $instFloater->instfloat_amount_of_claim = $instfloat_amount_of_claim;
                                     $instFloater->instfloat_date_of_loss = $instfloat_date_of_loss;
-                                    $instFloater->save();
+                                    $doesInstallationFloaterSaved = $instFloater->save();
 
-                                    $templateData['scheduledEquipmentsInfo'] = [];
-                                    foreach ($productDataStr as $key => $data) {
-                                        $counter = str_replace('instfloat_scheduled_equipment_type_', '', $key);
-                                        if (isset($productDataStr['instfloat_scheduled_equipment_type_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_mfg_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_id_or_serial_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_model_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_new_or_used_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_model_year_' . $counter]['value']) && !empty($productDataStr['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])) {
-                                            $instFloaterSchedEquipment = new InstallationFloaterScheduledEquipment();
-                                            DB::beginTransaction();
-                                            try {
-                                                $sched_equip_type = $productData['instfloat_scheduled_equipment_type_' . $counter]['value'];
-                                                $sched_equip_manufacturer = $productData['instfloat_scheduled_equipment_mfg_' . $counter]['value'];
-                                                $sched_equip_serial_no = $productData['instfloat_scheduled_equipment_id_or_serial_' . $counter]['value'];
-                                                $sched_equip_model = $productData['instfloat_scheduled_equipment_model_' . $counter]['value'];
-                                                $sched_equip_new_or_used = $productData['instfloat_scheduled_equipment_new_or_used_' . $counter]['value'];
-                                                $sched_equip_model_year = $productData['instfloat_scheduled_equipment_model_year_' . $counter]['value'];
-                                                $sched_equip_date_purchased = isset($productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value']) ? Carbon::createFromFormat('m/d/Y', $productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])->toDateString() : null;
+                                    if ($doesInstallationFloaterSaved) {
+                                        $templateData['scheduledEquipmentsInfo'] = [];
+                                        foreach ($productDataStr as $key => $data) {
+                                            $counter = str_replace('instfloat_scheduled_equipment_type_', '', $key);
+                                            if (
+                                                isset($productDataStr['instfloat_scheduled_equipment_mfg_' . $counter]['value'])
+                                                && !empty($productDataStr['instfloat_scheduled_equipment_mfg_' . $counter]['value']) &&
+                                                isset($productDataStr['instfloat_scheduled_equipment_id_or_serial_' . $counter]['value'])
+                                                && !empty($productDataStr['instfloat_scheduled_equipment_id_or_serial_' . $counter]['value']) &&
+                                                isset($productDataStr['instfloat_scheduled_equipment_model_' . $counter]['value'])
+                                                && !empty($productDataStr['instfloat_scheduled_equipment_model_' . $counter]['value']) &&
+                                                isset($productDataStr['instfloat_scheduled_equipment_new_or_used_' . $counter]['value'])
+                                                && !empty($productDataStr['instfloat_scheduled_equipment_new_or_used_' . $counter]['value']) &&
+                                                isset($productDataStr['instfloat_scheduled_equipment_model_year_' . $counter]['value'])
+                                                && !empty($productDataStr['instfloat_scheduled_equipment_model_year_' . $counter]['value']) &&
+                                                isset($productDataStr['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])
+                                                && !empty($productDataStr['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])) {
 
-                                                $instFloaterSchedEquipment->instfloat_id = $instFloater->id;
-                                                $instFloaterSchedEquipment->sched_equip_type = $sched_equip_type;
-                                                $instFloaterSchedEquipment->sched_equip_manufacturer = $sched_equip_manufacturer;
-                                                $instFloaterSchedEquipment->sched_equip_serial_no = $sched_equip_serial_no;
-                                                $instFloaterSchedEquipment->sched_equip_model = $sched_equip_model;
-                                                $instFloaterSchedEquipment->sched_equip_new_or_used = $sched_equip_new_or_used;
-                                                $instFloaterSchedEquipment->sched_equip_model_year = $sched_equip_model_year;
-                                                // $schedEquipmentDatePurchased = Carbon::createFromFormat('m/d/Y', $productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])->toDateString();
-                                                $instFloaterSchedEquipment->sched_equip_date_purchased = $sched_equip_date_purchased;
-                                                $instFloaterSchedEquipment->save();
+                                                $instFloaterSchedEquipment = new InstallationFloaterScheduledEquipment();
+                                                DB::beginTransaction();
+                                                try {
+                                                    $sched_equip_type = $productData['instfloat_scheduled_equipment_type_' . $counter]['value'];
+                                                    $sched_equip_manufacturer = $productData['instfloat_scheduled_equipment_mfg_' . $counter]['value'];
+                                                    $sched_equip_serial_no = $productData['instfloat_scheduled_equipment_id_or_serial_' . $counter]['value'];
+                                                    $sched_equip_model = $productData['instfloat_scheduled_equipment_model_' . $counter]['value'];
+                                                    $sched_equip_new_or_used = $productData['instfloat_scheduled_equipment_new_or_used_' . $counter]['value'];
+                                                    $sched_equip_model_year = $productData['instfloat_scheduled_equipment_model_year_' . $counter]['value'];
+                                                    $sched_equip_date_purchased = isset($productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value']) ? Carbon::createFromFormat('m/d/Y', $productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value']) : null;
 
-                                                $templateData['scheduledEquipmentsInfo'][] = [
-                                                    'counter' => $counter,
-                                                    'sched_equip_type' => $sched_equip_type,
-                                                    'sched_equip_manufacturer' => $sched_equip_manufacturer,
-                                                    'sched_equip_serial_no' => $sched_equip_serial_no,
-                                                    'sched_equip_model' => $sched_equip_model,
-                                                    'sched_equip_new_or_used' => $sched_equip_new_or_used,
-                                                    'sched_equip_model_year' => $sched_equip_model_year,
-                                                    'sched_equip_date_purchased' => Carbon::createFromFormat('m/d/Y', $productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])->format('F j, Y'),
-                                                ];
+                                                    $instFloaterSchedEquipment->instfloat_id = $instFloater->id;
+                                                    $instFloaterSchedEquipment->sched_equip_type = $sched_equip_type;
+                                                    $instFloaterSchedEquipment->sched_equip_manufacturer = $sched_equip_manufacturer;
+                                                    $instFloaterSchedEquipment->sched_equip_serial_no = $sched_equip_serial_no;
+                                                    $instFloaterSchedEquipment->sched_equip_model = $sched_equip_model;
+                                                    $instFloaterSchedEquipment->sched_equip_new_or_used = $sched_equip_new_or_used;
+                                                    $instFloaterSchedEquipment->sched_equip_model_year = $sched_equip_model_year;
+                                                    // $schedEquipmentDatePurchased = Carbon::createFromFormat('m/d/Y', $productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])->toDateString();
+                                                    $instFloaterSchedEquipment->sched_equip_date_purchased = $sched_equip_date_purchased;
+                                                    $instFloaterSchedEquipment->save();
 
-                                                Log::info('Successfully saved instFloaterSchedEquipment record. Data: ' . json_encode($instFloaterSchedEquipment));
-                                                DB::commit();
-                                            } catch (\Exception $e) {
-                                                DB::rollBack();
-                                                Log::error('Failed to insert instFloaterSchedEquipment record. Exception: ' . $e->getMessage());
+                                                    $templateData['scheduledEquipmentsInfo'][] = [
+                                                        'counter' => $counter,
+                                                        'sched_equip_type' => $sched_equip_type,
+                                                        'sched_equip_manufacturer' => $sched_equip_manufacturer,
+                                                        'sched_equip_serial_no' => $sched_equip_serial_no,
+                                                        'sched_equip_model' => $sched_equip_model,
+                                                        'sched_equip_new_or_used' => $sched_equip_new_or_used,
+                                                        'sched_equip_model_year' => $sched_equip_model_year,
+                                                        'sched_equip_date_purchased' => Carbon::createFromFormat('m/d/Y', $productData['instfloat_scheduled_equipment_date_purchased_' . $counter]['value'])->format('F j, Y'),
+                                                    ];
+
+                                                    Log::info('Successfully saved instFloaterSchedEquipment record. Data: ' . json_encode($instFloaterSchedEquipment));
+                                                    DB::commit();
+                                                } catch (\Exception $e) {
+                                                    DB::rollBack();
+                                                    Log::error('Failed to insert instFloaterSchedEquipment record. Exception: ' . $e->getMessage());
+                                                }
                                             }
                                         }
                                     }
@@ -2115,7 +2108,7 @@ class QuoteController extends Controller
                                     // $templateData['instFloatDateOfLoss'] = Carbon::createFromFormat('m/d/Y', $productData['instfloat_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['instFloatDateOfLoss'] = $instfloat_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['instfloat_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['instFloater'] = $instFloater;
-                                    $templateData['productType'] = 'instfloat';
+                                    // $templateData['productTypes'][] = 'instfloat';
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for INSTALLATION FLOATER: ' . $instFloater->id);

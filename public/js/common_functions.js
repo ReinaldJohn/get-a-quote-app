@@ -1,6 +1,5 @@
 (function ($) {
     ("use strict");
-
     // Preload
     $(window).on("load", function () {
         // makes sure the whole site is loaded
@@ -12,11 +11,11 @@
     });
 
     let observer = new MutationObserver(() => {
-        // $(
-        //     "#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea"
-        // )
-        //     .not("#fax_number, #personal_website, #contractor_license")
-        //     .prop("required", true);
+        $(
+            "#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea"
+        )
+            .not("#fax_number, #personal_website, #bond_owners_spouse_ssn")
+            .prop("required", true);
     });
 
     // Observe the entire document for changes
@@ -25,10 +24,99 @@
         subtree: true, // Observes all descendants
     });
 
+    const maxLength = 255;
+    $(document).on(
+        "input",
+        "#company_name, #firstname, #lastname, #address, #city, #website, #gl_specify_profession, #gl_descops, #gl_full_time_employees, #gl_part_time_employees, #gl_no_of_losses, input[name^='gl_multiple_states_'], #wc_num_of_empl, #wc_no_of_losses, #wc_name, #wc_title_relationship, input[name^='wc_name_'], input[name^='wc_title_relationship_'], input[name^='auto_vehicle_maker_'], input[name^='auto_vehicle_model_'], input[name^='auto_vehicle_vin_'], input[name^='auto_vehicle_mileage_'], input[name^='auto_vehicle_garage_add_'], #auto_driver_full_name, #auto_driver_marital_status, #auto_driver_spouse_name, #auto_driver_license_no, #auto_driver_years_of_driving_exp, #auto_no_of_losses, input[name^='auto_add_drivers_name_'], input[name^='auto_add_driver_lic_'], input[name^='auto_add_driver_mileage_radius_'], input[name^='auto_add_driver_civil_status_'], input[name^='auto_driver_spouse_name_'], #bond_owners_name, #bond_owners_ssn, #bond_owners_civil_status, #bond_owners_spouse_name, #bond_type_bond_requested, #bond_term_of_bond, #bond_type_of_license, #bond_if_other_type_of_license, #bond_no_of_losses, #excess_insurance_carrier, #excess_policy_or_quote_no, #excess_no_of_losses, #equipment_type, #tools_equipment_make, #tools_equipment_model, #tools_equipment_vin_or_serial_no, #tools_equipment_valuation, #tools_equipment_no_of_losses, #br_property_address, #br_period_duration_project, #br_construction_type, #br_complete_descops_of_project, #br_sq_footage, #br_number_of_floors, #br_number_of_units_dwelling, #br_anticipated_occupancy, #br_distance_to_nearest_fire_hydrant, #br_distance_to_nearest_fire_station, #br_structure_occupied_remodel_renovation, #br_jobsite_security, #br_sched_property_carrier_name, #br_residential_commercial, #br_when_project_started, #br_what_are_work_done, #br_what_are_remaining_works, #br_no_of_losses, #bop_property_address, #bop_loss_payee_info, #bop_building_industry, #bop_occupancy, #bop_bldg_construction_type, #bop_no_of_stories, #bop_total_bldg_sqft, #bop_automatic_fire_alarm, #bop_distance_nearest_fire_hydrant, #bop_distance_nearest_fire_station, #bop_automatic_comm_cooking_ext, #bop_automatic_burglar_alarm, #bop_no_of_losses, #property_property_address, #property_name_of_owner, #property_construction_type, #property_no_of_stories, #property_total_bldg_sqft, #property_distance_nearest_fire_hydrant, #property_distance_nearest_fire_station, #property_protection_class, #property_no_of_losses, #eo_requested_limits, #eo_reqlimit_if_others, #eo_request_deductible, #eo_reqdeductible_if_others, #eo_no_of_losses, #eo_business_entity_sub_q1, #eo_business_entity_sub_q2, #eo_business_entity_sub_q3, #eo_business_entity_sub_q4, #eo_business_entity_sub_q5, #eo_number_employee, #eo_full_time, #eo_part_time, #eo_hr_sub_q1, #eo_hr_sub_q2, #eo_hr_sub_q3, #eo_hr_sub_q4, #epli_current_epli, #epli_prior_carrier, #epli_prior_carrier_epli, #epli_deductible_amount, #epli_no_of_losses, #epli_full_time, #epli_part_time, #epli_independent_contractors, #epli_volunteers, #epli_leased_seasonal, #epli_non_us_base_emp, #epli_total_employees, #epli_located_at_ca, #epli_located_at_ga, #epli_located_at_tx, #epli_located_at_fl, #epli_located_at_ny, #epli_located_at_nj, #epli_emp_terminated_last_12_months_q1, #epli_emp_terminated_last_12_months_q2, #epli_emp_terminated_last_12_months_q3, #cyber_it_contact_name, #cyber_no_of_losses, #cyber_q1, #instfloat_territory_of_operation, #instfloat_type_of_operation, #instfloat_scheduled_type_of_equipment, #instfloat_deductible_amount, #instfloat_no_of_losses, #instfloat_location, #instfloat_type_security_placed, #instfloat_unscheduled_type_of_equipment",
+        function () {
+            if ($(this).val().length > maxLength) {
+                $(this).val($(this).val().substring(0, maxLength));
+            }
+        }
+    );
+
+    const fiftyMaxLength = 50;
+    $(document).on(
+        "input",
+        "#email_address, #contractor_license, #wc_exc_inc, input[name^='wc_exc_inc_'], #cyber_it_contact_email",
+        function () {
+            if ($(this).val().length > fiftyMaxLength) {
+                $(this).val($(this).val().substring(0, fiftyMaxLength));
+            }
+        }
+    );
+
+    const twentyMaxLength = 20;
+    $(document).on("input", "#ayc_yrs_exp_contractor", function () {
+        if ($(this).val().length > twentyMaxLength) {
+            $(this).val($(this).val().substring(0, twentyMaxLength));
+        }
+    });
+
+    const fiveMaxLength = 5;
+    $(document).on("input", "#zipcode", function () {
+        if ($(this).val().length > fiveMaxLength) {
+            $(this).val($(this).val().substring(0, fiveMaxLength));
+        }
+    });
+
+    const phoneMaxLength = 15;
+    $(document).on(
+        "input",
+        "#phone_number, #fax_number, #cyber_it_contact_number",
+        function () {
+            if ($(this).val().length > phoneMaxLength) {
+                $(this).val($(this).val().substring(0, phoneMaxLength));
+            }
+        }
+    );
+
+    const currencyMaxLength = 8;
+    $(document).on(
+        "input",
+        "#annual_gross_receipt, #gl_annual_gross, #gl_cost_proj_5years, #gl_payroll_amt, #gl_subcon_cost, #gl_amt_of_claims, #wc_gross_receipt, #wc_subcon_cost_year, #wc_amt_of_claims, input[name^='wc_annual_payroll_'], input[name^='auto_vehicle_coverage_limits_'], #auto_amt_of_claims, #bond_amount_of_bond, #bond_amt_of_claims, #excess_limits, #excess_policy_premium, #excess_amt_of_claims, #tools_misc_tools, #tools_rented_or_leased_amt, #tools_sched_equipment, #tools_equipment_amt_of_claims, #br_value_of_existing_structure, #br_value_of_work_performed, #br_cost_of_work_done, #br_cost_remaining_works, #br_amt_of_claims, #bop_val_cost_bldg, #bop_business_property_limit, #bop_amt_of_claims, #property_value_cost_bldg, #property_business_property_limit, #property_amt_of_claims, #eo_amt_of_claims, #eo_ftime_salary_range, #eo_ptime_salary_range, #epli_amt_of_claims, #cyber_amt_of_claims, #instfloat_amt_of_claims, #instfloat_max_value_of_equipment, #instfloat_max_value_of_bldg_storage, #instfloat_unscheduled_max_value_equipment_storing",
+        function () {
+            if ($(this).val().length > currencyMaxLength) {
+                $(this).val($(this).val().substring(0, currencyMaxLength));
+            }
+        }
+    );
+
+    const percentageMaxLength = 3;
+    $(document).on(
+        "input",
+        "#residential_percentage, #commercial_percentage, #new_construction_percentage, #repair_remodel_percentage, #gl_residential, #gl_commercial, #gl_new_construction, #gl_repair_remodel",
+        function () {
+            if ($(this).val().length > percentageMaxLength) {
+                $(this).val($(this).val().substring(0, percentageMaxLength));
+            }
+        }
+    );
+
+    const ssnMaxLength = 11;
+    $(document).on(
+        "input",
+        "#wc_ssn, #input[name^='wc_ssn_'], #bond_owners_spouse_ssn",
+        function () {
+            if ($(this).val().length > ssnMaxLength) {
+                $(this).val($(this).val().substring(0, ssnMaxLength));
+            }
+        }
+    );
+
+    const feinMaxLength = 10;
+    $(document).on(
+        "input",
+        "#wc_fein, #input[name^='wc_fein_'], #epli_fein",
+        function () {
+            if ($(this).val().length > feinMaxLength) {
+                $(this).val($(this).val().substring(0, feinMaxLength));
+            }
+        }
+    );
+
     var isTermsChecked = false;
-
     $("#process").css("cursor", "no-drop");
-
     $("#termsCheckbox").on("change", function () {
         isTermsChecked = $(this).is(":checked");
         $("#process").css("cursor", isTermsChecked ? "pointer" : "no-drop");
@@ -1776,9 +1864,15 @@
                     var epli_located_at_nj = $("#epli_located_at_nj").val();
 
                     // EPLI Step 4
-                    var epli_salary_range_q1 = $("#epli_salary_range_q1").val();
-                    var epli_salary_range_q2 = $("#epli_salary_range_q2").val();
-                    var epli_salary_range_q3 = $("#epli_salary_range_q3").val();
+                    var epli_salary_range_q1 = $(
+                        "#epli_salary_range_q1 option:selected"
+                    ).text();
+                    var epli_salary_range_q2 = $(
+                        "#epli_salary_range_q2 option:selected"
+                    ).text();
+                    var epli_salary_range_q3 = $(
+                        "#epli_salary_range_q3 option:selected"
+                    ).text();
 
                     // EPLI Ste 5
                     var epli_emp_terminated_last_12_months_q1 = $(
@@ -2497,8 +2591,11 @@
                             );
                             return false;
                         } else {
+                            $("#loader_form").css("display", "block");
+
                             var commonData = {};
                             var productData = {};
+                            var productKeyData = [];
 
                             // Gather data for commonData from #personal_information_step and #about_your_company_step
                             $(
@@ -2513,6 +2610,8 @@
                             $('input[name="question_1[]"]:checked').each(
                                 function () {
                                     var productKey = $(this).val();
+                                    productKeyData.push(productKey);
+
                                     // console.log(productKey);
                                     productData[productKey] = {};
 
@@ -2593,57 +2692,28 @@
                                 data: {
                                     common: commonData,
                                     products: productData,
+                                    productKeyData: productKeyData,
                                 },
                             })
                                 .then((response) => {
-                                    $(".loader-container").addClass("active");
-                                    $(".loader-container").removeClass(
-                                        "hidden"
-                                    );
+                                    $("#loader_form").css("display", "none");
                                     if (response.data.redirect) {
                                         window.location.href =
                                             response.data.redirect;
-                                        $(".loader-container").addClass(
-                                            "hidden"
-                                        );
-                                        $(".loader-container").removeClass(
-                                            "active"
-                                        );
                                     } else {
-                                        $(".loader-container").addClass(
-                                            "hidden"
-                                        );
-                                        $(".loader-container").removeClass(
-                                            "active"
-                                        );
                                         toastr.success(response.data.message);
                                         window.open("/thankyou", "_blank");
                                         // location.reload();
                                     }
                                 })
                                 .catch((error) => {
-                                    $(".loader-container").addClass("active");
-                                    $(".loader-container").removeClass(
-                                        "hidden"
-                                    );
+                                    $("#loader_form").css("display", "none");
                                     if (error.response && error.response.data) {
                                         toastr.error(
                                             error.response.data.message
                                         );
-                                        $(".loader-container").addClass(
-                                            "hidden"
-                                        );
-                                        $(".loader-container").removeClass(
-                                            "active"
-                                        );
                                     } else {
                                         toastr.error("An error occurred");
-                                        $(".loader-container").addClass(
-                                            "hidden"
-                                        );
-                                        $(".loader-container").removeClass(
-                                            "active"
-                                        );
                                     }
                                 });
                         }
@@ -3574,6 +3644,39 @@
                 }
             }
 
+            function setName(a, b, target) {
+                $(`#${a}, #${b}`).change(function () {
+                    var firstname = $(`#${a}`).val();
+                    var lastname = $(`#${b}`).val();
+                    const fullname = firstname + " " + lastname;
+                    $(`#${target}`).val(fullname);
+                });
+            }
+
+            function setWCSSN(a, target) {
+                $(`#${a}`).change(function () {
+                    var wc_ssn = $(this).val();
+                    const ssn = wc_ssn;
+                    $(`#${target}`).val(ssn);
+                });
+            }
+
+            function setWCFein(a, target) {
+                $(`#${a}`).change(function () {
+                    var wc_fein = $(this).val();
+                    const fein = wc_fein;
+                    $(`#${target}`).val(fein);
+                });
+            }
+
+            function setWCDateOfBirth(a, target) {
+                $(`#${a}`).change(function () {
+                    var wc_dob = $(this).val();
+                    const wc_date_of_birth = wc_dob;
+                    $(`#${target}`).val(wc_date_of_birth);
+                });
+            }
+
             if (glChecked) {
                 setSessionVariable("doesGLChecked", true);
                 $("#about_you_profession").load(
@@ -3587,77 +3690,198 @@
                 );
             }
 
-            if (glChecked && wcChecked) {
-                setSessionVariable("doesGLandWCChecked", false);
-                $("#wc_step_1").load(location.href + " #wc_step_1");
-            } else {
-                unsetSessionVariable("doesGLandWCChecked");
-                setSessionVariable(true);
-                $("#wc_step_1").load(location.href + " #wc_step_1");
-                // $("#firstname, #lastname").change(function () {
-                //     var firstname = $("#firstname").val();
-                //     var lastname = $("#lastname").val();
-                //     const fullname = firstname + " " + lastname;
-                //     $("#wc_name").val(fullname);
-                // });
-            }
+            // if (glChecked && wcChecked) {
+            //     setSessionVariable("doesGLandWCChecked", false);
+            //     $("#wc_step_1").load(location.href + " #wc_step_1");
+            // } else {
+            //     unsetSessionVariable("doesGLandWCChecked");
+            //     setSessionVariable(true);
+            //     $("#wc_step_1").load(location.href + " #wc_step_1");
+            // }
+
+            // if (glChecked && bondChecked) {
+            // }
 
             if (wcChecked) {
-                $("#firstname, #lastname").change(function () {
-                    var firstname = $("#firstname").val();
-                    var lastname = $("#lastname").val();
-                    const fullname = firstname + " " + lastname;
-                    $("#wc_name").val(fullname);
-                });
+                setName("firstname", "lastname", "wc_name");
             }
 
             if (autoChecked) {
-                $("#firstname, #lastname").change(function () {
-                    var firstname = $("#firstname").val();
-                    var lastname = $("#lastname").val();
-                    const fullname = firstname + " " + lastname;
-                    $("#auto_driver_full_name").val(fullname);
-                });
+                setName("firstname", "lastname", "auto_driver_full_name");
             }
 
             if (bondChecked) {
-                $("#firstname, #lastname").change(function () {
-                    var firstname = $("#firstname").val();
-                    var lastname = $("#lastname").val();
-                    const fullname = firstname + " " + lastname;
-                    $("#bond_owners_name").val(fullname);
+                setName("firstname", "lastname", "bond_owners_name");
+                $("#contractor_license").change(function () {
+                    var contractorLicense = $(this).val();
+                    const contractorLic = contractorLicense;
+                    $("#bond_license_or_application_no").val(contractorLic);
                 });
             }
 
             if (wcChecked && bondChecked) {
-                $("#wc_ssn").change(function () {
-                    var wc_ssn = $("#wc_ssn").val();
-                    const ssn = wc_ssn;
-                    $("#bond_owners_ssn").val(ssn);
-                });
+                setWCSSN("wc_ssn", "bond_owners_ssn");
             }
 
             if (wcChecked && epliChecked) {
-                $("#wc_fein").change(function () {
-                    var wc_fein = $("#wc_fein").val();
-                    const fein = wc_fein;
-                    $("#epli_fein").val(fein);
-                });
+                setWCFein("wc_fein", "epli_fein");
             }
 
             if (wcChecked && autoChecked) {
-                $("#wc_dob").change(function () {
-                    var wc_dob = $("#wc_dob").val();
-                    const wc_date_of_birth = wc_dob;
-                    $("#auto_driver_date_of_birth").val(wc_date_of_birth);
-                });
+                setWCDateOfBirth("wc_dob", "auto_driver_date_of_birth");
             }
 
             if (wcChecked && bondChecked) {
-                $("#wc_dob").change(function () {
-                    var wc_dob = $("#wc_dob").val();
-                    const wc_date_of_birth = wc_dob;
-                    $("#bond_owners_dob").val(wc_date_of_birth);
+                setWCDateOfBirth("wc_dob", "bond_owners_dob");
+            }
+
+            if (autoChecked && bondChecked) {
+                // auto_driver_full_name;
+
+                $("#auto_driver_date_of_birth").change(function () {
+                    var autoDriverDateOfBirth = $(this).val();
+                    const driverDateOfBirth = autoDriverDateOfBirth;
+                    $("#bond_owners_dob").val(driverDateOfBirth);
+                });
+
+                $("#auto_driver_marital_status").change(function () {
+                    var autoDriverMaritalStatus = $(this).val();
+                    const driverMaritalStatus = autoDriverMaritalStatus;
+                    $("#bond_owners_civil_status")
+                        .val(driverMaritalStatus)
+                        .trigger("change");
+                });
+
+                $(document).on(
+                    "change",
+                    "#auto_driver_spouse_name",
+                    function () {
+                        var autoDriverSpouseName = $(this).val();
+                        const driverSpouseName = autoDriverSpouseName;
+                        if ($("#bond_owners_spouse_name").length > 0) {
+                            $("#bond_owners_spouse_name").val(driverSpouseName);
+                        }
+                    }
+                );
+
+                $(document).on(
+                    "change",
+                    "#auto_driver_spouse_dob",
+                    function () {
+                        var autoDriverSpouseDateOfBirth = $(this).val();
+                        const driverSpouseDateOfBirth =
+                            autoDriverSpouseDateOfBirth;
+                        if ($("#bond_owners_spouse_dob").length > 0) {
+                            $("#bond_owners_spouse_dob").val(
+                                driverSpouseDateOfBirth
+                            );
+                        }
+                    }
+                );
+            }
+
+            if (bopChecked && propertyChecked) {
+                $("#bop_property_address").change(function () {
+                    var bopPropertyAdress = $(this).val();
+                    const propertyAddress = bopPropertyAdress;
+                    $("#property_property_address").val(propertyAddress);
+                });
+
+                $("#bop_val_cost_bldg").change(function () {
+                    var bopValueCostBldg = $(this).val();
+                    const valueCostBldg = bopValueCostBldg;
+                    $("#property_value_cost_bldg").val(valueCostBldg);
+                });
+
+                $("#bop_business_property_limit").change(function () {
+                    var bopBusinessPropertyLimit = $(this).val();
+                    const businessPropertyLimit = bopBusinessPropertyLimit;
+                    $("#property_business_property_limit").val(
+                        businessPropertyLimit
+                    );
+                });
+
+                $("#bop_bldg_construction_type").change(function () {
+                    var bopBldgConstructionType = $(this).val();
+                    const bldgConstructionType = bopBldgConstructionType;
+                    $("#property_construction_type")
+                        .val(bldgConstructionType)
+                        .trigger("change");
+                });
+
+                $("#bop_year_built").change(function () {
+                    var bopYearBuilt = $(this).val();
+                    const yearBuilt = bopYearBuilt;
+                    $("#property_year_built").val(yearBuilt);
+                });
+
+                $("#bop_no_of_stories").change(function () {
+                    var bopNoOfStories = $(this).val();
+                    const noOfStories = bopNoOfStories;
+                    $("#property_no_of_stories").val(noOfStories);
+                });
+
+                $("#bop_total_bldg_sqft").change(function () {
+                    var bopTotalBldgSqFt = $(this).val();
+                    const totalBldgSqFt = bopTotalBldgSqFt;
+                    $("#property_total_bldg_sqft").val(totalBldgSqFt);
+                });
+
+                $("#bop_total_bldg_sqft").change(function () {
+                    var bopTotalBldgSqFt = $(this).val();
+                    const totalBldgSqFt = bopTotalBldgSqFt;
+                    $("#property_total_bldg_sqft").val(totalBldgSqFt);
+                });
+
+                $("#bop_distance_nearest_fire_hydrant").change(function () {
+                    var bopDistanceToNearestFireHydrant = $(this).val();
+                    const distanceToNearestFireHydrant =
+                        bopDistanceToNearestFireHydrant;
+                    $("#property_distance_nearest_fire_hydrant").val(
+                        distanceToNearestFireHydrant
+                    );
+                });
+
+                $("#bop_distance_nearest_fire_station").change(function () {
+                    var bopDistanceToNearestFireStation = $(this).val();
+                    const distanceToNearestFireStation =
+                        bopDistanceToNearestFireStation;
+                    $("#property_distance_nearest_fire_station").val(
+                        distanceToNearestFireStation
+                    );
+                });
+
+                $("#bop_last_update_roofing_year").change(function () {
+                    var bopLastUpdateRoofingYear = $(this).val();
+                    const lastUpdateToRoofingYear = bopLastUpdateRoofingYear;
+                    $("#property_last_update_roofing_year").val(
+                        lastUpdateToRoofingYear
+                    );
+                });
+
+                $("#bop_last_update_heating_year").change(function () {
+                    var bopLastUpdateHeatingYear = $(this).val();
+                    const lastUpdateToHeatingYear = bopLastUpdateHeatingYear;
+                    $("#property_last_update_heating_year").val(
+                        lastUpdateToHeatingYear
+                    );
+                });
+
+                $("#bop_last_update_plumbing_year").change(function () {
+                    var bopLastUpdatePlumbingYear = $(this).val();
+                    const lastUpdateToPlumbingYear = bopLastUpdatePlumbingYear;
+                    $("#property_last_update_plumbing_year").val(
+                        lastUpdateToPlumbingYear
+                    );
+                });
+
+                $("#bop_last_update_electrical_year").change(function () {
+                    var bopLastUpdateElectricalYear = $(this).val();
+                    const lastUpdateToElectricalYear =
+                        bopLastUpdateElectricalYear;
+                    $("#property_last_update_electrical_year").val(
+                        lastUpdateToElectricalYear
+                    );
                 });
             }
         });
@@ -3916,19 +4140,19 @@
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="auto_add_drivers_name_${a}" id="auto_add_drivers_name_${a}" class="form-control" placeholder="" maxlength="100">
+                        <input type="text" name="auto_add_drivers_name_${a}" id="auto_add_drivers_name_${a}" class="form-control" placeholder="">
                         <label for="auto_add_drivers_name_${a}">Driver"s Name</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="auto_add_driver_lic_${a}" id="auto_add_driver_lic_${a}" class="form-control" placeholder="" maxlength="50">
+                        <input type="text" name="auto_add_driver_lic_${a}" id="auto_add_driver_lic_${a}" class="form-control" placeholder="">
                         <label for="auto_add_driver_lic_${a}">Driver"s License Number</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="auto_add_driver_mileage_radius_${a}" id="auto_add_driver_mileage_radius_${a}" class="form-control" placeholder="" maxlength="100">
+                        <input type="text" name="auto_add_driver_mileage_radius_${a}" id="auto_add_driver_mileage_radius_${a}" class="form-control" placeholder="">
                         <label for="auto_add_driver_mileage_radius_${a}">Mileage / Radius</label>
                     </div>
                 </div>
@@ -4026,7 +4250,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="bond_owners_spouse_ssn" id="bond_owners_spouse_ssn" class="form-control" placeholder="">
-                    <label for="bond_owners_spouse_ssn">Spouse's SSN</label>
+                    <label for="bond_owners_spouse_ssn">Spouse's SSN (Optional)</label>
                 </div>
             </div>
         `);
@@ -4084,7 +4308,7 @@
                     <h5 class="profession_header mt-2 mb-2">Additional Questions for General Contractors:</h5>
                     <h6 class="profession_header mt-2 mb-2">New construction - How many houses will you be building for the whole year?</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_gc" id="gl_gross_add_q1_for_gc" class="form-control" placeholder="Please explain:" maxlength="">
+                        <input type="text" name="gl_gross_add_q1_for_gc" id="gl_gross_add_q1_for_gc" class="form-control" placeholder="Please explain:">
                         <label for="gl_gross_add_q1_for_gc">Please explain:</label>
                     </div>
                 </div>
@@ -4394,7 +4618,7 @@
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q3_for_concrete" id="gl_gross_add_q3_for_concrete" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="gl_gross_add_q3_for_concrete" id="gl_gross_add_q3_for_concrete" class="form-control" placeholder="">
                         <label for="gl_gross_add_q3_for_concrete">Do you do works on dike, dams, and bridges?</label>
                     </div>
                 </div>
@@ -4425,7 +4649,7 @@
                 <h6 class="profession_header mt-2 mb-2">Additional Questions for Handyman Contractors:</h6>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_handyman" id="gl_gross_add_q1_for_handyman" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="gl_gross_add_q1_for_handyman" id="gl_gross_add_q1_for_handyman" class="form-control" placeholder="">
                         <label for="gl_gross_add_q1_for_handyman">What’s the largest project that you have done?</label>
                     </div>
                 </div>
@@ -4439,7 +4663,7 @@
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Additional Questions for Flooring Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_flooring" id="gl_gross_add_q1_for_flooring" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="gl_gross_add_q1_for_flooring" id="gl_gross_add_q1_for_flooring" class="form-control" placeholder="">
                         <label for="gl_gross_add_q1_for_flooring">What type of flooring do you install?</label>
                     </div>
                 </div>
@@ -4453,19 +4677,19 @@
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Additional Questions for Landscaping Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_landscaping" id="gl_gross_add_q1_for_landscaping" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="gl_gross_add_q1_for_landscaping" id="gl_gross_add_q1_for_landscaping" class="form-control" placeholder="">
                         <label for="gl_gross_add_q1_for_landscaping">Any hardscaping works?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q2_for_landscaping" id="gl_gross_add_q2_for_landscaping" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="gl_gross_add_q2_for_landscaping" id="gl_gross_add_q2_for_landscaping" class="form-control" placeholder="">
                         <label for="gl_gross_add_q2_for_landscaping">Do you install irrigations systems?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q3_for_landscaping" id="gl_gross_add_q3_for_landscaping" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="gl_gross_add_q3_for_landscaping" id="gl_gross_add_q3_for_landscaping" class="form-control" placeholder="">
                         <label for="gl_gross_add_q3_for_landscaping">Retaining walls max height</label>
                     </div>
                 </div>
@@ -4501,7 +4725,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q3_for_painting" id="gl_gross_add_q3_for_painting" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="gl_gross_add_q3_for_painting" id="gl_gross_add_q3_for_painting" class="form-control" placeholder="">
                         <label for="gl_gross_add_q3_for_painting">Max height exposure?</label>
                     </div>
                 </div>
@@ -4515,7 +4739,7 @@
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Additional Questions for Plastering Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_plastering" id="gl_gross_add_q1_for_plastering" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="gl_gross_add_q1_for_plastering" id="gl_gross_add_q1_for_plastering" class="form-control" placeholder="">
                         <label for="gl_gross_add_q1_for_plastering">Max. height exposure</label>
                     </div>
                 </div>
@@ -4529,7 +4753,7 @@
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Additional Questions for Tree Service Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_tree_service" id="gl_gross_add_q1_for_tree_service" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="gl_gross_add_q1_for_tree_service" id="gl_gross_add_q1_for_tree_service" class="form-control" placeholder="">
                         <label for="gl_gross_add_q1_for_tree_service">Max. height exposure</label>
                     </div>
                 </div>
@@ -4554,7 +4778,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q2_for_masonry" id="gl_gross_add_q2_for_masonry" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="gl_gross_add_q2_for_masonry" id="gl_gross_add_q2_for_masonry" class="form-control" placeholder="">
                         <label for="gl_gross_add_q2_for_masonry">Do you do retaining walls that exceeds 6ft?</label>
                     </div>
                 </div>
@@ -4567,7 +4791,7 @@
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="epli_deductible_claim_if_others" id="epli_deductible_claim_if_others" class="form-control" placeholder="" maxlength="">
+                        <input type="text" name="epli_deductible_claim_if_others" id="epli_deductible_claim_if_others" class="form-control" placeholder="">
                         <label for="epli_deductible_claim_if_others">If others, please indicate the deductible per claim amount:</label>
                     </div>
                 </div>
@@ -4671,7 +4895,7 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="gl_multiple_states_percentage_${counter}" id="gl_multiple_states_percentage_${counter}" class="form-control" placeholder="% Percentage" maxlength="">
+                    <input type="text" name="gl_multiple_states_percentage_${counter}" id="gl_multiple_states_percentage_${counter}" class="form-control" placeholder="% Percentage">
                     <label for="gl_multiple_states_percentage_${counter}">% Percentage</label>
                 </div>
             </div>
@@ -4728,7 +4952,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_type_${i}"
                         id="instfloat_scheduled_equipment_type_${i}" class="form-control"
-                        placeholder="Type:" maxlength="" />
+                        placeholder="Type:" />
                     <label for="instfloat_scheduled_equipment_type_${i}">Type:</label>
                 </div>
             </div>
@@ -4736,7 +4960,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_mfg_${i}"
                         id="instfloat_scheduled_equipment_mfg_${i}" class="form-control"
-                        placeholder="Manufacturer:" maxlength="" />
+                        placeholder="Manufacturer:" />
                     <label for="instfloat_scheduled_equipment_mfg_${i}">Manufacturer:</label>
                 </div>
             </div>
@@ -4748,7 +4972,7 @@
                         class="form-control"
                         placeholder="ID # /
                         Serial Number:"
-                        maxlength="" />
+                        />
                     <label for="instfloat_scheduled_equipment_id_or_serial_${i}">ID # /
                         Serial Number:</label>
                 </div>
@@ -4757,7 +4981,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_model_${i}"
                         id="instfloat_scheduled_equipment_model_${i}" class="form-control"
-                        placeholder="Model:" maxlength="" />
+                        placeholder="Model:" />
                     <label for="instfloat_scheduled_equipment_model_${i}">Model:</label>
                 </div>
             </div>
@@ -4781,7 +5005,7 @@
                         name="instfloat_scheduled_equipment_model_year_${i}"
                         id="instfloat_scheduled_equipment_model_year_${i}"
                         class="form-control" placeholder="Model Year:"
-                        maxlength="" />
+                        />
                     <label for="instfloat_scheduled_equipment_model_year_${i}">Model
                         Year:</label>
                 </div>
@@ -4792,7 +5016,7 @@
                         name="instfloat_scheduled_equipment_date_purchased_${i}"
                         id="instfloat_scheduled_equipment_date_purchased_${i}"
                         class="form-control" placeholder="Date Purchased:"
-                        maxlength="" />
+                        />
                     <label for="instfloat_scheduled_equipment_date_purchased_${i}">Date
                         Purchased:</label>
                 </div>
@@ -4807,7 +5031,7 @@
                     <h5 class="profession_header mt-2 mb-2">Owner's Information</h5>
                     <div class="mb-3 form-floating">
                         <input type="text" name="wc_name_${counter}" id="wc_name_${counter}"
-                            class="form-control" placeholder="" maxlength="255">
+                            class="form-control" placeholder="">
                         <label for="wc_name_${counter}">Owner's Name</label>
                     </div>
                 </div>
@@ -4815,7 +5039,7 @@
                     <div class="mb-3 form-floating">
                         <input type="text" name="wc_title_relationship_${counter}"
                             id="wc_title_relationship_${counter}" class="form-control" placeholder=""
-                            maxlength="255">
+                            >
                         <label for="wc_title_relationship_${counter}">Title / Relationship</label>
                     </div>
                 </div>
@@ -4913,7 +5137,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_sched_property_carrier_name"
                         id="br_sched_property_carrier_name" class="form-control"
-                        placeholder="Please specify:" maxlength="" />
+                        placeholder="Please specify:" />
                     <label for="br_sched_property_carrier_name">Please specify:</label>
                 </div>
             </div>
@@ -4922,7 +5146,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_sched_property_effective_date"
                         id="br_sched_property_effective_date" class="form-control"
-                        placeholder="Please specify:" maxlength="" />
+                        placeholder="Please specify:" />
                     <label for="br_sched_property_effective_date">Please specify:</label>
                 </div>
             </div>
@@ -4931,7 +5155,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_sched_property_expiration_date"
                         id="br_sched_property_expiration_date" class="form-control"
-                        placeholder="Please specify:" maxlength="" />
+                        placeholder="Please specify:" />
                     <label for="br_sched_property_expiration_date">Please specify:</label>
                 </div>
             </div>
@@ -4948,7 +5172,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_when_project_started"
                         id="br_when_project_started" class="form-control"
-                        placeholder="Please specify:" maxlength="" />
+                        placeholder="Please specify:" />
                     <label for="br_when_project_started">Please specify:</label>
                 </div>
             </div>
@@ -4957,7 +5181,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_what_are_work_done"
                         id="br_what_are_work_done" class="form-control"
-                        placeholder="Please specify:" maxlength="" />
+                        placeholder="Please specify:" />
                     <label for="br_what_are_work_done">Please specify:</label>
                 </div>
             </div>
@@ -4966,7 +5190,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_cost_of_work_done"
                         id="br_cost_of_work_done" class="form-control"
-                        placeholder="Please specify:" maxlength="" />
+                        placeholder="Please specify:" />
                     <label for="br_cost_of_work_done">Please specify:</label>
                 </div>
             </div>
@@ -4975,7 +5199,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_what_are_remaining_works"
                         id="br_what_are_remaining_works" class="form-control"
-                        placeholder="Please specify:" maxlength="" />
+                        placeholder="Please specify:" />
                     <label for="br_what_are_remaining_works">Please specify:</label>
                 </div>
             </div>
@@ -4984,7 +5208,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_cost_remaining_works"
                         id="br_cost_remaining_works" class="form-control"
-                        placeholder="Please specify:" maxlength="" />
+                        placeholder="Please specify:" />
                     <label for="br_cost_remaining_works">Please specify:</label>
                 </div>
             </div>
@@ -4993,7 +5217,7 @@
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_when_will_project_start"
                         id="br_when_will_project_start" class="form-control"
-                        placeholder="Please specify:" maxlength="" />
+                        placeholder="Please specify:" />
                     <label for="br_when_will_project_start">Please specify:</label>
                 </div>
             </div>

@@ -252,14 +252,14 @@
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="company_name" id="company_name"
-                                                    class="form-control" placeholder="Company Name" maxlength="100">
+                                                    class="form-control" placeholder="Company Name">
                                                 <label for="company_name">Company Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="firstname" id="firstname"
-                                                    class="form-control" placeholder="First Name" maxlength="100">
+                                                    class="form-control" placeholder="First Name">
                                                 <label for="firstname">First Name</label>
                                             </div>
                                         </div>
@@ -267,20 +267,20 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="lastname" id="lastname"
                                                     class="form-control" placeholder="Last Name">
-                                                <label for="lastname" maxlength="100">Last Name</label>
+                                                <label for="lastname">Last Name</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="address" id="address"
-                                                    class="form-control" placeholder="Address" maxlength="255">
+                                                    class="form-control" placeholder="Address">
                                                 <label for="address">Address</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="city" id="city"
-                                                    class="form-control" placeholder="City" maxlength="50">
+                                                    class="form-control" placeholder="City">
                                                 <label for="lastname">City</label>
                                             </div>
                                         </div>
@@ -301,7 +301,7 @@
                                         <div class="col-md-4">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="zipcode" id="zipcode"
-                                                    class="form-control" placeholder="Zipcode" maxlength="5">
+                                                    class="form-control" placeholder="Zipcode">
                                                 <label for="zipcode">Zipcode</label>
                                             </div>
                                         </div>
@@ -322,15 +322,14 @@
                                         <div class="col-md-4">
                                             <div class="mb-3 form-floating">
                                                 <input type="email" name="email_address" id="email_address"
-                                                    class="form-control" placeholder="Email Address" maxlength="50">
+                                                    class="form-control" placeholder="Email Address">
                                                 <label for="email_address">Email Address</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="personal_website" id="personal_website"
-                                                    class="form-control" placeholder="Website (Optional)"
-                                                    maxlength="50">
+                                                    class="form-control" placeholder="Website (Optional)">
                                                 <label for="personal_website">Website (Optional)</label>
                                             </div>
                                         </div>
@@ -338,9 +337,9 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="contractor_license"
                                                     id="contractor_license" class="form-control"
-                                                    placeholder="Contractor License No. (Optional)">
-                                                <label for="contractor_license" maxlength="50">Contractor License
-                                                    No. (Optional)</label>
+                                                    placeholder="Contractor License No.">
+                                                <label for="contractor_license">Contractor License
+                                                    No.</label>
                                             </div>
                                         </div>
                                     </div>
@@ -399,7 +398,7 @@
                                                         <div class="mb-3 form-floating">
                                                             <input type="text" name="annual_gross_receipt"
                                                                 id="annual_gross_receipt" class="form-control"
-                                                                placeholder="Annual Gross Receipts" maxlength="20">
+                                                                placeholder="Annual Gross Receipts">
                                                             <label for="annual_gross_receipt">Annual Gross
                                                                 Receipts</label>
                                                         </div>
@@ -586,7 +585,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="gl_annual_gross" id="gl_annual_gross"
                                                     class="form-control" placeholder="Annual Gross Receipts"
-                                                    maxlength="20">
+                                                    >
                                                 <label for="gl_annual_gross">Annual Gross Receipts</label>
                                             </div>
                                         </div>
@@ -753,7 +752,7 @@
                                                 <input type="text" name="gl_cost_proj_5years"
                                                     id="gl_cost_proj_5years" class="form-control"
                                                     placeholder="Cost of the Largest Project in the past 5 years?"
-                                                    maxlength="20">
+                                                    >
                                                 <label for="gl_cost_proj_5years">Cost of the Largest Project in the
                                                     past 5
                                                     years?</label>
@@ -776,7 +775,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="gl_full_time_employees"
                                                     id="gl_full_time_employees" class="form-control" placeholder=""
-                                                    maxlength="3">
+                                                    >
                                                 <label for="gl_full_time_employees">Full Time Employee/s</label>
                                             </div>
                                         </div>
@@ -784,14 +783,14 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="gl_part_time_employees"
                                                     id="gl_part_time_employees" class="form-control" placeholder=""
-                                                    maxlength="3">
+                                                    >
                                                 <label for="gl_part_time_employees">Part Time Employee/s</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="gl_payroll_amt" id="gl_payroll_amt"
-                                                    class="form-control" placeholder="Payroll Amount" maxlength="20">
+                                                    class="form-control" placeholder="Payroll Amount">
                                                 <label for="gl_payroll_amt">Payroll Amount</label>
                                             </div>
                                         </div>
@@ -860,40 +859,39 @@
                                         <!-- Start Profession Entry Container -->
                                         <div id="profession_entry_container"></div>
                                         <!-- End Profession Entry Container -->
-                                        @if (session('doesGLandWCChecked') === 'true')
-                                            <div class="col-md-12 mt-4">
-                                                <div class="mb-3 form-floating">
-                                                    <input type="text" name="wc_gross_receipt"
-                                                        id="wc_gross_receipt" class="form-control"
-                                                        placeholder="Gross Receipt" maxlength="20">
-                                                    <label for="wc_gross_receipt">Gross Receipt</label>
-                                                </div>
+                                        {{-- @if (session('doesGLandWCChecked') === 'true') --}}
+                                        <div class="col-md-12 mt-4">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="wc_gross_receipt" id="wc_gross_receipt"
+                                                    class="form-control" placeholder="Gross Receipt">
+                                                <label for="wc_gross_receipt">Gross Receipt</label>
                                             </div>
+                                        </div>
 
-                                            <div class="col-md-12">
-                                                <div class="mb-3 form-floating">
-                                                    <select class="form-select" name="wc_does_hire_subcon"
-                                                        id="wc_does_hire_subcon" aria-label="wc_does_hire_subcon">
-                                                        <option value selected></option>
-                                                        <option value="1">Yes</option>
-                                                        <option value="0">No</option>
-                                                    </select>
-                                                    <label for="wc_does_hire_subcon">Do you hire
-                                                        subcontractor?</label>
-                                                </div>
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <select class="form-select" name="wc_does_hire_subcon"
+                                                    id="wc_does_hire_subcon" aria-label="wc_does_hire_subcon">
+                                                    <option value selected></option>
+                                                    <option value="1">Yes</option>
+                                                    <option value="0">No</option>
+                                                </select>
+                                                <label for="wc_does_hire_subcon">Do you hire
+                                                    subcontractor?</label>
                                             </div>
-                                            <!--  -->
-                                            <div id="wc_subcon_cost_year_container"></div>
-                                            <!--  -->
-                                            <div class="col-md-12">
-                                                <div class="mb-3 form-floating">
-                                                    <input type="text" name="wc_num_of_empl" id="wc_num_of_empl"
-                                                        class="form-control" placeholder="Number of Employees"
-                                                        maxlength="3">
-                                                    <label for="wc_num_of_empl">Number of Employees</label>
-                                                </div>
+                                        </div>
+                                        <!--  -->
+                                        <div id="wc_subcon_cost_year_container"></div>
+                                        <!--  -->
+                                        <div class="col-md-12">
+                                            <div class="mb-3 form-floating">
+                                                <input type="text" name="wc_num_of_empl" id="wc_num_of_empl"
+                                                    class="form-control" placeholder="Number of Employees"
+                                                    >
+                                                <label for="wc_num_of_empl">Number of Employees</label>
                                             </div>
-                                        @endif
+                                        </div>
+                                        {{-- @endif --}}
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
                                                 <select class="form-select" name="wc_no_of_losses"
@@ -927,7 +925,7 @@
                                             <h5 class="profession_header mt-2 mb-2">Owner's Information</h5>
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="wc_name" id="wc_name"
-                                                    class="form-control" placeholder="" maxlength="255">
+                                                    class="form-control" placeholder="">
                                                 <label for="wc_name">Owner's Name</label>
                                             </div>
                                         </div>
@@ -935,7 +933,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="wc_title_relationship"
                                                     id="wc_title_relationship" class="form-control" placeholder=""
-                                                    maxlength="255">
+                                                    >
                                                 <label for="wc_title_relationship">Title / Relationship</label>
                                             </div>
                                         </div>
@@ -1178,7 +1176,7 @@
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="bond_owners_name" id="bond_owners_name"
-                                                    class="form-control" placeholder="Owner's Name" maxlength="100">
+                                                    class="form-control" placeholder="Owner's Name">
                                                 <label for="bond_owners_name">Owner's Name</label>
                                             </div>
                                         </div>
@@ -1228,7 +1226,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="bond_type_bond_requested"
                                                     id="bond_type_bond_requested" class="form-control"
-                                                    placeholder="Type of Bond Requested" maxlength="100">
+                                                    placeholder="Type of Bond Requested">
                                                 <label for="bond_type_bond_requested">Type of Bond
                                                     Requested</label>
                                             </div>
@@ -1237,7 +1235,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="bond_amount_of_bond"
                                                     id="bond_amount_of_bond" class="form-control"
-                                                    placeholder="Amount of Bond" maxlength="20">
+                                                    placeholder="Amount of Bond">
                                                 <label for="bond_amount_of_bond">Amount of Bond</label>
                                             </div>
                                         </div>
@@ -1278,7 +1276,7 @@
                                                 <input type="text" name="bond_license_or_application_no"
                                                     id="bond_license_or_application_no" class="form-control"
                                                     placeholder="License Number or Application Number"
-                                                    maxlength="100">
+                                                    >
                                                 <label for="bond_license_or_application_no">License Number or
                                                     Application
                                                     Number</label>
@@ -1408,7 +1406,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="excess_insurance_carrier"
                                                     id="excess_insurance_carrier" class="form-control"
-                                                    placeholder="Insurance Carrier" maxlength="100">
+                                                    placeholder="Insurance Carrier">
                                                 <label for="excess_insurance_carrier">Insurance
                                                     Carrier</label>
                                             </div>
@@ -1417,7 +1415,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="excess_policy_or_quote_no"
                                                     id="excess_policy_or_quote_no" class="form-control"
-                                                    placeholder="Policy Number / Quote Number" maxlength="50">
+                                                    placeholder="Policy Number / Quote Number">
                                                 <label for="excess_policy_or_quote_no">Policy Number / Quote
                                                     Number</label>
                                             </div>
@@ -1426,7 +1424,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="excess_policy_premium"
                                                     id="excess_policy_premium" class="form-control"
-                                                    placeholder="Policy Premium" maxlength="20">
+                                                    placeholder="Policy Premium">
                                                 <label for="excess_policy_premium">Policy Premium</label>
                                             </div>
                                         </div>
@@ -1498,7 +1496,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="tools_equipment_type"
                                                     id="tools_equipment_type" class="form-control"
-                                                    placeholder="Equipment Type" maxlength="100">
+                                                    placeholder="Equipment Type">
                                                 <label for="tools_equipment_type">Equipment Type</label>
                                             </div>
                                         </div>
@@ -1506,7 +1504,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="tools_equipment_year"
                                                     id="tools_equipment_year" class="form-control"
-                                                    placeholder="YYYY" maxlength="4">
+                                                    placeholder="YYYY">
                                                 <label for="tools_equipment_year">Year</label>
                                             </div>
                                         </div>
@@ -1514,7 +1512,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="tools_equipment_make"
                                                     id="tools_equipment_make" class="form-control"
-                                                    placeholder="Make" maxlength="100">
+                                                    placeholder="Make">
                                                 <label for="tools_equipment_make">Make</label>
                                             </div>
                                         </div>
@@ -1522,7 +1520,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="tools_equipment_model"
                                                     id="tools_equipment_model" class="form-control"
-                                                    placeholder="Model" maxlength="100">
+                                                    placeholder="Model">
                                                 <label for="tools_equipment_model">Model</label>
                                             </div>
                                         </div>
@@ -1530,7 +1528,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="tools_equipment_vin_or_serial_no"
                                                     id="tools_equipment_vin_or_serial_no" class="form-control"
-                                                    placeholder="VIN or Serial Number" maxlength="100">
+                                                    placeholder="VIN or Serial Number">
                                                 <label for="tools_equipment_vin_or_serial_no">VIN or Serial
                                                     Number</label>
                                             </div>
@@ -1539,7 +1537,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="tools_equipment_valuation"
                                                     id="tools_equipment_valuation" class="form-control"
-                                                    placeholder="Valuation" maxlength="100">
+                                                    placeholder="Valuation">
                                                 <label for="tools_equipment_valuation">Valuation</label>
                                             </div>
                                         </div>
@@ -1607,7 +1605,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_value_of_existing_structure"
                                                     id="br_value_of_existing_structure" class="form-control"
-                                                    placeholder="Value of Existing Structure" maxlength="20">
+                                                    placeholder="Value of Existing Structure">
                                                 <label for="br_value_of_existing_structure">Value of Existing
                                                     Structure</label>
                                             </div>
@@ -1616,7 +1614,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_value_of_work_performed"
                                                     id="br_value_of_work_performed" class="form-control"
-                                                    placeholder="Value of Work Being Performed" maxlength="20">
+                                                    placeholder="Value of Work Being Performed">
                                                 <label for="br_value_of_work_performed">Value of Work Being
                                                     Performed</label>
                                             </div>
@@ -1627,9 +1625,9 @@
                                                     id="br_period_duration_project"
                                                     aria-label="br_period_duration_project">
                                                     <option selected></option>
-                                                    <option value="3">3 Months</option>
-                                                    <option value="6">6 Months</option>
-                                                    <option value="9">9 Months</option>
+                                                    <option value="3 Months">3 Months</option>
+                                                    <option value="6 Months">6 Months</option>
+                                                    <option value="9 Months">9 Months</option>
                                                     <option value="12 Months">12 Months</option>
                                                 </select>
                                                 <label for="br_period_duration_project">Period of Insurance /
@@ -1717,7 +1715,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_sq_footage" id="br_sq_footage"
                                                     class="form-control" placeholder="Square Footage"
-                                                    maxlength="20">
+                                                    >
                                                 <label for="br_sq_footage">Square Footage</label>
                                             </div>
                                         </div>
@@ -1725,7 +1723,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_number_of_floors"
                                                     id="br_number_of_floors" class="form-control"
-                                                    placeholder="Number of Floors" maxlength="20">
+                                                    placeholder="Number of Floors">
                                                 <label for="br_number_of_floors">Number of Floors</label>
                                             </div>
                                         </div>
@@ -1733,7 +1731,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_number_of_units_dwelling"
                                                     id="br_number_of_units_dwelling" class="form-control"
-                                                    placeholder="" maxlength="20">
+                                                    placeholder="">
                                                 <label for="br_number_of_units_dwelling">Number of Units in
                                                     Dwelling</label>
                                             </div>
@@ -1742,7 +1740,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_anticipated_occupancy"
                                                     id="br_anticipated_occupancy" class="form-control"
-                                                    placeholder="" maxlength="20">
+                                                    placeholder="">
                                                 <label for="br_anticipated_occupancy">What is the Anticipated
                                                     Occupancy</label>
                                             </div>
@@ -1751,7 +1749,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_last_update_to_roofing_year"
                                                     id="br_last_update_to_roofing_year" class="form-control"
-                                                    placeholder="" maxlength="20">
+                                                    placeholder="">
                                                 <label for="br_last_update_to_roofing_year">Last Update to
                                                     Roofing
                                                     Year</label>
@@ -1761,7 +1759,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_last_update_to_heating_year"
                                                     id="br_last_update_to_heating_year" class="form-control"
-                                                    placeholder="" maxlength="20">
+                                                    placeholder="">
                                                 <label for="br_last_update_to_heating_year">Last Update to
                                                     Heating
                                                     Year</label>
@@ -1771,7 +1769,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_last_update_to_electrical_year"
                                                     id="br_last_update_to_electrical_year" class="form-control"
-                                                    placeholder="" maxlength="20">
+                                                    placeholder="">
                                                 <label for="br_last_update_to_electrical_year">Last Update to
                                                     Electrical Year</label>
                                             </div>
@@ -1780,7 +1778,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_last_update_to_plumbing_year"
                                                     id="br_last_update_to_plumbing_year" class="form-control"
-                                                    placeholder="" maxlength="20">
+                                                    placeholder="">
                                                 <label for="br_last_update_to_plumbing_year">Last Update to
                                                     Plumbing
                                                     Year</label>
@@ -1790,7 +1788,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_distance_to_nearest_fire_hydrant"
                                                     id="br_distance_to_nearest_fire_hydrant" class="form-control"
-                                                    placeholder="" maxlength="20">
+                                                    placeholder="">
                                                 <label for="br_distance_to_nearest_fire_hydrant">Distance to
                                                     Nearest
                                                     Fire Hydrant</label>
@@ -1800,7 +1798,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_distance_to_nearest_fire_station"
                                                     id="br_distance_to_nearest_fire_station" class="form-control"
-                                                    placeholder="" maxlength="20">
+                                                    placeholder="">
                                                 <label for="br_distance_to_nearest_fire_station">Distance to
                                                     Nearest
                                                     Fire Station</label>
@@ -1811,7 +1809,7 @@
                                                 <input type="text"
                                                     name="br_structure_occupied_remodel_renovation"
                                                     id="br_structure_occupied_remodel_renovation"
-                                                    class="form-control" placeholder="" maxlength="20">
+                                                    class="form-control" placeholder="">
                                                 <label for="br_structure_occupied_remodel_renovation">Will the
                                                     Structure be Occupied During the
                                                     Remodel/Renovation?</label>
@@ -1832,7 +1830,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_when_structure_built"
                                                     id="br_when_structure_built" class="form-control"
-                                                    placeholder="" maxlength="20">
+                                                    placeholder="">
                                                 <label for="br_when_structure_built">When was the structure
                                                     built?</label>
                                             </div>
@@ -1841,7 +1839,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="br_jobsite_security"
                                                     id="br_jobsite_security" class="form-control" placeholder=""
-                                                    maxlength="20">
+                                                    >
                                                 <label for="br_jobsite_security">Jobsite Security</label>
                                             </div>
                                         </div>
@@ -1913,7 +1911,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="bop_loss_payee_info"
                                                     id="bop_loss_payee_info" class="form-control"
-                                                    placeholder="Loss Payee Information" maxlength="">
+                                                    placeholder="Loss Payee Information">
                                                 <label for="bop_loss_payee_info">Loss Payee
                                                     Information</label>
                                             </div>
@@ -1972,7 +1970,7 @@
                                                     id="bop_val_cost_bldg" class="form-control"
                                                     placeholder="Value of Cost of the
                                                             Building?"
-                                                    maxlength="">
+                                                    >
                                                 <label for="bop_val_cost_bldg">Value of Cost of the
                                                     Building?</label>
                                             </div>
@@ -1983,7 +1981,7 @@
                                                     id="bop_business_property_limit" class="form-control"
                                                     placeholder="What is the Business Property
                                                             Limit?"
-                                                    maxlength="">
+                                                    >
                                                 <label for="bop_business_property_limit">What is the Business
                                                     Property
                                                     Limit?</label>
@@ -2044,7 +2042,7 @@
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="bop_year_built" id="bop_year_built"
-                                                    class="form-control" placeholder="Year Built" maxlength="">
+                                                    class="form-control" placeholder="Year Built">
                                                 <label for="bop_year_built">Year Built</label>
                                             </div>
                                         </div>
@@ -2052,7 +2050,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="bop_no_of_stories"
                                                     id="bop_no_of_stories" class="form-control"
-                                                    placeholder="No. of Stories" maxlength="">
+                                                    placeholder="No. of Stories">
                                                 <label for="bop_no_of_stories">No. of Stories</label>
                                             </div>
                                         </div>
@@ -2060,7 +2058,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="bop_total_bldg_sqft"
                                                     id="bop_total_bldg_sqft" class="form-control"
-                                                    placeholder="Total Building Sq. Ft." maxlength="">
+                                                    placeholder="Total Building Sq. Ft.">
                                                 <label for="bop_total_bldg_sqft">Total Building Sq.
                                                     Ft.</label>
                                             </div>
@@ -2111,7 +2109,7 @@
                                                     id="bop_distance_nearest_fire_hydrant" class="form-control"
                                                     placeholder="Distance to Nearest
                                                             Fire Hydrant:"
-                                                    maxlength="">
+                                                    >
                                                 <label for="bop_distance_nearest_fire_hydrant">Distance to
                                                     Nearest
                                                     Fire Hydrant:</label>
@@ -2123,7 +2121,7 @@
                                                     id="bop_distance_nearest_fire_station" class="form-control"
                                                     placeholder="Distance to Nearest
                                                             Fire Station:"
-                                                    maxlength="">
+                                                    >
                                                 <label for="bop_distance_nearest_fire_station">Distance to
                                                     Nearest
                                                     Fire Station:</label>
@@ -2193,7 +2191,7 @@
                                                     id="bop_last_update_roofing_year" class="form-control"
                                                     placeholder="Last Update to Roofing
                                                             Yr:"
-                                                    maxlength="">
+                                                    >
                                                 <label for="bop_last_update_roofing_year">Last Update to
                                                     Roofing
                                                     Yr:</label>
@@ -2205,7 +2203,7 @@
                                                     id="bop_last_update_heating_year" class="form-control"
                                                     placeholder="Last Update to Heating
                                                             Yr:"
-                                                    maxlength="">
+                                                    >
                                                 <label for="bop_last_update_heating_year">Last Update to
                                                     Heating
                                                     Yr:</label>
@@ -2217,7 +2215,7 @@
                                                     id="bop_last_update_plumbing_year" class="form-control"
                                                     placeholder="Last Update to Plumbing
                                                             Yr:"
-                                                    maxlength="">
+                                                    >
                                                 <label for="bop_last_update_plumbing_year">Last Update to
                                                     Plumbing
                                                     Yr:</label>
@@ -2229,7 +2227,7 @@
                                                     id="bop_last_update_electrical_year" class="form-control"
                                                     placeholder="Last Update to Electrical
                                                             Yr:"
-                                                    maxlength="">
+                                                    >
                                                 <label for="bop_last_update_electrical_year">Last Update to
                                                     Electrical
                                                     Yr:</label>
@@ -3032,7 +3030,7 @@
                                                     placeholder="Cost of the Largest Project in
                                                             the
                                                             past 5 years?"
-                                                    maxlength="20">
+                                                    >
                                                 <label for="pollution_cost_proj_5years">Cost of the Largest
                                                     Project in
                                                     the
@@ -3130,7 +3128,7 @@
                                         <div class="col-md-6">
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_fein" id="epli_fein"
-                                                    class="form-control" placeholder="FEIN No.:" maxlength="" />
+                                                    class="form-control" placeholder="FEIN No.:"  />
                                                 <label for="epli_fein">FEIN No.:</label>
                                             </div>
                                         </div>
@@ -3138,7 +3136,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_current_epli"
                                                     id="epli_current_epli" class="form-control"
-                                                    placeholder="Current EPLI:" maxlength="" />
+                                                    placeholder="Current EPLI:"  />
                                                 <label for="epli_current_epli">Current EPLI:</label>
                                             </div>
                                         </div>
@@ -3146,7 +3144,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_prior_carrier"
                                                     id="epli_prior_carrier" class="form-control"
-                                                    placeholder="Prior Carrier:" maxlength="" />
+                                                    placeholder="Prior Carrier:"  />
                                                 <label for="epli_prior_carrier">Prior Carrier:</label>
                                             </div>
                                         </div>
@@ -3154,7 +3152,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_prior_carrier_epli"
                                                     id="epli_prior_carrier_epli" class="form-control"
-                                                    placeholder="Prior Carrier EPLI:" maxlength="" />
+                                                    placeholder="Prior Carrier EPLI:"  />
                                                 <label for="epli_prior_carrier_epli">Prior Carrier
                                                     EPLI:</label>
                                             </div>
@@ -3163,7 +3161,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_effective_date"
                                                     id="epli_effective_date" class="form-control"
-                                                    placeholder="Effective Date:" maxlength="" />
+                                                    placeholder="Effective Date:"  />
                                                 <label for="epli_effective_date">Effective Date:</label>
                                             </div>
                                         </div>
@@ -3171,7 +3169,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_prev_premium_amount"
                                                     id="epli_prev_premium_amount" class="form-control"
-                                                    placeholder="Previous Premium Amount:" maxlength="" />
+                                                    placeholder="Previous Premium Amount:"  />
                                                 <label for="epli_prev_premium_amount">Previous Premium
                                                     Amount:</label>
                                             </div>
@@ -3180,7 +3178,7 @@
                                             <div class="mb-3 form-floating">
                                                 {{-- <input type="text" name="epli_deductible_amount"
                                                     id="epli_deductible_amount" class="form-control"
-                                                    placeholder="Deductible Amount:" maxlength="" /> --}}
+                                                    placeholder="Deductible Amount:"  /> --}}
                                                 <select class="form-select" name="epli_deductible_amount"
                                                     id="epli_deductible_amount" aria-label="epli_deductible_amount">
                                                     <option selected></option>
@@ -3227,7 +3225,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_full_time" id="epli_full_time"
                                                     class="form-control" placeholder="Full Time:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="epli_full_time">Full Time:</label>
                                             </div>
                                         </div>
@@ -3235,7 +3233,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_part_time" id="epli_part_time"
                                                     class="form-control" placeholder="Part Time:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="epli_part_time">Part Time:</label>
                                             </div>
                                         </div>
@@ -3243,7 +3241,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_independent_contractors"
                                                     id="epli_independent_contractors" class="form-control"
-                                                    placeholder="Independent Contractors:" maxlength="" />
+                                                    placeholder="Independent Contractors:"  />
                                                 <label for="epli_independent_contractors">Independent
                                                     Contractors:</label>
                                             </div>
@@ -3252,7 +3250,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_volunteers" id="epli_volunteers"
                                                     class="form-control" placeholder="Volunteers:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="epli_volunteers">Volunteers:</label>
                                             </div>
                                         </div>
@@ -3260,7 +3258,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_leased_seasonal"
                                                     id="epli_leased_seasonal" class="form-control"
-                                                    placeholder="Leased or Seasonal:" maxlength="" />
+                                                    placeholder="Leased or Seasonal:"  />
                                                 <label for="epli_leased_seasonal">Leased or Seasonal:</label>
                                             </div>
                                         </div>
@@ -3268,7 +3266,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_non_us_base_emp"
                                                     id="epli_non_us_base_emp" class="form-control"
-                                                    placeholder="Non-US base Emp.:" maxlength="" />
+                                                    placeholder="Non-US base Emp.:"  />
                                                 <label for="epli_non_us_base_emp">Non-US base Emp.:</label>
                                             </div>
                                         </div>
@@ -3276,7 +3274,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_total_employees"
                                                     id="epli_total_employees" class="form-control"
-                                                    placeholder="Total Employees:" maxlength="" />
+                                                    placeholder="Total Employees:"  />
                                                 <label for="epli_total_employees">Total Employees:</label>
                                             </div>
                                         </div>
@@ -3297,7 +3295,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_located_at_ca"
                                                     id="epli_located_at_ca" class="form-control" placeholder="CA:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="epli_located_at_ca">CA:</label>
                                             </div>
                                         </div>
@@ -3305,7 +3303,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_located_at_ga"
                                                     id="epli_located_at_ga" class="form-control" placeholder="GA:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="epli_located_at_ga">GA:</label>
                                             </div>
                                         </div>
@@ -3313,7 +3311,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_located_at_tx"
                                                     id="epli_located_at_tx" class="form-control" placeholder="TX:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="epli_located_at_tx">TX:</label>
                                             </div>
                                         </div>
@@ -3321,7 +3319,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_located_at_fl"
                                                     id="epli_located_at_fl" class="form-control" placeholder="FL:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="epli_located_at_fl">FL:</label>
                                             </div>
                                         </div>
@@ -3329,7 +3327,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_located_at_ny"
                                                     id="epli_located_at_ny" class="form-control" placeholder="NY:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="epli_located_at_ny">NY:</label>
                                             </div>
                                         </div>
@@ -3337,7 +3335,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_located_at_nj"
                                                     id="epli_located_at_nj" class="form-control" placeholder="NJ:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="epli_located_at_nj">NJ:</label>
                                             </div>
                                         </div>
@@ -3357,25 +3355,58 @@
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <input type="text" name="epli_salary_range_q1"
-                                                    id="epli_salary_range_q1" class="form-control"
-                                                    placeholder="Up to $60,000:" maxlength="" />
+                                                <select class="form-select" name="epli_salary_range_q1"
+                                                    id="epli_salary_range_q1" aria-label="epli_salary_range_q1">
+                                                    <option value selected></option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                </select>
                                                 <label for="epli_salary_range_q1">Up to $60,000:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <input type="text" name="epli_salary_range_q2"
-                                                    id="epli_salary_range_q2" class="form-control"
-                                                    placeholder="$60,000 - $120,000:" maxlength="" />
+                                                <select class="form-select" name="epli_salary_range_q2"
+                                                    id="epli_salary_range_q2" aria-label="epli_salary_range_q2">
+                                                    <option value selected></option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                </select>
                                                 <label for="epli_salary_range_q2">$60,000 - $120,000:</label>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="mb-3 form-floating">
-                                                <input type="text" name="epli_salary_range_q3"
-                                                    id="epli_salary_range_q3" class="form-control"
-                                                    placeholder="Over $120,000:" maxlength="" />
+                                                <select class="form-select" name="epli_salary_range_q3"
+                                                    id="epli_salary_range_q3" aria-label="epli_salary_range_q3">
+                                                    <option value selected></option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                    <option value="4">4</option>
+                                                    <option value="5">5</option>
+                                                    <option value="6">6</option>
+                                                    <option value="7">7</option>
+                                                    <option value="8">8</option>
+                                                    <option value="9">9</option>
+                                                    <option value="10">10</option>
+                                                </select>
                                                 <label for="epli_salary_range_q3">Over $120,000:</label>
                                             </div>
                                         </div>
@@ -3397,7 +3428,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_emp_terminated_last_12_months_q1"
                                                     id="epli_emp_terminated_last_12_months_q1" class="form-control"
-                                                    placeholder="Voluntary:" maxlength="" />
+                                                    placeholder="Voluntary:"  />
                                                 <label for="epli_emp_terminated_last_12_months_q1">Voluntary:</label>
                                             </div>
                                         </div>
@@ -3405,7 +3436,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_emp_terminated_last_12_months_q2"
                                                     id="epli_emp_terminated_last_12_months_q2" class="form-control"
-                                                    placeholder="Involuntary:" maxlength="" />
+                                                    placeholder="Involuntary:"  />
                                                 <label
                                                     for="epli_emp_terminated_last_12_months_q2">Involuntary:</label>
                                             </div>
@@ -3414,7 +3445,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="epli_emp_terminated_last_12_months_q3"
                                                     id="epli_emp_terminated_last_12_months_q3" class="form-control"
-                                                    placeholder="Laid-Off:" maxlength="" />
+                                                    placeholder="Laid-Off:"  />
                                                 <label for="epli_emp_terminated_last_12_months_q3">Laid-Off:</label>
                                             </div>
                                         </div>
@@ -3536,7 +3567,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="cyber_it_contact_name"
                                                     id="cyber_it_contact_name" class="form-control"
-                                                    placeholder="IT Contact Name:" maxlength="" />
+                                                    placeholder="IT Contact Name:"  />
                                                 <label for="cyber_it_contact_name">IT Contact Name:</label>
                                             </div>
                                         </div>
@@ -3544,7 +3575,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="cyber_it_contact_number"
                                                     id="cyber_it_contact_number" class="form-control"
-                                                    placeholder="IT Contact Number:" maxlength="" />
+                                                    placeholder="IT Contact Number:"  />
                                                 <label for="cyber_it_contact_number">IT Contact
                                                     Number:</label>
                                             </div>
@@ -3553,7 +3584,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="email" name="cyber_it_contact_email"
                                                     id="cyber_it_contact_email" class="form-control"
-                                                    placeholder="IT Contact Email:" maxlength="" />
+                                                    placeholder="IT Contact Email:"  />
                                                 <label for="cyber_it_contact_email">IT Contact Email:</label>
                                             </div>
                                         </div>
@@ -3762,7 +3793,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="instfloat_type_of_operation"
                                                     id="instfloat_type_of_operation" class="form-control"
-                                                    placeholder="Type of Operation:" maxlength="" />
+                                                    placeholder="Type of Operation:"  />
                                                 <label for="instfloat_type_of_operation">Type of
                                                     Operation:</label>
                                             </div>
@@ -3774,7 +3805,7 @@
                                                     placeholder="Type of Equipment / materials you will
                                                     be working
                                                     with:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="instfloat_scheduled_type_of_equipment">Type of
                                                     Equipment /
                                                     materials
@@ -3843,7 +3874,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="instfloat_location"
                                                     id="instfloat_location" class="form-control"
-                                                    placeholder="Location:" maxlength="" />
+                                                    placeholder="Location:"  />
                                                 <label for="instfloat_location">Location:</label>
                                             </div>
                                         </div>
@@ -3877,7 +3908,7 @@
                                                     placeholder="Maximum Value of equipment that you will
                                                     be
                                                     storing:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="instfloat_max_value_of_equipment">Maximum Value of
                                                     equipment that you will
                                                     be
@@ -3890,7 +3921,7 @@
                                                     id="instfloat_max_value_of_bldg_storage" class="form-control"
                                                     placeholder="Maximum Value of Building
                                                     storage:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="instfloat_max_value_of_bldg_storage">Maximum Value
                                                     of
                                                     Building
@@ -3943,7 +3974,7 @@
                                                     class="form-control"
                                                     placeholder="Type of Equipment / materials you will
                                                     be working with:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="instfloat_unscheduled_type_of_equipment">Type of
                                                     Equipment / materials you will
                                                     be working with:</label>
@@ -3957,7 +3988,7 @@
                                                     class="form-control"
                                                     placeholder="Maximum Value of equipment that you will be
                                                     storing:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="instfloat_unscheduled_max_value_equipment_storing">Maximum
                                                     Value of
                                                     equipment that you will be
@@ -4059,7 +4090,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="instfloat_scheduled_equipment_type_1"
                                                     id="instfloat_scheduled_equipment_type_1" class="form-control"
-                                                    placeholder="Type:" maxlength="" />
+                                                    placeholder="Type:"  />
                                                 <label for="instfloat_scheduled_equipment_type_1">Type:</label>
                                             </div>
                                         </div>
@@ -4067,7 +4098,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="instfloat_scheduled_equipment_mfg_1"
                                                     id="instfloat_scheduled_equipment_mfg_1" class="form-control"
-                                                    placeholder="Manufacturer:" maxlength="" />
+                                                    placeholder="Manufacturer:"  />
                                                 <label for="instfloat_scheduled_equipment_mfg_1">Manufacturer:</label>
                                             </div>
                                         </div>
@@ -4079,7 +4110,7 @@
                                                     class="form-control"
                                                     placeholder="ID # /
                                                     Serial Number:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="instfloat_scheduled_equipment_id_or_serial_1">ID #
                                                     /
                                                     Serial Number:</label>
@@ -4089,7 +4120,7 @@
                                             <div class="mb-3 form-floating">
                                                 <input type="text" name="instfloat_scheduled_equipment_model_1"
                                                     id="instfloat_scheduled_equipment_model_1" class="form-control"
-                                                    placeholder="Model:" maxlength="" />
+                                                    placeholder="Model:"  />
                                                 <label for="instfloat_scheduled_equipment_model_1">Model:</label>
                                             </div>
                                         </div>
@@ -4113,7 +4144,7 @@
                                                     name="instfloat_scheduled_equipment_model_year_1"
                                                     id="instfloat_scheduled_equipment_model_year_1"
                                                     class="form-control" placeholder="Model Year:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="instfloat_scheduled_equipment_model_year_1">Model
                                                     Year:</label>
                                             </div>
@@ -4124,7 +4155,7 @@
                                                     name="instfloat_scheduled_equipment_date_purchased_1"
                                                     id="instfloat_scheduled_equipment_date_purchased_1"
                                                     class="form-control" placeholder="Date Purchased:"
-                                                    maxlength="" />
+                                                     />
                                                 <label for="instfloat_scheduled_equipment_date_purchased_1">Date
                                                     Purchased:</label>
                                             </div>
