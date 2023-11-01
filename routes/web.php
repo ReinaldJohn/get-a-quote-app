@@ -4,7 +4,7 @@ use App\Http\Controllers\QuoteController;
 use Illuminate\Support\Facades\Route;
 
 // Get a Quote Form
-Route::get('/wc/showProfessionEntries', [QuoteController::class, 'showProfessionEntries']);
+// Route::get('/wc/showProfessionEntries', [QuoteController::class, 'showProfessionEntries']);
 
 // Route::get('/auto/showAutoVehicleEntries', [QuoteController::class, 'showVehicleEntries']);
 // Route::get('/auto/showAutoDriverEntries', [QuoteController::class, 'showDriverEntries']);

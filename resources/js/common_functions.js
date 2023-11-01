@@ -11,11 +11,11 @@
     });
 
     let observer = new MutationObserver(() => {
-        $(
-            "#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea"
-        )
-            .not("#fax_number, #personal_website, #bond_owners_spouse_ssn")
-            .prop("required", true);
+        // $(
+        //     "#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea"
+        // )
+        //     .not("#fax_number, #personal_website, #bond_owners_spouse_ssn")
+        //     .prop("required", true);
     });
 
     // Observe the entire document for changes
@@ -3965,49 +3965,97 @@
         `);
     }
 
-    async function showProfessionEntries(a, ids = []) {
-        try {
-            let response = await axios.get("wc/showProfessionEntries", {
-                params: {
-                    a: a,
-                },
-            });
+    // let professionOptions;
 
-            let data = response.data.data;
+    // // Fetch profession entries on document ready and populate the default select.
+    // $(document).ready(async function () {
+    //     await fetchProfessionEntries();
+    //     $("#wc_profession_type").html(professionOptions);
+    // });
 
-            if (data) {
-                $("#profession_entry_container").append(data);
-                perfectCurrencyFormatter(".annual-payroll");
-                // Attach a change event handler to the document for any element with an ID starting with 'wc_profession_'
-                $(document).on(
-                    "change",
-                    `[id^="wc_profession_${a}"]`,
-                    function () {
-                        // Get the value of the selected option
-                        let wcProfessionValue = parseInt($(this).val());
-                        if (wcProfessionValue === 319) {
-                            $("#classcode_if_others_container_" + a).append(`
-                            <div class="row justify-content-center customProfession">
-                                <h6 class="profession_header mt-2 mb-2">Please specify your profession:</h6>
-                                <div class="col-md-12">
-                                    <div class="mb-3 form-floating">
-                                        <input type="text" name="profession_if_others_input" id="profession_if_others_input" class="form-control" placeholder="">
-                                        <label for="profession_if_others_input">Please indicate:</label>
-                                    </div>
-                                </div>
-                            </div>
-                        `);
-                        } else {
-                            $(".customProfession").remove();
-                        }
-                    }
-                );
-            }
-        } catch (error) {
-            // Handle any errors here
-            console.error(error);
-        }
-    }
+    // async function fetchProfessionEntries() {
+    //     try {
+    //         const response = await axios.get("wc/showProfessionEntries", {
+    //             params: { a: 1 },
+    //         });
+    //         if (response.data.data) {
+    //             const parser = new DOMParser();
+    //             const doc = parser.parseFromString(
+    //                 response.data.data,
+    //                 "text/html"
+    //             );
+    //             professionOptions =
+    //                 doc.querySelector("#wc_profession_1").innerHTML;
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
+
+    // let entryCounter = 1;
+
+    // $("#add_sched_equipment_entry").click(function () {
+    //     entryCounter++;
+    //     const newEntry = `
+    //     <div class="row justify-content-center">
+    //         <h6 class="profession_header mt-2 mb-2">Employee's Profession Entry No. ${entryCounter}</h6>
+    //         <div class="col-md-12">
+    //             <div class="mb-3 form-floating">
+    //                 <select class="form-select" name="" id="wc_profession_type_${entryCounter}" aria-label="">
+    //                     ${professionOptions}
+    //                 </select>
+    //                 <label for="wc_profession_type_${entryCounter}">Profession Type:</label>
+    //             </div>
+    //         </div>
+    //     </div>
+    // `;
+
+    //     $("#wc_professions_container").append(newEntry);
+    // });
+
+    // async function showProfessionEntries(a, ids = []) {
+    //     try {
+    //         let response = await axios.get("wc/showProfessionEntries", {
+    //             params: {
+    //                 a: a,
+    //             },
+    //         });
+
+    //         let data = response.data.data;
+
+    //         if (data) {
+    //             $("#profession_entry_container").append(data);
+    //             perfectCurrencyFormatter(".annual-payroll");
+    //             // Attach a change event handler to the document for any element with an ID starting with 'wc_profession_'
+    //             $(document).on(
+    //                 "change",
+    //                 `[id^="wc_profession_${a}"]`,
+    //                 function () {
+    //                     // Get the value of the selected option
+    //                     let wcProfessionValue = parseInt($(this).val());
+    //                     if (wcProfessionValue === 319) {
+    //                         $("#classcode_if_others_container_" + a).append(`
+    //                         <div class="row justify-content-center customProfession">
+    //                             <h6 class="profession_header mt-2 mb-2">Please specify your profession:</h6>
+    //                             <div class="col-md-12">
+    //                                 <div class="mb-3 form-floating">
+    //                                     <input type="text" name="profession_if_others_input" id="profession_if_others_input" class="form-control" placeholder="">
+    //                                     <label for="profession_if_others_input">Please indicate:</label>
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                     `);
+    //                     } else {
+    //                         $(".customProfession").remove();
+    //                     }
+    //                 }
+    //             );
+    //         }
+    //     } catch (error) {
+    //         // Handle any errors here
+    //         console.error(error);
+    //     }
+    // }
 
     // async function showAutoVehicleEntries(a) {
     //     try {
@@ -5558,20 +5606,20 @@
     // END GL SCRIPTS
 
     // START WC SCRIPTS
-    $(document).on("change", "#wc_no_of_profession", async function () {
-        $(".loader-container").addClass("active");
-        $(".loader-container").removeClass("hidden");
+    // $(document).on("change", "#wc_no_of_profession", async function () {
+    //     $(".loader-container").addClass("active");
+    //     $(".loader-container").removeClass("hidden");
 
-        var numProfs = parseInt($(this).val());
-        $("#profession_entry_container").empty();
+    //     var numProfs = parseInt($(this).val());
+    //     $("#profession_entry_container").empty();
 
-        for (var i = 1; i <= numProfs; i++) {
-            await showProfessionEntries(i);
-        }
+    //     for (var i = 1; i <= numProfs; i++) {
+    //         await showProfessionEntries(i);
+    //     }
 
-        $(".loader-container").addClass("hidden");
-        $(".loader-container").removeClass("active");
-    });
+    //     $(".loader-container").addClass("hidden");
+    //     $(".loader-container").removeClass("active");
+    // });
 
     perfectCurrencyFormatter("#wc_subcon_cost_year");
     perfectCurrencyFormatter("#wc_gross_receipt");

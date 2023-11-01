@@ -56,70 +56,98 @@ class QuoteController extends Controller
         return view("quote.thankyou");
     }
 
-    public function showProfessionEntries(Request $request, Quote $quoteModel) {
+    // public function showProfessionEntries(Quote $quoteModel) {
 
-        if ($request->isMethod('get') && $request->has('a')) {
-            $a = $request->input('a');
+    //     // if ($request->isMethod('get') && $request->has('a')) {
+    //         // $a = $request->input('a');
 
-            // IDs you want specifically for WC Professions
-            $ids = [995, 996, 997, 998, 999];
+    //         $output = "";
 
-            // Fetch all professions
-            $professions = $quoteModel->getAllProfessions($ids);
+    //         // IDs you want specifically for WC Professions
+    //         $ids = [995, 996, 997, 998, 999];
 
-            // Fetch specific professions based on the array of IDs
-            $wcProfessions = $quoteModel->getWCProfessions($ids);
+    //         // Fetch all professions
+    //         $professions = $quoteModel->getAllProfessions($ids);
 
-            // Initialize output buffer and add general professions
-            ob_start();
+    //         // Fetch specific professions based on the array of IDs
+    //         $wcProfessions = $quoteModel->getWCProfessions($ids);
 
-            // Add WC professions if they exist
-            if ($wcProfessions && count($wcProfessions) > 0) {
-                echo "<optgroup label='Other Professions'>";
-                foreach ($wcProfessions as $wcProfession) {
-                    echo "<option value='{$wcProfession['id']}'>{$wcProfession['name']}</option>";
-                }
-                echo "</optgroup>";
-            }
+    //         // Initialize output buffer and add general professions
+    //         ob_start();
 
-            echo "<optgroup label='All Professions'>";
-            foreach ($professions as $profession) {
-                echo "<option value='{$profession['id']}'>{$profession['name']}</option>";
-            }
-            echo "</optgroup>";
+    //         // Add WC professions if they exist
+    //         if ($wcProfessions && count($wcProfessions) > 0) {
+    //             $output .= "<optgroup label='Other Professions'>";
+    //             foreach ($wcProfessions as $wcProfession) {
+    //                 $output .= "<option value='{$wcProfession['id']}'>{$wcProfession['name']}</option>";
+    //             }
+    //             $output .= "</optgroup>";
+    //         }
 
-            // Get output buffer content and clean the buffer
-            $options = ob_get_clean();
+    //         $output .= "<optgroup label='All Professions'>";
+    //         foreach ($professions as $profession) {
+    //             $output .= "<option value='{$profession['id']}'>{$profession['name']}</option>";
+    //         }
+    //         $output .= "</optgroup>";
 
-            // Generate the final HTML output
-            $output = "
-                <div id='profession_entry_container_{$a}'>
-                    <h4 class='profession_header mt-2 mb-2'>Profession Entry No. {$a}</h4>
-                    <div class='row justify-content-center'>
-                        <div class='col-md-12'>
-                            <div class='mb-3 form-floating'>
-                                <select class='form-control wc_profession_{$a}' name='wc_profession_{$a}' id='wc_profession_{$a}' aria-label='wc_profession_{$a}'>
-                                    <option value selected></option>
-                                    $options
-                                </select>
-                                <label for='wc_profession_{$a}'>Profession</label>
-                            </div>
-                        </div>
-                        <div id='classcode_if_others_container_{$a}'></div>
-                        <div class='col-md-12'>
-                            <div class='mb-3 form-floating'>
-                                <input type='text' name='wc_annual_payroll_{$a}' id='wc_annual_payroll_{$a}' class='form-control annual-payroll required' placeholder='' maxlength='20'>
-                                <label for='wc_annual_payroll_{$a}'>Annual Payroll of Employee</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            ";
+    //         // Get output buffer content and clean the buffer
+    //         $options = ob_get_clean();
 
-            return response()->json(['data' => $output]);
-        }
+    //         // Generate the final HTML output
+    //         // $output = "
+    //         //     <div id='profession_entry_container_{$a}'>
+    //         //         <h4 class='profession_header mt-2 mb-2'>Profession Entry No. {$a}</h4>
+    //         //         <div class='row justify-content-center'>
+    //         //             <div class='col-md-12'>
+    //         //                 <div class='mb-3 form-floating'>
+    //         //                     <select class='form-control wc_profession_{$a}' name='wc_profession_{$a}' id='wc_profession_{$a}' aria-label='wc_profession_{$a}'>
+    //         //                         <option value selected></option>
+    //         //                         $options
+    //         //                     </select>
+    //         //                     <label for='wc_profession_{$a}'>Profession</label>
+    //         //                 </div>
+    //         //             </div>
+    //         //             <div id='classcode_if_others_container_{$a}'></div>
+    //         //             <div class='col-md-12'>
+    //         //                 <div class='mb-3 form-floating'>
+    //         //                     <input type='text' name='wc_annual_payroll_{$a}' id='wc_annual_payroll_{$a}' class='form-control annual-payroll required' placeholder='' maxlength='20'>
+    //         //                     <label for='wc_annual_payroll_{$a}'>Annual Payroll of Employee</label>
+    //         //                 </div>
+    //         //             </div>
+    //         //         </div>
+    //         //     </div>
+    //         // ";
 
-        // return response()->json(['data' => '']);
+    //         return response()->json(['data' => $options]);
+    //     // }
+
+    //     // return response()->json(['data' => '']);
+    // }
+
+    public function showProfessionEntries(Quote $quoteModel) {
+        // IDs you want specifically for WC Professions
+        $ids = [995, 996, 997, 998, 999];
+
+        // Fetch all professions
+        $professions = $quoteModel->getAllProfessions($ids);
+
+        // Fetch specific professions based on the array of IDs
+        $wcProfessions = $quoteModel->getWCProfessions($ids);
+        // dd($wcProfessions ?? 'wcProfessions is not set');
+
+
+        // Log::info("WC PRofessions: " . $wcProfessions);
+
+        // Prepare data to send to Blade template
+        $data = [
+            'wcProfessions' => $wcProfessions,
+            'professions' => $professions,
+        ];
+
+        Log::info('WC Professions from Controller: ', ['wcProfessions' => $wcProfessions]);
+
+        return view('quote.index', compact('wcProfessions', 'professions'));
+
     }
 
     // public function showVehicleEntries(Request $request) {
@@ -2163,7 +2191,8 @@ class QuoteController extends Controller
                 "sender" => "PBIBINS Get a Quote Form <web@pbibinc.com>",
                 "subject" => "PBIBINS Get a Quote Details - {$formattedDateCreated}",
                 "to" => [
-                    "insure@pbibinc.com <insure@pbibinc.com>"
+                    // "insure@pbibinc.com <insure@pbibinc.com>"
+                    "rj@pbibinc.com <rj@pbibinc.com>"
                 ]
             ]),
             CURLOPT_HTTPHEADER => array(
@@ -2187,8 +2216,6 @@ class QuoteController extends Controller
         // dd($key,$value);
         session([$key => $value]);
         // dd(is_string(session('doesGLandWCChecked')));
-
-
         return response()->json(['message' => 'Session variable set successfully']);
     }
 

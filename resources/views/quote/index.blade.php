@@ -717,15 +717,43 @@
 
                                     <div class="col-md-6">
                                         <div class="mb-3 form-floating">
-                                            <input type="text" name="gl_full_time_employees"
-                                                id="gl_full_time_employees" class="form-control" placeholder="">
+                                            {{-- <input type="text" name="gl_full_time_employees"
+                                                id="gl_full_time_employees" class="form-control" placeholder=""> --}}
+                                            <select class="form-select" name="gl_full_time_employees"
+                                                id="gl_full_time_employees" aria-label="gl_full_time_employees">
+                                                <option selected></option>
+                                                <option value="1">1 Employee</option>
+                                                <option value="2">2 Employees</option>
+                                                <option value="3">3 Employees</option>
+                                                <option value="4">4 Employees</option>
+                                                <option value="5">5 Employees</option>
+                                                <option value="6">6 Employees</option>
+                                                <option value="7">7 Employees</option>
+                                                <option value="8">8 Employees</option>
+                                                <option value="9">9 Employees</option>
+                                                <option value="10">10 Employees</option>
+                                            </select>
                                             <label for="gl_full_time_employees">Full Time Employee/s</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3 form-floating">
-                                            <input type="text" name="gl_part_time_employees"
-                                                id="gl_part_time_employees" class="form-control" placeholder="">
+                                            {{-- <input type="text" name="gl_part_time_employees"
+                                                id="gl_part_time_employees" class="form-control" placeholder=""> --}}
+                                            <select class="form-select" name="gl_part_time_employees"
+                                                id="gl_part_time_employees" aria-label="gl_part_time_employees">
+                                                <option selected></option>
+                                                <option value="1">1 Employee</option>
+                                                <option value="2">2 Employees</option>
+                                                <option value="3">3 Employees</option>
+                                                <option value="4">4 Employees</option>
+                                                <option value="5">5 Employees</option>
+                                                <option value="6">6 Employees</option>
+                                                <option value="7">7 Employees</option>
+                                                <option value="8">8 Employees</option>
+                                                <option value="9">9 Employees</option>
+                                                <option value="10">10 Employees</option>
+                                            </select>
                                             <label for="gl_part_time_employees">Part Time Employee/s</label>
                                         </div>
                                     </div>
@@ -780,28 +808,90 @@
                                     <h3>Worker’s Compensation Application</h3>
                                     <p>Please provide the requested information and proceed.</p>
                                 </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <div class="col-md-12">
+                                        <div class="mb-3 form-floating">
+                                            <input type="text" name="" id="" class="form-control"
+                                                placeholder="Type:" />
+                                            <label for="">Total Employee (Full Time + Part Time)</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="profession_header mt-2 mb-2">Worker's Compensation Employee's Profession
+                                        Entry:</h5>
+                                    <button id="add_wc_employee_entry" class="btn_2">+</button>
+                                </div>
                                 <div class="row justify-content-center">
+                                    <h6 class="profession_header mt-2 mb-2">Employee's Profession Entry No. 1</h6>
+                                    <div class="col-md-12">
+                                        <div class="mb-3 form-floating">
+                                            <select class="form-select" name="" id="wc_profession_type"
+                                                aria-label="">
+                                                <!-- For wcProfessions -->
+                                               @if($wcProfessions && count($wcProfessions) > 0)
+                                                {{-- {{ dd($wcProfessions ?? 'wcProfessions is not set') }} --}}
+
+                                                <optgroup label='Other Professions'>
+                                                    @foreach ($wcProfessions as $wcProfession)
+                                                        <option value="{{ $wcProfession['id'] }}">
+                                                            {{ $wcProfession['name'] }}</option>
+                                                    @endforeach
+                                                </optgroup>
+                                                @endif
+
+                                                <!-- For general professions -->
+                                                <optgroup label='All Professions'>
+                                                    @foreach ($professions as $profession)
+                                                        <option value="{{ $profession['id'] }}">
+                                                            {{ $profession['name'] }}</option>
+                                                    @endforeach
+                                                </optgroup>
+                                            </select>
+                                            <label for="">Profession Type:</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3 form-floating">
+                                            <input type="text" name="" id="" class="form-control"
+                                                placeholder="" />
+                                            <label for="">Annual Gross Receipt:</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="mb-3 form-floating">
+                                            <input type="text" name="" id="" class="form-control"
+                                                placeholder="" />
+                                            <label for="">Number of Employee under this Profession:</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center" id="wc_professions_container">
+                                </div>
+
+                                {{-- <div class="row justify-content-center">
                                     <div class="col-md-12">
                                         <div class="mb-3 form-floating">
                                             <select class="form-select" name="wc_no_of_profession"
                                                 id="wc_no_of_profession" aria-label="wc_no_of_profession">
                                                 <option selected></option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
-                                                <option value="7">7</option>
-                                                <option value="8">8</option>
+                                                <option value="1">1 Employee</option>
+                                                <option value="2">2 Employees</option>
+                                                <option value="3">3 Employees</option>
+                                                <option value="4">4 Employees</option>
+                                                <option value="5">5 Employees</option>
+                                                <option value="6">6 Employees</option>
+                                                <option value="7">7 Employees</option>
+                                                <option value="8">8 Employees</option>
+                                                <option value="9">9 Employees</option>
+                                                <option value="10">10 Employees</option>
                                             </select>
                                             <label for="wc_no_of_profession">Number of Professions?</label>
                                         </div>
                                     </div>
-                                    <!-- Start Profession Entry Container -->
                                     <div id="profession_entry_container"></div>
-                                    <!-- End Profession Entry Container -->
-                                    {{-- @if (session('doesGLandWCChecked') === 'true') --}}
                                     <div class="col-md-12 mt-4">
                                         <div class="mb-3 form-floating">
                                             <input type="text" name="wc_gross_receipt" id="wc_gross_receipt"
@@ -832,7 +922,6 @@
                                             <label for="wc_num_of_empl">Number of Employees</label>
                                         </div>
                                     </div>
-                                    {{-- @endif --}}
                                     <div class="col-md-12">
                                         <div class="mb-3 form-floating">
                                             <select class="form-select" name="wc_no_of_losses" id="wc_no_of_losses"
@@ -848,10 +937,8 @@
                                                 Losses</label>
                                         </div>
                                     </div>
-                                    <!--  -->
                                     <div id="wc_losses_container"></div>
-                                    <!--  -->
-                                </div>
+                                </div> --}}
                             </div>
                             <!-- /Step -->
 
