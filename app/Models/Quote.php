@@ -21,7 +21,7 @@ class Quote extends Model
     //     return $this->select('id', 'name')->from('professions')->orderBy('name', 'ASC')->where('id', $id)->first();
     // }
 
-    public function getAllProfessions($excludeIds = []) {
+    public function getAllProfessions($excludeIds) {
         // return $this->select('id', 'name')->from('professions')->orderBy('name', 'ASC')->get();
         return $this->select('id', 'name')
                     ->from('professions')
@@ -40,7 +40,7 @@ class Quote extends Model
         return $profession ? $profession->name : null;
     }
 
-    public function getWCProfessions($ids) {
+    public function getWCProfessions($ids = []) {
         // Using whereIn to match against an array of IDs
         return $this->select('id', 'name')
                     ->from('professions')

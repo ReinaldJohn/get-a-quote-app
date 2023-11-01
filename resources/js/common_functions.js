@@ -3325,6 +3325,42 @@
         });
     }
 
+    let wcProfessionEntry = 1;
+    function appendNewSchedEquipmentEntry(selector) {
+        $(selector).on("click", function (e) {
+            e.preventDefault();
+            if (wcProfessionEntry < 5) {
+                wcProfessionEntry++;
+                showScheduledEquipmentEntry(wcProfessionEntry);
+                datePickerFormatter(
+                    "#instfloat_scheduled_equipment_date_purchased_" +
+                        wcProfessionEntry
+                );
+            }
+        });
+    }
+
+    function updateEquipmentEntryNames() {
+        if (equipmentCount >= 5) {
+            return false;
+        }
+        $(".equipment-entry").each(function (index, element) {
+            let newIndex = index + 2; // +1 because indexing starts at 0 and +1 because you have the original entry
+            $(element).find("h6").text(`Scheduled Equipment ${newIndex}`);
+            $(element)
+                .find("input, select")
+                .each(function () {
+                    let name = $(this).attr("name");
+                    let id = $(this).attr("id");
+                    let newName = name.replace(/_\d+$/, `_${newIndex}`);
+                    let newId = id.replace(/_\d+$/, `_${newIndex}`);
+                    $(this).attr("name", newName);
+                    $(this).attr("id", newId);
+                    $(this).next("label").attr("for", newId);
+                });
+        });
+    }
+
     function appendInputIfProfessionIsOthers() {
         $("#gl_profession_if_others").append(`
             <div class="col-md-12">
@@ -5067,6 +5103,59 @@
                         />
                     <label for="instfloat_scheduled_equipment_date_purchased_${i}">Date
                         Purchased:</label>
+                </div>
+            </div>`);
+    }
+
+    function showWCAdditionalProfessionEntry(i) {
+        $("#sched_equipment_container").append(`
+            <div class="d-flex justify-content-between profession-entry">
+                <h5 class="profession_header mt-2 mb-2">Worker's Compensation Employee's Profession
+                    Entry:</h5>
+                <button id="" class="btn_1 delete-profession-entry mb-2">-</button>
+            </div>
+            <div class="row justify-content-center">
+                <h6 class="profession_header mt-2 mb-2">Employee's Profession Entry No. ${i}</h6>
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <select class="form-select" name="wc_profession_type_${i}"
+                            id="wc_profession_type_${i}" aria-label="wc_profession_type_${i}">
+                            <!-- For wcProfessions -->
+                            <optgroup label='Other Professions'>
+                                @if (isset($wcProfessions))
+                                    @foreach ($wcProfessions as $wcProfession)
+                                        <option value="{{ $wcProfession->id }}">
+                                            {{ $wcProfession->name }}</option>
+                                    @endforeach
+                                @endif
+                            </optgroup>
+
+                            <!-- For general professions -->
+                            <optgroup label='All Professions'>
+                                @foreach ($professions as $profession)
+                                    <option value="{{ $profession->id }}">
+                                        {{ $profession->name }}</option>
+                                @endforeach
+                            </optgroup>
+                        </select>
+                        <label for="wc_profession_type_${i}">Profession Type:</label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="wc_gross_receipt_${i}" id="wc_gross_receipt_${i}"
+                            class="form-control" placeholder="" />
+                        <label for="wc_gross_receipt_${i}">Annual Gross Receipt:</label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="wc_num_employee_under_this_profession_${i}"
+                            id="wc_num_employee_under_this_profession_${i}" class="form-control"
+                            placeholder="" />
+                        <label for="wc_num_employee_under_this_profession_${i}">Number of Employee
+                            under this Profession (Must be equal to the total employees):</label>
+                    </div>
                 </div>
             </div>`);
     }

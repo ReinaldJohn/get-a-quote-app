@@ -27,7 +27,7 @@
             rel="stylesheet">
         <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet">
+
 
         <!-- BASE CSS -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -39,7 +39,11 @@
         <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     </head>
 
+
+
     <body class="bg_color_gray">
+
+
 
         <div id="preloader">
             <div data-loader="circle-side"></div>
@@ -117,6 +121,7 @@
         <script src="{{ asset('assets/validate.js') }}"></script>
         <!-- TOASTR -->
         <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet">
         {{-- Flatpicker --}}
         <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
         {{-- Plugins --}}

@@ -828,43 +828,43 @@
                                     <h6 class="profession_header mt-2 mb-2">Employee's Profession Entry No. 1</h6>
                                     <div class="col-md-12">
                                         <div class="mb-3 form-floating">
-                                            <select class="form-select" name="" id="wc_profession_type"
-                                                aria-label="">
+                                            <select class="form-select" name="wc_profession_type"
+                                                id="wc_profession_type" aria-label="wc_profession_type">
                                                 <!-- For wcProfessions -->
-                                               @if($wcProfessions && count($wcProfessions) > 0)
-                                                {{-- {{ dd($wcProfessions ?? 'wcProfessions is not set') }} --}}
-
                                                 <optgroup label='Other Professions'>
-                                                    @foreach ($wcProfessions as $wcProfession)
-                                                        <option value="{{ $wcProfession['id'] }}">
-                                                            {{ $wcProfession['name'] }}</option>
-                                                    @endforeach
+                                                    @if (isset($wcProfessions))
+                                                        @foreach ($wcProfessions as $wcProfession)
+                                                            <option value="{{ $wcProfession->id }}">
+                                                                {{ $wcProfession->name }}</option>
+                                                        @endforeach
+                                                    @endif
                                                 </optgroup>
-                                                @endif
 
                                                 <!-- For general professions -->
                                                 <optgroup label='All Professions'>
                                                     @foreach ($professions as $profession)
-                                                        <option value="{{ $profession['id'] }}">
-                                                            {{ $profession['name'] }}</option>
+                                                        <option value="{{ $profession->id }}">
+                                                            {{ $profession->name }}</option>
                                                     @endforeach
                                                 </optgroup>
                                             </select>
-                                            <label for="">Profession Type:</label>
+                                            <label for="wc_profession_type">Profession Type:</label>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3 form-floating">
-                                            <input type="text" name="" id="" class="form-control"
-                                                placeholder="" />
-                                            <label for="">Annual Gross Receipt:</label>
+                                            <input type="text" name="wc_gross_receipt_1" id="wc_gross_receipt_1"
+                                                class="form-control" placeholder="" />
+                                            <label for="wc_gross_receipt_1">Annual Gross Receipt:</label>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="mb-3 form-floating">
-                                            <input type="text" name="" id="" class="form-control"
+                                            <input type="text" name="wc_num_employee_under_this_profession_1"
+                                                id="wc_num_employee_under_this_profession_1" class="form-control"
                                                 placeholder="" />
-                                            <label for="">Number of Employee under this Profession:</label>
+                                            <label for="wc_num_employee_under_this_profession_1">Number of Employee
+                                                under this Profession (Must be equal to the total employees):</label>
                                         </div>
                                     </div>
                                 </div>
