@@ -37,14 +37,25 @@ use Exception;
 
 class QuoteController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
+        $encryptionKey = 'c0v3r@g3s';
+        $encryptedQueryString = $request->get('data');
+        $decryptedQueryString = openssl_decrypt($encryptedQueryString, 'AES-128-ECB', $encryptionKey);
+        parse_str($decryptedQueryString, $trueValues);
+
         $quoteModel = new Quote();
         $states = $quoteModel->getAllStates();
         $ids = [995, 996, 997, 998, 999];
         $professions = $quoteModel->getAllProfessions($ids);
         $wcProfessions = $quoteModel->getWCProfessions($ids);
         $currentYear = Carbon::now()->format('Y');
-        return view("quote.index", compact('states', 'professions', 'wcProfessions'), ['currentYear' => $currentYear]);
+        return view("quote.index",  [
+            'states' => $states,
+            'professions' => $professions,
+            'wcProfessions' => $wcProfessions,
+            'trueValues' => $trueValues,
+            'currentYear' => $currentYear
+        ]);
     }
 
     public function getStateByZipcode(Request $request, $zipcode) {
@@ -54,6 +65,81 @@ class QuoteController extends Controller
 
     public function thankyouPage() {
         return view("quote.thankyou");
+    }
+
+    public function showProfessionEntries(Request $request, Quote $quoteModel) {
+
+        if ($request->isMethod('get') && $request->has('a')) {
+            $a = $request->input('a');
+
+            // IDs you want specifically for WC Professions
+            $ids = [995, 996, 997, 998, 999];
+
+            // Fetch all professions
+            $professions = $quoteModel->getAllProfessions($ids);
+
+            // Fetch specific professions based on the array of IDs
+            $wcProfessions = $quoteModel->getWCProfessions($ids);
+
+            // Initialize output buffer and add general professions
+            ob_start();
+
+            // Add WC professions if they exist
+            if ($wcProfessions && count($wcProfessions) > 0) {
+                echo "<optgroup label='Other Professions'>";
+                foreach ($wcProfessions as $wcProfession) {
+                    echo "<option value='{$wcProfession['id']}'>{$wcProfession['name']}</option>";
+                }
+                echo "</optgroup>";
+            }
+
+            echo "<optgroup label='All Professions'>";
+            foreach ($professions as $profession) {
+                echo "<option value='{$profession['id']}'>{$profession['name']}</option>";
+            }
+            echo "</optgroup>";
+
+            // Get output buffer content and clean the buffer
+            $options = ob_get_clean();
+
+            // Generate the final HTML output
+            $output = "
+                <div class='d-flex justify-content-between profession-entry'>
+                    <h6 class='profession_header mt-2 mb-2'>Employee's Profession Entry No. {$a}</h6>
+
+                </div>
+                <div class='col-md-12'>
+                    <div class='mb-3 form-floating'>
+                        <select class='form-select' name='wc_profession_type_{$a}'
+                            id='wc_profession_type_{$a}' aria-label='wc_profession_type_{$a}'>
+                            $options
+                        </select>
+                        <label for='wc_profession_type_{$a}'>Profession Type:</label>
+                    </div>
+                </div>
+                <div id='wc_profession_type_if_other_{$a}'></div>
+                <div class='col-md-12'>
+                    <div class='mb-3 form-floating'>
+                        <input type='text' name='wc_annual_payroll_{$a}' id='wc_annual_payroll_{$a}'
+                            class='form-control wc-annual-payroll' placeholder='' />
+                        <label for='wc_annual_payroll_{$a}'>Annual Payroll:</label>
+                    </div>
+                </div>
+                <div class='col-md-12'>
+                    <div class='mb-3 form-floating'>
+                        <input type='text' name='wc_num_employee_under_this_profession_{$a}'
+                            id='wc_num_employee_under_this_profession_{$a}' class='form-control'
+                            placeholder='' />
+                        <label for='wc_num_employee_under_this_profession_{$a}'>Number of Employee
+                            under this Profession (Must be equal to the total employees):</label>
+                    </div>
+                </div>
+            ";
+
+            return response()->json(['data' => $output]);
+        }
+
+        // return response()->json(['data' => '']);
     }
 
     public function submitQuoteForm(Request $request) {
@@ -405,12 +491,8 @@ class QuoteController extends Controller
                                     $gross_receipt = isset($productData['wc_gross_receipt']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_gross_receipt']['value'])) : null;
                                     $does_hire_subcontractor = isset($productData['wc_does_hire_subcon']['value']) ? $productData['wc_does_hire_subcon']['value'] : null;
                                     $subcontractor_cost_in_year = isset($productData['wc_subcon_cost_year']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_subcon_cost_year']['value'])) : null;
-                                    $number_of_employee = isset($productData['wc_num_of_empl']['value']) ? $productData['wc_num_of_empl']['value'] : null;
+                                    $number_of_employee = isset($productData['wc_num_of_empl']['value']) ? (int) $productData['wc_num_of_empl']['value'] : null;
                                     $wc_no_of_losses = isset($productData['wc_no_of_losses']['value']) ? $productData['wc_no_of_losses']['value'] : null;
-
-                                    // $wc_amount_of_claim = isset($productData['wc_amt_of_claims']['value']) ? floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_amt_of_claims']['value'])) : null;
-                                    // $wc_date_of_loss = isset($productData['wc_date_of_loss']['value']) ? Carbon::createFromFormat('m/d/Y', $productData['wc_date_of_loss']['value'])->toDateString() : null;
-
                                     $wc_amount_of_claim = null;
                                     if (isset($productData['wc_amt_of_claims']['value']) && !empty($productData['wc_amt_of_claims']['value'])) {
                                         try {
@@ -440,28 +522,33 @@ class QuoteController extends Controller
                                     if ($doesWorkersCompensationSaved) {
                                         $templateData['professionsInfo'] = [];
                                         foreach ($productDataStr as $key => $data) {
-                                        if (strpos($key, 'wc_profession_') === 0) {
-                                            $counter = str_replace('wc_profession_', '', $key);
-                                            if (isset($productDataStr['wc_profession_' . $counter]) && !empty($productDataStr['wc_annual_payroll_' . $counter]['value'])) {
+                                        if (strpos($key, 'wc_profession_type_') === 0) {
+                                            $counter = str_replace('wc_profession_type_', '', $key);
+                                            if (isset($productDataStr['wc_profession_type_' . $counter]) && !empty($productDataStr['wc_annual_payroll_' . $counter]['value'])) {
                                                 DB::beginTransaction();
                                                 try {
-                                                    $profession = $productData['wc_profession_' . $counter]['value'];
+                                                    $profession = (int) $productData['wc_profession_type_' . $counter]['value'];
                                                     $annual_payroll = floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_annual_payroll_' . $counter]['value']));
+                                                    $if_profession_is_others = isset($productData['if_profession_is_others' . $counter]['value']) ? $productData['if_profession_is_others' . $counter]['value'] : null;
+                                                    $num_of_employee_under_same_profession = (int) $productData['wc_num_employee_under_this_profession_' . $counter]['value'];
 
                                                     $wcProfessionEntry = new WCProfessionEntry();
                                                     $wcProfessionEntry->wc_id = $workersCompensation->id;
                                                     $wcProfessionEntry->profession_id = $profession;
+                                                    $wcProfessionEntry->if_profession_is_others = $if_profession_is_others;
                                                     $wcProfessionEntry->annual_payroll_of_employee = $annual_payroll;
+                                                    $wcProfessionEntry->num_of_employee_under_same_profession = $num_of_employee_under_same_profession;
                                                     $wcProfessionEntry->save();
 
                                                     Log::info('Successfully saved wcProfessionEntry record. Data: ' . json_encode($wcProfessionEntry));
 
-                                                    $wcProfessionName = $quoteModel->getProfessionById($productData['wc_profession_' . $counter]['value']);
+                                                    $wcProfessionName = $quoteModel->getProfessionById($productData['wc_profession_type_' . $counter]['value']);
 
                                                     $templateData['professionsInfo'][] = [
                                                         'counter' => $counter,
                                                         'professionName' => $wcProfessionName,
                                                         'annual_payroll' => $annual_payroll,
+                                                        'num_of_employee_under_same_profession' => $num_of_employee_under_same_profession,
                                                     ];
 
                                                     DB::commit();

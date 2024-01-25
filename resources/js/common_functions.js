@@ -11,11 +11,11 @@
     });
 
     let observer = new MutationObserver(() => {
-        // $(
-        //     "#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea"
-        // )
-        //     .not("#fax_number, #personal_website, #bond_owners_spouse_ssn")
-        //     .prop("required", true);
+        $(
+            "#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea"
+        )
+            .not("#fax_number, #personal_website, #bond_owners_spouse_ssn")
+            .prop("required", true);
     });
 
     // Observe the entire document for changes
@@ -27,7 +27,7 @@
     const maxLength = 255;
     $(document).on(
         "input",
-        "#company_name, #firstname, #lastname, #address, #city, #website, #gl_specify_profession, #gl_descops, #gl_full_time_employees, #gl_part_time_employees, #gl_no_of_losses, input[name^='gl_multiple_states_'], #wc_num_of_empl, #wc_no_of_losses, #wc_name, #wc_title_relationship, input[name^='wc_name_'], input[name^='wc_title_relationship_'], input[name^='auto_vehicle_maker_'], input[name^='auto_vehicle_model_'], input[name^='auto_vehicle_vin_'], input[name^='auto_vehicle_mileage_'], input[name^='auto_vehicle_garage_add_'], #auto_driver_full_name, #auto_driver_marital_status, #auto_driver_spouse_name, #auto_driver_license_no, #auto_driver_years_of_driving_exp, #auto_no_of_losses, input[name^='auto_add_drivers_name_'], input[name^='auto_add_driver_lic_'], input[name^='auto_add_driver_mileage_radius_'], input[name^='auto_add_driver_civil_status_'], input[name^='auto_driver_spouse_name_'], #bond_owners_name, #bond_owners_ssn, #bond_owners_civil_status, #bond_owners_spouse_name, #bond_type_bond_requested, #bond_term_of_bond, #bond_type_of_license, #bond_if_other_type_of_license, #bond_no_of_losses, #excess_insurance_carrier, #excess_policy_or_quote_no, #excess_no_of_losses, #equipment_type, #tools_equipment_make, #tools_equipment_model, #tools_equipment_vin_or_serial_no, #tools_equipment_valuation, #tools_equipment_no_of_losses, #br_property_address, #br_period_duration_project, #br_construction_type, #br_complete_descops_of_project, #br_sq_footage, #br_number_of_floors, #br_number_of_units_dwelling, #br_anticipated_occupancy, #br_distance_to_nearest_fire_hydrant, #br_distance_to_nearest_fire_station, #br_structure_occupied_remodel_renovation, #br_jobsite_security, #br_sched_property_carrier_name, #br_residential_commercial, #br_when_project_started, #br_what_are_work_done, #br_what_are_remaining_works, #br_no_of_losses, #bop_property_address, #bop_loss_payee_info, #bop_building_industry, #bop_occupancy, #bop_bldg_construction_type, #bop_no_of_stories, #bop_total_bldg_sqft, #bop_automatic_fire_alarm, #bop_distance_nearest_fire_hydrant, #bop_distance_nearest_fire_station, #bop_automatic_comm_cooking_ext, #bop_automatic_burglar_alarm, #bop_no_of_losses, #property_property_address, #property_name_of_owner, #property_construction_type, #property_no_of_stories, #property_total_bldg_sqft, #property_distance_nearest_fire_hydrant, #property_distance_nearest_fire_station, #property_protection_class, #property_no_of_losses, #eo_requested_limits, #eo_reqlimit_if_others, #eo_request_deductible, #eo_reqdeductible_if_others, #eo_no_of_losses, #eo_business_entity_sub_q1, #eo_business_entity_sub_q2, #eo_business_entity_sub_q3, #eo_business_entity_sub_q4, #eo_business_entity_sub_q5, #eo_number_employee, #eo_full_time, #eo_part_time, #eo_hr_sub_q1, #eo_hr_sub_q2, #eo_hr_sub_q3, #eo_hr_sub_q4, #epli_current_epli, #epli_prior_carrier, #epli_prior_carrier_epli, #epli_deductible_amount, #epli_no_of_losses, #epli_full_time, #epli_part_time, #epli_independent_contractors, #epli_volunteers, #epli_leased_seasonal, #epli_non_us_base_emp, #epli_total_employees, #epli_located_at_ca, #epli_located_at_ga, #epli_located_at_tx, #epli_located_at_fl, #epli_located_at_ny, #epli_located_at_nj, #epli_emp_terminated_last_12_months_q1, #epli_emp_terminated_last_12_months_q2, #epli_emp_terminated_last_12_months_q3, #cyber_it_contact_name, #cyber_no_of_losses, #cyber_q1, #instfloat_territory_of_operation, #instfloat_type_of_operation, #instfloat_scheduled_type_of_equipment, #instfloat_deductible_amount, #instfloat_no_of_losses, #instfloat_location, #instfloat_type_security_placed, #instfloat_unscheduled_type_of_equipment",
+        "#company_name, #firstname, #lastname, #address, #city, #website, #gl_specify_profession, #gl_descops, #gl_full_time_employees, #gl_part_time_employees, #gl_no_of_losses, input[name^='gl_multiple_states_'], #wc_num_of_empl, #wc_no_of_losses, #wc_name, #wc_title_relationship, input[name^='wc_name_'], input[name^='wc_title_relationship_'], input[name^='wc_specify_profession_'], input[name^='wc_profession_type_'], input[name^='wc_num_employee_under_this_profession_'], input[name^='auto_vehicle_maker_'], input[name^='auto_vehicle_model_'], input[name^='auto_vehicle_vin_'], input[name^='auto_vehicle_mileage_'], input[name^='auto_vehicle_garage_add_'], #auto_driver_full_name, #auto_driver_marital_status, #auto_driver_spouse_name, #auto_driver_license_no, #auto_driver_years_of_driving_exp, #auto_no_of_losses, input[name^='auto_add_drivers_name_'], input[name^='auto_add_driver_lic_'], input[name^='auto_add_driver_mileage_radius_'], input[name^='auto_add_driver_civil_status_'], input[name^='auto_driver_spouse_name_'], #bond_owners_name, #bond_owners_ssn, #bond_owners_civil_status, #bond_owners_spouse_name, #bond_type_bond_requested, #bond_term_of_bond, #bond_type_of_license, #bond_if_other_type_of_license, #bond_no_of_losses, #excess_insurance_carrier, #excess_policy_or_quote_no, #excess_no_of_losses, #equipment_type, #tools_equipment_make, #tools_equipment_model, #tools_equipment_vin_or_serial_no, #tools_equipment_valuation, #tools_equipment_no_of_losses, #br_property_address, #br_period_duration_project, #br_construction_type, #br_complete_descops_of_project, #br_sq_footage, #br_number_of_floors, #br_number_of_units_dwelling, #br_anticipated_occupancy, #br_distance_to_nearest_fire_hydrant, #br_distance_to_nearest_fire_station, #br_structure_occupied_remodel_renovation, #br_jobsite_security, #br_sched_property_carrier_name, #br_residential_commercial, #br_when_project_started, #br_what_are_work_done, #br_what_are_remaining_works, #br_no_of_losses, #bop_property_address, #bop_loss_payee_info, #bop_building_industry, #bop_occupancy, #bop_bldg_construction_type, #bop_no_of_stories, #bop_total_bldg_sqft, #bop_automatic_fire_alarm, #bop_distance_nearest_fire_hydrant, #bop_distance_nearest_fire_station, #bop_automatic_comm_cooking_ext, #bop_automatic_burglar_alarm, #bop_no_of_losses, #property_property_address, #property_name_of_owner, #property_construction_type, #property_no_of_stories, #property_total_bldg_sqft, #property_distance_nearest_fire_hydrant, #property_distance_nearest_fire_station, #property_protection_class, #property_no_of_losses, #eo_requested_limits, #eo_reqlimit_if_others, #eo_request_deductible, #eo_reqdeductible_if_others, #eo_no_of_losses, #eo_business_entity_sub_q1, #eo_business_entity_sub_q2, #eo_business_entity_sub_q3, #eo_business_entity_sub_q4, #eo_business_entity_sub_q5, #eo_number_employee, #eo_full_time, #eo_part_time, #eo_hr_sub_q1, #eo_hr_sub_q2, #eo_hr_sub_q3, #eo_hr_sub_q4, #epli_current_epli, #epli_prior_carrier, #epli_prior_carrier_epli, #epli_deductible_amount, #epli_no_of_losses, #epli_full_time, #epli_part_time, #epli_independent_contractors, #epli_volunteers, #epli_leased_seasonal, #epli_non_us_base_emp, #epli_total_employees, #epli_located_at_ca, #epli_located_at_ga, #epli_located_at_tx, #epli_located_at_fl, #epli_located_at_ny, #epli_located_at_nj, #epli_emp_terminated_last_12_months_q1, #epli_emp_terminated_last_12_months_q2, #epli_emp_terminated_last_12_months_q3, #cyber_it_contact_name, #cyber_no_of_losses, #cyber_q1, #instfloat_territory_of_operation, #instfloat_type_of_operation, #instfloat_scheduled_type_of_equipment, #instfloat_deductible_amount, #instfloat_no_of_losses, #instfloat_location, #instfloat_type_security_placed, #instfloat_unscheduled_type_of_equipment",
         function () {
             if ($(this).val().length > maxLength) {
                 $(this).val($(this).val().substring(0, maxLength));
@@ -74,7 +74,7 @@
     const currencyMaxLength = 8;
     $(document).on(
         "input",
-        "#annual_gross_receipt, #gl_annual_gross, #gl_cost_proj_5years, #gl_payroll_amt, #gl_subcon_cost, #gl_amt_of_claims, #wc_gross_receipt, #wc_subcon_cost_year, #wc_amt_of_claims, input[name^='wc_annual_payroll_'], input[name^='auto_vehicle_coverage_limits_'], #auto_amt_of_claims, #bond_amount_of_bond, #bond_amt_of_claims, #excess_limits, #excess_policy_premium, #excess_amt_of_claims, #tools_misc_tools, #tools_rented_or_leased_amt, #tools_sched_equipment, #tools_equipment_amt_of_claims, #br_value_of_existing_structure, #br_value_of_work_performed, #br_cost_of_work_done, #br_cost_remaining_works, #br_amt_of_claims, #bop_val_cost_bldg, #bop_business_property_limit, #bop_amt_of_claims, #property_value_cost_bldg, #property_business_property_limit, #property_amt_of_claims, #eo_amt_of_claims, #eo_ftime_salary_range, #eo_ptime_salary_range, #epli_amt_of_claims, #cyber_amt_of_claims, #instfloat_amt_of_claims, #instfloat_max_value_of_equipment, #instfloat_max_value_of_bldg_storage, #instfloat_unscheduled_max_value_equipment_storing",
+        "#annual_gross_receipt, #gl_annual_gross, #gl_cost_proj_5years, #gl_payroll_amt, #gl_subcon_cost, #gl_amt_of_claims, #wc_gross_receipt, #wc_subcon_cost_year, #wc_amt_of_claims, input[name^='wc_annual_payroll_'], input[name^='auto_vehicle_coverage_limits_'], #auto_amt_of_claims, #bond_amount_of_bond, #bond_amt_of_claims, #excess_limits, #excess_policy_premium, #excess_amt_of_claims, #tools_misc_tools, #tools_rented_or_leased_amt, #tools_sched_equipment, #tools_equipment_amt_of_claims, #br_value_of_existing_structure, #br_value_of_work_performed, #br_cost_of_work_done, #br_cost_remaining_works, #br_amt_of_claims, #bop_val_cost_bldg, #bop_business_property_limit, #bop_amt_of_claims, #property_value_cost_bldg, #property_business_property_limit, #property_amt_of_claims, #eo_amt_of_claims, #eo_ftime_salary_range, #eo_ptime_salary_range, #epli_amt_of_claims, #cyber_amt_of_claims, #instfloat_amt_of_claims, #instfloat_max_value_of_equipment, #instfloat_max_value_of_bldg_storage, #instfloat_unscheduled_max_value_equipment_storing, input[name^='wc_annual_payroll_']",
         function () {
             if ($(this).val().length > currencyMaxLength) {
                 $(this).val($(this).val().substring(0, currencyMaxLength));
@@ -123,34 +123,37 @@
     });
 
     function updateProfessionContents() {
-        var numProfessions = $("#wc_no_of_profession").val();
+        var numTotalEmp = $(".professionEntries").length;
         var professionData = [];
         var professionContent = "";
 
-        for (var i = 1; i <= numProfessions; i++) {
+        for (var i = 1; i <= numTotalEmp; i++) {
             var profession = {};
             profession.name =
-                $("#wc_profession_" + i + " option:selected").text() || "";
+                $("#wc_profession_type_" + i + " option:selected").text() || "";
             profession.annualPayroll = $("#wc_annual_payroll_" + i).val() || "";
+            profession.numOfEmpUnderProf =
+                $("#wc_num_employee_under_this_profession_" + i).val() || "";
 
-            professionContent += `<div><h6><strong>Profession Entry No. ${i}</strong></h6>`;
-            professionContent += `<p>Profession: <strong>${profession.name}</strong></p>`;
+            professionContent += `<div><h6><strong>Employee's Profession Entry No. ${i}</strong></h6>`;
+            professionContent += `<p>Profession Type: <strong>${profession.name}</strong></p>`;
             professionContent += `<p>Annual Payroll: <strong>${profession.annualPayroll}</strong></p></div>`;
+            professionContent += `<p>Number of Employee/s under this profession: <strong>${profession.numOfEmpUnderProf} employee/s</strong></p></div>`;
 
             professionData.push(profession);
         }
 
-        if (numProfessions) {
+        if (numTotalEmp) {
             $("#wc_details_1").html(`
-            <p>Number of Professions: <strong>${numProfessions}</strong></p>
+            <p>Number of Total Employees: <strong>${numTotalEmp} Employee/s</strong></p>
             ${professionContent}
         `);
         } else {
             $("#wc_details_1").html("");
         }
     }
-    $("#wc_no_of_profession").change(updateProfessionContents);
-    $("#wc_no_of_profession").val("1").trigger("change");
+    // $("#wc_no_of_profession").change(updateProfessionContents);
+    // $("#wc_no_of_profession").val("1").trigger("change");
 
     function updateOwnersInfoContents() {
         let ownershipContent = "";
@@ -2154,15 +2157,6 @@
                         new_construction_percentage;
                     aboutYourCompanyInformation["Repair / Remodel"] =
                         repair_remodel_percentage;
-                    // var aboutYourCompanyInformation = {
-                    //     "Business Ownership Structure": ayc_bop,
-                    //     "Date Business Started": ayc_date_business_started,
-                    //     "Years of experience as a contractor":
-                    //         ayc_yrs_exp_contractor,
-                    //     // "No. of Losses": ayc_no_of_losses,
-                    //     // "Explain Losses (Please include loss amount)":
-                    //     //     ayc_no_of_losses_explain,
-                    // };
 
                     function generateAllHTML(targetDiv, informationObjects) {
                         var htmlString = "";
@@ -2528,6 +2522,8 @@
                         $(targetDiv).html(htmlString);
                     }
 
+                    // function
+
                     generateAllHTML("#personal_information_details", [
                         personalInformation,
                     ]);
@@ -2805,16 +2801,17 @@
                 break;
 
             case "wc":
-                $("#wc_step_1, #wc_step_2, #wcDetailsContainer")
+                $("#wc_step_1, #wc_step_2, #wc_step_3, #wcDetailsContainer")
                     .removeClass("step wizard-step")
                     .addClass("hidden");
-                $("#wc_step_1, #wc_step_2").find("input").val("");
-                $("#wc_step_1, #wc_step_2").find("select").val("");
+                $("#wc_step_1, #wc_step_2, #wc_step_3").find("input").val("");
+                $("#wc_step_1, #wc_step_2, #wc_step_3").find("select").val("");
 
                 // ajax container
-                $("#wc_step_1").find("#profession_entry_container").empty();
-                $("#wc_step_1").find("#wc_subcon_cost_year_container").empty();
-                $("#wc_step_2").find("#owners_information_container").empty();
+                $("#wc_step_1").find("#wc_professions_container").empty();
+                // $("#wc_step_2").find("#profession_entry_container").empty();
+                $("#wc_step_2").find("#wc_subcon_cost_year_container").empty();
+                $("#wc_step_3").find("#owners_information_container").empty();
                 break;
 
             case "auto":
@@ -3084,7 +3081,7 @@
                     .removeClass("hidden");
                 break;
             case "wc":
-                $("#wc_step_1, #wc_step_2, #wcDetailsContainer")
+                $("#wc_step_1, #wc_step_2, #wc_step_3, #wcDetailsContainer")
                     .addClass("step wizard-step")
                     .removeClass("hidden");
                 break;
@@ -3168,6 +3165,30 @@
     }
 
     localStorage.clear();
+
+    if (typeof serverData !== "undefined") {
+        if (serverData.hasOwnProperty("subcon")) {
+            serverData["gl"] = serverData["subcon"];
+            delete serverData["subcon"];
+        }
+        for (var key in serverData) {
+            if (serverData.hasOwnProperty(key)) {
+                var state = serverData[key];
+                localStorage.setItem(key, state);
+                // Update the checkbox state
+                var checkbox = $(
+                    'input[name="question_1[]"][value="' + key + '"]'
+                );
+                checkbox.prop("checked", state === "checked");
+                if (state === "checked") {
+                    showSteps(key);
+                } else {
+                    hideSteps(key);
+                }
+            }
+        }
+    }
+
     $('input[name="question_1[]"]').each(function () {
         var checkboxValue = $(this).val();
         var checkboxState = localStorage.getItem(checkboxValue);
@@ -3325,40 +3346,110 @@
         });
     }
 
+    let numOfEmployees = 0;
+    let shouldCreateNewEntry = false;
+    // Function to allow only numbers in specific fields
+    function allowOnlyNumbers(inputField) {
+        const inputValue = $(inputField).val();
+        if (typeof inputValue !== "string") {
+            $(inputField).val("");
+            return;
+        }
+
+        const numericValue = inputValue.replace(/[^0-9]/g, "");
+        if (inputValue !== numericValue) {
+            toastr.warning("Only numbers are allowed in this field.");
+        }
+        $(inputField).val(numericValue);
+    }
+
+    function getSumOfEmployeesInProfessions() {
+        let sum = 0;
+        $("[id^='wc_num_employee_under_this_profession_']").each(function () {
+            sum += parseInt($(this).val()) || 0;
+        });
+        return sum;
+    }
+
+    function exceedsTotalEmployees() {
+        return getSumOfEmployeesInProfessions() > numOfEmployees;
+    }
+
+    function shouldAppendNewEntry() {
+        return getSumOfEmployeesInProfessions() < numOfEmployees;
+    }
+
+    $(document).on("input keyup change", "#wc_num_of_empl", function () {
+        allowOnlyNumbers(this);
+        numOfEmployees = parseInt($(this).val());
+
+        // Reset state variables
+        shouldCreateNewEntry = false;
+        wcProfessionEntry = 1;
+
+        // Clear existing entries
+        $("#wc_professions_container").empty();
+        $("#wc_num_employee_under_this_profession_1").val("");
+    });
+
+    let prevVal = {};
+    // Declare a variable to track the previous value of the profession input
+    let prevProfessionValue = 0;
+    $(document).on(
+        "input keyup change",
+        "[id^='wc_num_employee_under_this_profession_']",
+        function () {
+            allowOnlyNumbers(this);
+
+            const currentInput = $(this);
+            const currentId = currentInput.attr("id");
+            const currentVal = parseInt(currentInput.val()) || 0;
+
+            if (prevVal[currentId] === currentVal) return;
+
+            prevVal[currentId] = currentVal;
+
+            if (exceedsTotalEmployees()) {
+                toastr.error(
+                    "The sum of employees in professions cannot exceed the total number of employees."
+                );
+                currentInput.val("");
+                return;
+            }
+
+            // Check if the current value is greater than the previous value
+            if (currentVal > prevProfessionValue) {
+                prevProfessionValue = currentVal;
+                if (shouldAppendNewEntry()) {
+                    createNewProfessionEntry();
+                }
+            } else {
+                prevProfessionValue = currentVal;
+            }
+        }
+    );
+
     let wcProfessionEntry = 1;
-    function appendNewSchedEquipmentEntry(selector) {
+
+    function appendNewWCProfessionEntry(selector) {
         $(selector).on("click", function (e) {
             e.preventDefault();
-            if (wcProfessionEntry < 5) {
-                wcProfessionEntry++;
-                showScheduledEquipmentEntry(wcProfessionEntry);
-                datePickerFormatter(
-                    "#instfloat_scheduled_equipment_date_purchased_" +
-                        wcProfessionEntry
-                );
-            }
+            createNewProfessionEntry();
         });
     }
 
-    function updateEquipmentEntryNames() {
-        if (equipmentCount >= 5) {
-            return false;
-        }
-        $(".equipment-entry").each(function (index, element) {
-            let newIndex = index + 2; // +1 because indexing starts at 0 and +1 because you have the original entry
-            $(element).find("h6").text(`Scheduled Equipment ${newIndex}`);
-            $(element)
-                .find("input, select")
-                .each(function () {
-                    let name = $(this).attr("name");
-                    let id = $(this).attr("id");
-                    let newName = name.replace(/_\d+$/, `_${newIndex}`);
-                    let newId = id.replace(/_\d+$/, `_${newIndex}`);
-                    $(this).attr("name", newName);
-                    $(this).attr("id", newId);
-                    $(this).next("label").attr("for", newId);
-                });
-        });
+    function createNewProfessionEntry() {
+        $("#loader_form").show();
+        wcProfessionEntry++;
+        showWCAdditionalProfessionEntry(wcProfessionEntry)
+            .then(() => {
+                $("#loader_form").hide();
+                perfectCurrencyFormatter(".wc-annual-payroll");
+            })
+            .catch(console.error)
+            .finally(() => {
+                $("#loader_form").hide();
+            });
     }
 
     function appendInputIfProfessionIsOthers() {
@@ -3602,326 +3693,615 @@
         });
     }
 
-    function getCheckboxValue() {
-        var glChecked = false;
-        var wcChecked = false;
-        var autoChecked = false;
-        var bondChecked = false;
-        var excessChecked = false;
-        var toolsChecked = false;
-        var brChecked = false;
-        var bopChecked = false;
-        var propertyChecked = false;
-        var eoChecked = false;
-        var epliChecked = false;
-        var cyberChecked = false;
-        var instFloatChecked = false;
+    var checkboxStates = {
+        gl: false,
+        wc: false,
+        auto: false,
+        bond: false,
+        excess: false,
+        tools: false,
+        br: false,
+        bop: false,
+        comm_prop: false,
+        eo: false,
+        epli: false,
+        cyber: false,
+        instfloat: false,
+    };
 
-        $('input[name="question_1[]"]').change(function () {
-            var checkboxValue = $(this).val();
-            if ($(this).is(":checked")) {
-                // console.log(checkboxValue);
-                localStorage.setItem(checkboxValue, "checked");
-                if (checkboxValue === "gl") {
-                    glChecked = true;
-                } else if (checkboxValue === "wc") {
-                    wcChecked = true;
-                } else if (checkboxValue === "auto") {
-                    autoChecked = true;
-                } else if (checkboxValue === "bond") {
-                    bondChecked = true;
-                } else if (checkboxValue === "excess") {
-                    excessChecked = true;
-                } else if (checkboxValue === "tools") {
-                    toolsChecked = true;
-                } else if (checkboxValue === "br") {
-                    brChecked = true;
-                } else if (checkboxValue === "bop") {
-                    bopChecked = true;
-                } else if (checkboxValue === "comm_prop") {
-                    propertyChecked = true;
-                } else if (checkboxValue === "eo") {
-                    eoChecked = true;
-                } else if (checkboxValue === "epli") {
-                    epliChecked = true;
-                } else if (checkboxValue === "cyber") {
-                    cyberChecked = true;
-                } else if (checkboxValue === "instfloat") {
-                    instFloatChecked = true;
-                }
-            } else {
-                localStorage.setItem(checkboxValue, "unchecked");
-                if (checkboxValue === "gl") {
-                    glChecked = false;
-                } else if (checkboxValue === "wc") {
-                    wcChecked = false;
-                } else if (checkboxValue === "auto") {
-                    autoChecked = false;
-                } else if (checkboxValue === "bond") {
-                    bondChecked = false;
-                } else if (checkboxValue === "excess") {
-                    excessChecked = false;
-                } else if (checkboxValue === "tools") {
-                    toolsChecked = false;
-                } else if (checkboxValue === "br") {
-                    brChecked = false;
-                } else if (checkboxValue === "bop") {
-                    bopChecked = false;
-                } else if (checkboxValue === "comm_prop") {
-                    propertyChecked = false;
-                } else if (checkboxValue === "eo") {
-                    eoChecked = false;
-                } else if (checkboxValue === "epli") {
-                    epliChecked = false;
-                } else if (checkboxValue === "cyber") {
-                    cyberChecked = false;
-                } else if (checkboxValue === "instfloat") {
-                    instFloatChecked = false;
-                }
-            }
-
-            function setName(a, b, target) {
-                $(`#${a}, #${b}`).change(function () {
-                    var firstname = $(`#${a}`).val();
-                    var lastname = $(`#${b}`).val();
-                    const fullname = firstname + " " + lastname;
-                    $(`#${target}`).val(fullname);
-                });
-            }
-
-            function setWCSSN(a, target) {
-                $(`#${a}`).change(function () {
-                    var wc_ssn = $(this).val();
-                    const ssn = wc_ssn;
-                    $(`#${target}`).val(ssn);
-                });
-            }
-
-            function setWCFein(a, target) {
-                $(`#${a}`).change(function () {
-                    var wc_fein = $(this).val();
-                    const fein = wc_fein;
-                    $(`#${target}`).val(fein);
-                });
-            }
-
-            function setWCDateOfBirth(a, target) {
-                $(`#${a}`).change(function () {
-                    var wc_dob = $(this).val();
-                    const wc_date_of_birth = wc_dob;
-                    $(`#${target}`).val(wc_date_of_birth);
-                });
-            }
-
-            if (glChecked) {
-                setSessionVariable("doesGLChecked", true);
-                $("#about_you_profession").load(
-                    location.href + " #about_you_profession"
-                );
-            } else {
-                unsetSessionVariable("doesGLChecked");
-                setSessionVariable("doesGLChecked", false);
-                $("#about_you_profession").load(
-                    location.href + " #about_you_profession"
-                );
-            }
-
-            // if (glChecked && wcChecked) {
-            //     setSessionVariable("doesGLandWCChecked", false);
-            //     $("#wc_step_1").load(location.href + " #wc_step_1");
-            // } else {
-            //     unsetSessionVariable("doesGLandWCChecked");
-            //     setSessionVariable(true);
-            //     $("#wc_step_1").load(location.href + " #wc_step_1");
-            // }
-
-            // if (glChecked && bondChecked) {
-            // }
-
-            if (wcChecked) {
-                setName("firstname", "lastname", "wc_name");
-            }
-
-            if (autoChecked) {
-                setName("firstname", "lastname", "auto_driver_full_name");
-            }
-
-            if (bondChecked) {
-                setName("firstname", "lastname", "bond_owners_name");
-                $("#contractor_license").change(function () {
-                    var contractorLicense = $(this).val();
-                    const contractorLic = contractorLicense;
-                    $("#bond_license_or_application_no").val(contractorLic);
-                });
-            }
-
-            if (wcChecked && bondChecked) {
-                setWCSSN("wc_ssn", "bond_owners_ssn");
-            }
-
-            if (wcChecked && epliChecked) {
-                setWCFein("wc_fein", "epli_fein");
-            }
-
-            if (wcChecked && autoChecked) {
-                setWCDateOfBirth("wc_dob", "auto_driver_date_of_birth");
-            }
-
-            if (wcChecked && bondChecked) {
-                setWCDateOfBirth("wc_dob", "bond_owners_dob");
-            }
-
-            if (autoChecked && bondChecked) {
-                // auto_driver_full_name;
-
-                $("#auto_driver_date_of_birth").change(function () {
-                    var autoDriverDateOfBirth = $(this).val();
-                    const driverDateOfBirth = autoDriverDateOfBirth;
-                    $("#bond_owners_dob").val(driverDateOfBirth);
-                });
-
-                $("#auto_driver_marital_status").change(function () {
-                    var autoDriverMaritalStatus = $(this).val();
-                    const driverMaritalStatus = autoDriverMaritalStatus;
-                    $("#bond_owners_civil_status")
-                        .val(driverMaritalStatus)
-                        .trigger("change");
-                });
-
-                $(document).on(
-                    "change",
-                    "#auto_driver_spouse_name",
-                    function () {
-                        var autoDriverSpouseName = $(this).val();
-                        const driverSpouseName = autoDriverSpouseName;
-                        if ($("#bond_owners_spouse_name").length > 0) {
-                            $("#bond_owners_spouse_name").val(driverSpouseName);
-                        }
-                    }
-                );
-
-                $(document).on(
-                    "change",
-                    "#auto_driver_spouse_dob",
-                    function () {
-                        var autoDriverSpouseDateOfBirth = $(this).val();
-                        const driverSpouseDateOfBirth =
-                            autoDriverSpouseDateOfBirth;
-                        if ($("#bond_owners_spouse_dob").length > 0) {
-                            $("#bond_owners_spouse_dob").val(
-                                driverSpouseDateOfBirth
-                            );
-                        }
-                    }
-                );
-            }
-
-            if (bopChecked && propertyChecked) {
-                $("#bop_property_address").change(function () {
-                    var bopPropertyAdress = $(this).val();
-                    const propertyAddress = bopPropertyAdress;
-                    $("#property_property_address").val(propertyAddress);
-                });
-
-                $("#bop_val_cost_bldg").change(function () {
-                    var bopValueCostBldg = $(this).val();
-                    const valueCostBldg = bopValueCostBldg;
-                    $("#property_value_cost_bldg").val(valueCostBldg);
-                });
-
-                $("#bop_business_property_limit").change(function () {
-                    var bopBusinessPropertyLimit = $(this).val();
-                    const businessPropertyLimit = bopBusinessPropertyLimit;
-                    $("#property_business_property_limit").val(
-                        businessPropertyLimit
-                    );
-                });
-
-                $("#bop_bldg_construction_type").change(function () {
-                    var bopBldgConstructionType = $(this).val();
-                    const bldgConstructionType = bopBldgConstructionType;
-                    $("#property_construction_type")
-                        .val(bldgConstructionType)
-                        .trigger("change");
-                });
-
-                $("#bop_year_built").change(function () {
-                    var bopYearBuilt = $(this).val();
-                    const yearBuilt = bopYearBuilt;
-                    $("#property_year_built").val(yearBuilt);
-                });
-
-                $("#bop_no_of_stories").change(function () {
-                    var bopNoOfStories = $(this).val();
-                    const noOfStories = bopNoOfStories;
-                    $("#property_no_of_stories").val(noOfStories);
-                });
-
-                $("#bop_total_bldg_sqft").change(function () {
-                    var bopTotalBldgSqFt = $(this).val();
-                    const totalBldgSqFt = bopTotalBldgSqFt;
-                    $("#property_total_bldg_sqft").val(totalBldgSqFt);
-                });
-
-                $("#bop_total_bldg_sqft").change(function () {
-                    var bopTotalBldgSqFt = $(this).val();
-                    const totalBldgSqFt = bopTotalBldgSqFt;
-                    $("#property_total_bldg_sqft").val(totalBldgSqFt);
-                });
-
-                $("#bop_distance_nearest_fire_hydrant").change(function () {
-                    var bopDistanceToNearestFireHydrant = $(this).val();
-                    const distanceToNearestFireHydrant =
-                        bopDistanceToNearestFireHydrant;
-                    $("#property_distance_nearest_fire_hydrant").val(
-                        distanceToNearestFireHydrant
-                    );
-                });
-
-                $("#bop_distance_nearest_fire_station").change(function () {
-                    var bopDistanceToNearestFireStation = $(this).val();
-                    const distanceToNearestFireStation =
-                        bopDistanceToNearestFireStation;
-                    $("#property_distance_nearest_fire_station").val(
-                        distanceToNearestFireStation
-                    );
-                });
-
-                $("#bop_last_update_roofing_year").change(function () {
-                    var bopLastUpdateRoofingYear = $(this).val();
-                    const lastUpdateToRoofingYear = bopLastUpdateRoofingYear;
-                    $("#property_last_update_roofing_year").val(
-                        lastUpdateToRoofingYear
-                    );
-                });
-
-                $("#bop_last_update_heating_year").change(function () {
-                    var bopLastUpdateHeatingYear = $(this).val();
-                    const lastUpdateToHeatingYear = bopLastUpdateHeatingYear;
-                    $("#property_last_update_heating_year").val(
-                        lastUpdateToHeatingYear
-                    );
-                });
-
-                $("#bop_last_update_plumbing_year").change(function () {
-                    var bopLastUpdatePlumbingYear = $(this).val();
-                    const lastUpdateToPlumbingYear = bopLastUpdatePlumbingYear;
-                    $("#property_last_update_plumbing_year").val(
-                        lastUpdateToPlumbingYear
-                    );
-                });
-
-                $("#bop_last_update_electrical_year").change(function () {
-                    var bopLastUpdateElectricalYear = $(this).val();
-                    const lastUpdateToElectricalYear =
-                        bopLastUpdateElectricalYear;
-                    $("#property_last_update_electrical_year").val(
-                        lastUpdateToElectricalYear
-                    );
-                });
-            }
-        });
+    function updateCheckboxState(checkboxValue, isChecked) {
+        checkboxStates[checkboxValue] = isChecked;
+        localStorage.setItem(
+            checkboxValue,
+            isChecked ? "checked" : "unchecked"
+        );
     }
+
+    function loadStepContent(stepId, isChecked) {
+        if (isChecked) {
+            $("#" + stepId).load(location.href + " #" + stepId + " > *");
+        }
+    }
+
+    function handleCheckboxChange(checkboxValue, isChecked) {
+        // Common session variable handling
+        var sessionVariableName = `does${checkboxValue.toUpperCase()}Checked`;
+
+        console.log(sessionVariableName);
+
+        if (isChecked) {
+            setSessionVariable(sessionVariableName, true);
+            // Add logic for when the checkbox is checked
+        } else {
+            unsetSessionVariable(sessionVariableName);
+            // Add logic for when the checkbox is unchecked
+        }
+
+        // Handling each checkbox with specific logic
+        switch (checkboxValue) {
+            case "gl":
+                loadStepContent("gl_step_1", isChecked);
+                loadStepContent("gl_step_2", isChecked);
+                // Additional logic specific to 'gl' if needed
+                break;
+            case "wc":
+                loadStepContent("wc_step_1", isChecked);
+                loadStepContent("wc_step_2", isChecked);
+                loadStepContent("wc_step_3", isChecked);
+                // Additional logic specific to 'wc' if needed
+                break;
+            case "auto":
+                loadStepContent("auto_step_1", isChecked);
+                loadStepContent("auto_step_2", isChecked);
+                loadStepContent("auto_step_3", isChecked);
+                // Additional logic specific to 'auto' if needed
+                break;
+            case "bond":
+                loadStepContent("bond_step_1", isChecked);
+                loadStepContent("bond_step_2", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
+            case "excess":
+                loadStepContent("excess_step_1", isChecked);
+                loadStepContent("excess_step_2", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
+            case "tools":
+                loadStepContent("tools_step_1", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
+            case "br":
+                loadStepContent("br_step_1", isChecked);
+                loadStepContent("br_step_2", isChecked);
+                loadStepContent("br_step_3", isChecked);
+                loadStepContent("br_step_4", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
+            case "bop":
+                loadStepContent("bop_step_1", isChecked);
+                loadStepContent("bop_step_2", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
+            case "comm_prop":
+                loadStepContent("comm_prop_step_1", isChecked);
+                loadStepContent("comm_prop_step_2", isChecked);
+                loadStepContent("comm_prop_step_3", isChecked);
+                loadStepContent("comm_prop_step_4", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
+            case "eo":
+                loadStepContent("eo_step_1", isChecked);
+                loadStepContent("eo_step_2", isChecked);
+                loadStepContent("eo_step_3", isChecked);
+                loadStepContent("eo_step_4", isChecked);
+                loadStepContent("eo_step_5", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
+            case "epli":
+                loadStepContent("epli_step_1", isChecked);
+                loadStepContent("epli_step_2", isChecked);
+                loadStepContent("epli_step_3", isChecked);
+                loadStepContent("epli_step_4", isChecked);
+                loadStepContent("epli_step_5", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
+            case "cyber":
+                loadStepContent("cyber_step_1", isChecked);
+                loadStepContent("cyber_step_2", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
+            case "instfloat":
+                loadStepContent("instfloat_step_1", isChecked);
+                loadStepContent("instfloat_step_2", isChecked);
+                loadStepContent("instfloat_step_3", isChecked);
+                loadStepContent("instfloat_step_4", isChecked);
+                loadStepContent("instfloat_step_5", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
+            default:
+                // Handle any default case if necessary
+                break;
+        }
+
+        // Any additional logic that applies to all checkboxes
+    }
+
+    // Event listener for checkbox changes
+
+    $(document).on("change", 'input[name="question_1[]"]', function () {
+        var checkboxValue = $(this).val();
+        var isChecked = $(this).is(":checked");
+
+        // Update the state of the checkbox
+        updateCheckboxState(checkboxValue, isChecked);
+
+        // Handle the change for the specific checkbox
+        handleCheckboxChange(checkboxValue, isChecked);
+    });
+
+    // function getCheckboxValue() {
+    //     var glChecked = false;
+    //     var wcChecked = false;
+    //     var autoChecked = false;
+    //     var bondChecked = false;
+    //     var excessChecked = false;
+    //     var toolsChecked = false;
+    //     var brChecked = false;
+    //     var bopChecked = false;
+    //     var propertyChecked = false;
+    //     var eoChecked = false;
+    //     var epliChecked = false;
+    //     var cyberChecked = false;
+    //     var instFloatChecked = false;
+
+    //     $('input[name="question_1[]"]').change(function () {
+    //         var checkboxValue = $(this).val();
+    //         if ($(this).is(":checked")) {
+    //             // console.log(checkboxValue);
+    //             localStorage.setItem(checkboxValue, "checked");
+    //             if (checkboxValue === "gl") {
+    //                 glChecked = true;
+    //             } else if (checkboxValue === "wc") {
+    //                 wcChecked = true;
+    //             } else if (checkboxValue === "auto") {
+    //                 autoChecked = true;
+    //             } else if (checkboxValue === "bond") {
+    //                 bondChecked = true;
+    //             } else if (checkboxValue === "excess") {
+    //                 excessChecked = true;
+    //             } else if (checkboxValue === "tools") {
+    //                 toolsChecked = true;
+    //             } else if (checkboxValue === "br") {
+    //                 brChecked = true;
+    //             } else if (checkboxValue === "bop") {
+    //                 bopChecked = true;
+    //             } else if (checkboxValue === "comm_prop") {
+    //                 propertyChecked = true;
+    //             } else if (checkboxValue === "eo") {
+    //                 eoChecked = true;
+    //             } else if (checkboxValue === "epli") {
+    //                 epliChecked = true;
+    //             } else if (checkboxValue === "cyber") {
+    //                 cyberChecked = true;
+    //             } else if (checkboxValue === "instfloat") {
+    //                 instFloatChecked = true;
+    //             }
+    //         } else {
+    //             localStorage.setItem(checkboxValue, "unchecked");
+    //             if (checkboxValue === "gl") {
+    //                 glChecked = false;
+    //             } else if (checkboxValue === "wc") {
+    //                 wcChecked = false;
+    //             } else if (checkboxValue === "auto") {
+    //                 autoChecked = false;
+    //             } else if (checkboxValue === "bond") {
+    //                 bondChecked = false;
+    //             } else if (checkboxValue === "excess") {
+    //                 excessChecked = false;
+    //             } else if (checkboxValue === "tools") {
+    //                 toolsChecked = false;
+    //             } else if (checkboxValue === "br") {
+    //                 brChecked = false;
+    //             } else if (checkboxValue === "bop") {
+    //                 bopChecked = false;
+    //             } else if (checkboxValue === "comm_prop") {
+    //                 propertyChecked = false;
+    //             } else if (checkboxValue === "eo") {
+    //                 eoChecked = false;
+    //             } else if (checkboxValue === "epli") {
+    //                 epliChecked = false;
+    //             } else if (checkboxValue === "cyber") {
+    //                 cyberChecked = false;
+    //             } else if (checkboxValue === "instfloat") {
+    //                 instFloatChecked = false;
+    //             }
+    //         }
+
+    //         function setName(a, b, target) {
+    //             $(`#${a}, #${b}`).change(function () {
+    //                 var firstname = $(`#${a}`).val();
+    //                 var lastname = $(`#${b}`).val();
+    //                 const fullname = firstname + " " + lastname;
+    //                 $(`#${target}`).val(fullname);
+    //             });
+    //         }
+
+    //         function setValue(selector, targetValue) {
+    //             $(selector).change(function () {
+    //                 var value = $(this).val();
+    //                 $(targetValue).val(value);
+    //             });
+    //         }
+
+    //         function setValueWithChange(selector, targetValue) {
+    //             $(selector).change(function () {
+    //                 var value = $(this).val();
+    //                 $(targetValue).val(value).trigger("change");
+    //             });
+    //         }
+
+    //         function setSpouseInfo(selector, targetValue) {
+    //             $(document).on("change", selector, function () {
+    //                 var value = $(this).val();
+    //                 if ($(targetValue).length > 0) {
+    //                     $(targetValue).val(value);
+    //                 }
+    //             });
+    //         }
+
+    //         if (glChecked) {
+    //             setSessionVariable("doesGLChecked", true);
+    //             $("#about_you_profession").load(
+    //                 location.href + " #about_you_profession"
+    //             );
+    //             $("#gl_step_1").load(location.href + " #gl_step_1 > *");
+    //             $("#gl_step_2").load(location.href + " #gl_step_2 > *");
+    //         } else {
+    //             unsetSessionVariable("doesGLChecked");
+    //             setSessionVariable("doesGLChecked", false);
+    //             $("#gl_step_1").load(location.href + " #gl_step_1 > *");
+    //             $("#gl_step_2").load(location.href + " #gl_step_2 > *");
+    //         }
+
+    //         if (wcChecked) {
+    //             setSessionVariable("doesWCChecked", true);
+    //             $("#wc_step_1").load(location.href + " #wc_step_1 > *");
+    //             $("#wc_step_2").load(location.href + " #wc_step_2 > *");
+    //             $("#wc_step_3").load(location.href + " #wc_step_3 > *");
+    //             setName("firstname", "lastname", "wc_name");
+    //         } else {
+    //             unsetSessionVariable("doesWCChecked");
+    //             setSessionVariable("doesWCChecked", false);
+    //             $("#wc_step_1").load(location.href + " #wc_step_1 > *");
+    //             $("#wc_step_2").load(location.href + " #wc_step_2 > *");
+    //             $("#wc_step_3").load(location.href + " #wc_step_3 > *");
+    //         }
+
+    //         if (autoChecked) {
+    //             setSessionVariable("doesAutoChecked", true);
+    //             $("#auto_step_1").load(location.href + " #auto_step_1 > *");
+    //             $("#auto_step_2").load(location.href + " #auto_step_2 > *");
+    //             $("#auto_step_3").load(location.href + " #auto_step_3 > *");
+    //             setName("firstname", "lastname", "auto_driver_full_name");
+    //         } else {
+    //             unsetSessionVariable("doesAutoChecked");
+    //             setSessionVariable("doesAutoChecked", false);
+    //             $("#auto_step_1").load(location.href + " #auto_step_1 > *");
+    //             $("#auto_step_2").load(location.href + " #auto_step_2 > *");
+    //             $("#auto_step_3").load(location.href + " #auto_step_3 > *");
+    //         }
+
+    //         if (bondChecked) {
+    //             setSessionVariable("doesBondChecked", true);
+    //             $("#bond_step_1").load(location.href + " #bond_step_1 > *");
+    //             $("#bond_step_2").load(location.href + " #bond_step_2 > *");
+    //             setName("firstname", "lastname", "bond_owners_name");
+    //             $("#contractor_license").change(function () {
+    //                 var contractorLicense = $(this).val();
+    //                 const contractorLic = contractorLicense;
+    //                 $("#bond_license_or_application_no").val(contractorLic);
+    //             });
+    //         } else {
+    //             unsetSessionVariable("doesBondChecked");
+    //             setSessionVariable("doesBondChecked", false);
+    //             $("#bond_step_1").load(location.href + " #bond_step_1 > *");
+    //             $("#bond_step_2").load(location.href + " #bond_step_2 > *");
+    //         }
+
+    //         if (excessChecked) {
+    //             setSessionVariable("doesExcessChecked", true);
+    //             $("#excess_step_1").load(location.href + " #excess_step_1 > *");
+    //             $("#excess_step_2").load(location.href + " #excess_step_2 > *");
+    //         } else {
+    //             unsetSessionVariable("doesExcessChecked");
+    //             setSessionVariable("doesExcessChecked", false);
+    //             $("#excess_step_1").load(location.href + " #excess_step_1 > *");
+    //             $("#excess_step_2").load(location.href + " #excess_step_2 > *");
+    //         }
+
+    //         if (toolsChecked) {
+    //             setSessionVariable("doesToolsChecked", true);
+    //             $("#tools_step_1").load(location.href + " #tools_step_1 > *");
+    //         } else {
+    //             unsetSessionVariable("doesToolsChecked");
+    //             setSessionVariable("doesToolsChecked", false);
+    //             $("#tools_step_1").load(location.href + " #tools_step_1 > *");
+    //         }
+
+    //         if (brChecked) {
+    //             setSessionVariable("doesBRChecked", true);
+    //             $("#br_step_1").load(location.href + " #br_step_1 > *");
+    //             $("#br_step_2").load(location.href + " #br_step_2 > *");
+    //             $("#br_step_3").load(location.href + " #br_step_3 > *");
+    //             $("#br_step_4").load(location.href + " #br_step_4 > *");
+    //         } else {
+    //             unsetSessionVariable("doesBRChecked");
+    //             setSessionVariable("doesBRChecked", false);
+    //             $("#br_step_1").load(location.href + " #br_step_1 > *");
+    //             $("#br_step_2").load(location.href + " #br_step_2 > *");
+    //             $("#br_step_3").load(location.href + " #br_step_3 > *");
+    //             $("#br_step_4").load(location.href + " #br_step_4 > *");
+    //         }
+
+    //         if (bopChecked) {
+    //             setSessionVariable("doesBOPChecked", true);
+    //             $("#bop_step_1").load(location.href + " #bop_step_1 > *");
+    //             $("#bop_step_2").load(location.href + " #bop_step_2 > *");
+    //             $("#bop_step_3").load(location.href + " #bop_step_3 > *");
+    //             $("#bop_step_4").load(location.href + " #bop_step_4 > *");
+    //         } else {
+    //             unsetSessionVariable("doesBOPChecked");
+    //             setSessionVariable("doesBRChecked", false);
+    //             $("#bop_step_1").load(location.href + " #bop_step_1 > *");
+    //             $("#bop_step_2").load(location.href + " #bop_step_2 > *");
+    //             $("#bop_step_3").load(location.href + " #bop_step_3 > *");
+    //             $("#bop_step_4").load(location.href + " #bop_step_4 > *");
+    //         }
+
+    //         if (propertyChecked) {
+    //             setSessionVariable("doesPropertyChecked", true);
+    //             $("#comm_prop_step_1").load(
+    //                 location.href + " #comm_prop_step_1 > *"
+    //             );
+    //             $("#comm_prop_step_2").load(
+    //                 location.href + " #comm_prop_step_2 > *"
+    //             );
+    //             $("#comm_prop_step_3").load(
+    //                 location.href + " #comm_prop_step_3 > *"
+    //             );
+    //             $("#comm_prop_step_4").load(
+    //                 location.href + " #comm_prop_step_4 > *"
+    //             );
+    //         } else {
+    //             unsetSessionVariable("doesPropertyChecked");
+    //             setSessionVariable("doesPropertyChecked", false);
+    //             $("#comm_prop_step_1").load(
+    //                 location.href + " #comm_prop_step_1 > *"
+    //             );
+    //             $("#comm_prop_step_2").load(
+    //                 location.href + " #comm_prop_step_2 > *"
+    //             );
+    //             $("#comm_prop_step_3").load(
+    //                 location.href + " #comm_prop_step_3 > *"
+    //             );
+    //             $("#comm_prop_step_4").load(
+    //                 location.href + " #comm_prop_step_4 > *"
+    //             );
+    //         }
+
+    //         if (eoChecked) {
+    //             setSessionVariable("doesEOChecked", true);
+    //             $("#eo_step_1").load(location.href + " #eo_step_1 > *");
+    //             $("#eo_step_2").load(location.href + " #eo_step_2 > *");
+    //             $("#eo_step_3").load(location.href + " #eo_step_3 > *");
+    //             $("#eo_step_4").load(location.href + " #eo_step_4 > *");
+    //             $("#eo_step_5").load(location.href + " #eo_step_5 > *");
+    //         } else {
+    //             unsetSessionVariable("doesEOChecked");
+    //             setSessionVariable("doesEOChecked", false);
+    //             $("#eo_step_1").load(location.href + " #eo_step_1 > *");
+    //             $("#eo_step_2").load(location.href + " #eo_step_2 > *");
+    //             $("#eo_step_3").load(location.href + " #eo_step_3 > *");
+    //             $("#eo_step_4").load(location.href + " #eo_step_4 > *");
+    //             $("#eo_step_5").load(location.href + " #eo_step_5 > *");
+    //         }
+
+    //         if (epliChecked) {
+    //             setSessionVariable("doesEPLIChecked", true);
+    //             $("#epli_step_1").load(location.href + " #epli_step_1 > *");
+    //             $("#epli_step_2").load(location.href + " #epli_step_2 > *");
+    //             $("#epli_step_3").load(location.href + " #epli_step_3 > *");
+    //             $("#epli_step_4").load(location.href + " #epli_step_4 > *");
+    //             $("#epli_step_5").load(location.href + " #epli_step_5 > *");
+    //         } else {
+    //             unsetSessionVariable("doesEPLIChecked");
+    //             setSessionVariable("doesEPLIChecked", false);
+    //             $("#epli_step_1").load(location.href + " #epli_step_1 > *");
+    //             $("#epli_step_2").load(location.href + " #epli_step_2 > *");
+    //             $("#epli_step_3").load(location.href + " #epli_step_3 > *");
+    //             $("#epli_step_4").load(location.href + " #epli_step_4 > *");
+    //             $("#epli_step_5").load(location.href + " #epli_step_5 > *");
+    //         }
+
+    //         if (cyberChecked) {
+    //             setSessionVariable("doesCyberChecked", true);
+    //             $("#cyber_step_1").load(location.href + " #cyber_step_1 > *");
+    //             $("#cyber_step_2").load(location.href + " #cyber_step_2 > *");
+    //         } else {
+    //             unsetSessionVariable("doesCyberChecked");
+    //             setSessionVariable("doesCyberChecked", false);
+    //             $("#cyber_step_1").load(location.href + " #cyber_step_1 > *");
+    //             $("#cyber_step_2").load(location.href + " #cyber_step_2 > *");
+    //         }
+
+    //         if (instFloatChecked) {
+    //             setSessionVariable("doesInstFloatChecked", true);
+    //             $("#instfloat_step_1").load(
+    //                 location.href + " #instfloat_step_1 > *"
+    //             );
+    //             $("#instfloat_step_2").load(
+    //                 location.href + " #instfloat_step_2 > *"
+    //             );
+    //             $("#instfloat_step_3").load(
+    //                 location.href + " #instfloat_step_3 > *"
+    //             );
+    //             $("#instfloat_step_4").load(
+    //                 location.href + " #instfloat_step_4 > *"
+    //             );
+    //             $("#instfloat_step_5").load(
+    //                 location.href + " #instfloat_step_5 > *"
+    //             );
+    //         } else {
+    //             unsetSessionVariable("doesInstFloatChecked");
+    //             setSessionVariable("doesInstFloatChecked", false);
+    //             $("#instfloat_step_1").load(
+    //                 location.href + " #instfloat_step_1 > *"
+    //             );
+    //             $("#instfloat_step_2").load(
+    //                 location.href + " #instfloat_step_2 > *"
+    //             );
+    //             $("#instfloat_step_3").load(
+    //                 location.href + " #instfloat_step_3 > *"
+    //             );
+    //             $("#instfloat_step_4").load(
+    //                 location.href + " #instfloat_step_4 > *"
+    //             );
+    //             $("#instfloat_step_5").load(
+    //                 location.href + " #instfloat_step_5 > *"
+    //             );
+    //         }
+
+    //         if (glChecked && wcChecked) {
+    //             // setSessionVariable("doesGLandWCChecked", false);
+    //             // $("#wc_step_1").load(location.href + " #wc_step_1");
+
+    //             var glFullTimeEmp = 0;
+    //             $(document).on(
+    //                 "change",
+    //                 "#gl_full_time_employees",
+    //                 function () {
+    //                     glFullTimeEmp = parseInt($(this).val());
+    //                     updateTotalEmployees();
+    //                 }
+    //             );
+
+    //             var glPartTimeEmp = 0;
+    //             $(document).on(
+    //                 "change",
+    //                 "#gl_part_time_employees",
+    //                 function () {
+    //                     glPartTimeEmp = parseInt($(this).val());
+    //                     updateTotalEmployees();
+    //                 }
+    //             );
+
+    //             function updateTotalEmployees() {
+    //                 const sumOfNumOfEmp = glFullTimeEmp + glPartTimeEmp;
+    //                 $("#wc_num_of_empl").val(sumOfNumOfEmp);
+    //                 numOfEmployees = sumOfNumOfEmp;
+    //             }
+
+    //             $(document).on("change", "#gl_annual_gross", function () {
+    //                 var glAnnualGrossReceipt = $(this).val();
+    //                 const annualGrossReceipt = glAnnualGrossReceipt;
+    //                 $("#wc_gross_receipt").val(annualGrossReceipt);
+    //             });
+
+    //             $(document).on("change", "#gl_using_subcon", function () {
+    //                 var glDoesUseSubcon = parseInt($(this).val());
+    //                 $("#wc_does_hire_subcon")
+    //                     .val(glDoesUseSubcon)
+    //                     .trigger("change");
+
+    //                 if (glDoesUseSubcon === 1) {
+    //                     $(document).on(
+    //                         "change",
+    //                         "#gl_subcon_cost",
+    //                         function () {
+    //                             $("#wc_subcon_cost_year").val($(this).val());
+    //                         }
+    //                     );
+    //                 }
+    //             });
+    //         } else {
+    //             // unsetSessionVariable("doesGLandWCChecked");
+    //             // setSessionVariable(true);
+    //             // $("#wc_step_1").load(location.href + " #wc_step_1");
+    //         }
+
+    //         if (wcChecked && bondChecked) {
+    //             setValue("#wc_ssn", "#bond_owners_ssn");
+    //         }
+
+    //         if (wcChecked && epliChecked) {
+    //             setValue("#wc_fein", "#epli_fein");
+    //         }
+
+    //         if (wcChecked && autoChecked) {
+    //             setValue("#wc_dob", "#auto_driver_date_of_birth");
+    //         }
+
+    //         if (wcChecked && bondChecked) {
+    //             setValue("#wc_dob", "#bond_owners_dob");
+    //         }
+
+    //         if (autoChecked && bondChecked) {
+    //             setValue("#auto_driver_date_of_birth", "#bond_owners_dob");
+    //             setValueWithChange(
+    //                 "#auto_driver_marital_status",
+    //                 "#bond_owners_civil_status"
+    //             );
+    //             setSpouseInfo(
+    //                 "#auto_driver_spouse_name",
+    //                 "#bond_owners_spouse_name"
+    //             );
+    //             setSpouseInfo(
+    //                 "#auto_driver_spouse_dob",
+    //                 "#bond_owners_spouse_dob"
+    //             );
+    //         }
+
+    //         if (bopChecked && propertyChecked) {
+    //             setValue("#bop_property_address", "#property_property_address");
+    //             setValue("#bop_val_cost_bldg", "#property_value_cost_bldg");
+    //             setValue(
+    //                 "#bop_business_property_limit",
+    //                 "#property_business_property_limit"
+    //             );
+    //             setValueWithChange(
+    //                 "#bop_bldg_construction_type",
+    //                 "#property_construction_type"
+    //             );
+    //             setValue("#bop_year_built", "#property_year_built");
+    //             setValue("#bop_no_of_stories", "#property_no_of_stories");
+    //             setValue("#bop_total_bldg_sqft", "#property_total_bldg_sqft");
+    //             setValue(
+    //                 "#bop_distance_nearest_fire_hydrant",
+    //                 "#property_distance_nearest_fire_hydrant"
+    //             );
+    //             setValue(
+    //                 "#bop_distance_nearest_fire_station",
+    //                 "#property_distance_nearest_fire_station"
+    //             );
+    //             setValue(
+    //                 "#bop_last_update_roofing_year",
+    //                 "#property_last_update_roofing_year"
+    //             );
+    //             setValue(
+    //                 "#bop_last_update_heating_year",
+    //                 "#property_last_update_heating_year"
+    //             );
+    //             setValue(
+    //                 "#bop_last_update_plumbing_year",
+    //                 "#property_last_update_plumbing_year"
+    //             );
+    //             setValue(
+    //                 "#bop_last_update_electrical_year",
+    //                 "#property_last_update_electrical_year"
+    //             );
+    //         }
+    //     });
+    // }
 
     function showDriverIfMarried() {
         $("#auto_driver_if_married_container").append(`
@@ -4299,6 +4679,8 @@
         $("#" + a).on("change", function () {
             $(".loader-container").removeClass("hidden");
             $(".loader-container").addClass("active");
+
+            console.log($(this).val());
 
             if ($(this).val() === "1") {
                 setTimeout(function () {
@@ -4890,19 +5272,17 @@
     let totalPercentage = 0;
 
     function checkPercentages() {
-        const sum = percentages.reduce((a, b) => a + b, 0);
-        return sum;
-    }
-
-    function adjustRemainingPercentages(excludedIndex) {
-        const sum = checkPercentages();
-        if (sum < 100) {
-            showMultipleStateWork();
-        }
+        return percentages.reduce((a, b) => a + b, 0);
     }
 
     function checkTotalPercentage() {
         return totalPercentage + percentages.reduce((a, b) => a + b, 0);
+    }
+
+    function removeLastStateWork() {
+        counter--;
+        $(`.stateWorkContainer:last`).remove();
+        percentages.pop(); // remove the last percentage from the array
     }
 
     function showMultipleStateWork() {
@@ -4991,7 +5371,8 @@
         $(`#gl_multiple_states_percentage_${counter}`).on(
             "change",
             function () {
-                const index = counter - 1;
+                const currentFieldIndex =
+                    parseInt($(this).attr("id").match(/\d+/)[0], 10) - 1;
                 const value = parseFloat($(this).val());
 
                 if (isNaN(value)) {
@@ -5000,17 +5381,29 @@
                     return;
                 }
 
-                const oldPercentage = percentages[index] || 0;
-                const newTotal = checkPercentages() - oldPercentage + value;
+                const oldPercentage = percentages[currentFieldIndex] || 0;
+                percentages[currentFieldIndex] = value;
 
-                if (newTotal > 100) {
+                const totalPercentage = checkPercentages();
+
+                if (totalPercentage > 100) {
                     toastr.error("Total percentage should not exceed 100%");
                     $(this).val(oldPercentage);
-                    return;
+                    percentages[currentFieldIndex] = oldPercentage;
+                } else {
+                    // If the new total percentage is valid, update the array.
+                    percentages[currentFieldIndex] = value;
                 }
 
-                percentages[index] = value;
-                adjustRemainingPercentages(index);
+                // If total is 100%, ensure there are no extra state input elements.
+                if (totalPercentage === 100 && counter > percentages.length) {
+                    removeLastStateWork();
+                }
+
+                // If total is below 100% and there's no extra input, add one.
+                if (totalPercentage < 100 && counter === percentages.length) {
+                    showMultipleStateWork();
+                }
             }
         );
     }
@@ -5107,57 +5500,48 @@
             </div>`);
     }
 
-    function showWCAdditionalProfessionEntry(i) {
-        $("#sched_equipment_container").append(`
-            <div class="d-flex justify-content-between profession-entry">
-                <h5 class="profession_header mt-2 mb-2">Worker's Compensation Employee's Profession
-                    Entry:</h5>
-                <button id="" class="btn_1 delete-profession-entry mb-2">-</button>
-            </div>
-            <div class="row justify-content-center">
-                <h6 class="profession_header mt-2 mb-2">Employee's Profession Entry No. ${i}</h6>
-                <div class="col-md-12">
-                    <div class="mb-3 form-floating">
-                        <select class="form-select" name="wc_profession_type_${i}"
-                            id="wc_profession_type_${i}" aria-label="wc_profession_type_${i}">
-                            <!-- For wcProfessions -->
-                            <optgroup label='Other Professions'>
-                                @if (isset($wcProfessions))
-                                    @foreach ($wcProfessions as $wcProfession)
-                                        <option value="{{ $wcProfession->id }}">
-                                            {{ $wcProfession->name }}</option>
-                                    @endforeach
-                                @endif
-                            </optgroup>
+    async function showWCAdditionalProfessionEntry(a) {
+        try {
+            let response = await axios.get("wc/showProfessionEntries", {
+                params: {
+                    a: a,
+                },
+            });
 
-                            <!-- For general professions -->
-                            <optgroup label='All Professions'>
-                                @foreach ($professions as $profession)
-                                    <option value="{{ $profession->id }}">
-                                        {{ $profession->name }}</option>
-                                @endforeach
-                            </optgroup>
-                        </select>
-                        <label for="wc_profession_type_${i}">Profession Type:</label>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="mb-3 form-floating">
-                        <input type="text" name="wc_gross_receipt_${i}" id="wc_gross_receipt_${i}"
-                            class="form-control" placeholder="" />
-                        <label for="wc_gross_receipt_${i}">Annual Gross Receipt:</label>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="mb-3 form-floating">
-                        <input type="text" name="wc_num_employee_under_this_profession_${i}"
-                            id="wc_num_employee_under_this_profession_${i}" class="form-control"
-                            placeholder="" />
-                        <label for="wc_num_employee_under_this_profession_${i}">Number of Employee
-                            under this Profession (Must be equal to the total employees):</label>
-                    </div>
-                </div>
-            </div>`);
+            let data = response.data.data;
+
+            if (data) {
+                $("#wc_professions_container").append(data);
+                perfectCurrencyFormatter(".wc-annual-payroll");
+                // Attach a change event handler to the document for any element with an ID starting with 'wc_profession_'
+                $(document).on(
+                    "change",
+                    `[id^="wc_profession_type_"]`,
+                    function () {
+                        // Get the value of the selected option
+                        let wcProfessionValue = parseInt($(this).val());
+                        if (wcProfessionValue === 319) {
+                            $("#wc_profession_type_if_other_" + a).append(`
+                            <div class="row justify-content-center customProfession">
+                                <h6 class="profession_header mt-2 mb-2">Please specify your profession:</h6>
+                                <div class="col-md-12">
+                                    <div class="mb-3 form-floating">
+                                        <input type="text" name="wc_specify_profession_${a}" id="wc_specify_profession_${a}" class="form-control" placeholder="">
+                                        <label for="wc_specify_profession_${a}">Please specify your profession</label>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                        } else {
+                            $(".customProfession").remove();
+                        }
+                    }
+                );
+            }
+        } catch (error) {
+            // Handle any errors here
+            console.error(error);
+        }
     }
 
     function renderOwnersInformationFields() {
@@ -5573,11 +5957,30 @@
     $("#wc_gross_receipt").val($("#gl_annual_gross").val());
     perfectCurrencyFormatter("#gl_payroll_amt");
     perfectCurrencyFormatter("#gl_subcon_cost");
-    renderingYesNoDivs(
-        "gl_using_subcon",
-        showSubconContainerForGL,
-        "gl_subcon_cost"
-    );
+
+    // renderingYesNoDivs(
+    //     "gl_using_subcon",
+    //     showSubconContainerForGL,
+    //     "gl_subcon_cost"
+    // );
+
+    $(document).on("change", "#gl_using_subcon", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === 1) {
+            setTimeout(function () {
+                showSubconContainerForGL();
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $("#gl_subcon_cost_container").empty();
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+        }
+    });
+
     $(document).on("change", "#gl_no_of_losses", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");
@@ -5770,6 +6173,35 @@
             $(".loader-container").removeClass("active");
         }
     });
+    appendNewWCProfessionEntry("#add_wc_employee_entry");
+    $(document).on("click", ".delete-profession-entry", function () {
+        $(this)
+            .parent(".profession-entry")
+            .nextUntil(".profession-entry")
+            .addBack()
+            .remove();
+        wcProfessionEntry--;
+        updateWCProfessionEntryNames();
+    });
+    $(document).on("change", "#wc_profession_type_1", function () {
+        var professionType = parseInt($(this).val());
+        if (professionType === 319) {
+            $("#wc_profession_type_if_other_1").append(`
+            <div class="row justify-content-center customProfession">
+                <h6 class="profession_header mt-2 mb-2">Please specify your profession:</h6>
+                <div class="col-md-12">
+                    <div class="mb-3 form-floating">
+                        <input type="text" name="wc_specify_profession_1" id="wc_specify_profession_1" class="form-control" placeholder="">
+                        <label for="wc_specify_profession_1">Please specify your profession</label>
+                    </div>
+                </div>
+            </div>
+        `);
+        } else {
+            $(".customProfession").remove();
+        }
+    });
+    perfectCurrencyFormatter("#wc_annual_payroll_1");
     // END WC SCRIPTS
 
     // START AUTO SCRIPTS
@@ -6169,55 +6601,55 @@
     // END EO SCRIPTS
 
     // START POLLUTION SCRIPTS
-    $("#pollution_residential").change(function () {
-        setTimeout(function () {
-            computePercentage("pollution_residential", "pollution_commercial");
-        }, 0);
-    });
-    $("#pollution_commercial").change(function () {
-        setTimeout(function () {
-            computePercentage("pollution_commercial", "pollution_residential");
-        }, 0);
-    });
-    $("#pollution_new_construction").change(function () {
-        setTimeout(function () {
-            computePercentage(
-                "pollution_new_construction",
-                "pollution_repair_remodel"
-            );
-        }, 0);
-    });
-    $("#pollution_repair_remodel").change(function () {
-        setTimeout(function () {
-            computePercentage(
-                "pollution_repair_remodel",
-                "pollution_new_construction"
-            );
-        }, 0);
-    });
-    perfectCurrencyFormatter("#pollution_cost_proj_5years");
-    perfectCurrencyFormatter("#pollution_annual_gross");
-    perfectCurrencyFormatter("#pollution_payroll_amt");
-    perfectCurrencyFormatter("#pollution_subcon_cost");
-    renderingYesNoDivs(
-        "pollution_using_subcon",
-        showSubconContainerForPollution,
-        "pollution_subcon_cost"
-    );
-    $("#pollution_no_losses_5years").on("change", function () {
-        const value = parseInt($(this).val());
-        if (value >= 1) {
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-            setTimeout(function () {
-                showPollutionNoOfLossesContainer();
-            }, 0);
-        } else {
-            $("#pollution_explain_losses").parent().parent().remove();
-            $(".loader-container").addClass("hidden");
-            $(".loader-container").removeClass("active");
-        }
-    });
+    // $("#pollution_residential").change(function () {
+    //     setTimeout(function () {
+    //         computePercentage("pollution_residential", "pollution_commercial");
+    //     }, 0);
+    // });
+    // $("#pollution_commercial").change(function () {
+    //     setTimeout(function () {
+    //         computePercentage("pollution_commercial", "pollution_residential");
+    //     }, 0);
+    // });
+    // $("#pollution_new_construction").change(function () {
+    //     setTimeout(function () {
+    //         computePercentage(
+    //             "pollution_new_construction",
+    //             "pollution_repair_remodel"
+    //         );
+    //     }, 0);
+    // });
+    // $("#pollution_repair_remodel").change(function () {
+    //     setTimeout(function () {
+    //         computePercentage(
+    //             "pollution_repair_remodel",
+    //             "pollution_new_construction"
+    //         );
+    //     }, 0);
+    // });
+    // perfectCurrencyFormatter("#pollution_cost_proj_5years");
+    // perfectCurrencyFormatter("#pollution_annual_gross");
+    // perfectCurrencyFormatter("#pollution_payroll_amt");
+    // perfectCurrencyFormatter("#pollution_subcon_cost");
+    // renderingYesNoDivs(
+    //     "pollution_using_subcon",
+    //     showSubconContainerForPollution,
+    //     "pollution_subcon_cost"
+    // );
+    // $("#pollution_no_losses_5years").on("change", function () {
+    //     const value = parseInt($(this).val());
+    //     if (value >= 1) {
+    //         $(".loader-container").addClass("hidden");
+    //         $(".loader-container").removeClass("active");
+    //         setTimeout(function () {
+    //             showPollutionNoOfLossesContainer();
+    //         }, 0);
+    //     } else {
+    //         $("#pollution_explain_losses").parent().parent().remove();
+    //         $(".loader-container").addClass("hidden");
+    //         $(".loader-container").removeClass("active");
+    //     }
+    // });
     // END POLLUTION SCRIPTS
 
     // START EPLI SCRIPTS
@@ -6327,5 +6759,5 @@
         numericValue = parseFloat(numericValue || 0);
         return toUSD(numericValue);
     }
-    getCheckboxValue();
+    // getCheckboxValue();
 })(window.jQuery);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
     <head>
         <meta charset="utf-8">
@@ -42,8 +42,6 @@
 
 
     <body class="bg_color_gray">
-
-
 
         <div id="preloader">
             <div data-loader="circle-side"></div>
@@ -109,7 +107,9 @@
         <!-- /modal -->
 
         {{-- Main JS files --}}
-
+        <script type="text/javascript">
+            window.serverData = @json($trueValues);
+        </script>
         <script src="{{ asset('js/app.js') }}"></script>
         <script src="{{ asset('js/bootstrap.js') }}"></script>
         <script src="{{ asset('js/common_scripts.min.js') }}"></script>

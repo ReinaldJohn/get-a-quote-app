@@ -256,271 +256,289 @@
                                                                                     </tr>
                                                                                     {{-- End About your Company --}}
                                                                                     @foreach ($productKeyData as $productType)
-                                                                                    {{-- Start GL Section --}}
-                                                                                    @if ($productType === 'gl')
-                                                                                        <tr>
-                                                                                            <td class="esd-block-text es-p30t es-p35r es-p40l"
-                                                                                                align="left">
-                                                                                                <p
-                                                                                                    style="font-size: 18px;">
-                                                                                                    <strong>General
-                                                                                                        Liability
-                                                                                                        Application</strong>
-                                                                                                </p>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                        <tr>
-                                                                                            <td class="esd-block-text es-p25t es-p40r es-p40l"
-                                                                                                align="left">
-                                                                                                <p>Annual Gross
-                                                                                                    Receipts.:
-                                                                                                    <b>${{ number_format($generalLiability->annual_gross_receipt, 2) }}</b>
-                                                                                                </p>
-                                                                                                <p>Profession:
-                                                                                                    <strong>{{ $GLProfessionName }}</strong>
-                                                                                                </p>
-                                                                                                <p><br></p>
-                                                                                                @if (!empty($GLProfessionName))
-                                                                                                    <p><strong>Additional
-                                                                                                            Questions
-                                                                                                            for
-                                                                                                            {{ $GLProfessionName }}:</strong>
+                                                                                        {{-- Start GL Section --}}
+                                                                                        @if ($productType === 'gl')
+                                                                                            <tr>
+                                                                                                <td class="esd-block-text es-p30t es-p35r es-p40l"
+                                                                                                    align="left">
+                                                                                                    <p
+                                                                                                        style="font-size: 18px;">
+                                                                                                        <strong>General
+                                                                                                            Liability
+                                                                                                            Application</strong>
                                                                                                     </p>
-                                                                                                    @foreach ($glAdditionalQuestions as $index => $glAdditionalQuestion)
-                                                                                                        <p>{{ $glAdditionalQuestion['questionLabels'] }}
-                                                                                                            <strong>{{ $glAdditionalQuestion['questionAnswers'] }}</strong>
-                                                                                                            @if ($glAdditionalQuestion['questionAnswers'])
-                                                                                                                <strong>{{ $glAdditionalQuestion['questionAnswers'] ? 'Yes' : 'No' }}</strong>
-                                                                                                            @endif
-                                                                                                        </p>
-                                                                                                    @endforeach
-                                                                                                @endif
-                                                                                                <p>Residential:
-                                                                                                    <b>{{ $generalLiability->residential }}%</b>
-                                                                                                </p>
-                                                                                                <p>Commercial:
-                                                                                                    <strong>{{ $generalLiability->commercial }}%</strong>
-                                                                                                </p>
-                                                                                                <p>New Construction:
-                                                                                                    <strong>{{ $generalLiability->new_construction }}%</strong>
-                                                                                                </p>
-                                                                                                <p>Repair / Remodel:
-                                                                                                    <b>{{ $generalLiability->repair_remodel }}%</b>
-                                                                                                </p>
-                                                                                                <p>Detailed Description
-                                                                                                    of
-                                                                                                    Operations:</p>
-                                                                                                <p><strong>{!! $generalLiability->detailed_descops !!}</strong>
-                                                                                                </p>
-                                                                                                <p><br></p>
-                                                                                                <p>Multiple State Work?:
-                                                                                                    <strong>{{ $generalLiability->multiple_state_work ? 'Yes' : 'No' }}</strong>
-                                                                                                </p>
-                                                                                                @if (!empty($multipleStateWorks))
-                                                                                                    @foreach ($multipleStateWorks as $stateWork)
-                                                                                                        <p><strong>State
-                                                                                                                Work
-                                                                                                                Entry
-                                                                                                                No.
-                                                                                                                {{ $stateWork['counter'] }}</strong>
-                                                                                                        </p>
-                                                                                                        <p><br></p>
-                                                                                                        <p>State:
-                                                                                                            <strong>{{ $stateWork['state'] }}</strong>
-                                                                                                        </p>
-                                                                                                        <p>% Percentage:
-                                                                                                            <strong>{{ $stateWork['percentage'] }}%</strong>
-                                                                                                        </p>
-                                                                                                        <p><br></p>
-                                                                                                    @endforeach
-                                                                                                @endif
-                                                                                                <p>Cost of the Largest
-                                                                                                    Project in the past
-                                                                                                    5
-                                                                                                    years:
-                                                                                                    <strong>${{ number_format($generalLiability->cost_of_largest_project, 2) }}</strong>
-                                                                                                </p>
-                                                                                                <p>Full Time
-                                                                                                    Employees<b>:
-                                                                                                        {{ $generalLiability->full_time }}
-                                                                                                        Employee/s</b>
-                                                                                                </p>
-                                                                                                <p>Part Time
-                                                                                                    Employees<b>:
-                                                                                                        {{ $generalLiability->part_time }}
-                                                                                                        Employee/s</b>
-                                                                                                </p>
-                                                                                                <p>Payroll Amount:
-                                                                                                    <strong>${{ number_format($generalLiability->payroll_amount, 2) }}</strong>
-                                                                                                </p>
-                                                                                                <p>Are you using any
-                                                                                                    subcontractor?
-                                                                                                    <strong>{{ $generalLiability->does_using_subcontractor ? 'Yes' : 'No' }}</strong>
-                                                                                                </p>
-                                                                                                <p>Subcontractor Cost:
-                                                                                                    <strong>${{ number_format($generalLiability->subcon_cost, 2) }}</strong>
-                                                                                                </p>
-                                                                                                <p>General Liability - #
-                                                                                                    of Losses:
-                                                                                                    <strong>{{ $glNoOfLosses }}</strong>
-                                                                                                </p>
-                                                                                                @if ($generalLiability->gl_no_of_losses === '-1')
-                                                                                                    <p>Amount of Claim:
-                                                                                                        <strong>${{ number_format($generalLiability->gl_amount_of_claim, 2) }}</strong>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="esd-block-text es-p25t es-p40r es-p40l"
+                                                                                                    align="left">
+                                                                                                    <p>Annual Gross
+                                                                                                        Receipts.:
+                                                                                                        <b>${{ number_format($generalLiability->annual_gross_receipt, 2) }}</b>
                                                                                                     </p>
-                                                                                                    <p>Date of Loss:
-                                                                                                        <strong>{{ $glDateOfLoss }}</strong>
+                                                                                                    <p>Profession:
+                                                                                                        <strong>{{ $GLProfessionName }}</strong>
                                                                                                     </p>
                                                                                                     <p><br></p>
-                                                                                                @endif
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    @endif
-                                                                                    {{-- End GL Section --}}
-                                                                                    {{-- Start WC Section --}}
-                                                                                    @if ($productType === 'wc')
-                                                                                        <tr>
-                                                                                            <td class="esd-block-text es-p30t es-p35r es-p40l"
-                                                                                                align="left">
-                                                                                                <p
-                                                                                                    style="font-size: 18px;">
-                                                                                                    <strong>Worker's
-                                                                                                        Compensation
-                                                                                                        Application</strong>
-                                                                                                </p>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                        <tr>
-                                                                                            <td class="esd-block-text es-p25t es-p40r es-p40l"
-                                                                                                align="left">
-                                                                                                {{-- <p>Number of
-                                                                                                    Professions:
-                                                                                                    <strong>{{ $counter }}</strong>
-                                                                                                </p> --}}
-
-                                                                                                @if (!empty($professionsInfo))
-                                                                                                    @foreach ($professionsInfo as $professionInfo)
-                                                                                                        <p><br></p>
-                                                                                                        <p><strong>Profession
-                                                                                                                Entry
-                                                                                                                No.
-                                                                                                                {{ $professionInfo['counter'] }}</strong>
+                                                                                                    @if (!empty($GLProfessionName))
+                                                                                                        <p><strong>Additional
+                                                                                                                Questions
+                                                                                                                for
+                                                                                                                {{ $GLProfessionName }}:</strong>
                                                                                                         </p>
-                                                                                                        <p>Profession:
-                                                                                                            <b>{{ $professionInfo['professionName'] ?? '' }}</b>
-                                                                                                        </p>
-                                                                                                        <p>Annual
-                                                                                                            Payroll:
-                                                                                                            <strong>${{ number_format($professionInfo['annual_payroll'], 2) }}</strong>
-                                                                                                        </p>
-                                                                                                        <p><br></p>
-                                                                                                    @endforeach
-                                                                                                @endif
-
-                                                                                                <p><br></p>
-                                                                                                <p>Gross Receipt:
-                                                                                                    <strong>${{ number_format($workersCompensation->gross_receipt, 2) }}</strong>
-                                                                                                </p>
-                                                                                                <p>Do you hire
-                                                                                                    subcontractor.:
-                                                                                                    <b>{{ $workersCompensation->does_hire_subcontractor ? 'Yes' : 'No' }}</b>
-                                                                                                </p>
-                                                                                                @if ($workersCompensation->does_hire_subcontractor)
+                                                                                                        @foreach ($glAdditionalQuestions as $index => $glAdditionalQuestion)
+                                                                                                            <p>{{ $glAdditionalQuestion['questionLabels'] }}
+                                                                                                                <strong>{{ $glAdditionalQuestion['questionAnswers'] }}</strong>
+                                                                                                                @if ($glAdditionalQuestion['questionAnswers'])
+                                                                                                                    <strong>{{ $glAdditionalQuestion['questionAnswers'] ? 'Yes' : 'No' }}</strong>
+                                                                                                                @endif
+                                                                                                            </p>
+                                                                                                        @endforeach
+                                                                                                    @endif
+                                                                                                    <p>Residential:
+                                                                                                        <b>{{ $generalLiability->residential }}%</b>
+                                                                                                    </p>
+                                                                                                    <p>Commercial:
+                                                                                                        <strong>{{ $generalLiability->commercial }}%</strong>
+                                                                                                    </p>
+                                                                                                    <p>New Construction:
+                                                                                                        <strong>{{ $generalLiability->new_construction }}%</strong>
+                                                                                                    </p>
+                                                                                                    <p>Repair / Remodel:
+                                                                                                        <b>{{ $generalLiability->repair_remodel }}%</b>
+                                                                                                    </p>
+                                                                                                    <p>Detailed
+                                                                                                        Description
+                                                                                                        of
+                                                                                                        Operations:</p>
+                                                                                                    <p><strong>{!! $generalLiability->detailed_descops !!}</strong>
+                                                                                                    </p>
+                                                                                                    <p><br></p>
+                                                                                                    <p>Multiple State
+                                                                                                        Work?:
+                                                                                                        <strong>{{ $generalLiability->multiple_state_work ? 'Yes' : 'No' }}</strong>
+                                                                                                    </p>
+                                                                                                    @if (!empty($multipleStateWorks))
+                                                                                                        @foreach ($multipleStateWorks as $stateWork)
+                                                                                                            <p><strong>State
+                                                                                                                    Work
+                                                                                                                    Entry
+                                                                                                                    No.
+                                                                                                                    {{ $stateWork['counter'] }}</strong>
+                                                                                                            </p>
+                                                                                                            <p>State:
+                                                                                                                <strong>{{ $stateWork['state'] }}</strong>
+                                                                                                            </p>
+                                                                                                            <p>% Percentage:
+                                                                                                                <strong>{{ $stateWork['percentage'] }}%</strong>
+                                                                                                            </p>
+                                                                                                            <p><br></p>
+                                                                                                        @endforeach
+                                                                                                    @endif
+                                                                                                    <p>Cost of the
+                                                                                                        Largest
+                                                                                                        Project in the
+                                                                                                        past
+                                                                                                        5
+                                                                                                        years:
+                                                                                                        <strong>${{ number_format($generalLiability->cost_of_largest_project, 2) }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Full Time
+                                                                                                        Employees<b>:
+                                                                                                            {{ $generalLiability->full_time }}
+                                                                                                            Employee/s</b>
+                                                                                                    </p>
+                                                                                                    <p>Part Time
+                                                                                                        Employees<b>:
+                                                                                                            {{ $generalLiability->part_time }}
+                                                                                                            Employee/s</b>
+                                                                                                    </p>
+                                                                                                    <p>Payroll Amount:
+                                                                                                        <strong>${{ number_format($generalLiability->payroll_amount, 2) }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Are you using any
+                                                                                                        subcontractor?
+                                                                                                        <strong>{{ $generalLiability->does_using_subcontractor ? 'Yes' : 'No' }}</strong>
+                                                                                                    </p>
                                                                                                     <p>Subcontractor
                                                                                                         Cost:
-                                                                                                        <strong>${{ number_format($workersCompensation->subcontractor_cost_in_year, 2) }}</strong>
+                                                                                                        <strong>${{ number_format($generalLiability->subcon_cost, 2) }}</strong>
                                                                                                     </p>
-                                                                                                @endif
-                                                                                                <p>Number of
-                                                                                                    Employees<b>:
+                                                                                                    <p>General Liability
+                                                                                                        - #
+                                                                                                        of Losses:
+                                                                                                        <strong>{{ $glNoOfLosses }}</strong>
+                                                                                                    </p>
+                                                                                                    @if ($generalLiability->gl_no_of_losses === '-1')
+                                                                                                        <p>Amount of
+                                                                                                            Claim:
+                                                                                                            <strong>${{ number_format($generalLiability->gl_amount_of_claim, 2) }}</strong>
+                                                                                                        </p>
+                                                                                                        <p>Date of Loss:
+                                                                                                            <strong>{{ $glDateOfLoss }}</strong>
+                                                                                                        </p>
+                                                                                                        <p><br></p>
+                                                                                                    @endif
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        @endif
+                                                                                        {{-- End GL Section --}}
+                                                                                        {{-- Start WC Section --}}
+                                                                                        @if ($productType === 'wc')
+                                                                                            <tr>
+                                                                                                <td class="esd-block-text es-p30t es-p35r es-p40l"
+                                                                                                    align="left">
+                                                                                                    <p
+                                                                                                        style="font-size: 18px;">
+                                                                                                        <strong>Worker's
+                                                                                                            Compensation
+                                                                                                            Application</strong>
+                                                                                                    </p>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="esd-block-text es-p25t es-p40r es-p40l"
+                                                                                                    align="left">
+                                                                                                    <p>Number of
+                                                                                                    Total Employees<b>:
                                                                                                         {{ $workersCompensation->number_of_employee }}</b>
                                                                                                 </p>
-                                                                                                <p><br></p>
-                                                                                                <p><strong>Owner's
-                                                                                                        Information</strong>
-                                                                                                </p>
-                                                                                                <p>Owner's Name:
-                                                                                                    <strong>{{ $wcOwnersInfo->owners_name }}</strong>
-                                                                                                </p>
-                                                                                                <p>Title /
-                                                                                                    Relationship:
-                                                                                                    <strong>{{ $wcOwnersInfo->title_relationship }}</strong>
-                                                                                                </p>
-                                                                                                <p>Ownership:
-                                                                                                    <strong>{{ $wcOwnersInfo->ownership_percentage }}%</strong>
-                                                                                                </p>
-                                                                                                <p>Excluded /
-                                                                                                    Included:
-                                                                                                    <strong>{{ $wcOwnersInfo->excluded_or_included }}</strong>
-                                                                                                </p>
-                                                                                                <p>SSN:
-                                                                                                    <strong>{{ $wcOwnersInfo->ssn }}</strong>
-                                                                                                </p>
-                                                                                                <p>FEIN:
-                                                                                                    <strong>{{ $wcOwnersInfo->fein }}</strong>
-                                                                                                </p>
-                                                                                                <p>Date of
-                                                                                                    Birth:
-                                                                                                    <strong>{{ $ownersDobFormatted }}</strong>
-                                                                                                </p>
-                                                                                                @if (!empty($ownersInfo))
-                                                                                                    @foreach ($ownersInfo as $ownerInfo)
-                                                                                                        <p><br></p>
-                                                                                                        <p><strong>Owner's
-                                                                                                                Information</strong>
+
+                                                                                                    @if (!empty($professionsInfo))
+                                                                                                        @foreach ($professionsInfo as $professionInfo)
+                                                                                                            <p><br></p>
+                                                                                                            <p><strong>Profession
+                                                                                                                    Entry
+                                                                                                                    No.
+                                                                                                                    {{ $professionInfo['counter'] }}</strong>
+                                                                                                            </p>
+                                                                                                            <p>Profession:
+                                                                                                                <b>{{ $professionInfo['professionName'] ?? '' }}</b>
+                                                                                                            </p>
+                                                                                                            <p>Annual
+                                                                                                                Payroll:
+                                                                                                                <strong>${{ number_format($professionInfo['annual_payroll'], 2) }}</strong>
+                                                                                                            </p>
+                                                                                                            <p>Number of
+                                                                                                                Employee/s
+                                                                                                                under
+                                                                                                                this
+                                                                                                                profession:
+                                                                                                                <strong>{{ $professionInfo['num_of_employee_under_same_profession'] }}</strong>
+                                                                                                            </p>
+                                                                                                            <p><br></p>
+                                                                                                        @endforeach
+                                                                                                    @endif
+
+                                                                                                    <p><br></p>
+                                                                                                    <p>Gross Receipt:
+                                                                                                        <strong>${{ number_format($workersCompensation->gross_receipt, 2) }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Do you hire
+                                                                                                        subcontractor.:
+                                                                                                        <b>{{ $workersCompensation->does_hire_subcontractor ? 'Yes' : 'No' }}</b>
+                                                                                                    </p>
+                                                                                                    @if ($workersCompensation->does_hire_subcontractor)
+                                                                                                        <p>Subcontractor
+                                                                                                            Cost:
+                                                                                                            <strong>${{ number_format($workersCompensation->subcontractor_cost_in_year, 2) }}</strong>
                                                                                                         </p>
-                                                                                                        <p>Owner's Name:
-                                                                                                            <strong>{{ $ownerInfo['owners_name'] }}</strong>
-                                                                                                        </p>
-                                                                                                        <p>Title /
-                                                                                                            Relationship:
-                                                                                                            <strong>{{ $ownerInfo['title_relationship'] }}</strong>
-                                                                                                        </p>
-                                                                                                        <p>Ownership:
-                                                                                                            <strong>{{ $ownerInfo['ownership_perc'] }}%</strong>
-                                                                                                        </p>
-                                                                                                        <p>Excluded /
-                                                                                                            Included:
-                                                                                                            <strong>{{ $ownerInfo['excluded_included'] }}</strong>
-                                                                                                        </p>
-                                                                                                        <p>SSN:
-                                                                                                            <strong>{{ $ownerInfo['ssn'] }}</strong>
-                                                                                                        </p>
-                                                                                                        <p>FEIN:
-                                                                                                            <strong>{{ $ownerInfo['fein'] }}</strong>
-                                                                                                        </p>
-                                                                                                        <p>Date of
-                                                                                                            Birth:
-                                                                                                            <strong>{{ $ownersDobFormatted }}</strong>
-                                                                                                        </p>
-                                                                                                        <p><br></p>
-                                                                                                    @endforeach
-                                                                                                @endif
-                                                                                                <p><br></p>
-                                                                                                <p>Worker's
-                                                                                                    Compensation
-                                                                                                    - # of
-                                                                                                    Losses:
-                                                                                                    <strong>{{ $wcNoOfLosses }}</strong>
-                                                                                                </p>
-                                                                                                @if ($workersCompensation->wc_no_of_losses === '-1')
+                                                                                                    @endif
+
+                                                                                                    <p><br></p>
+                                                                                                    <p><strong>Owner's
+                                                                                                            Information</strong>
+                                                                                                    </p>
+                                                                                                    <p>Owner's Name:
+                                                                                                        <strong>{{ $wcOwnersInfo->owners_name }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Title /
+                                                                                                        Relationship:
+                                                                                                        <strong>{{ $wcOwnersInfo->title_relationship }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Ownership:
+                                                                                                        <strong>{{ $wcOwnersInfo->ownership_percentage }}%</strong>
+                                                                                                    </p>
+                                                                                                    <p>Excluded /
+                                                                                                        Included:
+                                                                                                        <strong>{{ $wcOwnersInfo->excluded_or_included }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>SSN:
+                                                                                                        <strong>{{ $wcOwnersInfo->ssn }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>FEIN:
+                                                                                                        <strong>{{ $wcOwnersInfo->fein }}</strong>
+                                                                                                    </p>
+                                                                                                    <p>Date of
+                                                                                                        Birth:
+                                                                                                        <strong>{{ $ownersDobFormatted }}</strong>
+                                                                                                    </p>
+                                                                                                    @if (!empty($ownersInfo))
+                                                                                                        @foreach ($ownersInfo as $ownerInfo)
+                                                                                                            <p><br>
+                                                                                                            </p>
+                                                                                                            <p><strong>Owner's
+                                                                                                                    Information</strong>
+                                                                                                            </p>
+                                                                                                            <p>Owner's
+                                                                                                                Name:
+                                                                                                                <strong>{{ $ownerInfo['owners_name'] }}</strong>
+                                                                                                            </p>
+                                                                                                            <p>Title
+                                                                                                                /
+                                                                                                                Relationship:
+                                                                                                                <strong>{{ $ownerInfo['title_relationship'] }}</strong>
+                                                                                                            </p>
+                                                                                                            <p>Ownership:
+                                                                                                                <strong>{{ $ownerInfo['ownership_perc'] }}%</strong>
+                                                                                                            </p>
+                                                                                                            <p>Excluded
+                                                                                                                /
+                                                                                                                Included:
+                                                                                                                <strong>{{ $ownerInfo['excluded_included'] }}</strong>
+                                                                                                            </p>
+                                                                                                            <p>SSN:
+                                                                                                                <strong>{{ $ownerInfo['ssn'] }}</strong>
+                                                                                                            </p>
+                                                                                                            <p>FEIN:
+                                                                                                                <strong>{{ $ownerInfo['fein'] }}</strong>
+                                                                                                            </p>
+                                                                                                            <p>Date
+                                                                                                                of
+                                                                                                                Birth:
+                                                                                                                <strong>{{ $ownersDobFormatted }}</strong>
+                                                                                                            </p>
+                                                                                                            <p><br>
+                                                                                                            </p>
+                                                                                                        @endforeach
+                                                                                                    @endif
+                                                                                                    <p><br></p>
                                                                                                     <p>Worker's
                                                                                                         Compensation
-                                                                                                        - Amount of
-                                                                                                        Claim:
-                                                                                                        <strong>${{ number_format($workersCompensation->wc_amount_of_claim, 2) }}</strong>
+                                                                                                        - # of
+                                                                                                        Losses:
+                                                                                                        <strong>{{ $wcNoOfLosses }}</strong>
                                                                                                     </p>
-                                                                                                    <p>Worker's
-                                                                                                        Compensation
-                                                                                                        - Date of
-                                                                                                        Loss:
-                                                                                                        <strong>{{ $wcDateOfLoss }}</strong>
-                                                                                                    </p>
-                                                                                                @endif
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    @endif
-                                                                                    {{-- End WC Section --}}
+                                                                                                    @if ($workersCompensation->wc_no_of_losses === '-1')
+                                                                                                        <p>Worker's
+                                                                                                            Compensation
+                                                                                                            - Amount
+                                                                                                            of
+                                                                                                            Claim:
+                                                                                                            <strong>${{ number_format($workersCompensation->wc_amount_of_claim, 2) }}</strong>
+                                                                                                        </p>
+                                                                                                        <p>Worker's
+                                                                                                            Compensation
+                                                                                                            - Date
+                                                                                                            of
+                                                                                                            Loss:
+                                                                                                            <strong>{{ $wcDateOfLoss }}</strong>
+                                                                                                        </p>
+                                                                                                    @endif
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        @endif
+                                                                                        {{-- End WC Section --}}
                                                                                 </tbody>
                                                                             </table>
                                                                         </td>
