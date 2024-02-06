@@ -10,16 +10,41 @@
         });
     });
 
-    let observer = new MutationObserver(() => {
-        $(
-            "#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea"
-        )
-            .not("#fax_number, #personal_website, #bond_owners_spouse_ssn")
-            .prop("required", true);
+    let observer = new MutationObserver((mutationsList, observer) => {
+        for (let mutation of mutationsList) {
+            if (mutation.type === "childList") {
+                // Check if the '.trades_performed' element exists within the added nodes
+                mutation.addedNodes.forEach((node) => {
+                    // Ensure node is an element
+                    if (node.nodeType === 1) {
+                        // Check if the node itself matches or if it contains the select element
+                        if (
+                            node.matches(".polopt") ||
+                            node.querySelector(".polopt")
+                        ) {
+                            // Initialize select2 for the '.trades_performed' element
+                            $(".polopt").select2({
+                                placeholder: "Select here..",
+                                width: "100%",
+                            });
+
+                            // Additional logic to set the element as required
+                            $(
+                                "#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea"
+                            )
+                                .not(
+                                    "#fax_number, #personal_website, #bond_owners_spouse_ssn"
+                                )
+                                .prop("required", true);
+                        }
+                    }
+                });
+            }
+        }
     });
 
     // Observe the entire document for changes
-    observer.observe(document, {
+    observer.observe(document.body, {
         childList: true, // Observes direct children
         subtree: true, // Observes all descendants
     });
@@ -85,7 +110,7 @@
     const percentageMaxLength = 3;
     $(document).on(
         "input",
-        "#residential_percentage, #commercial_percentage, #new_construction_percentage, #repair_remodel_percentage, #gl_residential, #gl_commercial, #gl_new_construction, #gl_repair_remodel",
+        "#residential_percentage, #commercial_percentage, #new_construction_percentage, #repair_remodel_percentage, #gl_residential, #gl_commercial, #gl_new_construction, #gl_repair_remodel, #pol_1_subcon_work, #pol_1_total_subcon_work, #pol_2_subcon_work, #pol_2_total_subcon_work, #pol_3_subcon_work, #pol_3_total_subcon_work",
         function () {
             if ($(this).val().length > percentageMaxLength) {
                 $(this).val($(this).val().substring(0, percentageMaxLength));
@@ -422,9 +447,7 @@
                         : "";
                     var contractor_license = $("#contractor_license").val();
                     var contractor_license_if_set = contractor_license
-                        ? "<p>Contractor License No.: <strong>" +
-                          contractor_license +
-                          "</strong></p>"
+                        ? "<strong>" + contractor_license + "</strong>"
                         : "";
 
                     var personalInformation = {
@@ -833,12 +856,6 @@
                     ).text();
                     var wc_amt_of_claims = $("#wc_amt_of_claims").val();
                     var wc_date_of_loss = $("#wc_date_of_loss").val();
-
-                    var wc_no_of_losses = $(
-                        "#wc_no_of_losses option:selected"
-                    ).text();
-                    var wc_amt_of_claims = "";
-                    var wc_date_of_loss = "";
 
                     if (wc_no_of_losses === "Have Losses") {
                         wc_amt_of_claims = $("#wc_amt_of_claims").val();
@@ -1734,80 +1751,121 @@
                             eo_hr_sub_q4,
                     };
 
-                    // Pollution Step 1 & 2
-                    var pollution_profession = $(
-                        "#pollution_profession option:selected"
-                    ).text();
-                    var pollution_residential = $(
-                        "#pollution_residential option:selected"
-                    ).text();
-                    var pollution_commercial = $(
-                        "#pollution_commercial option:selected"
-                    ).text();
-                    var pollution_new_construction = $(
-                        "#pollution_new_construction option:selected"
-                    ).text();
-                    var pollution_repair_remodel = $(
-                        "#pollution_repair_remodel option:selected"
-                    ).text();
-                    var pollution_descops = $("#pollution_descops").val();
-                    var pollution_cost_proj_5years = $(
-                        "#pollution_cost_proj_5years"
+                    // Pollution Step 1 & 3
+                    var pol_1_proj_rev = $("#pol_1_proj_rev").val();
+                    var pol_1_subcon_work = $("#pol_1_subcon_work").val();
+                    var pol_1_total_proj_rev = $("#pol_1_total_proj_rev").val();
+                    var pol_1_total_subcon_work = $(
+                        "#pol_1_total_subcon_work"
                     ).val();
-                    var pollution_annual_gross = $(
-                        "#pollution_annual_gross"
+
+                    var pol_2_proj_rev = $("#pol_2_proj_rev").val();
+                    var pol_2_subcon_work = $("#pol_2_subcon_work").val();
+                    var pol_2_total_proj_rev = $("#pol_2_total_proj_rev").val();
+                    var pol_2_total_subcon_work = $(
+                        "#pol_2_total_subcon_work"
                     ).val();
-                    var pollution_no_field_emp = $(
-                        "#pollution_no_field_emp"
+
+                    var pol_3_proj_rev = $("#pol_3_proj_rev").val();
+                    var pol_3_subcon_work = $("#pol_3_subcon_work").val();
+                    var pol_3_total_proj_rev = $("#pol_3_total_proj_rev").val();
+                    var pol_3_total_subcon_work = $(
+                        "#pol_3_total_subcon_work"
                     ).val();
-                    var pollution_payroll_amt = $(
-                        "#pollution_payroll_amt"
+
+                    var pollution_no_of_losses = $(
+                        "#pollution_no_of_losses option:selected"
+                    ).text();
+                    var pollution_amt_of_claims = $(
+                        "#pollution_amt_of_claims"
                     ).val();
-                    var pollution_using_subcon = $(
-                        "#pollution_using_subcon"
+                    var pollution_date_of_loss = $(
+                        "#pollution_date_of_loss"
                     ).val();
-                    var pollution_using_subcon_if_set = "";
-                    if (pollution_using_subcon === "Yes") {
-                        var pollution_subcon_cost = $(
-                            "#pollution_subcon_cost"
+
+                    if (pollution_no_of_losses === "Have Losses") {
+                        pollution_amt_of_claims = $(
+                            "#pollution_amt_of_claims"
                         ).val();
-                        var pollution_using_subcon_if_set =
-                            pollution_subcon_cost;
-                    } else {
-                        var pollution_using_subcon_if_set = "";
-                    }
-                    var pollution_no_losses_5years = $(
-                        "#pollution_no_losses_5years"
-                    ).val();
-                    if (pollution_no_losses_5years >= 0) {
-                        var pollution_explain_losses = $(
-                            "#pollution_explain_losses"
+                        pollution_date_of_loss = $(
+                            "#pollution_date_of_loss"
                         ).val();
-                        var pollution_explain_losses_if_set =
-                            pollution_explain_losses;
                     } else {
-                        var pollution_explain_losses_if_set = "";
+                        pollution_amt_of_claims = "";
+                        pollution_date_of_loss = "";
                     }
 
-                    var pollutionLiabilityInformation = {
-                        Profession: pollution_profession,
-                        Residential: pollution_residential,
-                        Commercial: pollution_commercial,
-                        "New Construction": pollution_new_construction,
-                        "Repair/Remodel": pollution_repair_remodel,
-                        "Detailed Description of Operations": pollution_descops,
-                        "Cost of the Largest Project in the past 5 years":
-                            pollution_cost_proj_5years,
-                        "Annual Gross Receipts": pollution_annual_gross,
-                        "Number of Field Employees": pollution_no_field_emp,
-                        "Payroll Amount": pollution_payroll_amt,
-                        "Are you using any subcontractor":
-                            pollution_using_subcon,
-                        "Subcontractor Cost": pollution_using_subcon_if_set,
-                        "# of Losses for the Past 5 Years":
-                            pollution_no_losses_5years,
-                        "Explain Losses (Please include loss amount)":
-                            pollution_explain_losses_if_set,
+                    var polopt1_id = $("#polopt1_id").val();
+                    if (polopt1_id.length > 0) {
+                        var selectedOptionsText1 = $(
+                            "#polopt1_id option:selected"
+                        )
+                            .map(function () {
+                                return $(this).text();
+                            })
+                            .get()
+                            .join(", ");
+                    }
+
+                    var polopt2_id = $("#polopt2_id").val();
+                    if (polopt2_id.length > 0) {
+                        var selectedOptionsText2 = $(
+                            "#polopt2_id option:selected"
+                        )
+                            .map(function () {
+                                return $(this).text();
+                            })
+                            .get()
+                            .join(", ");
+                    }
+
+                    var polopt3_id = $("#polopt3_id").val();
+                    if (polopt3_id.length > 0) {
+                        var selectedOptionsText3 = $(
+                            "#polopt3_id option:selected"
+                        )
+                            .map(function () {
+                                return $(this).text();
+                            })
+                            .get()
+                            .join(", ");
+                    }
+
+                    var pollutionLiabilityInformation1 = {
+                        "Env. Contracting Srvcs. Project Revenues $":
+                            pol_1_proj_rev,
+                        "% of Subcontracted Work": pol_1_subcon_work,
+                        "Total Projected Revenues $": pol_1_total_proj_rev,
+                        "Total % of Subcontracted Work":
+                            pol_1_total_subcon_work,
+                        "Selected Options": selectedOptionsText1,
+                    };
+
+                    var pollutionLiabilityInformation2 = {
+                        "Env. Consulting Srvcs. Projected Revenues $":
+                            pol_2_proj_rev,
+                        "% of Subcontracted Work": pol_2_subcon_work,
+                        "Total Projected Revenues $": pol_2_total_proj_rev,
+                        "Total % of Subcontracted Work":
+                            pol_2_total_subcon_work,
+                        "Selected Options": selectedOptionsText2,
+                    };
+
+                    var pollutionLiabilityInformation3 = {
+                        "Non-Environmental Srvcs. Projected Revenues $":
+                            pol_3_proj_rev,
+                        "% of Subcontracted Work": pol_3_subcon_work,
+                        "Total Projected Revenues $": pol_3_total_proj_rev,
+                        "Total % of Subcontracted Work":
+                            pol_3_total_subcon_work,
+                        "Selected Options": selectedOptionsText3,
+                    };
+
+                    var pollutionLiabilityInformation4 = {
+                        "Pollution Liability - # of Losses":
+                            pollution_no_of_losses,
+                        "Amount of Claim": pollution_amt_of_claims,
+                        "Date of Loss": pollution_date_of_loss,
                     };
 
                     // EPLI Step 1 - 6
@@ -1858,7 +1916,7 @@
                     var epli_non_us_base_emp = $("#epli_non_us_base_emp").val();
                     var epli_total_employees = $("#epli_total_employees").val();
 
-                    // EPLI Stepo 3
+                    // EPLI Step 3
                     var epli_located_at_ca = $("#epli_located_at_ca").val();
                     var epli_located_at_ga = $("#epli_located_at_ga").val();
                     var epli_located_at_tx = $("#epli_located_at_tx").val();
@@ -2469,9 +2527,49 @@
                                             "<p>Does have Losses? <strong>" +
                                             value +
                                             "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Pollution Liability - # of Losses"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Pollution Liability Application - Loss Information</strong></h6>";
+                                        htmlString +=
+                                            "<p>Does have Losses? <strong>" +
+                                            value +
+                                            "</strong></p>";
                                     } else if (info === "Annual Payroll") {
                                         htmlString +=
                                             "<p>Annual Payroll: <strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Env. Contracting Srvcs. Project Revenues $"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Environmental Contracting Services: </strong></h6>";
+                                        htmlString +=
+                                            "<p>Projected Revenues $:<strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Env. Consulting Srvcs. Projected Revenues $"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Environmental Consulting Services: </strong></h6>";
+                                        htmlString +=
+                                            "<p>Projected Revenues $:<strong>" +
+                                            value +
+                                            "</strong></p>";
+                                    } else if (
+                                        info ===
+                                        "Non-Environmental Srvcs. Projected Revenues $"
+                                    ) {
+                                        htmlString +=
+                                            "<h6><strong>Non-Environmental Services: </strong></h6>";
+                                        htmlString +=
+                                            "<p>Projected Revenues $:<strong>" +
                                             value +
                                             "</strong></p>";
                                     } else if (info === "Profession") {
@@ -2522,8 +2620,6 @@
                         $(targetDiv).html(htmlString);
                     }
 
-                    // function
-
                     generateAllHTML("#personal_information_details", [
                         personalInformation,
                     ]);
@@ -2537,11 +2633,9 @@
                         workersCompensationInformation3,
                         ownersInfo,
                     ]);
-
                     generateAllHTML("#auto_other_details", [
                         commercialAutoInformation,
                     ]);
-
                     generateAllHTML("#license_bond_details", [
                         contractorLicenseBondInformation,
                     ]);
@@ -2561,8 +2655,17 @@
                     generateAllHTML("#error_emissions_details", [
                         errorsEmissionInformation,
                     ]);
-                    generateAllHTML("#pollution_liability_details", [
-                        pollutionLiabilityInformation,
+                    generateAllHTML("#pollution_liability_details1", [
+                        pollutionLiabilityInformation1,
+                    ]);
+                    generateAllHTML("#pollution_liability_details2", [
+                        pollutionLiabilityInformation2,
+                    ]);
+                    generateAllHTML("#pollution_liability_details3", [
+                        pollutionLiabilityInformation3,
+                    ]);
+                    generateAllHTML("#pollution_liability_details4", [
+                        pollutionLiabilityInformation4,
                     ]);
                     generateAllHTML("#epli_liability_details", [
                         epliInformation,
@@ -2591,6 +2694,7 @@
 
                             var commonData = {};
                             var productData = {};
+                            // var polOptData = {};
                             var productKeyData = [];
 
                             // Gather data for commonData from #personal_information_step and #about_your_company_step
@@ -2653,6 +2757,17 @@
                                 }
                             );
 
+                            // Pollution OPT
+                            // polOptData.polopt1 = $(
+                            //     'select[name="polopt1[]"]'
+                            // ).val();
+                            // polOptData.polopt2 = $(
+                            //     'select[name="polopt2[]"]'
+                            // ).val();
+                            // polOptData.polopt3 = $(
+                            //     'select[name="polopt3[]"]'
+                            // ).val();
+
                             // Collecting UTM data from hidden fields
                             commonData.utm_source = $(
                                 'input[name="utm_source"]'
@@ -2689,6 +2804,7 @@
                                     common: commonData,
                                     products: productData,
                                     productKeyData: productKeyData,
+                                    // polOptData: polOptData,
                                 },
                             })
                                 .then((response) => {
@@ -2987,24 +3103,22 @@
 
             case "pollution":
                 $(
-                    "#pollution_step_1, #pollution_step_2, #pollutionDetailsContainer"
+                    "#pollution_step_1, #pollution_step_2, #pollution_step_3, #pollution_step_4, #pollution_step_5, #pollution_step_6, #pollution_step_7, #pollutionDetailsContainer"
                 )
                     .removeClass("step wizard-step")
                     .addClass("hidden");
-                $("#pollution_step_1, #pollution_step_2").find("input").val("");
-                $("#pollution_step_1, #pollution_step_2")
+                $(
+                    "#pollution_step_1, #pollution_step_2, #pollution_step_3, #pollution_step_4, #pollution_step_5, #pollution_step_6, #pollution_step_7"
+                )
+                    .find("input")
+                    .val("");
+                $(
+                    "#pollution_step_1, #pollution_step_2, #pollution_step_3, #pollution_step_4, #pollution_step_5, #pollution_step_6, #pollution_step_7"
+                )
                     .find("select")
                     .val("");
                 // textarea
-                $("#pollution_step_1, #pollution_descops").val("");
-                $("#pollution_step_2, #pollution_explain_losses").val("");
                 // ajax container
-                $("#pollution_step_2")
-                    .find("#pollution_subcon_cost_container")
-                    .val("");
-                $("#pollution_step_2")
-                    .find("#pollution_explain_losses_container")
-                    .val("");
                 break;
 
             case "epli":
@@ -3137,7 +3251,7 @@
                 break;
             case "pollution":
                 $(
-                    "#pollution_step_1, #pollution_step_2, #pollutionDetailsContainer"
+                    "#pollution_step_1, #pollution_step_2, #pollution_step_3, #pollution_step_4, #pollution_step_5, #pollution_step_6, #pollution_step_7, #pollutionDetailsContainer"
                 )
                     .addClass("step wizard-step")
                     .removeClass("hidden");
@@ -3704,6 +3818,7 @@
         bop: false,
         comm_prop: false,
         eo: false,
+        pollution: false,
         epli: false,
         cyber: false,
         instfloat: false,
@@ -3797,6 +3912,16 @@
                 loadStepContent("eo_step_5", isChecked);
                 // Additional logic specific to 'bond' if needed
                 break;
+            case "pollution":
+                loadStepContent("pollution_step_1", isChecked);
+                loadStepContent("pollution_step_2", isChecked);
+                loadStepContent("pollution_step_3", isChecked);
+                loadStepContent("pollution_step_4", isChecked);
+                loadStepContent("pollution_step_5", isChecked);
+                loadStepContent("pollution_step_6", isChecked);
+                loadStepContent("pollution_step_7", isChecked);
+                // Additional logic specific to 'bond' if needed
+                break;
             case "epli":
                 loadStepContent("epli_step_1", isChecked);
                 loadStepContent("epli_step_2", isChecked);
@@ -3838,470 +3963,6 @@
         // Handle the change for the specific checkbox
         handleCheckboxChange(checkboxValue, isChecked);
     });
-
-    // function getCheckboxValue() {
-    //     var glChecked = false;
-    //     var wcChecked = false;
-    //     var autoChecked = false;
-    //     var bondChecked = false;
-    //     var excessChecked = false;
-    //     var toolsChecked = false;
-    //     var brChecked = false;
-    //     var bopChecked = false;
-    //     var propertyChecked = false;
-    //     var eoChecked = false;
-    //     var epliChecked = false;
-    //     var cyberChecked = false;
-    //     var instFloatChecked = false;
-
-    //     $('input[name="question_1[]"]').change(function () {
-    //         var checkboxValue = $(this).val();
-    //         if ($(this).is(":checked")) {
-    //             // console.log(checkboxValue);
-    //             localStorage.setItem(checkboxValue, "checked");
-    //             if (checkboxValue === "gl") {
-    //                 glChecked = true;
-    //             } else if (checkboxValue === "wc") {
-    //                 wcChecked = true;
-    //             } else if (checkboxValue === "auto") {
-    //                 autoChecked = true;
-    //             } else if (checkboxValue === "bond") {
-    //                 bondChecked = true;
-    //             } else if (checkboxValue === "excess") {
-    //                 excessChecked = true;
-    //             } else if (checkboxValue === "tools") {
-    //                 toolsChecked = true;
-    //             } else if (checkboxValue === "br") {
-    //                 brChecked = true;
-    //             } else if (checkboxValue === "bop") {
-    //                 bopChecked = true;
-    //             } else if (checkboxValue === "comm_prop") {
-    //                 propertyChecked = true;
-    //             } else if (checkboxValue === "eo") {
-    //                 eoChecked = true;
-    //             } else if (checkboxValue === "epli") {
-    //                 epliChecked = true;
-    //             } else if (checkboxValue === "cyber") {
-    //                 cyberChecked = true;
-    //             } else if (checkboxValue === "instfloat") {
-    //                 instFloatChecked = true;
-    //             }
-    //         } else {
-    //             localStorage.setItem(checkboxValue, "unchecked");
-    //             if (checkboxValue === "gl") {
-    //                 glChecked = false;
-    //             } else if (checkboxValue === "wc") {
-    //                 wcChecked = false;
-    //             } else if (checkboxValue === "auto") {
-    //                 autoChecked = false;
-    //             } else if (checkboxValue === "bond") {
-    //                 bondChecked = false;
-    //             } else if (checkboxValue === "excess") {
-    //                 excessChecked = false;
-    //             } else if (checkboxValue === "tools") {
-    //                 toolsChecked = false;
-    //             } else if (checkboxValue === "br") {
-    //                 brChecked = false;
-    //             } else if (checkboxValue === "bop") {
-    //                 bopChecked = false;
-    //             } else if (checkboxValue === "comm_prop") {
-    //                 propertyChecked = false;
-    //             } else if (checkboxValue === "eo") {
-    //                 eoChecked = false;
-    //             } else if (checkboxValue === "epli") {
-    //                 epliChecked = false;
-    //             } else if (checkboxValue === "cyber") {
-    //                 cyberChecked = false;
-    //             } else if (checkboxValue === "instfloat") {
-    //                 instFloatChecked = false;
-    //             }
-    //         }
-
-    //         function setName(a, b, target) {
-    //             $(`#${a}, #${b}`).change(function () {
-    //                 var firstname = $(`#${a}`).val();
-    //                 var lastname = $(`#${b}`).val();
-    //                 const fullname = firstname + " " + lastname;
-    //                 $(`#${target}`).val(fullname);
-    //             });
-    //         }
-
-    //         function setValue(selector, targetValue) {
-    //             $(selector).change(function () {
-    //                 var value = $(this).val();
-    //                 $(targetValue).val(value);
-    //             });
-    //         }
-
-    //         function setValueWithChange(selector, targetValue) {
-    //             $(selector).change(function () {
-    //                 var value = $(this).val();
-    //                 $(targetValue).val(value).trigger("change");
-    //             });
-    //         }
-
-    //         function setSpouseInfo(selector, targetValue) {
-    //             $(document).on("change", selector, function () {
-    //                 var value = $(this).val();
-    //                 if ($(targetValue).length > 0) {
-    //                     $(targetValue).val(value);
-    //                 }
-    //             });
-    //         }
-
-    //         if (glChecked) {
-    //             setSessionVariable("doesGLChecked", true);
-    //             $("#about_you_profession").load(
-    //                 location.href + " #about_you_profession"
-    //             );
-    //             $("#gl_step_1").load(location.href + " #gl_step_1 > *");
-    //             $("#gl_step_2").load(location.href + " #gl_step_2 > *");
-    //         } else {
-    //             unsetSessionVariable("doesGLChecked");
-    //             setSessionVariable("doesGLChecked", false);
-    //             $("#gl_step_1").load(location.href + " #gl_step_1 > *");
-    //             $("#gl_step_2").load(location.href + " #gl_step_2 > *");
-    //         }
-
-    //         if (wcChecked) {
-    //             setSessionVariable("doesWCChecked", true);
-    //             $("#wc_step_1").load(location.href + " #wc_step_1 > *");
-    //             $("#wc_step_2").load(location.href + " #wc_step_2 > *");
-    //             $("#wc_step_3").load(location.href + " #wc_step_3 > *");
-    //             setName("firstname", "lastname", "wc_name");
-    //         } else {
-    //             unsetSessionVariable("doesWCChecked");
-    //             setSessionVariable("doesWCChecked", false);
-    //             $("#wc_step_1").load(location.href + " #wc_step_1 > *");
-    //             $("#wc_step_2").load(location.href + " #wc_step_2 > *");
-    //             $("#wc_step_3").load(location.href + " #wc_step_3 > *");
-    //         }
-
-    //         if (autoChecked) {
-    //             setSessionVariable("doesAutoChecked", true);
-    //             $("#auto_step_1").load(location.href + " #auto_step_1 > *");
-    //             $("#auto_step_2").load(location.href + " #auto_step_2 > *");
-    //             $("#auto_step_3").load(location.href + " #auto_step_3 > *");
-    //             setName("firstname", "lastname", "auto_driver_full_name");
-    //         } else {
-    //             unsetSessionVariable("doesAutoChecked");
-    //             setSessionVariable("doesAutoChecked", false);
-    //             $("#auto_step_1").load(location.href + " #auto_step_1 > *");
-    //             $("#auto_step_2").load(location.href + " #auto_step_2 > *");
-    //             $("#auto_step_3").load(location.href + " #auto_step_3 > *");
-    //         }
-
-    //         if (bondChecked) {
-    //             setSessionVariable("doesBondChecked", true);
-    //             $("#bond_step_1").load(location.href + " #bond_step_1 > *");
-    //             $("#bond_step_2").load(location.href + " #bond_step_2 > *");
-    //             setName("firstname", "lastname", "bond_owners_name");
-    //             $("#contractor_license").change(function () {
-    //                 var contractorLicense = $(this).val();
-    //                 const contractorLic = contractorLicense;
-    //                 $("#bond_license_or_application_no").val(contractorLic);
-    //             });
-    //         } else {
-    //             unsetSessionVariable("doesBondChecked");
-    //             setSessionVariable("doesBondChecked", false);
-    //             $("#bond_step_1").load(location.href + " #bond_step_1 > *");
-    //             $("#bond_step_2").load(location.href + " #bond_step_2 > *");
-    //         }
-
-    //         if (excessChecked) {
-    //             setSessionVariable("doesExcessChecked", true);
-    //             $("#excess_step_1").load(location.href + " #excess_step_1 > *");
-    //             $("#excess_step_2").load(location.href + " #excess_step_2 > *");
-    //         } else {
-    //             unsetSessionVariable("doesExcessChecked");
-    //             setSessionVariable("doesExcessChecked", false);
-    //             $("#excess_step_1").load(location.href + " #excess_step_1 > *");
-    //             $("#excess_step_2").load(location.href + " #excess_step_2 > *");
-    //         }
-
-    //         if (toolsChecked) {
-    //             setSessionVariable("doesToolsChecked", true);
-    //             $("#tools_step_1").load(location.href + " #tools_step_1 > *");
-    //         } else {
-    //             unsetSessionVariable("doesToolsChecked");
-    //             setSessionVariable("doesToolsChecked", false);
-    //             $("#tools_step_1").load(location.href + " #tools_step_1 > *");
-    //         }
-
-    //         if (brChecked) {
-    //             setSessionVariable("doesBRChecked", true);
-    //             $("#br_step_1").load(location.href + " #br_step_1 > *");
-    //             $("#br_step_2").load(location.href + " #br_step_2 > *");
-    //             $("#br_step_3").load(location.href + " #br_step_3 > *");
-    //             $("#br_step_4").load(location.href + " #br_step_4 > *");
-    //         } else {
-    //             unsetSessionVariable("doesBRChecked");
-    //             setSessionVariable("doesBRChecked", false);
-    //             $("#br_step_1").load(location.href + " #br_step_1 > *");
-    //             $("#br_step_2").load(location.href + " #br_step_2 > *");
-    //             $("#br_step_3").load(location.href + " #br_step_3 > *");
-    //             $("#br_step_4").load(location.href + " #br_step_4 > *");
-    //         }
-
-    //         if (bopChecked) {
-    //             setSessionVariable("doesBOPChecked", true);
-    //             $("#bop_step_1").load(location.href + " #bop_step_1 > *");
-    //             $("#bop_step_2").load(location.href + " #bop_step_2 > *");
-    //             $("#bop_step_3").load(location.href + " #bop_step_3 > *");
-    //             $("#bop_step_4").load(location.href + " #bop_step_4 > *");
-    //         } else {
-    //             unsetSessionVariable("doesBOPChecked");
-    //             setSessionVariable("doesBRChecked", false);
-    //             $("#bop_step_1").load(location.href + " #bop_step_1 > *");
-    //             $("#bop_step_2").load(location.href + " #bop_step_2 > *");
-    //             $("#bop_step_3").load(location.href + " #bop_step_3 > *");
-    //             $("#bop_step_4").load(location.href + " #bop_step_4 > *");
-    //         }
-
-    //         if (propertyChecked) {
-    //             setSessionVariable("doesPropertyChecked", true);
-    //             $("#comm_prop_step_1").load(
-    //                 location.href + " #comm_prop_step_1 > *"
-    //             );
-    //             $("#comm_prop_step_2").load(
-    //                 location.href + " #comm_prop_step_2 > *"
-    //             );
-    //             $("#comm_prop_step_3").load(
-    //                 location.href + " #comm_prop_step_3 > *"
-    //             );
-    //             $("#comm_prop_step_4").load(
-    //                 location.href + " #comm_prop_step_4 > *"
-    //             );
-    //         } else {
-    //             unsetSessionVariable("doesPropertyChecked");
-    //             setSessionVariable("doesPropertyChecked", false);
-    //             $("#comm_prop_step_1").load(
-    //                 location.href + " #comm_prop_step_1 > *"
-    //             );
-    //             $("#comm_prop_step_2").load(
-    //                 location.href + " #comm_prop_step_2 > *"
-    //             );
-    //             $("#comm_prop_step_3").load(
-    //                 location.href + " #comm_prop_step_3 > *"
-    //             );
-    //             $("#comm_prop_step_4").load(
-    //                 location.href + " #comm_prop_step_4 > *"
-    //             );
-    //         }
-
-    //         if (eoChecked) {
-    //             setSessionVariable("doesEOChecked", true);
-    //             $("#eo_step_1").load(location.href + " #eo_step_1 > *");
-    //             $("#eo_step_2").load(location.href + " #eo_step_2 > *");
-    //             $("#eo_step_3").load(location.href + " #eo_step_3 > *");
-    //             $("#eo_step_4").load(location.href + " #eo_step_4 > *");
-    //             $("#eo_step_5").load(location.href + " #eo_step_5 > *");
-    //         } else {
-    //             unsetSessionVariable("doesEOChecked");
-    //             setSessionVariable("doesEOChecked", false);
-    //             $("#eo_step_1").load(location.href + " #eo_step_1 > *");
-    //             $("#eo_step_2").load(location.href + " #eo_step_2 > *");
-    //             $("#eo_step_3").load(location.href + " #eo_step_3 > *");
-    //             $("#eo_step_4").load(location.href + " #eo_step_4 > *");
-    //             $("#eo_step_5").load(location.href + " #eo_step_5 > *");
-    //         }
-
-    //         if (epliChecked) {
-    //             setSessionVariable("doesEPLIChecked", true);
-    //             $("#epli_step_1").load(location.href + " #epli_step_1 > *");
-    //             $("#epli_step_2").load(location.href + " #epli_step_2 > *");
-    //             $("#epli_step_3").load(location.href + " #epli_step_3 > *");
-    //             $("#epli_step_4").load(location.href + " #epli_step_4 > *");
-    //             $("#epli_step_5").load(location.href + " #epli_step_5 > *");
-    //         } else {
-    //             unsetSessionVariable("doesEPLIChecked");
-    //             setSessionVariable("doesEPLIChecked", false);
-    //             $("#epli_step_1").load(location.href + " #epli_step_1 > *");
-    //             $("#epli_step_2").load(location.href + " #epli_step_2 > *");
-    //             $("#epli_step_3").load(location.href + " #epli_step_3 > *");
-    //             $("#epli_step_4").load(location.href + " #epli_step_4 > *");
-    //             $("#epli_step_5").load(location.href + " #epli_step_5 > *");
-    //         }
-
-    //         if (cyberChecked) {
-    //             setSessionVariable("doesCyberChecked", true);
-    //             $("#cyber_step_1").load(location.href + " #cyber_step_1 > *");
-    //             $("#cyber_step_2").load(location.href + " #cyber_step_2 > *");
-    //         } else {
-    //             unsetSessionVariable("doesCyberChecked");
-    //             setSessionVariable("doesCyberChecked", false);
-    //             $("#cyber_step_1").load(location.href + " #cyber_step_1 > *");
-    //             $("#cyber_step_2").load(location.href + " #cyber_step_2 > *");
-    //         }
-
-    //         if (instFloatChecked) {
-    //             setSessionVariable("doesInstFloatChecked", true);
-    //             $("#instfloat_step_1").load(
-    //                 location.href + " #instfloat_step_1 > *"
-    //             );
-    //             $("#instfloat_step_2").load(
-    //                 location.href + " #instfloat_step_2 > *"
-    //             );
-    //             $("#instfloat_step_3").load(
-    //                 location.href + " #instfloat_step_3 > *"
-    //             );
-    //             $("#instfloat_step_4").load(
-    //                 location.href + " #instfloat_step_4 > *"
-    //             );
-    //             $("#instfloat_step_5").load(
-    //                 location.href + " #instfloat_step_5 > *"
-    //             );
-    //         } else {
-    //             unsetSessionVariable("doesInstFloatChecked");
-    //             setSessionVariable("doesInstFloatChecked", false);
-    //             $("#instfloat_step_1").load(
-    //                 location.href + " #instfloat_step_1 > *"
-    //             );
-    //             $("#instfloat_step_2").load(
-    //                 location.href + " #instfloat_step_2 > *"
-    //             );
-    //             $("#instfloat_step_3").load(
-    //                 location.href + " #instfloat_step_3 > *"
-    //             );
-    //             $("#instfloat_step_4").load(
-    //                 location.href + " #instfloat_step_4 > *"
-    //             );
-    //             $("#instfloat_step_5").load(
-    //                 location.href + " #instfloat_step_5 > *"
-    //             );
-    //         }
-
-    //         if (glChecked && wcChecked) {
-    //             // setSessionVariable("doesGLandWCChecked", false);
-    //             // $("#wc_step_1").load(location.href + " #wc_step_1");
-
-    //             var glFullTimeEmp = 0;
-    //             $(document).on(
-    //                 "change",
-    //                 "#gl_full_time_employees",
-    //                 function () {
-    //                     glFullTimeEmp = parseInt($(this).val());
-    //                     updateTotalEmployees();
-    //                 }
-    //             );
-
-    //             var glPartTimeEmp = 0;
-    //             $(document).on(
-    //                 "change",
-    //                 "#gl_part_time_employees",
-    //                 function () {
-    //                     glPartTimeEmp = parseInt($(this).val());
-    //                     updateTotalEmployees();
-    //                 }
-    //             );
-
-    //             function updateTotalEmployees() {
-    //                 const sumOfNumOfEmp = glFullTimeEmp + glPartTimeEmp;
-    //                 $("#wc_num_of_empl").val(sumOfNumOfEmp);
-    //                 numOfEmployees = sumOfNumOfEmp;
-    //             }
-
-    //             $(document).on("change", "#gl_annual_gross", function () {
-    //                 var glAnnualGrossReceipt = $(this).val();
-    //                 const annualGrossReceipt = glAnnualGrossReceipt;
-    //                 $("#wc_gross_receipt").val(annualGrossReceipt);
-    //             });
-
-    //             $(document).on("change", "#gl_using_subcon", function () {
-    //                 var glDoesUseSubcon = parseInt($(this).val());
-    //                 $("#wc_does_hire_subcon")
-    //                     .val(glDoesUseSubcon)
-    //                     .trigger("change");
-
-    //                 if (glDoesUseSubcon === 1) {
-    //                     $(document).on(
-    //                         "change",
-    //                         "#gl_subcon_cost",
-    //                         function () {
-    //                             $("#wc_subcon_cost_year").val($(this).val());
-    //                         }
-    //                     );
-    //                 }
-    //             });
-    //         } else {
-    //             // unsetSessionVariable("doesGLandWCChecked");
-    //             // setSessionVariable(true);
-    //             // $("#wc_step_1").load(location.href + " #wc_step_1");
-    //         }
-
-    //         if (wcChecked && bondChecked) {
-    //             setValue("#wc_ssn", "#bond_owners_ssn");
-    //         }
-
-    //         if (wcChecked && epliChecked) {
-    //             setValue("#wc_fein", "#epli_fein");
-    //         }
-
-    //         if (wcChecked && autoChecked) {
-    //             setValue("#wc_dob", "#auto_driver_date_of_birth");
-    //         }
-
-    //         if (wcChecked && bondChecked) {
-    //             setValue("#wc_dob", "#bond_owners_dob");
-    //         }
-
-    //         if (autoChecked && bondChecked) {
-    //             setValue("#auto_driver_date_of_birth", "#bond_owners_dob");
-    //             setValueWithChange(
-    //                 "#auto_driver_marital_status",
-    //                 "#bond_owners_civil_status"
-    //             );
-    //             setSpouseInfo(
-    //                 "#auto_driver_spouse_name",
-    //                 "#bond_owners_spouse_name"
-    //             );
-    //             setSpouseInfo(
-    //                 "#auto_driver_spouse_dob",
-    //                 "#bond_owners_spouse_dob"
-    //             );
-    //         }
-
-    //         if (bopChecked && propertyChecked) {
-    //             setValue("#bop_property_address", "#property_property_address");
-    //             setValue("#bop_val_cost_bldg", "#property_value_cost_bldg");
-    //             setValue(
-    //                 "#bop_business_property_limit",
-    //                 "#property_business_property_limit"
-    //             );
-    //             setValueWithChange(
-    //                 "#bop_bldg_construction_type",
-    //                 "#property_construction_type"
-    //             );
-    //             setValue("#bop_year_built", "#property_year_built");
-    //             setValue("#bop_no_of_stories", "#property_no_of_stories");
-    //             setValue("#bop_total_bldg_sqft", "#property_total_bldg_sqft");
-    //             setValue(
-    //                 "#bop_distance_nearest_fire_hydrant",
-    //                 "#property_distance_nearest_fire_hydrant"
-    //             );
-    //             setValue(
-    //                 "#bop_distance_nearest_fire_station",
-    //                 "#property_distance_nearest_fire_station"
-    //             );
-    //             setValue(
-    //                 "#bop_last_update_roofing_year",
-    //                 "#property_last_update_roofing_year"
-    //             );
-    //             setValue(
-    //                 "#bop_last_update_heating_year",
-    //                 "#property_last_update_heating_year"
-    //             );
-    //             setValue(
-    //                 "#bop_last_update_plumbing_year",
-    //                 "#property_last_update_plumbing_year"
-    //             );
-    //             setValue(
-    //                 "#bop_last_update_electrical_year",
-    //                 "#property_last_update_electrical_year"
-    //             );
-    //         }
-    //     });
-    // }
 
     function showDriverIfMarried() {
         $("#auto_driver_if_married_container").append(`
@@ -4359,17 +4020,6 @@
         `);
     }
 
-    // function showGLNoOfLossesContainer() {
-    //     $("#gl_explain_losses_container").append(`
-    //         <div class="col-md-12">
-    //             <div class="mb-3 form-floating">
-    //                 <textarea style="resize: none;" name="gl_explain_losses" id="gl_explain_losses" class="form-control" placeholder="Please explain"></textarea>
-    //                 <label for="gl_explain_losses">Explain Losses (Please include loss amount)</label>
-    //             </div>
-    //         </div>
-    //     `);
-    // }
-
     function showPollutionNoOfLossesContainer() {
         $("#pollution_explain_losses_container").append(`
             <div class="col-md-12">
@@ -4380,117 +4030,6 @@
             </div>
         `);
     }
-
-    // let professionOptions;
-
-    // // Fetch profession entries on document ready and populate the default select.
-    // $(document).ready(async function () {
-    //     await fetchProfessionEntries();
-    //     $("#wc_profession_type").html(professionOptions);
-    // });
-
-    // async function fetchProfessionEntries() {
-    //     try {
-    //         const response = await axios.get("wc/showProfessionEntries", {
-    //             params: { a: 1 },
-    //         });
-    //         if (response.data.data) {
-    //             const parser = new DOMParser();
-    //             const doc = parser.parseFromString(
-    //                 response.data.data,
-    //                 "text/html"
-    //             );
-    //             professionOptions =
-    //                 doc.querySelector("#wc_profession_1").innerHTML;
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
-
-    // let entryCounter = 1;
-
-    // $("#add_sched_equipment_entry").click(function () {
-    //     entryCounter++;
-    //     const newEntry = `
-    //     <div class="row justify-content-center">
-    //         <h6 class="profession_header mt-2 mb-2">Employee's Profession Entry No. ${entryCounter}</h6>
-    //         <div class="col-md-12">
-    //             <div class="mb-3 form-floating">
-    //                 <select class="form-select" name="" id="wc_profession_type_${entryCounter}" aria-label="">
-    //                     ${professionOptions}
-    //                 </select>
-    //                 <label for="wc_profession_type_${entryCounter}">Profession Type:</label>
-    //             </div>
-    //         </div>
-    //     </div>
-    // `;
-
-    //     $("#wc_professions_container").append(newEntry);
-    // });
-
-    // async function showProfessionEntries(a, ids = []) {
-    //     try {
-    //         let response = await axios.get("wc/showProfessionEntries", {
-    //             params: {
-    //                 a: a,
-    //             },
-    //         });
-
-    //         let data = response.data.data;
-
-    //         if (data) {
-    //             $("#profession_entry_container").append(data);
-    //             perfectCurrencyFormatter(".annual-payroll");
-    //             // Attach a change event handler to the document for any element with an ID starting with 'wc_profession_'
-    //             $(document).on(
-    //                 "change",
-    //                 `[id^="wc_profession_${a}"]`,
-    //                 function () {
-    //                     // Get the value of the selected option
-    //                     let wcProfessionValue = parseInt($(this).val());
-    //                     if (wcProfessionValue === 319) {
-    //                         $("#classcode_if_others_container_" + a).append(`
-    //                         <div class="row justify-content-center customProfession">
-    //                             <h6 class="profession_header mt-2 mb-2">Please specify your profession:</h6>
-    //                             <div class="col-md-12">
-    //                                 <div class="mb-3 form-floating">
-    //                                     <input type="text" name="profession_if_others_input" id="profession_if_others_input" class="form-control" placeholder="">
-    //                                     <label for="profession_if_others_input">Please indicate:</label>
-    //                                 </div>
-    //                             </div>
-    //                         </div>
-    //                     `);
-    //                     } else {
-    //                         $(".customProfession").remove();
-    //                     }
-    //                 }
-    //             );
-    //         }
-    //     } catch (error) {
-    //         // Handle any errors here
-    //         console.error(error);
-    //     }
-    // }
-
-    // async function showAutoVehicleEntries(a) {
-    //     try {
-    //         let response = await axios.get("auto/showAutoVehicleEntries", {
-    //             params: {
-    //                 a: a,
-    //             },
-    //         });
-
-    //         let data = response.data.data;
-
-    //         if (data) {
-    //             $("#auto_vehicles_container").append(data);
-    //         }
-    //     } catch (error) {
-    //         // Handle any errors here
-    //         console.error(error);
-    //     }
-    // }
 
     function showAutoVehicleEntries(a) {
         $("#auto_vehicles_container").append(`
@@ -4549,54 +4088,6 @@
 
         yearPickerFormatter(`#auto_vehicle_year_${a}`);
     }
-
-    // async function showAutoDriverEntries(a) {
-    //     try {
-    //         const response = await axios.get("auto/showAutoDriverEntries", {
-    //             params: {
-    //                 a: a,
-    //             },
-    //         });
-
-    //         const data = response.data.data;
-
-    //         if (data) {
-    //             $("#auto_drivers_container").append(data);
-    //             datePickerFormatter(".driver_birthdate");
-    //         }
-
-    //         // If Married status
-    //         $(`#auto_add_driver_civil_status_${a}`).on(
-    //             "change",
-    //             async function () {
-    //                 const selectedOption = $(this).val();
-    //                 const containerId = `auto_driver_if_married_container_${a}`;
-
-    //                 if (selectedOption === "Married") {
-    //                     try {
-    //                         const spouseResponse = await axios.get(
-    //                             "auto/showSpouseInformationForm",
-    //                             {
-    //                                 params: {
-    //                                     a: a,
-    //                                 },
-    //                             }
-    //                         );
-
-    //                         $(`#${containerId}`).html(spouseResponse.data.data);
-    //                         datePickerFormatter(".spouse_datebirth");
-    //                     } catch (error) {
-    //                         console.error(error);
-    //                     }
-    //                 } else {
-    //                     $(`#${containerId}`).empty();
-    //                 }
-    //             }
-    //         );
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
 
     function showAutoDriverEntries(a) {
         $("#auto_drivers_container").append(`
@@ -5958,12 +5449,6 @@
     perfectCurrencyFormatter("#gl_payroll_amt");
     perfectCurrencyFormatter("#gl_subcon_cost");
 
-    // renderingYesNoDivs(
-    //     "gl_using_subcon",
-    //     showSubconContainerForGL,
-    //     "gl_subcon_cost"
-    // );
-
     $(document).on("change", "#gl_using_subcon", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");
@@ -6098,21 +5583,6 @@
     // END GL SCRIPTS
 
     // START WC SCRIPTS
-    // $(document).on("change", "#wc_no_of_profession", async function () {
-    //     $(".loader-container").addClass("active");
-    //     $(".loader-container").removeClass("hidden");
-
-    //     var numProfs = parseInt($(this).val());
-    //     $("#profession_entry_container").empty();
-
-    //     for (var i = 1; i <= numProfs; i++) {
-    //         await showProfessionEntries(i);
-    //     }
-
-    //     $(".loader-container").addClass("hidden");
-    //     $(".loader-container").removeClass("active");
-    // });
-
     perfectCurrencyFormatter("#wc_subcon_cost_year");
     perfectCurrencyFormatter("#wc_gross_receipt");
 
@@ -6142,9 +5612,6 @@
                 counter = 0;
                 percentages = [];
                 renderOwnersInformationFields();
-                // $(`input[name^="wc_ssn_"]`).ssnFormat();
-                // $(`input[name^="wc_fein_"]`).feinFormat();
-                // datePickerFormatter(`input[name^="wc_dob_"]`);
             } else if (value == 100) {
                 totalPercentage = value;
                 $("#owners_information_container").empty();
@@ -6218,7 +5685,6 @@
     });
     $(document).on("change", "#auto_add_driver", function () {
         const numDrivers = $(this).val();
-        // console.log(numDrivers);
         $("#auto_drivers_container").empty();
         for (let i = 1; i <= numDrivers; i++) {
             showAutoDriverEntries(i);
@@ -6227,7 +5693,6 @@
 
     $(document).on("change", "#auto_driver_marital_status", function () {
         const value = $(this).val();
-        // console.log(value);
         $(".loader-container").removeClass("hidden");
         $(".loader-container").addClass("active");
         if (value === "Married") {
@@ -6601,62 +6066,34 @@
     // END EO SCRIPTS
 
     // START POLLUTION SCRIPTS
-    // $("#pollution_residential").change(function () {
-    //     setTimeout(function () {
-    //         computePercentage("pollution_residential", "pollution_commercial");
-    //     }, 0);
-    // });
-    // $("#pollution_commercial").change(function () {
-    //     setTimeout(function () {
-    //         computePercentage("pollution_commercial", "pollution_residential");
-    //     }, 0);
-    // });
-    // $("#pollution_new_construction").change(function () {
-    //     setTimeout(function () {
-    //         computePercentage(
-    //             "pollution_new_construction",
-    //             "pollution_repair_remodel"
-    //         );
-    //     }, 0);
-    // });
-    // $("#pollution_repair_remodel").change(function () {
-    //     setTimeout(function () {
-    //         computePercentage(
-    //             "pollution_repair_remodel",
-    //             "pollution_new_construction"
-    //         );
-    //     }, 0);
-    // });
-    // perfectCurrencyFormatter("#pollution_cost_proj_5years");
-    // perfectCurrencyFormatter("#pollution_annual_gross");
-    // perfectCurrencyFormatter("#pollution_payroll_amt");
-    // perfectCurrencyFormatter("#pollution_subcon_cost");
-    // renderingYesNoDivs(
-    //     "pollution_using_subcon",
-    //     showSubconContainerForPollution,
-    //     "pollution_subcon_cost"
-    // );
-    // $("#pollution_no_losses_5years").on("change", function () {
-    //     const value = parseInt($(this).val());
-    //     if (value >= 1) {
-    //         $(".loader-container").addClass("hidden");
-    //         $(".loader-container").removeClass("active");
-    //         setTimeout(function () {
-    //             showPollutionNoOfLossesContainer();
-    //         }, 0);
-    //     } else {
-    //         $("#pollution_explain_losses").parent().parent().remove();
-    //         $(".loader-container").addClass("hidden");
-    //         $(".loader-container").removeClass("active");
-    //     }
-    // });
+    perfectCurrencyFormatter("#pol_1_proj_rev");
+    perfectCurrencyFormatter("#pol_1_total_proj_rev");
+    perfectCurrencyFormatter("#pol_2_proj_rev");
+    perfectCurrencyFormatter("#pol_2_total_proj_rev");
+    perfectCurrencyFormatter("#pol_3_proj_rev");
+    perfectCurrencyFormatter("#pol_3_total_proj_rev");
+    $(document).on("change", "#pollution_no_of_losses", function () {
+        const value = parseInt($(this).val());
+        $(".loader-container").removeClass("hidden");
+        $(".loader-container").addClass("active");
+        if (value === -1) {
+            setTimeout(function () {
+                showLossesAdditionalQuestion("pollution");
+                $(".loader-container").removeClass("active");
+                $(".loader-container").addClass("hidden");
+            }, 0);
+        } else {
+            $(".loader-container").addClass("hidden");
+            $(".loader-container").removeClass("active");
+            $("#pollution_losses_container").empty();
+        }
+    });
     // END POLLUTION SCRIPTS
 
     // START EPLI SCRIPTS
     $("#epli_fein").feinFormat();
     datePickerFormatter("#epli_effective_date");
     perfectCurrencyFormatter("#epli_prev_premium_amount");
-    // perfectCurrencyFormatter("#epli_deductible_amount");
 
     $(document).on("change", "#epli_deductible_amount", function () {
         const value = $(this).val();

@@ -96,16 +96,15 @@
                                 Omission</label>
                         </div>
                     </li>
-                    {{-- <li>
-                                <div class="checkbox_radio_container">
-                                    <input type="checkbox" id="question_1_opt_11"
-                                        name="question_1[]" class="" value="pollution"
-                                        disabled>
-                                    <label class="checkbox" for="question_1_opt_11"></label>
-                                    <label for="question_1_opt_11" class="wrapper">Pollution
-                                        Application (Not yet available)</label>
-                                </div>
-                            </li> --}}
+                    <li>
+                        <div class="checkbox_radio_container">
+                            <input type="checkbox" id="question_1_opt_11" name="question_1[]" class=""
+                                value="pollution">
+                            <label class="checkbox" for="question_1_opt_11"></label>
+                            <label for="question_1_opt_11" class="wrapper">Pollution
+                                Liability</label>
+                        </div>
+                    </li>
                     <li>
                         <div class="checkbox_radio_container">
                             <input type="checkbox" id="question_1_opt_12" name="question_1[]" class=""

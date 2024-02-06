@@ -58,7 +58,7 @@
                                                                                 <tbody>
                                                                                     <tr>
                                                                                         <td class="esd-block-image es-m-p0l es-m-txt-c"
-                                                                                            align="left"
+                                                                                            align="center"
                                                                                             style="font-size: 0px;"><a
                                                                                                 href="https://viewstripo.email"
                                                                                                 target="_blank"><img
@@ -400,9 +400,10 @@
                                                                                                 <td class="esd-block-text es-p25t es-p40r es-p40l"
                                                                                                     align="left">
                                                                                                     <p>Number of
-                                                                                                    Total Employees<b>:
-                                                                                                        {{ $workersCompensation->number_of_employee }}</b>
-                                                                                                </p>
+                                                                                                        Total
+                                                                                                        Employees<b>:
+                                                                                                            {{ $workersCompensation->number_of_employee }}</b>
+                                                                                                    </p>
 
                                                                                                     @if (!empty($professionsInfo))
                                                                                                         @foreach ($professionsInfo as $professionInfo)
@@ -1720,131 +1721,135 @@
                                                                                     {{-- End EO Section --}}
                                                                                     {{-- Start Pollution Section --}}
                                                                                     @if ($productType === 'pollution')
-                                                                                        <tr>
-                                                                                            <td class="esd-block-text es-p30t es-p35r es-p40l"
-                                                                                                align="left">
-                                                                                                <p
-                                                                                                    style="font-size: 18px;">
-                                                                                                    <strong>Pollution
-                                                                                                        Liability
-                                                                                                        Application</strong>
-                                                                                                </p>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                        <tr>
-                                                                                            <td class="esd-block-text es-p25t es-p40r es-p40l"
-                                                                                                align="left">
-                                                                                                <p>Profession:
-                                                                                                    <strong>DRYWALL</strong>
-                                                                                                </p>
-                                                                                                <p>Residential:
-                                                                                                    <b>35%</b>
-                                                                                                </p>
-                                                                                                <p>Commercial:&nbsp;<strong>65%</strong>
-                                                                                                </p>
-                                                                                                <p>New Construction:
-                                                                                                    <strong>45%</strong>
-                                                                                                </p>
-                                                                                                <p>Repair / Remodel:
-                                                                                                    <b>55%</b>
-                                                                                                </p>
-                                                                                                <p>Detailed Description
-                                                                                                    of
-                                                                                                    Operations:</p>
-                                                                                                <p><strong>Lorem ipsum
-                                                                                                        dolor
-                                                                                                        sit amet,
-                                                                                                        consectetur
-                                                                                                        adipiscing elit.
-                                                                                                        Proin sed
-                                                                                                        sagittis
-                                                                                                        dolor. Vivamus
-                                                                                                        neque
-                                                                                                        eros, sodales eu
-                                                                                                        turpis
-                                                                                                        vulputate,
-                                                                                                        porttitor mattis
-                                                                                                        tortor. Aenean
-                                                                                                        quis
-                                                                                                        tempus lorem.
-                                                                                                        Nam
-                                                                                                        sed lorem
-                                                                                                        tortor.
-                                                                                                        Vestibulum nec
-                                                                                                        lectus id ligula
-                                                                                                        lobortis pretium
-                                                                                                        vitae a
-                                                                                                        erat.</strong>
-                                                                                                </p>
-                                                                                                <p>Cost of the Largest
-                                                                                                    Project in the past
-                                                                                                    5
-                                                                                                    years:
-                                                                                                    <strong>$325,235</strong>
-                                                                                                </p>
-                                                                                                <p>Annual Gross
-                                                                                                    Receipts.:
-                                                                                                    <b>$50,000</b>
-                                                                                                </p>
-                                                                                                <p>Number of Field
-                                                                                                    Employees<b>: 3</b>
-                                                                                                </p>
-                                                                                                <p>Payroll Amount:
-                                                                                                    <strong>$2,000</strong>
-                                                                                                </p>
-                                                                                                <p>Are you using any
-                                                                                                    subcontractor:
-                                                                                                    <strong>Yes</strong>
-                                                                                                </p>
-                                                                                                <p>Subcontractor Cost:
-                                                                                                    <strong>$1,000</strong>
-                                                                                                </p>
-                                                                                                <p>No. of Losses for the
-                                                                                                    past 5 years:
-                                                                                                    <strong>1</strong>
-                                                                                                </p>
-                                                                                                <p>Explain
-                                                                                                    Losses:&nbsp;<strong>Lorem
-                                                                                                        ipsum dolor sit
-                                                                                                        amet,
-                                                                                                        consectetur
-                                                                                                        adipiscing elit.
-                                                                                                        Proin sed
-                                                                                                        sagittis
-                                                                                                        dolor. Vivamus
-                                                                                                        neque
-                                                                                                        eros, sodales eu
-                                                                                                        turpis
-                                                                                                        vulputate,
-                                                                                                        porttitor mattis
-                                                                                                        tortor. Aenean
-                                                                                                        quis
-                                                                                                        tempus lorem.
-                                                                                                        Nam
-                                                                                                        sed lorem
-                                                                                                        tortor.
-                                                                                                        Vestibulum nec
-                                                                                                        lectus id ligula
-                                                                                                        lobortis pretium
-                                                                                                        vitae a
-                                                                                                        erat.</strong>
-                                                                                                </p>
-                                                                                                <p><br></p>
-                                                                                                <p>Pollution Liability -
-                                                                                                    # of Losses:
-                                                                                                    <strong>Have
-                                                                                                        Losses</strong>
-                                                                                                </p>
+                                                                                        <td class="esd-block-text es-p25t es-p40r es-p40l"
+                                                                                            align="left">
+                                                                                            <p><strong>Environmental
+                                                                                                    Contracting
+                                                                                                    Services:</strong>
+                                                                                            </p>
+                                                                                            <p>Projected Revenues $:
+                                                                                                <strong>{{ number_format($pollutionLiability->envcontserv_proj_rev, 2) }}</strong>
+                                                                                            </p>
+                                                                                            <p>% of Subcontracted Work:
+                                                                                                <strong>{{ $pollutionLiability->envcontserv_subcon_work }}
+                                                                                                    %</strong>
+                                                                                            </p>
+                                                                                            <p><br></p>
+                                                                                            <p><strong>Total Revenue for
+                                                                                                    Environmental
+                                                                                                    Contracting
+                                                                                                    Services:</strong>
+                                                                                            </p>
+                                                                                            <p>Projected Revenues $:
+                                                                                                <strong>{{ number_format($pollutionLiability->envcontserv_total_proj_rev, 2) }}</strong>
+                                                                                            </p>
+                                                                                            <p>% of Subcontracted Work:
+                                                                                                <strong>{{ $pollutionLiability->envcontserv_total_subcon_work }}
+                                                                                                    %</strong>
+                                                                                            </p>
+                                                                                            <p><br></p>
+                                                                                            <p>Selected Applied to
+                                                                                                Work: @if (!empty($p1))
+                                                                                                    @php
+                                                                                                        $options = collect($p1)
+                                                                                                            ->flatten()
+                                                                                                            ->pluck('option')
+                                                                                                            ->filter();
+                                                                                                        echo '<strong>' . $options->join(', ') . '</strong>';
+                                                                                                    @endphp
+                                                                                                @endif
+                                                                                            </p>
+                                                                                            <p><br></p>
+                                                                                            <p><strong>Environmental
+                                                                                                    Consulting
+                                                                                                    Services:</strong>
+                                                                                            </p>
+
+                                                                                            <p>Projected Revenues $:
+                                                                                                <strong>{{ number_format($pollutionLiability->envconsultserv_proj_rev, 2) }}</strong>
+                                                                                            </p>
+                                                                                            <p>% of Subcontracted Work:
+                                                                                                <strong>{{ $pollutionLiability->envconsultserv_subcon_work }}
+                                                                                                    %</strong>
+                                                                                            </p>
+                                                                                            <p><br></p>
+                                                                                            <p><strong>Total Revenue for
+                                                                                                    Environmental
+                                                                                                    Consulting
+                                                                                                    Services:</strong>
+                                                                                            </p>
+
+                                                                                            <p>Projected Revenues $:
+                                                                                                <strong>{{ number_format($pollutionLiability->envconsultserv_total_proj_rev, 2) }}</strong>
+                                                                                            </p>
+                                                                                            <p>% of Subcontracted Work:
+                                                                                                <strong>{{ $pollutionLiability->envconsultserv_total_subcon_work }}
+                                                                                                    %</strong>
+                                                                                            </p>
+                                                                                            <p><br></p>
+                                                                                            <p>Selected Applied to
+                                                                                                Work: @if (!empty($p2))
+                                                                                                    @php
+                                                                                                        $options = collect($p2)
+                                                                                                            ->flatten()
+                                                                                                            ->pluck('option')
+                                                                                                            ->filter();
+                                                                                                        echo '<strong>' . $options->join(', ') . '</strong>';
+                                                                                                    @endphp
+                                                                                                @endif
+                                                                                            </p>
+                                                                                            <p><br></p>
+                                                                                            <p><strong>Non-Environmental
+                                                                                                    Services:</strong>
+                                                                                            </p>
+                                                                                            <p>Projected Revenues $:
+                                                                                                <strong>{{ number_format($pollutionLiability->nonenvserv_proj_rev, 2) }}</strong>
+                                                                                            </p>
+                                                                                            <p>% of Subcontracted Work:
+                                                                                                <strong>{{ $pollutionLiability->nonenvserv_subcon_work }}
+                                                                                                    %</strong>
+                                                                                            </p>
+                                                                                            <p><br></p>
+                                                                                            <p><strong>Total Revenue for
+                                                                                                    Non-Environmental
+                                                                                                    Services:</strong>
+                                                                                            </p>
+
+                                                                                            <p>Projected Revenues $:
+                                                                                                <strong>{{ number_format($pollutionLiability->nonenvserv_total_proj_rev, 2) }}</strong>
+                                                                                            </p>
+                                                                                            <p>% of Subcontracted Work:
+                                                                                                <strong>{{ $pollutionLiability->nonenvserv_total_subcon_work }}
+                                                                                                    %</strong>
+                                                                                            </p>
+                                                                                            <p><br></p>
+                                                                                            <p>Selected Applied to
+                                                                                                Work: @if (!empty($p3))
+                                                                                                    @php
+                                                                                                        $options = collect($p3)
+                                                                                                            ->flatten()
+                                                                                                            ->pluck('option')
+                                                                                                            ->filter();
+                                                                                                        echo '<strong>' . $options->join(', ') . '</strong>';
+                                                                                                    @endphp
+                                                                                                @endif
+                                                                                            </p>
+                                                                                            <p><br></p>
+                                                                                            <p>Pollution Liability - #
+                                                                                                of Losses:
+                                                                                                <strong>{{ $pollutionNoOfLosses }}</strong>
+                                                                                            </p>
+                                                                                            @if ($pollutionLiability->pollution_no_of_losses === '-1')
                                                                                                 <p>Pollution Liability -
                                                                                                     Amount of Claim:
-                                                                                                    <strong>$1,000,000</strong>
+                                                                                                    <strong>{{ number_format($pollutionLiability->pollution_amount_of_claim, 2) }}</strong>
                                                                                                 </p>
                                                                                                 <p>Pollution Liability -
                                                                                                     Date of Loss:
-                                                                                                    <strong>10/16/1996</strong>
+                                                                                                    <strong>{{ $pollutionDateOfLoss }}</strong>
                                                                                                 </p>
-                                                                                            </td>
-                                                                                        </tr>
+                                                                                            @endif
+                                                                                        </td>
                                                                                     @endif
                                                                                     {{-- End Pollution Section --}}
                                                                                     {{-- Start EPLI Section --}}

@@ -63,6 +63,9 @@
                             <!-- ERRORS AND OMISSION -->
                             <x-eo></x-eo>
 
+                            <!-- POLLUTION LIABILITY -->
+                            <x-pollution :p1="$p1" :p2="$p2" :p3="$p3"></x-pollution>
+
                             <!-- EPLI -->
                             <x-epli></x-epli>
 
@@ -445,11 +448,17 @@
                                     <!-- END EO REVIEW -->
 
                                     <!-- START POLLUTION REVIEW -->
-                                    {{-- <div class="col-lg-12 mt-2" id="pollutionDetailsContainer">
-                                                <h5>Pollution Liability Application</h5>
-                                                <div class="reviewInfoSubContainer" id="pollution_liability_details">
-                                                </div>
-                                            </div> --}}
+                                    <div class="col-lg-12 mt-2" id="pollutionDetailsContainer">
+                                        <h5>Pollution Liability Application</h5>
+                                        <div class="reviewInfoSubContainer" id="pollution_liability_details1">
+                                        </div>
+                                        <div class="reviewInfoSubContainer" id="pollution_liability_details2">
+                                        </div>
+                                        <div class="reviewInfoSubContainer" id="pollution_liability_details3">
+                                        </div>
+                                        <div class="reviewInfoSubContainer" id="pollution_liability_details4">
+                                        </div>
+                                    </div>
                                     <!-- END POLLUTION REVIEW -->
 
                                     <!-- START EPLI REVIEW -->
@@ -492,7 +501,8 @@
                             <button type="button" name="backward" class="backward btn_1">Previous</button>
                             <button type="button" name="forward" class="forward btn_1">Next</button>
 
-                            <button type="submit" name="process" id="process" class="submit btn_1">Submit</button>
+                            <button type="submit" name="process" id="process"
+                                class="submit btn_1">Submit</button>
 
                         </div>
                         <!-- /bottom-wizard -->
@@ -509,9 +519,6 @@
                     <div class="col-sm-12">
                         <p>© {{ $currentYear }} Pascal Burke Insurance Brokerage Inc.</p>
                     </div>
-                    {{-- <div class="col-sm-6 text-md-end">
-                            <a class="btn_help btn" href="#modal-help" id="modal_h"><i class="bi bi-question-circle"> Help</i></a>
-                        </div> --}}
                 </div>
                 <!-- /Row -->
             </div>

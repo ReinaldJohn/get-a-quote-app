@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Carbon\Carbon;
 use App\Models\Quote;
+use App\Models\PolOpt1;
+use App\Models\PolOpt2;
+use App\Models\PolOpt3;
+use App\Models\OptInList;
 use App\Models\Classcodes;
 use App\Models\WCOwnersInfo;
 use Illuminate\Http\Request;
@@ -32,8 +37,6 @@ use App\Models\PollutionLiabilityInformation;
 use App\Models\InstallationFloaterInformation;
 use App\Models\WorkersCompensationInformation;
 use App\Models\InstallationFloaterScheduledEquipment;
-use App\Models\OptInList;
-use Exception;
 
 class QuoteController extends Controller
 {
@@ -49,12 +52,25 @@ class QuoteController extends Controller
         $professions = $quoteModel->getAllProfessions($ids);
         $wcProfessions = $quoteModel->getWCProfessions($ids);
         $currentYear = Carbon::now()->format('Y');
+
+        // Pollution Opts
+        $polOpt1 = new PolOpt1();
+        $polOpt2 = new PolOpt2();
+        $polOpt3 = new PolOpt3();
+
+        $p1 = $polOpt1->getAllOpt1();
+        $p2 = $polOpt2->getAllOpt2();
+        $p3 = $polOpt3->getAllOpt3();
+
         return view("quote.index",  [
             'states' => $states,
             'professions' => $professions,
             'wcProfessions' => $wcProfessions,
             'trueValues' => $trueValues,
-            'currentYear' => $currentYear
+            'currentYear' => $currentYear,
+            'p1' => $p1,
+            'p2' => $p2,
+            'p3' => $p3,
         ]);
     }
 
@@ -142,7 +158,7 @@ class QuoteController extends Controller
         // return response()->json(['data' => '']);
     }
 
-    public function submitQuoteForm(Request $request) {
+    public function submitQuoteForm(Request $request, Quote $quoteModel) {
         if ($request->isMethod('post')) {
 
             Log::debug('Raw request content: ' . $request->getContent());
@@ -1595,38 +1611,99 @@ class QuoteController extends Controller
                                 break;
                             case 'pollution':
                                 try {
+                                    $client_info_id = $clientInformation->id;
+                                    $pol_1_proj_rev = floatval(preg_replace("/[^-0-9\.]/","", $productData['pol_1_proj_rev']['value']));
+                                    $pol_1_subcon_work = $productData['pol_1_subcon_work']['value'];
+                                    $pol_1_total_proj_rev = floatval(preg_replace("/[^-0-9\.]/","", $productData['pol_1_total_proj_rev']['value']));
+                                    $pol_1_total_subcon_work = $productData['pol_1_total_subcon_work']['value'];
+                                    $pol_2_proj_rev = floatval(preg_replace("/[^-0-9\.]/","", $productData['pol_2_proj_rev']['value']));
+                                    $pol_2_subcon_work = $productData['pol_2_subcon_work']['value'];
+                                    $pol_2_total_proj_rev = floatval(preg_replace("/[^-0-9\.]/","", $productData['pol_2_total_proj_rev']['value']));
+                                    $pol_2_total_subcon_work = $productData['pol_2_total_subcon_work']['value'];
+                                    $pol_3_proj_rev = floatval(preg_replace("/[^-0-9\.]/","", $productData['pol_3_proj_rev']['value']));
+                                    $pol_3_subcon_work = $productData['pol_3_subcon_work']['value'];
+                                    $pol_3_total_proj_rev = floatval(preg_replace("/[^-0-9\.]/","", $productData['pol_3_total_proj_rev']['value']));
+                                    $pol_3_total_subcon_work = $productData['pol_3_total_subcon_work']['value'];
+                                    $polopt1 = $productData['polopt1[]']['value'];
+                                    $polopt2 = $productData['polopt2[]']['value'];
+                                    $polopt3 = $productData['polopt3[]']['value'];
+                                    $pollution_no_of_losses = $productData['pollution_no_of_losses']['value'];
+                                    $pollution_amount_of_claim = null;
+                                    if (isset($productData['pollution_amt_of_claims']['value']) && !empty($productData['pollution_amt_of_claims']['value'])) {
+                                        try {
+                                            $pollution_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['pollution_amt_of_claims']['value']));
+                                        } catch (\Exception $e) {
+                                            $pollution_amount_of_claim = null;
+                                        }
+                                    }
+                                    $pollution_date_of_loss = null;
+                                    if (isset($productData['pollution_date_of_loss']['value']) && !empty($productData['pollution_date_of_loss']['value'])) {
+                                        $pollution_date_of_loss = Carbon::createFromFormat('m/d/Y', $productData['pollution_date_of_loss']['value']);
+                                    } else {
+                                         $pollution_date_of_loss = null;
+                                    }
+
                                     $pollutionLiability = new PollutionLiabilityInformation();
-                                    $pollutionLiability->client_info_id = $clientInformation->id;
-                                    $pollutionLiability->pollution_profession = $productData['pollution_profession'];
-                                    $pollutionLiability->pollution_residential = $productData['pollution_residential'];
-                                    $pollutionLiability->pollution_commercial = $productData['pollution_commercial'];
-                                    $pollutionLiability->pollution_new_construction = $productData['pollution_new_construction'];
-                                    $pollutionLiability->pollution_repair_remodel = $productData['pollution_repair_remodel'];
-                                    $pollutionLiability->pollution_detailed_descops = $productData['pollution_descops'];
-
-                                    $pollutionLiability->pollution_cost_of_largest_proj_past_5_years = floatval(preg_replace("/[^-0-9\.]/","", $productData['pollution_cost_proj_5years']));
-                                    $parsedPollutionCostOfLargestProj = floatval($pollutionLiability->pollution_cost_of_largest_proj_past_5_years);
-
-                                    $pollutionLiability->pollution_annual_gross_receipts = floatval(preg_replace("/[^-0-9\.]/","", $productData['pollution_annual_gross']));
-                                    $parsedPollutionAnnualGrossReceipts = floatval($pollutionLiability->pollution_annual_gross_receipts);
-                                    $pollutionLiability->pollution_no_field_employees = $productData['pollution_no_field_emp'];
-                                    $pollutionLiability->pollution_payroll_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['pollution_payroll_amt']));
-                                    $parsedPollutionPayrollAmount = floatval($pollutionLiability->pollution_payroll_amount);
-                                    $pollutionLiability->pollution_does_use_subcontractor = $productData['pollution_using_subcon'];
-                                    $pollutionLiability->pollution_subcontractor_cost = floatval(preg_replace("/[^-0-9\.]/","", $productData['pollution_subcon_cost']));
-                                    $parsedPollutionSubcontractorCost = floatval($pollutionLiability->pollution_subcontractor_cost);
-                                    $pollutionLiability->pollution_no_of_losses_past_5_years = $productData['pollution_no_losses_5years'];
-                                    $pollutionLiability->pollution_explain_losses = $productData['pollution_explain_losses'];
+                                    $pollutionLiability->client_info_id = $client_info_id;
+                                    $pollutionLiability->envcontserv_proj_rev = $pol_1_proj_rev;
+                                    $pollutionLiability->envcontserv_subcon_work = $pol_1_subcon_work;
+                                    $pollutionLiability->envcontserv_total_proj_rev = $pol_1_total_proj_rev;
+                                    $pollutionLiability->envcontserv_total_subcon_work = $pol_1_total_subcon_work;
+                                    $pollutionLiability->envcontserv_opts = $polopt1;
+                                    $pollutionLiability->envconsultserv_proj_rev = $pol_2_proj_rev;
+                                    $pollutionLiability->envconsultserv_subcon_work = $pol_2_subcon_work;
+                                    $pollutionLiability->envconsultserv_total_proj_rev = $pol_2_total_proj_rev;
+                                    $pollutionLiability->envconsultserv_total_subcon_work = $pol_2_total_subcon_work;
+                                    $pollutionLiability->envconsultserv_opts = $polopt2;
+                                    $pollutionLiability->nonenvserv_proj_rev = $pol_3_proj_rev;
+                                    $pollutionLiability->nonenvserv_subcon_work = $pol_3_subcon_work;
+                                    $pollutionLiability->nonenvserv_total_proj_rev = $pol_3_total_proj_rev;
+                                    $pollutionLiability->nonenvserv_total_subcon_work = $pol_3_total_subcon_work;
+                                    $pollutionLiability->nonenvserv_opts = $polopt3;
+                                    $pollutionLiability->pollution_no_of_losses = $pollution_no_of_losses;
+                                    $pollutionLiability->pollution_amount_of_claim = $pollution_amount_of_claim;
+                                    $pollutionLiability->pollution_date_of_loss = $pollution_date_of_loss;
 
                                     $pollutionLiability->save();
 
-                                    $templateData['parsedPollutionCostOfLargestProj'] = $parsedPollutionCostOfLargestProj;
-                                    $templateData['parsedPollutionAnnualGrossReceipts'] = $parsedPollutionAnnualGrossReceipts;
-                                    $templateData['parsedPollutionPayrollAmount'] = $parsedPollutionPayrollAmount;
-                                    $templateData['parsedPollutionSubcontractorCost'] = $parsedPollutionSubcontractorCost;
-                                    $templateData['pollutionLiability'] = $pollutionLiability;
-                                    // $templateData['productTypes'][] = 'pollution';
+                                    $templateData['pollutionNoOfLosses'] = "";
+
+                                    switch($pollutionLiability->pollution_no_of_losses) {
+                                        case '-1':
+                                            $templateData['pollutionNoOfLosses'] = "Have Losses";
+                                            break;
+                                        case '5':
+                                            $templateData['pollutionNoOfLosses'] = "5 yrs. No Losses";
+                                            break;
+                                        case '3':
+                                            $templateData['pollutionNoOfLosses'] = "3 yrs. No Losses";
+                                            break;
+                                        case '1':
+                                            $templateData['pollutionNoOfLosses'] = "1 yrs. No Losses";
+                                            break;
+                                        case '0':
+                                            $templateData['pollutionNoOfLosses'] = "No Losses";
+                                            break;
+                                    }
+                                    // Initialize an array to store the results
+                                    $templateData['p1'] = [];
+                                    foreach ($productData['polopt1[]']['value'] as $p1) {
+                                        $result = $quoteModel->getPolOpt1($p1);
+                                        $templateData['p1'][] = $result;
+                                    }
+                                    $templateData['p2'] = [];
+                                    foreach ($productData['polopt2[]']['value'] as $p2) {
+                                        $result = $quoteModel->getPolOpt2($p2);
+                                        $templateData['p2'][] = $result;
+                                    }
+                                    $templateData['p3'] = [];
+                                    foreach ($productData['polopt3[]']['value'] as $p3) {
+                                        $result = $quoteModel->getPolOpt3($p3);
+                                        $templateData['p3'][] = $result;
+                                    }
+                                    $templateData['pollutionDateOfLoss'] = $pollution_date_of_loss === null ? '' : Carbon::createFromFormat('m/d/Y', $productData['pollution_date_of_loss']['value'])->format('F j, Y');
                                     $templateData['clientInformation'] = $clientInformation;
+                                    $templateData['pollutionLiability'] = $pollutionLiability;
 
                                     $html_body .= view('quote.quote-details', $templateData)->render();
 
@@ -1653,7 +1730,6 @@ class QuoteController extends Controller
                                         $deductible_amount = floatval(preg_replace("/[^-0-9\.]/","", $productData['epli_deductible_amount']['value']));
                                         $deductible_claim_if_others = null;
                                     }
-
                                     $full_time_employee = $productData['epli_full_time']['value'];
                                     $part_time_employee = $productData['epli_part_time']['value'];
                                     $independent_contractors = $productData['epli_independent_contractors']['value'];

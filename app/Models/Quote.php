@@ -30,6 +30,16 @@ class Quote extends Model
                     ->get();
     }
 
+    public function getPolOpt1($id) {
+        return PolOpt1::where('id', $id)->get(['id', 'option']);
+    }
+    public function getPolOpt2($id) {
+        return PolOpt2::where('id', $id)->get(['id', 'option']);
+    }
+    public function getPolOpt3($id) {
+        return PolOpt3::where('id', $id)->get(['id', 'option']);
+    }
+
     public function getStatesById($id) {
         $states = $this->select('state_abbr')->from('states')->where('id', $id)->first();
         return $states ? $states->abbr : null;
