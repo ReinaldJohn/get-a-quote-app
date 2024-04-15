@@ -8,14 +8,15 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="gl_annual_gross" id="gl_annual_gross" class="form-control"
+                    <input type="text" name="gl_annual_gross" id="gl_annual_gross" class="form-control required"
                         placeholder="Annual Gross Receipts">
                     <label for="gl_annual_gross">Annual Gross Receipts</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="gl_profession" id="gl_profession" aria-label="gl_profession">
+                    <select class="form-select required" name="gl_profession" id="gl_profession"
+                        aria-label="gl_profession">
                         <option value selected></option>
                         <optgroup label="All Professions">
                             @foreach ($professions as $profession)
@@ -33,7 +34,8 @@
             <div id="gl_profession_container"></div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="gl_residential" id="gl_residential" aria-label="gl_residential">
+                    <select class="form-select required" name="gl_residential" id="gl_residential"
+                        aria-label="gl_residential">
                         <option value selected></option>
                         <option value="0">0%</option>
                         <option value="5">5%</option>
@@ -62,7 +64,8 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="gl_commercial" id="gl_commercial" aria-label="gl_commercial">
+                    <select class="form-select required" name="gl_commercial" id="gl_commercial"
+                        aria-label="gl_commercial">
                         <option value selected></option>
                         <option value="0">0%</option>
                         <option value="5">5%</option>
@@ -91,7 +94,7 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="gl_new_construction" id="gl_new_construction"
+                    <select class="form-select required" name="gl_new_construction" id="gl_new_construction"
                         aria-label="gl_new_construction">
                         <option value selected></option>
                         <option value="0">0%</option>
@@ -121,7 +124,7 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="gl_repair_remodel" id="gl_repair_remodel"
+                    <select class="form-select required" name="gl_repair_remodel" id="gl_repair_remodel"
                         aria-label="gl_repair_remodel">
                         <option value selected></option>
                         <option value="0">0%</option>
@@ -151,14 +154,14 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <textarea style="resize: none;" name="gl_descops" id="gl_descops" class="form-control"
+                    <textarea style="resize: none;" name="gl_descops" id="gl_descops" class="form-control required"
                         placeholder="Detailed Description of Operations"></textarea>
                     <label for="gl_descops">Detailed Description of Operations</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="gl_multiple_state_work" id="gl_multiple_state_work"
+                    <select class="form-select required" name="gl_multiple_state_work" id="gl_multiple_state_work"
                         aria-label="gl_multiple_state_work">
                         <option value selected></option>
                         <option value="0">No</option>
@@ -170,8 +173,8 @@
             <div id="gl_multiple_state_work_container"></div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="gl_cost_proj_5years" id="gl_cost_proj_5years" class="form-control"
-                        placeholder="Cost of the Largest Project in the past 5 years?">
+                    <input type="text" name="gl_cost_proj_5years" id="gl_cost_proj_5years"
+                        class="form-control required" placeholder="Cost of the Largest Project in the past 5 years?">
                     <label for="gl_cost_proj_5years">Cost of the Largest Project in the
                         past 5
                         years?</label>
@@ -193,9 +196,7 @@
 
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    {{-- <input type="text" name="gl_full_time_employees"
-                id="gl_full_time_employees" class="form-control" placeholder=""> --}}
-                    <select class="form-select" name="gl_full_time_employees" id="gl_full_time_employees"
+                    <select class="form-select required" name="gl_full_time_employees" id="gl_full_time_employees"
                         aria-label="gl_full_time_employees">
                         <option selected></option>
                         <option value="0">0 Employee</option>
@@ -215,9 +216,7 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    {{-- <input type="text" name="gl_part_time_employees"
-                id="gl_part_time_employees" class="form-control" placeholder=""> --}}
-                    <select class="form-select" name="gl_part_time_employees" id="gl_part_time_employees"
+                    <select class="form-select required" name="gl_part_time_employees" id="gl_part_time_employees"
                         aria-label="gl_part_time_employees">
                         <option selected></option>
                         <option value="0">0 Employee</option>
@@ -237,14 +236,14 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="gl_payroll_amt" id="gl_payroll_amt" class="form-control"
+                    <input type="text" name="gl_payroll_amt" id="gl_payroll_amt" class="form-control required"
                         placeholder="Payroll Amount">
                     <label for="gl_payroll_amt">Payroll Amount</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="gl_using_subcon" id="gl_using_subcon"
+                    <select class="form-select required" name="gl_using_subcon" id="gl_using_subcon"
                         aria-label="gl_using_subcon">
                         <option value selected></option>
                         <option value="0">No</option>
@@ -258,7 +257,7 @@
             <!--  -->
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="gl_no_of_losses" id="gl_no_of_losses"
+                    <select class="form-select required" name="gl_no_of_losses" id="gl_no_of_losses"
                         aria-label="gl_no_of_losses">
                         <option selected></option>
                         <option value="0">No Losses</option>

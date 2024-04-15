@@ -2,7 +2,8 @@
             <div class="container-fluid">
                 <div class="row d-flex align-items-center">
                     <div class="col-4">
-                        <!-- <a data-bs-toggle="offcanvas" href="#offcanvasNav" role="button" class="btn_nav"><i class="bi bi-list"></i></a> -->
+                        {{-- <a data-bs-toggle="offcanvas" href="#offcanvasNav" role="button" class="btn_nav"><i
+                                class="bi bi-list"></i></a> --}}
                     </div>
                     <div class="col-4 text-center">
                         <a href="https://pbibins.com" target="_blank"><img src="{{ asset('img/PBIB Logo.png') }}"
@@ -26,3 +27,20 @@
             <!-- /container -->
         </header>
         <!-- /header -->
+
+        {{-- <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNav">
+            <div class="offcanvas-header">
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <h4>Check our:</h4>
+                <hr>
+                <ul>
+                    <li><a href="#" class="animated_link">Cookie Policy</a></li>
+                    <li><a href="#" class="animated_link">Privacy Policy</a></li>
+                    <li><a href="#" class="animated_link">Terms and Conditions</a></li>
+                </ul>
+            </div>
+        </div> --}}
+        <!-- /offcanvas nav -->

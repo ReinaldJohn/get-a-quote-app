@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="form-floating mb-3">
-                <select class="form-select" name="ayc_bop" id="ayc_bop" aria-label="ayc_bop">
+                <select class="form-select required" name="ayc_bop" id="ayc_bop" aria-label="ayc_bop">
                     <option value selected></option>
                     <option value="Sole Proprietor">Sole Proprietor</option>
                     <option value="Partnership">Partnership</option>
@@ -19,21 +19,21 @@
         <div class="col-md-12">
             <div class="form-floating mb-3">
                 <input type="text" name="ayc_date_business_started" id="ayc_date_business_started"
-                    class="form-control flatpickr-input" placeholder="MM/DD/YYYY">
+                    class="form-control required flatpickr-input" placeholder="MM/DD/YYYY">
                 <label for="ayc_date_business_started">Date Business Started</label>
             </div>
         </div>
         <div class="col-md-12">
             <div class="form-floating mb-3">
-                <input type="text" name="ayc_yrs_in_business" id="ayc_yrs_in_business" class="form-control"
+                <input type="text" name="ayc_yrs_in_business" id="ayc_yrs_in_business" class="form-control required"
                     placeholder="">
                 <label for="ayc_yrs_in_business">Years in Business?</label>
             </div>
         </div>
         <div class="col-md-12">
             <div class="form-floating mb-3">
-                <input type="text" name="ayc_yrs_exp_contractor" id="ayc_yrs_exp_contractor" class="form-control"
-                    placeholder="">
+                <input type="text" name="ayc_yrs_exp_contractor" id="ayc_yrs_exp_contractor"
+                    class="form-control required" placeholder="">
                 <label for="ayc_yrs_exp_contractor">Years of experience as a
                     contractor?</label>
             </div>
@@ -45,14 +45,15 @@
                     <div class="col-md-12">
                         <div class="mb-3 form-floating">
                             <input type="text" name="annual_gross_receipt" id="annual_gross_receipt"
-                                class="form-control" placeholder="Annual Gross Receipts">
+                                class="form-control required" placeholder="Annual Gross Receipts">
                             <label for="annual_gross_receipt">Annual Gross
                                 Receipts</label>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="mb-3 form-floating">
-                            <select class="form-select" name="profession" id="profession" aria-label="profession">
+                            <select class="form-select required" name="profession" id="profession"
+                                aria-label="profession">
                                 <option value selected></option>
                                 <optgroup label="All Professions">
                                     @foreach ($professions as $profession)
@@ -69,8 +70,8 @@
                 <div class="row justify-content-center">
                     <div class="col-md-6">
                         <div class="mb-3 form-floating">
-                            <select class="form-select" name="residential_percentage" id="residential_percentage"
-                                aria-label="residential_percentage">
+                            <select class="form-select required" name="residential_percentage"
+                                id="residential_percentage" aria-label="residential_percentage">
                                 <option value selected></option>
                                 <option value="0">0%</option>
                                 <option value="5">5%</option>
@@ -99,7 +100,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3 form-floating">
-                            <select class="form-select" name="commercial_percentage" id="commercial_percentage"
+                            <select class="form-select required" name="commercial_percentage" id="commercial_percentage"
                                 aria-label="commercial_percentage">
                                 <option value selected></option>
                                 <option value="0">0%</option>
@@ -129,7 +130,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3 form-floating">
-                            <select class="form-select" name="new_construction_percentage"
+                            <select class="form-select required" name="new_construction_percentage"
                                 id="new_construction_percentage" aria-label="new_construction_percentage">
                                 <option value selected></option>
                                 <option value="0">0%</option>
@@ -160,7 +161,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3 form-floating">
-                            <select class="form-select" name="repair_remodel_percentage"
+                            <select class="form-select required" name="repair_remodel_percentage"
                                 id="repair_remodel_percentage" aria-label="repair_remodel_percentage">
                                 <option value selected></option>
                                 <option value="0">0%</option>

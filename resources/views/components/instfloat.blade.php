@@ -7,7 +7,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="instfloat_territory_of_operation"
+                    <select class="form-select required" name="instfloat_territory_of_operation"
                         id="instfloat_territory_of_operation" aria-label="instfloat_territory_of_operation">
                         <option value selected></option>
                         @foreach ($states as $state)
@@ -23,7 +23,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_type_of_operation" id="instfloat_type_of_operation"
-                        class="form-control" placeholder="Type of Operation:" />
+                        class="form-control required" placeholder="Type of Operation:" />
                     <label for="instfloat_type_of_operation">Type of
                         Operation:</label>
                 </div>
@@ -31,7 +31,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_type_of_equipment"
-                        id="instfloat_scheduled_type_of_equipment" class="form-control"
+                        id="instfloat_scheduled_type_of_equipment" class="form-control required"
                         placeholder="Type of Equipment / materials you will
                             be working
                             with:" />
@@ -45,17 +45,8 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    {{-- <select class="form-select" name="instfloat_deductible_amount"
-                            id="instfloat_deductible_amount"
-                            aria-label="instfloat_deductible_amount">
-                            <option value selected></option>
-                            <option value="500-1000">$500 - $1,000</option>
-                            <option value="2500">$2,500</option>
-                            <option value="5000">$5,000</option>
-                            <option value="10000">$10,000</option>
-                        </select> --}}
-                    <select class="form-select" name="instfloat_deductible_amount" id="instfloat_deductible_amount"
-                        aria-label="instfloat_deductible_amount">
+                    <select class="form-select required" name="instfloat_deductible_amount"
+                        id="instfloat_deductible_amount" aria-label="instfloat_deductible_amount">
                         <option selected></option>
                         <option value="500-2500">$500 / $2,500</option>
                         <option value="1000-2500">$1,000 / $2,500</option>
@@ -69,7 +60,7 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="instfloat_no_of_losses" id="instfloat_no_of_losses"
+                    <select class="form-select required" name="instfloat_no_of_losses" id="instfloat_no_of_losses"
                         aria-label="instfloat_no_of_losses">
                         <option selected></option>
                         <option value="0">No Losses</option>
@@ -102,15 +93,15 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="instfloat_location" id="instfloat_location" class="form-control"
-                        placeholder="Location:" />
+                    <input type="text" name="instfloat_location" id="instfloat_location"
+                        class="form-control required" placeholder="Location:" />
                     <label for="instfloat_location">Location:</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="instfloat_months_in_storage" id="instfloat_months_in_storage"
-                        aria-label="instfloat_months_in_storage">
+                    <select class="form-select required" name="instfloat_months_in_storage"
+                        id="instfloat_months_in_storage" aria-label="instfloat_months_in_storage">
                         <option value selected></option>
                         <option value="1 month">1 month</option>
                         <option value="2 months">2 months</option>
@@ -132,7 +123,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_max_value_of_equipment" id="instfloat_max_value_of_equipment"
-                        class="form-control"
+                        class="form-control required"
                         placeholder="Maximum Value of equipment that you will
                             be
                             storing:" />
@@ -145,7 +136,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_max_value_of_bldg_storage"
-                        id="instfloat_max_value_of_bldg_storage" class="form-control"
+                        id="instfloat_max_value_of_bldg_storage" class="form-control required"
                         placeholder="Maximum Value of Building
                             storage:" />
                     <label for="instfloat_max_value_of_bldg_storage">Maximum Value
@@ -156,7 +147,7 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="instfloat_type_security_placed"
+                    <select class="form-select required" name="instfloat_type_security_placed"
                         id="instfloat_type_security_placed" aria-label="instfloat_type_security_placed">
                         <option value selected></option>
                         <option value="Automatic Sprinkler System">Automatic Sprinkler
@@ -196,7 +187,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_unscheduled_type_of_equipment"
-                        id="instfloat_unscheduled_type_of_equipment" class="form-control"
+                        id="instfloat_unscheduled_type_of_equipment" class="form-control required"
                         placeholder="Type of Equipment / materials you will
                             be working with:" />
                     <label for="instfloat_unscheduled_type_of_equipment">Type of
@@ -207,7 +198,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_unscheduled_max_value_equipment_storing"
-                        id="instfloat_unscheduled_max_value_equipment_storing" class="form-control"
+                        id="instfloat_unscheduled_max_value_equipment_storing" class="form-control required"
                         placeholder="Maximum Value of equipment that you will be
                             storing:" />
                     <label for="instfloat_unscheduled_max_value_equipment_storing">Maximum
@@ -235,8 +226,8 @@
                     to/from
                     Others with or without Operators?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="instfloat_additional_info_q1" id="instfloat_additional_info_q1"
-                        aria-label="instfloat_additional_info_q1">
+                    <select class="form-select required" name="instfloat_additional_info_q1"
+                        id="instfloat_additional_info_q1" aria-label="instfloat_additional_info_q1">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -250,8 +241,8 @@
                     Equipment not
                     listed here?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="instfloat_additional_info_q2" id="instfloat_additional_info_q2"
-                        aria-label="instfloat_additional_info_q2">
+                    <select class="form-select required" name="instfloat_additional_info_q2"
+                        id="instfloat_additional_info_q2" aria-label="instfloat_additional_info_q2">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -264,8 +255,8 @@
                 <h6 class="profession_header mt-2 mb-2">Property used underground?
                 </h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="instfloat_additional_info_q3" id="instfloat_additional_info_q3"
-                        aria-label="instfloat_additional_info_q3">
+                    <select class="form-select required" name="instfloat_additional_info_q3"
+                        id="instfloat_additional_info_q3" aria-label="instfloat_additional_info_q3">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -277,8 +268,8 @@
             <div class="col-md-12">
                 <h6 class="profession_header mt-2 mb-2">Any work done afloat?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="instfloat_additional_info_q4" id="instfloat_additional_info_q4"
-                        aria-label="instfloat_additional_info_q4">
+                    <select class="form-select required" name="instfloat_additional_info_q4"
+                        id="instfloat_additional_info_q4" aria-label="instfloat_additional_info_q4">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -309,21 +300,23 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_type_1"
-                        id="instfloat_scheduled_equipment_type_1" class="form-control" placeholder="Type:" />
+                        id="instfloat_scheduled_equipment_type_1" class="form-control required"
+                        placeholder="Type:" />
                     <label for="instfloat_scheduled_equipment_type_1">Type:</label>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_mfg_1"
-                        id="instfloat_scheduled_equipment_mfg_1" class="form-control" placeholder="Manufacturer:" />
+                        id="instfloat_scheduled_equipment_mfg_1" class="form-control required"
+                        placeholder="Manufacturer:" />
                     <label for="instfloat_scheduled_equipment_mfg_1">Manufacturer:</label>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_id_or_serial_1"
-                        id="instfloat_scheduled_equipment_id_or_serial_1" class="form-control"
+                        id="instfloat_scheduled_equipment_id_or_serial_1" class="form-control required"
                         placeholder="ID # /
                             Serial Number:" />
                     <label for="instfloat_scheduled_equipment_id_or_serial_1">ID #
@@ -334,13 +327,14 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_model_1"
-                        id="instfloat_scheduled_equipment_model_1" class="form-control" placeholder="Model:" />
+                        id="instfloat_scheduled_equipment_model_1" class="form-control required"
+                        placeholder="Model:" />
                     <label for="instfloat_scheduled_equipment_model_1">Model:</label>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="instfloat_scheduled_equipment_new_or_used_1"
+                    <select class="form-select required" name="instfloat_scheduled_equipment_new_or_used_1"
                         id="instfloat_scheduled_equipment_new_or_used_1"
                         aria-label="instfloat_scheduled_equipment_new_or_used_1">
                         <option value="" selected></option>
@@ -354,7 +348,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_model_year_1"
-                        id="instfloat_scheduled_equipment_model_year_1" class="form-control"
+                        id="instfloat_scheduled_equipment_model_year_1" class="form-control required"
                         placeholder="Model Year:" />
                     <label for="instfloat_scheduled_equipment_model_year_1">Model
                         Year:</label>
@@ -363,7 +357,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_date_purchased_1"
-                        id="instfloat_scheduled_equipment_date_purchased_1" class="form-control"
+                        id="instfloat_scheduled_equipment_date_purchased_1" class="form-control required"
                         placeholder="Date Purchased:" />
                     <label for="instfloat_scheduled_equipment_date_purchased_1">Date
                         Purchased:</label>

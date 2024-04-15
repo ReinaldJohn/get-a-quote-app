@@ -7,7 +7,8 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="auto_add_vehicle" id="auto_add_vehicle" aria-label="auto_add_vehicle">
+                    <select class="form-select required" name="auto_add_vehicle" id="auto_add_vehicle"
+                        aria-label="auto_add_vehicle">
                         <option selected></option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -39,7 +40,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="auto_are_you_the_driver" id="auto_are_you_the_driver"
+                    <select class="form-select required" name="auto_are_you_the_driver" id="auto_are_you_the_driver"
                         aria-label="auto_are_you_the_driver">
                         <option value="" selected></option>
                         <option value="0">No</option>
@@ -52,22 +53,22 @@
             <div class="col-md-12">
                 <h6 class="profession_header mt-2 mb-2">Your Information:</h6>
                 <div class="mb-3 form-floating">
-                    <input type="text" name="auto_driver_full_name" id="auto_driver_full_name" class="form-control"
-                        placeholder="">
+                    <input type="text" name="auto_driver_full_name" id="auto_driver_full_name"
+                        class="form-control required" placeholder="">
                     <label for="auto_driver_full_name">Full Name</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="auto_driver_date_of_birth" id="auto_driver_date_of_birth"
-                        class="form-control" placeholder="auto_driver_date_of_birth">
+                        class="form-control required" placeholder="auto_driver_date_of_birth">
                     <label for="auto_driver_date_of_birth">Date of Birth</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="auto_driver_marital_status" id="auto_driver_marital_status"
-                        aria-label="auto_driver_marital_status">
+                    <select class="form-select required" name="auto_driver_marital_status"
+                        id="auto_driver_marital_status" aria-label="auto_driver_marital_status">
                         <option value selected></option>
                         <option value="Single">Single</option>
                         <option value="Married">Married</option>
@@ -79,8 +80,8 @@
             <div id="auto_driver_if_married_container"></div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="auto_driver_license_no" id="auto_driver_license_no" class="form-control"
-                        placeholder="auto_driver_license_no">
+                    <input type="text" name="auto_driver_license_no" id="auto_driver_license_no"
+                        class="form-control required" placeholder="auto_driver_license_no">
                     <label for="auto_driver_license_no">Driver's License
                         No.</label>
                 </div>
@@ -88,14 +89,14 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="auto_driver_years_of_driving_exp" id="auto_driver_years_of_driving_exp"
-                        class="form-control" placeholder="auto_driver_years_of_driving_exp">
+                        class="form-control required" placeholder="auto_driver_years_of_driving_exp">
                     <label for="auto_driver_years_of_driving_exp">Years of Driving
                         Experience?</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="auto_no_of_losses" id="auto_no_of_losses"
+                    <select class="form-select required" name="auto_no_of_losses" id="auto_no_of_losses"
                         aria-label="auto_no_of_losses">
                         <option selected></option>
                         <option value="0">No Losses</option>
@@ -124,9 +125,10 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="auto_add_driver" id="auto_add_driver"
+                    <select class="form-select required" name="auto_add_driver" id="auto_add_driver"
                         aria-label="auto_add_driver">
-                        <option value="1" selected>1</option>
+                        <option selected></option>
+                        <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>

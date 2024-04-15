@@ -29,9 +29,9 @@
                 <p>
                     You can also view our Policies by following this
                     link.
-                    <a href="https://pbibins.com/terms-and-conditions/">Terms and Conditions</a> |
-                    <a href="https://pbibins.com/privacy-policy/">Privacy Policy</a> |
-                    <a href="https://pbibins.com/cookie-policy/">Cookie Policy</a>
+                    <a href="{{ route('tc-index') }}">Terms and Conditions</a> |
+                    <a href="{{ route('pp-index') }}">Privacy Policy</a> |
+                    <a href="{{ route('cp-index') }}">Cookie Policy</a>
                 </p>
             </div>
         </div>

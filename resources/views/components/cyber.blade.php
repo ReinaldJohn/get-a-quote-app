@@ -7,29 +7,29 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="cyber_it_contact_name" id="cyber_it_contact_name" class="form-control"
-                        placeholder="IT Contact Name:" />
+                    <input type="text" name="cyber_it_contact_name" id="cyber_it_contact_name"
+                        class="form-control required" placeholder="IT Contact Name:" />
                     <label for="cyber_it_contact_name">IT Contact Name:</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="cyber_it_contact_number" id="cyber_it_contact_number"
-                        class="form-control" placeholder="IT Contact Number:" />
+                        class="form-control required" placeholder="IT Contact Number:" />
                     <label for="cyber_it_contact_number">IT Contact
                         Number:</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="email" name="cyber_it_contact_email" id="cyber_it_contact_email" class="form-control"
-                        placeholder="IT Contact Email:" />
+                    <input type="email" name="cyber_it_contact_email" id="cyber_it_contact_email"
+                        class="form-control required" placeholder="IT Contact Email:" />
                     <label for="cyber_it_contact_email">IT Contact Email:</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="cyber_no_of_losses" id="cyber_no_of_losses"
+                    <select class="form-select required" name="cyber_no_of_losses" id="cyber_no_of_losses"
                         aria-label="cyber_no_of_losses">
                         <option selected></option>
                         <option value="0">No Losses</option>
@@ -63,7 +63,7 @@
                 activities?</h6>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="cyber_q1" id="cyber_q1" aria-label="cyber_q1">
+                    <select class="form-select required" name="cyber_q1" id="cyber_q1" aria-label="cyber_q1">
                         <option value="" selected></option>
                         <option value="Adult Content">Adult Content</option>
                         <option value="Cannabis">Cannabis</option>
@@ -95,7 +95,7 @@
                     transfers over $25,000 through a secondary means of
                     communication prior to execution?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="cyber_q2" id="cyber_q2" aria-label="cyber_q2">
+                    <select class="form-select required" name="cyber_q2" id="cyber_q2" aria-label="cyber_q2">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -110,7 +110,7 @@
                     with a cloud
                     service provider?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="cyber_q3" id="cyber_q3" aria-label="cyber_q3">
+                    <select class="form-select required" name="cyber_q3" id="cyber_q3" aria-label="cyber_q3">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -125,7 +125,7 @@
                     card information of more than 500,000
                     Individuals?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="cyber_q4" id="cyber_q4" aria-label="cyber_q4">
+                    <select class="form-select required" name="cyber_q4" id="cyber_q4" aria-label="cyber_q4">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -139,7 +139,7 @@
                     authentication for email
                     access and remote network access?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="cyber_q5" id="cyber_q5" aria-label="cyber_q5">
+                    <select class="form-select required" name="cyber_q5" id="cyber_q5" aria-label="cyber_q5">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -153,7 +153,7 @@
                     information
                     at rest?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="cyber_q6" id="cyber_q6" aria-label="cyber_q6">
+                    <select class="form-select required" name="cyber_q6" id="cyber_q6" aria-label="cyber_q6">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -167,7 +167,7 @@
                     exceeding $10,000
                     within the past three years?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="cyber_q7" id="cyber_q7" aria-label="cyber_q7">
+                    <select class="form-select required" name="cyber_q7" id="cyber_q7" aria-label="cyber_q7">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -182,7 +182,7 @@
                     claim that could fall within the scope of the policy you
                     are applying for?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="cyber_q8" id="cyber_q8" aria-label="cyber_q8">
+                    <select class="form-select required" name="cyber_q8" id="cyber_q8" aria-label="cyber_q8">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>

@@ -13,9 +13,7 @@
     let observer = new MutationObserver((mutationsList, observer) => {
         for (let mutation of mutationsList) {
             if (mutation.type === "childList") {
-                // Check if the '.trades_performed' element exists within the added nodes
                 mutation.addedNodes.forEach((node) => {
-                    // Ensure node is an element
                     if (node.nodeType === 1) {
                         // Check if the node itself matches or if it contains the select element
                         if (
@@ -27,16 +25,80 @@
                                 placeholder: "Select here..",
                                 width: "100%",
                             });
-
-                            // Additional logic to set the element as required
-                            $(
-                                "#wrapped :checkbox, #wrapped input, #wrapped select, #wrapped textarea"
-                            )
-                                .not(
-                                    "#fax_number, #personal_website, #bond_owners_spouse_ssn"
-                                )
-                                .prop("required", true);
                         }
+
+                        $.fn.feinFormat = function () {
+                            return this.on("input blur", function () {
+                                var origString = $(this).val();
+                                var trimmedString = origString
+                                    .replace(/[^0-9]/g, "")
+                                    .slice(0, 9);
+                                if (trimmedString.length === 9) {
+                                    var specialChar = "-";
+                                    var newString =
+                                        trimmedString.substring(0, 2) +
+                                        specialChar +
+                                        trimmedString.substring(2);
+                                    $(this).val(newString);
+                                }
+                            });
+                        };
+
+                        $.fn.ssnFormat = function () {
+                            return this.on("input blur", function () {
+                                var id = $(this);
+                                var origString = id.val();
+                                var trimmedString = origString
+                                    .replace(/[^0-9]/g, "")
+                                    .slice(0, 9);
+                                if (trimmedString.length === 9) {
+                                    var specialString = "-";
+                                    var newString1 =
+                                        trimmedString.substring(0, 3) +
+                                        specialString;
+                                    var newString2 =
+                                        trimmedString.substring(3, 5) +
+                                        specialString;
+                                    var newString =
+                                        newString1 +
+                                        newString2 +
+                                        trimmedString.substring(5);
+                                    id.val(newString);
+                                }
+                            });
+                        };
+
+                        $("#wc_fein").feinFormat();
+                        $("#wc_ssn").ssnFormat();
+                        datePickerFormatter("#wc_dob");
+                        datePickerFormatter("#auto_driver_date_of_birth");
+                        datePickerFormatter("#bond_owners_dob");
+                        $("#bond_owners_ssn").ssnFormat();
+                        datePickerFormatter("#bond_effective_date");
+                        datePickerFormatter("#excess_gl_eff_date");
+                        datePickerFormatter("#excess_effective_date");
+                        datePickerFormatter("#excess_expiration_date");
+                        datePickerFormatter(
+                            "#instfloat_scheduled_equipment_date_purchased_1"
+                        );
+                        datePickerFormatter("#br_when_structure_built");
+                        datePickerFormatter("#epli_effective_date");
+                        $("#epli_fein").feinFormat();
+                        datePickerFormatter("#ayc_date_business_started");
+                        yearPickerFormatter("#property_year_built");
+                        yearPickerFormatter("#yearPickerFormatter");
+                        yearPickerFormatter(
+                            "#property_last_update_roofing_year"
+                        );
+                        yearPickerFormatter(
+                            "#property_last_update_heating_year"
+                        );
+                        yearPickerFormatter(
+                            "#property_last_update_plumbing_year"
+                        );
+                        yearPickerFormatter(
+                            "#property_last_update_electrical_year"
+                        );
                     }
                 });
             }
@@ -146,6 +208,59 @@
         isTermsChecked = $(this).is(":checked");
         $("#process").css("cursor", isTermsChecked ? "pointer" : "no-drop");
     });
+
+    var allowForward = false;
+    var declined = false;
+
+    $("#wizard_container").wizard({
+        afterForward: function () {
+            setInitialCursorState();
+        },
+        beforeForward: function (event, state) {
+            if (state.stepIndex === 2) {
+                if (!allowForward && !declined) {
+                    if ($("#dialpadTermsCheckbox").is(":checked")) {
+                        allowForward = true;
+                        $(".forward").css("cursor", "");
+                    } else {
+                        $(".forward").css("cursor", "no-drop");
+                        toastr.info(
+                            "You must accept the agreements before proceeding."
+                        );
+                        return false;
+                    }
+                } else if (declined) {
+                    toastr.info(
+                        "You must refresh the page again to agree to the terms and agreements."
+                    );
+                    return false;
+                }
+            } else {
+                allowForward = false;
+                $(".forward").css("cursor", "");
+            }
+            return true;
+        },
+    });
+
+    $("#dialpadTermsCheckbox").change(function () {
+        if ($(this).is(":checked")) {
+            allowForward = true;
+            $(".forward").css("cursor", "");
+        } else {
+            allowForward = false;
+            $(".forward").css("cursor", "no-drop");
+            toastr.info("You must accept the agreements before proceeding.");
+        }
+    });
+
+    // Function to set the initial cursor state for the forward button based on the checkbox state
+    function setInitialCursorState() {
+        // Apply only if the checkbox is not checked
+        if (!$("#dialpadTermsCheckbox").is(":checked")) {
+            $(".forward").css("cursor", "no-drop");
+        }
+    }
 
     function updateProfessionContents() {
         var numTotalEmp = $(".professionEntries").length;
@@ -414,10 +529,12 @@
         .wizard({
             stepsWrapper: "#wrapped",
             submit: ".submit",
+
             beforeSelect: function (event, state) {
                 if ($("input#website").val().length != 0) {
                     return false;
                 }
+
                 if (!state.isMovingForward) return true;
                 var inputs = $(this).wizard("state").step.find(":input");
 
@@ -1795,40 +1912,46 @@
                         pollution_date_of_loss = "";
                     }
 
-                    var polopt1_id = $("#polopt1_id").val();
-                    if (polopt1_id.length > 0) {
-                        var selectedOptionsText1 = $(
-                            "#polopt1_id option:selected"
-                        )
-                            .map(function () {
-                                return $(this).text();
-                            })
-                            .get()
-                            .join(", ");
+                    if ($("#polopt1_id").length) {
+                        var polopt1_id = $("#polopt1_id").val();
+                        if (polopt1_id.length > 0) {
+                            var selectedOptionsText1 = $(
+                                "#polopt1_id option:selected"
+                            )
+                                .map(function () {
+                                    return $(this).text();
+                                })
+                                .get()
+                                .join(", ");
+                        }
                     }
 
-                    var polopt2_id = $("#polopt2_id").val();
-                    if (polopt2_id.length > 0) {
-                        var selectedOptionsText2 = $(
-                            "#polopt2_id option:selected"
-                        )
-                            .map(function () {
-                                return $(this).text();
-                            })
-                            .get()
-                            .join(", ");
+                    if ($("#polopt2_id").length) {
+                        var polopt2_id = $("#polopt2_id").val();
+                        if (polopt2_id.length > 0) {
+                            var selectedOptionsText2 = $(
+                                "#polopt2_id option:selected"
+                            )
+                                .map(function () {
+                                    return $(this).text();
+                                })
+                                .get()
+                                .join(", ");
+                        }
                     }
 
-                    var polopt3_id = $("#polopt3_id").val();
-                    if (polopt3_id.length > 0) {
-                        var selectedOptionsText3 = $(
-                            "#polopt3_id option:selected"
-                        )
-                            .map(function () {
-                                return $(this).text();
-                            })
-                            .get()
-                            .join(", ");
+                    if ($("#polopt3_id").length) {
+                        var polopt3_id = $("#polopt3_id").val();
+                        if (polopt3_id.length > 0) {
+                            var selectedOptionsText3 = $(
+                                "#polopt3_id option:selected"
+                            )
+                                .map(function () {
+                                    return $(this).text();
+                                })
+                                .get()
+                                .join(", ");
+                        }
                     }
 
                     var pollutionLiabilityInformation1 = {
@@ -2815,7 +2938,7 @@
                                     } else {
                                         toastr.success(response.data.message);
                                         window.open("/thankyou", "_blank");
-                                        // location.reload();
+                                        location.reload();
                                     }
                                 })
                                 .catch((error) => {
@@ -2854,6 +2977,59 @@
             );
         },
     });
+
+    // var allowForward = false;
+    // var declined = false;
+    // $("#wizard_container").wizard({
+    //     beforeForward: function (event, state) {
+    //         var deferred = $.Deferred();
+    //         if (state.stepIndex === 1) {
+    //             if (!allowForward && !declined) {
+    //                 $.magnificPopup.open({
+    //                     items: {
+    //                         src: "#modal-help",
+    //                         type: "inline",
+    //                     },
+    //                     modal: true,
+    //                     callbacks: {
+    //                         close: function () {
+    //                             if (allowForward) {
+    //                                 deferred.resolve(true);
+    //                             } else {
+    //                                 deferred.resolve(false);
+    //                                 if (declined) {
+    //                                     toastr.info(
+    //                                         "You must refresh the page again to agree to the terms and agreements."
+    //                                     );
+    //                                 }
+    //                             }
+    //                         },
+    //                     },
+    //                 });
+    //                 $("#accepted").one("click", function () {
+    //                     allowForward = true;
+    //                     $.magnificPopup.close();
+    //                     $(".forward").trigger("click");
+    //                 });
+
+    //                 $("#decline").one("click", function () {
+    //                     allowForward = false;
+    //                     declined = true;
+    //                     $.magnificPopup.close();
+    //                 });
+    //                 return false;
+    //             } else if (declined) {
+    //                 toastr.info(
+    //                     "You must refresh the page again to agree to the terms and agreements."
+    //                 );
+    //                 return false;
+    //             }
+    //         } else {
+    //             allowForward = false;
+    //             return true;
+    //         }
+    //     },
+    // });
 
     // Validate select
     $("#wrapped").validate({
@@ -3332,37 +3508,6 @@
         }
     });
 
-    $.fn.feinFormat = function () {
-        return this.on("input blur", function () {
-            var origString = $(this).val();
-            var trimmedString = origString.replace(/[^0-9]/g, "").slice(0, 9);
-            if (trimmedString.length === 9) {
-                var specialChar = "-";
-                var newString =
-                    trimmedString.substring(0, 2) +
-                    specialChar +
-                    trimmedString.substring(2);
-                $(this).val(newString);
-            }
-        });
-    };
-
-    $.fn.ssnFormat = function () {
-        return this.on("input blur", function () {
-            var id = $(this);
-            var origString = id.val();
-            var trimmedString = origString.replace(/[^0-9]/g, "").slice(0, 9);
-            if (trimmedString.length === 9) {
-                var specialString = "-";
-                var newString1 = trimmedString.substring(0, 3) + specialString;
-                var newString2 = trimmedString.substring(3, 5) + specialString;
-                var newString =
-                    newString1 + newString2 + trimmedString.substring(5);
-                id.val(newString);
-            }
-        });
-    };
-
     function computePercentage(a, b) {
         const val_a = $("#" + a).val();
         const x = 100 - parseInt(val_a);
@@ -3426,7 +3571,7 @@
 
     let equipmentCount = 1;
     function appendNewSchedEquipmentEntry(selector) {
-        $(selector).on("click", function (e) {
+        $(document).on("click", selector, function (e) {
             e.preventDefault();
             if (equipmentCount < 5) {
                 equipmentCount++;
@@ -3570,7 +3715,7 @@
         $("#gl_profession_if_others").append(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="gl_specify_profession" id="gl_specify_profession" class="form-control" placeholder="">
+                    <input type="text" name="gl_specify_profession" id="gl_specify_profession" class="form-control required" placeholder="">
                     <label for="gl_specify_profession">Please specify your profession</label>
                 </div>
             </div>
@@ -3969,7 +4114,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="auto_driver_spouse_name"
-                        id="auto_driver_spouse_name" class="form-control"
+                        id="auto_driver_spouse_name" class="form-control required"
                         placeholder="auto_driver_spouse_name">
                     <label for="auto_driver_spouse_name">Spouse Name</label>
                 </div>
@@ -3977,7 +4122,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="auto_driver_spouse_dob"
-                        id="auto_driver_spouse_dob" class="form-control"
+                        id="auto_driver_spouse_dob" class="form-control required"
                         placeholder="auto_driver_spouse_dob">
                     <label for="auto_driver_spouse_dob">Spouse Date of Birth</label>
                 </div>
@@ -3991,7 +4136,7 @@
         $("#gl_subcon_cost_container").append(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="gl_subcon_cost" id="gl_subcon_cost" class="form-control" placeholder="">
+                    <input type="text" name="gl_subcon_cost" id="gl_subcon_cost" class="form-control required" placeholder="">
                     <label for="gl_subcon_cost">Subcontractor Cost</label>
                 </div>
             </div>
@@ -4002,7 +4147,7 @@
         $("#pollution_subcon_cost_container").append(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="pollution_subcon_cost" id="pollution_subcon_cost" class="form-control" placeholder="">
+                    <input type="text" name="pollution_subcon_cost" id="pollution_subcon_cost" class="form-control required" placeholder="">
                     <label for="pollution_subcon_cost">Subcontractor Cost</label>
                 </div>
             </div>
@@ -4013,7 +4158,7 @@
         $("#wc_subcon_cost_year_container").append(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="wc_subcon_cost_year" id="wc_subcon_cost_year" class="form-control" placeholder="">
+                    <input type="text" name="wc_subcon_cost_year" id="wc_subcon_cost_year" class="form-control required" placeholder="">
                     <label for="wc_subcon_cost_year">Subcontractor cost in a year</label>
                 </div>
             </div>
@@ -4024,7 +4169,7 @@
         $("#pollution_explain_losses_container").append(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <textarea style="resize: none;" name="pollution_explain_losses" id="pollution_explain_losses" class="form-control" placeholder="Please explain"></textarea>
+                    <textarea style="resize: none;" name="pollution_explain_losses" id="pollution_explain_losses" class="form-control required" placeholder="Please explain"></textarea>
                     <label for="pollution_explain_losses">Explain Losses (Please include loss amount)</label>
                 </div>
             </div>
@@ -4037,43 +4182,43 @@
             <div class='row justify-content-center'>
                 <div class='col-md-4'>
                     <div class='mb-3 form-floating'>
-                        <input type='text' name='auto_vehicle_year_${a}' id='auto_vehicle_year_${a}' class='form-control' placeholder='' maxlength='4'>
+                        <input type='text' name='auto_vehicle_year_${a}' id='auto_vehicle_year_${a}' class='form-control required' placeholder='' maxlength='4'>
                         <label for='auto_vehicle_year_${a}'>Year</label>
                     </div>
                 </div>
                 <div class='col-md-4'>
                     <div class='mb-3 form-floating'>
-                        <input type='text' name='auto_vehicle_maker_${a}' id='auto_vehicle_maker_${a}' class='form-control' placeholder='' maxlength='100'>
+                        <input type='text' name='auto_vehicle_maker_${a}' id='auto_vehicle_maker_${a}' class='form-control required' placeholder='' maxlength='100'>
                         <label for='auto_vehicle_maker_${a}'>Maker</label>
                     </div>
                 </div>
                 <div class='col-md-4'>
                     <div class='mb-3 form-floating'>
-                        <input type='text' name='auto_vehicle_model_${a}' id='auto_vehicle_model_${a}' class='form-control' placeholder='' maxlength='100'>
+                        <input type='text' name='auto_vehicle_model_${a}' id='auto_vehicle_model_${a}' class='form-control required' placeholder='' maxlength='100'>
                         <label for='auto_vehicle_model_${a}'>Model</label>
                     </div>
                 </div>
                 <div class='col-md-6'>
                     <div class='mb-3 form-floating'>
-                        <input type='text' name='auto_vehicle_vin_${a}' id='auto_vehicle_vin_${a}' class='form-control' placeholder='' maxlength='100'>
+                        <input type='text' name='auto_vehicle_vin_${a}' id='auto_vehicle_vin_${a}' class='form-control required' placeholder='' maxlength='100'>
                         <label for='auto_vehicle_vin_${a}'>Vehicle Identification Number (VIN)</label>
                     </div>
                 </div>
                 <div class='col-md-6'>
                     <div class='mb-3 form-floating'>
-                        <input type='text' name='auto_vehicle_mileage_${a}' id='auto_vehicle_mileage_${a}' class='form-control' placeholder='' maxlength='100'>
+                        <input type='text' name='auto_vehicle_mileage_${a}' id='auto_vehicle_mileage_${a}' class='form-control required' placeholder='' maxlength='100'>
                         <label for='auto_vehicle_mileage_${a}'>Mileage / Radius</label>
                     </div>
                 </div>
                 <div class='col-md-12'>
                     <div class='mb-3 form-floating'>
-                        <input type='text' name='auto_vehicle_garage_add_${a}' id='auto_vehicle_garage_add_${a}' class='form-control' placeholder=''>
+                        <input type='text' name='auto_vehicle_garage_add_${a}' id='auto_vehicle_garage_add_${a}' class='form-control required' placeholder=''>
                         <label for='auto_vehicle_garage_add_${a}'>Garage Address</label>
                     </div>
                 </div>
                 <div class='col-md-12'>
                     <div class='mb-3 form-floating'>
-                        <select class='form-control' name='auto_vehicle_coverage_limits_${a}' id='auto_vehicle_coverage_limits_${a}' aria-label='auto_vehicle_coverage_limits_${a}'>
+                        <select class='form-control required' name='auto_vehicle_coverage_limits_${a}' id='auto_vehicle_coverage_limits_${a}' aria-label='auto_vehicle_coverage_limits_${a}'>
                             <option value selected></option>
                             <option value='100,000'>$100,000</option>
                             <option value='300,000'>$300,000</option>
@@ -4095,31 +4240,31 @@
             <div class="row justify-content-center">
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="auto_add_drivers_name_${a}" id="auto_add_drivers_name_${a}" class="form-control" placeholder="">
-                        <label for="auto_add_drivers_name_${a}">Driver"s Name</label>
+                        <input type="text" name="auto_add_drivers_name_${a}" id="auto_add_drivers_name_${a}" class="form-control required" placeholder="">
+                        <label for="auto_add_drivers_name_${a}">Driver's Name</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="auto_add_driver_lic_${a}" id="auto_add_driver_lic_${a}" class="form-control" placeholder="">
-                        <label for="auto_add_driver_lic_${a}">Driver"s License Number</label>
+                        <input type="text" name="auto_add_driver_lic_${a}" id="auto_add_driver_lic_${a}" class="form-control required" placeholder="">
+                        <label for="auto_add_driver_lic_${a}">Driver's License Number</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="auto_add_driver_mileage_radius_${a}" id="auto_add_driver_mileage_radius_${a}" class="form-control" placeholder="">
+                        <input type="text" name="auto_add_driver_mileage_radius_${a}" id="auto_add_driver_mileage_radius_${a}" class="form-control required" placeholder="">
                         <label for="auto_add_driver_mileage_radius_${a}">Mileage / Radius</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="auto_add_driver_date_birth_${a}" id="auto_add_driver_date_birth_${a}" class="form-control" placeholder="">
+                        <input type="text" name="auto_add_driver_date_birth_${a}" id="auto_add_driver_date_birth_${a}" class="form-control required" placeholder="">
                         <label for="auto_add_driver_date_birth_${a}">Date of Birth</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="auto_add_driver_civil_status_${a}" id="auto_add_driver_civil_status_${a}" aria-label="auto_add_driver_civil_status_${a}">
+                        <select class="form-select required" name="auto_add_driver_civil_status_${a}" id="auto_add_driver_civil_status_${a}" aria-label="auto_add_driver_civil_status_${a}">
                             <option value selected></option>
                             <option value="Single">Single</option>
                             <option value="Married">Married</option>
@@ -4142,7 +4287,7 @@
                         <div class="col-md-12">
                             <div class="mb-3 form-floating">
                                 <input type="text" name="auto_driver_spouse_name_${a}"
-                                    id="auto_driver_spouse_name_${a}" class="form-control"
+                                    id="auto_driver_spouse_name_${a}" class="form-control required"
                                     placeholder="">
                                 <label for="auto_driver_spouse_name_${a}">Spouse Name</label>
                             </div>
@@ -4150,7 +4295,7 @@
                         <div class="col-md-12">
                             <div class="mb-3 form-floating">
                                 <input type="text" name="auto_driver_spouse_dob_${a}"
-                                    id="auto_driver_spouse_dob_${a}" class="form-control"
+                                    id="auto_driver_spouse_dob_${a}" class="form-control required"
                                     placeholder="">
                                 <label for="auto_driver_spouse_dob_${a}">Spouse Date of Birth</label>
                             </div>
@@ -4194,19 +4339,19 @@
         $("#bond_owner_if_married_container").append(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bond_owners_spouse_name" id="bond_owners_spouse_name" class="form-control" placeholder="">
+                    <input type="text" name="bond_owners_spouse_name" id="bond_owners_spouse_name" class="form-control required" placeholder="">
                     <label for="bond_owners_spouse_name">Spouse's Name</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bond_owners_spouse_dob" id="bond_owners_spouse_dob" class="form-control" placeholder="">
+                    <input type="text" name="bond_owners_spouse_dob" id="bond_owners_spouse_dob" class="form-control required" placeholder="">
                     <label for="bond_owners_spouse_dob">Spouse's Date of Birth</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bond_owners_spouse_ssn" id="bond_owners_spouse_ssn" class="form-control" placeholder="">
+                    <input type="text" name="bond_owners_spouse_ssn" id="bond_owners_spouse_ssn" class="form-control required" placeholder="">
                     <label for="bond_owners_spouse_ssn">Spouse's SSN (Optional)</label>
                 </div>
             </div>
@@ -4220,7 +4365,7 @@
         $("#bond_license_type_if_others_container").append(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bond_if_other_type_of_license" id="bond_if_other_type_of_license" class="form-control" placeholder="">
+                    <input type="text" name="bond_if_other_type_of_license" id="bond_if_other_type_of_license" class="form-control required" placeholder="">
                     <label for="bond_if_other_type_of_license">If others, please specify</label>
                 </div>
             </div>
@@ -4231,13 +4376,13 @@
         $(`#${name}_losses_container`).html(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="${name}_amt_of_claims" id="${name}_amt_of_claims" class="form-control" placeholder="Amount of Claims">
+                    <input type="text" name="${name}_amt_of_claims" id="${name}_amt_of_claims" class="form-control required" placeholder="Amount of Claims">
                     <label for="${name}_amt_of_claims">Amount of Claim:</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="${name}_date_of_loss" id="${name}_date_of_loss" class="form-control" placeholder="Date of Loss">
+                    <input type="text" name="${name}_date_of_loss" id="${name}_date_of_loss" class="form-control required" placeholder="Date of Loss">
                     <label for="${name}_date_of_loss">Date of Loss:</label>
                 </div>
             </div>
@@ -4251,7 +4396,7 @@
         $("#excess_no_losses_5years_container").append(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <textarea style="resize: none;" name="excess_explain_losses" id="excess_explain_losses" class="form-control" placeholder="Please explain"></textarea>
+                    <textarea style="resize: none;" name="excess_explain_losses" id="excess_explain_losses" class="form-control required" placeholder="Please explain"></textarea>
                     <label for="excess_explain_losses">Explain Losses (Please include loss amount)</label>
                 </div>
             </div>
@@ -4265,14 +4410,14 @@
                     <h5 class="profession_header mt-2 mb-2">Additional Questions for General Contractors:</h5>
                     <h6 class="profession_header mt-2 mb-2">New construction - How many houses will you be building for the whole year?</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_gc" id="gl_gross_add_q1_for_gc" class="form-control" placeholder="Please explain:">
+                        <input type="text" name="gl_gross_add_q1_for_gc" id="gl_gross_add_q1_for_gc" class="form-control required" placeholder="Please explain:">
                         <label for="gl_gross_add_q1_for_gc">Please explain:</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Do you work on ADU houses?</h6>
                     <div class="mb-3 form-floating">
-                        <select class="form-select"
+                        <select class="form-select required"
                             name="gl_gross_add_q2_for_gc"
                             id="gl_gross_add_q2_for_gc"
                             aria-label="gl_gross_add_q2_for_gc">
@@ -4560,14 +4705,14 @@
                 <div class="col-md-6">
                     <h6 class="profession_header mt-2 mb-2">Flat Works %</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_concrete" id="gl_gross_add_q1_for_concrete" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q1_for_concrete" id="gl_gross_add_q1_for_concrete" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q1_for_concrete">%</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <h6 class="profession_header mt-2 mb-2">Foundation Works %</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q2_for_concrete" id="gl_gross_add_q2_for_concrete" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q2_for_concrete" id="gl_gross_add_q2_for_concrete" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q2_for_concrete">%</label>
                     </div>
                 </div>
@@ -4575,7 +4720,7 @@
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q3_for_concrete" id="gl_gross_add_q3_for_concrete" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q3_for_concrete" id="gl_gross_add_q3_for_concrete" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q3_for_concrete">Do you do works on dike, dams, and bridges?</label>
                     </div>
                 </div>
@@ -4606,7 +4751,7 @@
                 <h6 class="profession_header mt-2 mb-2">Additional Questions for Handyman Contractors:</h6>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_handyman" id="gl_gross_add_q1_for_handyman" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q1_for_handyman" id="gl_gross_add_q1_for_handyman" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q1_for_handyman">What’s the largest project that you have done?</label>
                     </div>
                 </div>
@@ -4620,7 +4765,7 @@
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Additional Questions for Flooring Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_flooring" id="gl_gross_add_q1_for_flooring" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q1_for_flooring" id="gl_gross_add_q1_for_flooring" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q1_for_flooring">What type of flooring do you install?</label>
                     </div>
                 </div>
@@ -4634,19 +4779,19 @@
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Additional Questions for Landscaping Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_landscaping" id="gl_gross_add_q1_for_landscaping" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q1_for_landscaping" id="gl_gross_add_q1_for_landscaping" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q1_for_landscaping">Any hardscaping works?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q2_for_landscaping" id="gl_gross_add_q2_for_landscaping" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q2_for_landscaping" id="gl_gross_add_q2_for_landscaping" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q2_for_landscaping">Do you install irrigations systems?</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q3_for_landscaping" id="gl_gross_add_q3_for_landscaping" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q3_for_landscaping" id="gl_gross_add_q3_for_landscaping" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q3_for_landscaping">Retaining walls max height</label>
                     </div>
                 </div>
@@ -4660,7 +4805,7 @@
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Additional Questions for Painting Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_gross_add_q1_for_painting"
+                        <select class="form-select required" name="gl_gross_add_q1_for_painting"
                             id="gl_gross_add_q1_for_painting" aria-label="gl_gross_add_q1_for_painting">
                             <option value="" selected></option>
                             <option value="0">No</option>
@@ -4671,7 +4816,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_gross_add_q2_for_painting"
+                        <select class="form-select required" name="gl_gross_add_q2_for_painting"
                             id="gl_gross_add_q2_for_painting" aria-label="gl_gross_add_q2_for_painting">
                             <option value="" selected></option>
                             <option value="0">No</option>
@@ -4682,7 +4827,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q3_for_painting" id="gl_gross_add_q3_for_painting" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q3_for_painting" id="gl_gross_add_q3_for_painting" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q3_for_painting">Max height exposure?</label>
                     </div>
                 </div>
@@ -4696,7 +4841,7 @@
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Additional Questions for Plastering Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_plastering" id="gl_gross_add_q1_for_plastering" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q1_for_plastering" id="gl_gross_add_q1_for_plastering" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q1_for_plastering">Max. height exposure</label>
                     </div>
                 </div>
@@ -4710,7 +4855,7 @@
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Additional Questions for Tree Service Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q1_for_tree_service" id="gl_gross_add_q1_for_tree_service" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q1_for_tree_service" id="gl_gross_add_q1_for_tree_service" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q1_for_tree_service">Max. height exposure</label>
                     </div>
                 </div>
@@ -4724,7 +4869,7 @@
                 <div class="col-md-12">
                     <h6 class="profession_header mt-2 mb-2">Additional Questions Masonry Contractors:</h6>
                     <div class="mb-3 form-floating">
-                        <select class="form-select" name="gl_gross_add_q1_for_masonry"
+                        <select class="form-select required" name="gl_gross_add_q1_for_masonry"
                             id="gl_gross_add_q1_for_masonry" aria-label="gl_gross_add_q1_for_masonry">
                             <option value="" selected></option>
                             <option value="0">No</option>
@@ -4735,7 +4880,7 @@
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="gl_gross_add_q2_for_masonry" id="gl_gross_add_q2_for_masonry" class="form-control" placeholder="">
+                        <input type="text" name="gl_gross_add_q2_for_masonry" id="gl_gross_add_q2_for_masonry" class="form-control required" placeholder="">
                         <label for="gl_gross_add_q2_for_masonry">Do you do retaining walls that exceeds 6ft?</label>
                     </div>
                 </div>
@@ -4748,7 +4893,7 @@
             <div class="row justify-content-center appendedQuestion">
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="epli_deductible_claim_if_others" id="epli_deductible_claim_if_others" class="form-control" placeholder="">
+                        <input type="text" name="epli_deductible_claim_if_others" id="epli_deductible_claim_if_others" class="form-control required" placeholder="">
                         <label for="epli_deductible_claim_if_others">If others, please indicate the deductible per claim amount:</label>
                     </div>
                 </div>
@@ -4784,7 +4929,7 @@
             <h6 class="profession_header mt-2 mb-2">State Work Entry No. ${counter}</h6>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="gl_multiple_states_${counter}"
+                    <select class="form-select required" name="gl_multiple_states_${counter}"
                         id="gl_multiple_states_${counter}" aria-label="gl_multiple_states_${counter}">
                         <option value="" selected></option>
                         <option value='AK'>AK</option>
@@ -4850,7 +4995,7 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="gl_multiple_states_percentage_${counter}" id="gl_multiple_states_percentage_${counter}" class="form-control" placeholder="% Percentage">
+                    <input type="text" name="gl_multiple_states_percentage_${counter}" id="gl_multiple_states_percentage_${counter}" class="form-control required" placeholder="% Percentage">
                     <label for="gl_multiple_states_percentage_${counter}">% Percentage</label>
                 </div>
             </div>
@@ -4903,7 +5048,7 @@
         $("#tools_no_losses_5years_container").append(`
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <textarea style="resize: none;" name="tools_explain_losses" id="tools_explain_losses" class="form-control" placeholder="Please explain"></textarea>
+                    <textarea style="resize: none;" name="tools_explain_losses" id="tools_explain_losses" class="form-control required" placeholder="Please explain"></textarea>
                     <label for="tools_explain_losses">Explain Losses (Please include loss amount)</label>
                 </div>
             </div>
@@ -4919,7 +5064,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_type_${i}"
-                        id="instfloat_scheduled_equipment_type_${i}" class="form-control"
+                        id="instfloat_scheduled_equipment_type_${i}" class="form-control required"
                         placeholder="Type:" />
                     <label for="instfloat_scheduled_equipment_type_${i}">Type:</label>
                 </div>
@@ -4927,7 +5072,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_mfg_${i}"
-                        id="instfloat_scheduled_equipment_mfg_${i}" class="form-control"
+                        id="instfloat_scheduled_equipment_mfg_${i}" class="form-control required"
                         placeholder="Manufacturer:" />
                     <label for="instfloat_scheduled_equipment_mfg_${i}">Manufacturer:</label>
                 </div>
@@ -4937,7 +5082,7 @@
                     <input type="text"
                         name="instfloat_scheduled_equipment_id_or_serial_${i}"
                         id="instfloat_scheduled_equipment_id_or_serial_${i}"
-                        class="form-control"
+                        class="form-control required"
                         placeholder="ID # /
                         Serial Number:"
                         />
@@ -4948,7 +5093,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="instfloat_scheduled_equipment_model_${i}"
-                        id="instfloat_scheduled_equipment_model_${i}" class="form-control"
+                        id="instfloat_scheduled_equipment_model_${i}" class="form-control required"
                         placeholder="Model:" />
                     <label for="instfloat_scheduled_equipment_model_${i}">Model:</label>
                 </div>
@@ -4972,7 +5117,7 @@
                     <input type="text"
                         name="instfloat_scheduled_equipment_model_year_${i}"
                         id="instfloat_scheduled_equipment_model_year_${i}"
-                        class="form-control" placeholder="Model Year:"
+                        class="form-control required" placeholder="Model Year:"
                         />
                     <label for="instfloat_scheduled_equipment_model_year_${i}">Model
                         Year:</label>
@@ -4983,7 +5128,7 @@
                     <input type="text"
                         name="instfloat_scheduled_equipment_date_purchased_${i}"
                         id="instfloat_scheduled_equipment_date_purchased_${i}"
-                        class="form-control" placeholder="Date Purchased:"
+                        class="form-control required" placeholder="Date Purchased:"
                         />
                     <label for="instfloat_scheduled_equipment_date_purchased_${i}">Date
                         Purchased:</label>
@@ -5017,7 +5162,7 @@
                                 <h6 class="profession_header mt-2 mb-2">Please specify your profession:</h6>
                                 <div class="col-md-12">
                                     <div class="mb-3 form-floating">
-                                        <input type="text" name="wc_specify_profession_${a}" id="wc_specify_profession_${a}" class="form-control" placeholder="">
+                                        <input type="text" name="wc_specify_profession_${a}" id="wc_specify_profession_${a}" class="form-control required" placeholder="">
                                         <label for="wc_specify_profession_${a}">Please specify your profession</label>
                                     </div>
                                 </div>
@@ -5043,14 +5188,14 @@
                     <h5 class="profession_header mt-2 mb-2">Owner's Information</h5>
                     <div class="mb-3 form-floating">
                         <input type="text" name="wc_name_${counter}" id="wc_name_${counter}"
-                            class="form-control" placeholder="">
+                            class="form-control required" placeholder="">
                         <label for="wc_name_${counter}">Owner's Name</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
                         <input type="text" name="wc_title_relationship_${counter}"
-                            id="wc_title_relationship_${counter}" class="form-control" placeholder=""
+                            id="wc_title_relationship_${counter}" class="form-control required" placeholder=""
                             >
                         <label for="wc_title_relationship_${counter}">Title / Relationship</label>
                     </div>
@@ -5099,21 +5244,21 @@
                 <div class="col-md-6">
                     <div class="mb-3 form-floating">
                         <input type="text" name="wc_ssn_${counter}" id="wc_ssn_${counter}"
-                            class="form-control" placeholder="SSN">
+                            class="form-control required" placeholder="SSN">
                         <label for="wc_ssn_${counter}">SSN</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3 form-floating">
                         <input type="text" name="wc_fein_${counter}" id="wc_fein_${counter}"
-                            class="form-control" placeholder="FEIN">
+                            class="form-control required" placeholder="FEIN">
                         <label for="wc_fein_${counter}">FEIN</label>
                     </div>
                 </div>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
                         <input type="text" name="wc_dob_${counter}" id="wc_dob_${counter}"
-                            class="form-control" placeholder="MM/DD/YYYY">
+                            class="form-control required" placeholder="MM/DD/YYYY">
                         <label for="wc_dob_${counter}">Date of Birth</label>
                     </div>
                 </div>
@@ -5148,7 +5293,7 @@
                 <h6 class="profession_header mt-2 mb-2">Carrier Name</h6>
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_sched_property_carrier_name"
-                        id="br_sched_property_carrier_name" class="form-control"
+                        id="br_sched_property_carrier_name" class="form-control required"
                         placeholder="Please specify:" />
                     <label for="br_sched_property_carrier_name">Please specify:</label>
                 </div>
@@ -5157,7 +5302,7 @@
                 <h6 class="profession_header mt-2 mb-2">Effective Date:</h6>
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_sched_property_effective_date"
-                        id="br_sched_property_effective_date" class="form-control"
+                        id="br_sched_property_effective_date" class="form-control required"
                         placeholder="Please specify:" />
                     <label for="br_sched_property_effective_date">Please specify:</label>
                 </div>
@@ -5166,7 +5311,7 @@
                 <h6 class="profession_header mt-2 mb-2">Expiration Date:</h6>
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_sched_property_expiration_date"
-                        id="br_sched_property_expiration_date" class="form-control"
+                        id="br_sched_property_expiration_date" class="form-control required"
                         placeholder="Please specify:" />
                     <label for="br_sched_property_expiration_date">Please specify:</label>
                 </div>
@@ -5183,7 +5328,7 @@
                 <h6 class="profession_header mt-2 mb-2">When has the project started?</h6>
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_when_project_started"
-                        id="br_when_project_started" class="form-control"
+                        id="br_when_project_started" class="form-control required"
                         placeholder="Please specify:" />
                     <label for="br_when_project_started">Please specify:</label>
                 </div>
@@ -5192,7 +5337,7 @@
                 <h6 class="profession_header mt-2 mb-2">What are the work done?</h6>
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_what_are_work_done"
-                        id="br_what_are_work_done" class="form-control"
+                        id="br_what_are_work_done" class="form-control required"
                         placeholder="Please specify:" />
                     <label for="br_what_are_work_done">Please specify:</label>
                 </div>
@@ -5201,7 +5346,7 @@
                 <h6 class="profession_header mt-2 mb-2">Cost of Work Done</h6>
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_cost_of_work_done"
-                        id="br_cost_of_work_done" class="form-control"
+                        id="br_cost_of_work_done" class="form-control required"
                         placeholder="Please specify:" />
                     <label for="br_cost_of_work_done">Please specify:</label>
                 </div>
@@ -5210,7 +5355,7 @@
                 <h6 class="profession_header mt-2 mb-2">What are the remaining works?</h6>
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_what_are_remaining_works"
-                        id="br_what_are_remaining_works" class="form-control"
+                        id="br_what_are_remaining_works" class="form-control required"
                         placeholder="Please specify:" />
                     <label for="br_what_are_remaining_works">Please specify:</label>
                 </div>
@@ -5219,7 +5364,7 @@
                 <h6 class="profession_header mt-2 mb-2">Cost of remaining works</h6>
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_cost_remaining_works"
-                        id="br_cost_remaining_works" class="form-control"
+                        id="br_cost_remaining_works" class="form-control required"
                         placeholder="Please specify:" />
                     <label for="br_cost_remaining_works">Please specify:</label>
                 </div>
@@ -5228,7 +5373,7 @@
                 <h6 class="profession_header mt-2 mb-2">When will project start?</h6>
                 <div class="mb-3 form-floating">
                     <input type="text" name="br_when_will_project_start"
-                        id="br_when_will_project_start" class="form-control"
+                        id="br_when_will_project_start" class="form-control required"
                         placeholder="Please specify:" />
                     <label for="br_when_will_project_start">Please specify:</label>
                 </div>
@@ -5243,14 +5388,14 @@
 
     function showReqLimitsIfOthers() {
         $("#eo_requested_limits_others_container").append(`
-            <div class="col-md-12">
+
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_reqlimit_if_others"
-                        id="eo_reqlimit_if_others" class="form-control"
+                        id="eo_reqlimit_if_others" class="form-control required"
                         placeholder="If Others, Please indicate:" />
                     <label for="eo_reqlimit_if_others">If Others, Please indicate:</label>
                 </div>
-            </div>
+
         `);
     }
 
@@ -5259,7 +5404,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_reqdeductible_if_others"
-                        id="eo_reqdeductible_if_others" class="form-control"
+                        id="eo_reqdeductible_if_others" class="form-control required"
                         placeholder="If Others, Please indicate:" />
                     <label for="eo_reqdeductible_if_others">If Others, Please
                         indicate:</label>
@@ -5273,7 +5418,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_reqdeductible_if_others"
-                        id="eo_reqdeductible_if_others" class="form-control"
+                        id="eo_reqdeductible_if_others" class="form-control required"
                         placeholder="If Others, Please indicate:" />
                     <label for="eo_reqdeductible_if_others">If Others, Please
                         indicate:</label>
@@ -5287,7 +5432,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_business_entity_sub_q1"
-                        id="eo_business_entity_sub_q1" class="form-control"
+                        id="eo_business_entity_sub_q1" class="form-control required"
                         placeholder="" />
                     <label for="eo_business_entity_sub_q1">If Yes, Please
                         explain:</label>
@@ -5301,7 +5446,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_business_entity_sub_q2"
-                        id="eo_business_entity_sub_q2" class="form-control"
+                        id="eo_business_entity_sub_q2" class="form-control required"
                         placeholder="" />
                     <label for="eo_business_entity_sub_q2">If Yes, Please
                         explain:</label>
@@ -5315,7 +5460,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_business_entity_sub_q3"
-                        id="eo_business_entity_sub_q3" class="form-control"
+                        id="eo_business_entity_sub_q3" class="form-control required"
                         placeholder="" />
                     <label for="eo_business_entity_sub_q3">If Yes, Please
                         explain:</label>
@@ -5329,7 +5474,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_business_entity_sub_q4"
-                        id="eo_business_entity_sub_q4" class="form-control"
+                        id="eo_business_entity_sub_q4" class="form-control required"
                         placeholder="" />
                     <label for="eo_business_entity_sub_q4">If Yes, Please
                         explain:</label>
@@ -5343,7 +5488,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_business_entity_sub_q5"
-                        id="eo_business_entity_sub_q5" class="form-control"
+                        id="eo_business_entity_sub_q5" class="form-control required"
                         placeholder="" />
                     <label for="eo_business_entity_sub_q5">If Yes, Please
                         explain:</label>
@@ -5357,7 +5502,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_hr_sub_q1"
-                        id="eo_hr_sub_q1" class="form-control"
+                        id="eo_hr_sub_q1" class="form-control required"
                         placeholder="" />
                     <label for="eo_hr_sub_q1">If Yes, Please
                         explain:</label>
@@ -5371,7 +5516,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_hr_sub_q2"
-                        id="eo_hr_sub_q2" class="form-control"
+                        id="eo_hr_sub_q2" class="form-control required"
                         placeholder="" />
                     <label for="eo_hr_sub_q2">If Yes, Please
                         explain:</label>
@@ -5385,7 +5530,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_hr_sub_q3"
-                        id="eo_hr_sub_q3" class="form-control"
+                        id="eo_hr_sub_q3" class="form-control required"
                         placeholder="" />
                     <label for="eo_hr_sub_q3">If Yes, Please
                         explain:</label>
@@ -5399,7 +5544,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_hr_sub_q4"
-                        id="eo_hr_sub_q4" class="form-control"
+                        id="eo_hr_sub_q4" class="form-control required"
                         placeholder="" />
                     <label for="eo_hr_sub_q4">If Yes, Please
                         explain:</label>
@@ -5438,7 +5583,7 @@
     // END ABOUT YOUR COMPANY
 
     // START GL SCRIPT
-    datePickerFormatter("#wc_dob");
+
     handleComputedPercentage("gl_residential", "gl_commercial");
     handleComputedPercentage("gl_commercial", "gl_residential");
     handleComputedPercentage("gl_new_construction", "gl_repair_remodel");
@@ -5600,9 +5745,6 @@
         }
     });
 
-    $("#wc_fein").feinFormat();
-    $("#wc_ssn").ssnFormat();
-
     $(document).on("change", "#wc_ownership_perc", function () {
         const value = parseInt($(this).val());
         if (!isNaN(value)) {
@@ -5641,6 +5783,7 @@
         }
     });
     appendNewWCProfessionEntry("#add_wc_employee_entry");
+
     $(document).on("click", ".delete-profession-entry", function () {
         $(this)
             .parent(".profession-entry")
@@ -5658,7 +5801,7 @@
                 <h6 class="profession_header mt-2 mb-2">Please specify your profession:</h6>
                 <div class="col-md-12">
                     <div class="mb-3 form-floating">
-                        <input type="text" name="wc_specify_profession_1" id="wc_specify_profession_1" class="form-control" placeholder="">
+                        <input type="text" name="wc_specify_profession_1" id="wc_specify_profession_1" class="form-control required" placeholder="">
                         <label for="wc_specify_profession_1">Please specify your profession</label>
                     </div>
                 </div>
@@ -5672,10 +5815,13 @@
     // END WC SCRIPTS
 
     // START AUTO SCRIPTS
-    datePickerFormatter("#auto_driver_date_of_birth");
-    $(document).ready(function () {
-        $("#auto_add_vehicle").trigger("change");
-    });
+
+    // $(document).ready(function () {
+    // $("#auto_add_vehicle").trigger("change");
+    // });
+    // $(document).on("ready", function () {
+    //     $("#auto_add_vehicle").trigger("change");
+    // });
     $(document).on("change", "#auto_add_vehicle", function () {
         var numVehicles = $(this).val();
         $("#auto_vehicles_container").empty();
@@ -5683,6 +5829,9 @@
             showAutoVehicleEntries(i);
         }
     });
+    // $(document).on("ready", function () {
+    //     $("#auto_add_driver").trigger("change");
+    // });
     $(document).on("change", "#auto_add_driver", function () {
         const numDrivers = $(this).val();
         $("#auto_drivers_container").empty();
@@ -5727,8 +5876,7 @@
     // END AUTO SCRIPTS
 
     // START BOND SCRIPTS
-    $("#bond_owners_ssn").ssnFormat();
-    datePickerFormatter("#bond_owners_dob");
+
     $(document).on("change", "#bond_owners_civil_status", function () {
         const isSelectedMarried = $(this).val() === "Married";
         if (isSelectedMarried) {
@@ -5754,7 +5902,7 @@
             $(".loader-container").removeClass("active");
         }
     });
-    datePickerFormatter("#bond_effective_date");
+
     $(document).on("change", "#bond_no_of_losses", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");
@@ -5789,9 +5937,7 @@
             $(".loader-container").removeClass("active");
         }
     });
-    datePickerFormatter("#excess_gl_eff_date");
-    datePickerFormatter("#excess_effective_date");
-    datePickerFormatter("#excess_expiration_date");
+
     $(document).on("change", "#excess_no_of_losses", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");
@@ -5881,7 +6027,6 @@
         "br_project_started_container"
     );
 
-    datePickerFormatter("#br_when_structure_built");
     $(document).on("change", "#br_no_of_losses", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");
@@ -5934,12 +6079,7 @@
     // START COMM PROP SCRIPTS
     perfectCurrencyFormatter("#property_value_cost_bldg");
     perfectCurrencyFormatter("#property_business_property_limit");
-    yearPickerFormatter("#property_year_built");
-    yearPickerFormatter("#yearPickerFormatter");
-    yearPickerFormatter("#property_last_update_roofing_year");
-    yearPickerFormatter("#property_last_update_heating_year");
-    yearPickerFormatter("#property_last_update_plumbing_year");
-    yearPickerFormatter("#property_last_update_electrical_year");
+
     $(document).on("change", "#property_no_of_losses", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");
@@ -6088,11 +6228,11 @@
             $("#pollution_losses_container").empty();
         }
     });
+
     // END POLLUTION SCRIPTS
 
     // START EPLI SCRIPTS
-    $("#epli_fein").feinFormat();
-    datePickerFormatter("#epli_effective_date");
+
     perfectCurrencyFormatter("#epli_prev_premium_amount");
 
     $(document).on("change", "#epli_deductible_amount", function () {
@@ -6167,7 +6307,7 @@
         equipmentCount--;
         updateEquipmentEntryNames();
     });
-    datePickerFormatter("#instfloat_scheduled_equipment_date_purchased_1");
+
     $(document).on("change", "#instfloat_no_of_losses", function () {
         const value = parseInt($(this).val());
         $(".loader-container").removeClass("hidden");
@@ -6187,7 +6327,7 @@
     // END INSTALLATION FLOATER SCRIPTS
 
     // START ABOUT YOUR COMPANY SCRIPTS
-    datePickerFormatter("#ayc_date_business_started");
+
     $("#ayc_phone_number").on("input", formatUSPhone);
     // END ABOUT YOUR COMPANY SCRIPTS
 

@@ -7,7 +7,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_requested_limits" id="eo_requested_limits" aria-label="">
+                    <select class="form-select required" name="eo_requested_limits" id="eo_requested_limits" aria-label="">
                         <option value="" selected></option>
                         <option value="100000">$100,000</option>
                         <option value="250000">$250,000</option>
@@ -19,10 +19,11 @@
                     <label for="eo_requested_limits">Requested Limits:</label>
                 </div>
             </div>
-            <div id="eo_requested_limits_others_container"></div>
+            <div id="eo_requested_limits_others_container" class="col-md-12"></div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_request_deductible" id="eo_request_deductible" aria-label="">
+                    <select class="form-select required" name="eo_request_deductible" id="eo_request_deductible"
+                        aria-label="">
                         <option value="" selected></option>
                         <option value="5000">$5,000</option>
                         <option value="10000">$10,000</option>
@@ -36,7 +37,7 @@
             <div id="eo_requested_deductible_others_container"></div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_no_of_losses" id="eo_no_of_losses"
+                    <select class="form-select required" name="eo_no_of_losses" id="eo_no_of_losses"
                         aria-label="eo_no_of_losses">
                         <option selected></option>
                         <option value="0">No Losses</option>
@@ -50,7 +51,7 @@
                 </div>
             </div>
             <!--  -->
-            <div id="eo_losses_container"></div>
+            <div id="eo_losses_container" class="col-md-12"></div>
             <!--  -->
         </div>
     @endif
@@ -73,7 +74,8 @@
                     within
                     the last 5 years?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_business_entity_q1" id="eo_business_entity_q1" aria-label="">
+                    <select class="form-select required" name="eo_business_entity_q1" id="eo_business_entity_q1"
+                        aria-label="">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -81,7 +83,7 @@
                     <label for="eo_business_entity_q1">Please select:</label>
                 </div>
             </div>
-            <div id="eo_business_entity_q1_container"></div>
+            <div id="eo_business_entity_q1_container" class="col-md-12"></div>
             <div class="col-md-12">
                 <h6 class="profession_header mt-2 mb-2">Has any other business
                     been
@@ -89,7 +91,8 @@
                     consolidated with the entity within the last 5
                     years?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_business_entity_q2" id="eo_business_entity_q2" aria-label="">
+                    <select class="form-select required" name="eo_business_entity_q2" id="eo_business_entity_q2"
+                        aria-label="">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -97,14 +100,15 @@
                     <label for="eo_business_entity_q2">Please select:</label>
                 </div>
             </div>
-            <div id="eo_business_entity_q2_container"></div>
+            <div id="eo_business_entity_q2_container" class="col-md-12"></div>
             <div class="col-md-12">
                 <h6 class="profession_header mt-2 mb-2">Does any other entity own
                     or
                     control your
                     business?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_business_entity_q3" id="eo_business_entity_q3" aria-label="">
+                    <select class="form-select required" name="eo_business_entity_q3" id="eo_business_entity_q3"
+                        aria-label="">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -112,7 +116,7 @@
                     <label for="eo_business_entity_q3">Please select:</label>
                 </div>
             </div>
-            <div id="eo_business_entity_q3_container"></div>
+            <div id="eo_business_entity_q3_container" class="col-md-12"></div>
             <div class="col-md-12">
                 <h6 class="profession_header mt-2 mb-2">Has your company name been
                     changed
@@ -120,7 +124,8 @@
                     past 5
                     years?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_business_entity_q4" id="eo_business_entity_q4" aria-label="">
+                    <select class="form-select required" name="eo_business_entity_q4" id="eo_business_entity_q4"
+                        aria-label="">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -128,14 +133,14 @@
                     <label for="eo_business_entity_q4">Please select:</label>
                 </div>
             </div>
-            <div id="eo_business_entity_q4_container"></div>
+            <div id="eo_business_entity_q4_container" class="col-md-12"></div>
             <div class="col-md-12">
                 <h6 class="profession_header mt-2 mb-2">Has any other business
                     purchased,
                     merged or
                     consolidated with you during the past 5 years?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_business_entity_q5" id="eo_business_entity_q5"
+                    <select class="form-select required" name="eo_business_entity_q5" id="eo_business_entity_q5"
                         aria-label="">
                         <option value="" selected></option>
                         <option value="0">No</option>
@@ -144,7 +149,7 @@
                     <label for="eo_business_entity_q5">Please select:</label>
                 </div>
             </div>
-            <div id="eo_business_entity_q5_container"></div>
+            <div id="eo_business_entity_q5_container" class="col-md-12"></div>
         </div>
     @endif
 </div>
@@ -161,14 +166,14 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="eo_number_employee" id="eo_number_employee" class="form-control"
-                        placeholder="Number of Employees:" />
+                    <input type="text" name="eo_number_employee" id="eo_number_employee"
+                        class="form-control required" placeholder="Number of Employees:" />
                     <label for="eo_number_employee">Number of Employees:</label>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="eo_full_time" id="eo_full_time" class="form-control"
+                    <input type="text" name="eo_full_time" id="eo_full_time" class="form-control required"
                         placeholder="Full Time:" />
                     <label for="eo_full_time">Full Time:</label>
                 </div>
@@ -176,13 +181,13 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_ftime_salary_range" id="eo_ftime_salary_range"
-                        class="form-control" placeholder="Salary Range:" />
+                        class="form-control required" placeholder="Salary Range:" />
                     <label for="eo_ftime_salary_range">Salary Range:</label>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="eo_part_time" id="eo_part_time" class="form-control"
+                    <input type="text" name="eo_part_time" id="eo_part_time" class="form-control required"
                         placeholder="Part Time:" />
                     <label for="eo_part_time">Part Time:</label>
                 </div>
@@ -190,7 +195,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="eo_ptime_salary_range" id="eo_ptime_salary_range"
-                        class="form-control" placeholder="Salary Range:" />
+                        class="form-control required" placeholder="Salary Range:" />
                     <label for="eo_ptime_salary_range">Salary Range:</label>
                 </div>
             </div>
@@ -216,7 +221,8 @@
                     by more than ten percent (10) due to lay off, force
                     reduction of closing of division in the past 1 year?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_emp_practice_q1" id="eo_emp_practice_q1" aria-label="">
+                    <select class="form-select required" name="eo_emp_practice_q1" id="eo_emp_practice_q1"
+                        aria-label="">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -246,7 +252,7 @@
                     agreements
                     with all officers?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_hr_q1" id="eo_hr_q1" aria-label="eo_hr_q1">
+                    <select class="form-select required" name="eo_hr_q1" id="eo_hr_q1" aria-label="eo_hr_q1">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -262,7 +268,7 @@
                     policies/procedures reviewed by labor or employment
                     counsel?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_hr_q2" id="eo_hr_q2" aria-label="eo_hr_q2">
+                    <select class="form-select required" name="eo_hr_q2" id="eo_hr_q2" aria-label="eo_hr_q2">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -278,7 +284,7 @@
                     Personnel
                     Department?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_hr_q3" id="eo_hr_q3" aria-label="eo_hr_q3">
+                    <select class="form-select required" name="eo_hr_q3" id="eo_hr_q3" aria-label="eo_hr_q3">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>
@@ -291,7 +297,7 @@
                 <h6 class="profession_header mt-2 mb-2">Does the Applicant have an
                     employee handbook?</h6>
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="eo_hr_q4" id="eo_hr_q4" aria-label="eo_hr_q4">
+                    <select class="form-select required" name="eo_hr_q4" id="eo_hr_q4" aria-label="eo_hr_q4">
                         <option value="" selected></option>
                         <option value="0">No</option>
                         <option value="1">Yes</option>

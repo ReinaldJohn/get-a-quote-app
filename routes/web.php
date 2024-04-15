@@ -22,3 +22,7 @@ Route::get('/quote-details', function() {
 });
 
 Route::get('/thankyou', [QuoteController::class, 'thankyouPage'])->middleware('check.forms.completed', 'reset.forms.completed');
+
+Route::get('/privacy-policy', [QuoteController::class, 'privacyPolicy'])->name('pp-index');
+Route::get('/cookie-policy', [QuoteController::class, 'cookiePolicy'])->name('cp-index');
+Route::get('/terms-and-conditions', [QuoteController::class, 'termsAndCondition'])->name('tc-index');

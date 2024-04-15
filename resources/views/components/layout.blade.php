@@ -12,7 +12,7 @@
         <meta property="og:url" content="https://quote.pbibins.com/" />
         <meta property="og:image" content="{{ asset('img/PBIB Logo.png') }}" />
 
-        <title>Get a Quote Form | Pascal Burke Insurance Brokerage</title>
+        <title>{{ $title }}</title>
 
         <!-- Favicons-->
         <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" type="image/x-icon">
@@ -72,14 +72,6 @@
 
         {{-- Plugins --}}
         <script src="{{ asset('js/plugins.js') }}"></script>
-
-        {{-- <script type="text/javascript">
-            $(document).ready(function() {
-                $("#trades_performed").select2({
-                    placeholder: "Select the trade, or trades you perform here..",
-                });
-            });
-        </script> --}}
     </body>
 
 </html>

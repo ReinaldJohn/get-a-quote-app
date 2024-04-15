@@ -7,7 +7,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="property_business_located" id="property_business_located"
+                    <select class="form-select required" name="property_business_located" id="property_business_located"
                         aria-label="property_business_located">
                         <option value="" selected></option>
                         <option value="Home or Apartment">Home or Apartment
@@ -29,14 +29,15 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_property_address" id="property_property_address"
-                        class="form-control" placeholder="Property Address" />
+                        class="form-control required" placeholder="Property Address" />
                     <label for="property_property_address">Property
                         Address</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="property_name_of_owner" id="property_name_of_owner" class="form-control"
+                    <input type="text" name="property_name_of_owner" id="property_name_of_owner"
+                        class="form-control required"
                         placeholder="Name of the owner of the
                             Building" />
                     <label for="property_name_of_owner">Name of the owner of the
@@ -46,7 +47,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_value_cost_bldg" id="property_value_cost_bldg"
-                        class="form-control" placeholder="Value of Cost of the Building:" />
+                        class="form-control required" placeholder="Value of Cost of the Building:" />
                     <label for="property_value_cost_bldg">Value of Cost of the
                         Building:</label>
                 </div>
@@ -54,7 +55,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_business_property_limit" id="property_business_property_limit"
-                        class="form-control" placeholder="What is the Business Property Limit?" />
+                        class="form-control required" placeholder="What is the Business Property Limit?" />
                     <label for="property_business_property_limit">What is the
                         Business
                         Property Limit?</label>
@@ -62,7 +63,7 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="property_no_of_losses" id="property_no_of_losses"
+                    <select class="form-select required" name="property_no_of_losses" id="property_no_of_losses"
                         aria-label="property_no_of_losses">
                         <option selected></option>
                         <option value="0">No Losses</option>
@@ -94,7 +95,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="property_does_have_more_than_one_location"
+                    <select class="form-select required" name="property_does_have_more_than_one_location"
                         id="property_does_have_more_than_one_location"
                         aria-label="property_does_have_more_than_one_location">
                         <option value="" selected></option>
@@ -108,7 +109,7 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="property_multiple_units" id="property_multiple_units"
+                    <select class="form-select required" name="property_multiple_units" id="property_multiple_units"
                         aria-label="property_multiple_units">
                         <option value="" selected></option>
                         <option value="0">No</option>
@@ -122,8 +123,8 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="property_construction_type" id="property_construction_type"
-                        aria-label="property_construction_type">
+                    <select class="form-select required" name="property_construction_type"
+                        id="property_construction_type" aria-label="property_construction_type">
                         <option value="" selected></option>
                         <option value="Frame">Frame</option>
                         <option value="Joisted Masonry">Joisted Masonry</option>
@@ -142,22 +143,22 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="property_year_built" id="property_year_built" class="form-control"
-                        placeholder="Year Built:" />
+                    <input type="text" name="property_year_built" id="property_year_built"
+                        class="form-control required" placeholder="Year Built:" />
                     <label for="property_year_built">Year Built:</label>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_no_of_stories" id="property_no_of_stories"
-                        class="form-control" placeholder="No. of Stories:" />
+                        class="form-control required" placeholder="No. of Stories:" />
                     <label for="property_no_of_stories">No. of Stories:</label>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_total_bldg_sqft" id="property_total_bldg_sqft"
-                        class="form-control"
+                        class="form-control required"
                         placeholder="Total Building Square
                             Footage:" />
                     <label for="property_total_bldg_sqft">Total Building Square
@@ -166,7 +167,7 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="property_is_bldg_equipped_with_fire_sprinklers"
+                    <select class="form-select required" name="property_is_bldg_equipped_with_fire_sprinklers"
                         id="property_is_bldg_equipped_with_fire_sprinklers"
                         aria-label="property_is_bldg_equipped_with_fire_sprinklers">
                         <option value="" selected></option>
@@ -182,7 +183,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_distance_nearest_fire_hydrant"
-                        id="property_distance_nearest_fire_hydrant" class="form-control"
+                        id="property_distance_nearest_fire_hydrant" class="form-control required"
                         placeholder="Distance to
                             Nearest Fire Hydrant:" />
                     <label for="property_distance_nearest_fire_hydrant">Distance
@@ -193,7 +194,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_distance_nearest_fire_station"
-                        id="property_distance_nearest_fire_station" class="form-control"
+                        id="property_distance_nearest_fire_station" class="form-control required"
                         placeholder="Distance to
                             Nearest Fire Station:" />
                     <label for="property_distance_nearest_fire_station">Distance
@@ -203,8 +204,8 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="property_protection_class" id="property_protection_class"
-                        aria-label="property_protection_class">
+                    <select class="form-select required" name="property_protection_class"
+                        id="property_protection_class" aria-label="property_protection_class">
                         <option value="" selected></option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -233,8 +234,8 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="property_protective_device" id="property_protective_device"
-                        aria-label="property_protective_device">
+                    <select class="form-select required" name="property_protective_device"
+                        id="property_protective_device" aria-label="property_protective_device">
                         <option value="" selected></option>
                         <option value="Local Burglar Alarm">Local Burglar Alarm
                         </option>
@@ -252,12 +253,10 @@
                         you have:</label>
                 </div>
             </div>
-        </div>
-        <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_last_update_roofing_year"
-                        id="property_last_update_roofing_year" class="form-control"
+                        id="property_last_update_roofing_year" class="form-control required"
                         placeholder="Last Update to Roofing Year:" />
                     <label for="property_last_update_roofing_year">Last Update to
                         Roofing
@@ -267,19 +266,17 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_last_update_heating_year"
-                        id="property_last_update_heating_year" class="form-control"
+                        id="property_last_update_heating_year" class="form-control required"
                         placeholder="Last Update to Heating Year:" />
                     <label for="property_last_update_heating_year">Last Update to
                         Heating
                         Year:</label>
                 </div>
             </div>
-        </div>
-        <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_last_update_plumbing_year"
-                        id="property_last_update_plumbing_year" class="form-control"
+                        id="property_last_update_plumbing_year" class="form-control required"
                         placeholder="Last Update to Plumbing Year:" />
                     <label for="property_last_update_plumbing_year">Last Update to
                         Plumbing Year:</label>
@@ -288,7 +285,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="property_last_update_electrical_year"
-                        id="property_last_update_electrical_year" class="form-control"
+                        id="property_last_update_electrical_year" class="form-control required"
                         placeholder="Last Update to Electrical Year:" />
                     <label for="property_last_update_electrical_year">Last Update
                         to

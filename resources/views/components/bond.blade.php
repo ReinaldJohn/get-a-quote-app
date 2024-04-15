@@ -7,14 +7,14 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bond_owners_name" id="bond_owners_name" class="form-control"
+                    <input type="text" name="bond_owners_name" id="bond_owners_name" class="form-control required"
                         placeholder="Owner's Name">
                     <label for="bond_owners_name">Owner's Name</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bond_owners_ssn" id="bond_owners_ssn" class="form-control"
+                    <input type="text" name="bond_owners_ssn" id="bond_owners_ssn" class="form-control required"
                         placeholder="Social Security Number (SSN)">
                     <label for="bond_owners_ssn">Social Security Number
                         (SSN)</label>
@@ -22,14 +22,14 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bond_owners_dob" id="bond_owners_dob" class="form-control"
+                    <input type="text" name="bond_owners_dob" id="bond_owners_dob" class="form-control required"
                         placeholder="MM/DD/YYYY">
                     <label for="bond_owners_dob">Date of Birth</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bond_owners_civil_status" id="bond_owners_civil_status"
+                    <select class="form-select required" name="bond_owners_civil_status" id="bond_owners_civil_status"
                         aria-label="bond_owners_civil_status">
                         <option value selected></option>
                         <option value="Single">Single</option>
@@ -58,21 +58,21 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="bond_type_bond_requested" id="bond_type_bond_requested"
-                        class="form-control" placeholder="Type of Bond Requested">
+                        class="form-control required" placeholder="Type of Bond Requested">
                     <label for="bond_type_bond_requested">Type of Bond
                         Requested</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bond_amount_of_bond" id="bond_amount_of_bond" class="form-control"
-                        placeholder="Amount of Bond">
+                    <input type="text" name="bond_amount_of_bond" id="bond_amount_of_bond"
+                        class="form-control required" placeholder="Amount of Bond">
                     <label for="bond_amount_of_bond">Amount of Bond</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bond_term_of_bond" id="bond_term_of_bond"
+                    <select class="form-select required" name="bond_term_of_bond" id="bond_term_of_bond"
                         aria-label="bond_term_of_bond">
                         <option value selected></option>
                         <option value="1 year">1 year</option>
@@ -85,7 +85,7 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bond_type_of_license" id="bond_type_of_license"
+                    <select class="form-select required" name="bond_type_of_license" id="bond_type_of_license"
                         aria-label="bond_type_of_license">
                         <option value selected></option>
                         <option value="General Contractor">General Contractor
@@ -105,7 +105,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="bond_license_or_application_no" id="bond_license_or_application_no"
-                        class="form-control" placeholder="License Number or Application Number">
+                        class="form-control required" placeholder="License Number or Application Number">
                     <label for="bond_license_or_application_no">License Number or
                         Application
                         Number</label>
@@ -113,8 +113,8 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bond_effective_date" id="bond_effective_date" class="form-control"
-                        placeholder="MM/DD/YYYY">
+                    <input type="text" name="bond_effective_date" id="bond_effective_date"
+                        class="form-control required" placeholder="MM/DD/YYYY">
                     <label for="bond_effective_date">Effective Date</label>
                 </div>
             </div>
@@ -123,7 +123,7 @@
                     {{-- <h6 class="profession_header mt-2 mb-2">Contractor License
                             Bond - # of
                             Losses</h6> --}}
-                    <select class="form-select" name="bond_no_of_losses" id="bond_no_of_losses"
+                    <select class="form-select required" name="bond_no_of_losses" id="bond_no_of_losses"
                         aria-label="bond_no_of_losses" data-placeholder="" data-allow-clear="true"
                         style="width:100%">
                         <option selected></option>

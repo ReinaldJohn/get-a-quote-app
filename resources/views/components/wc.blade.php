@@ -6,9 +6,9 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            <div class="col-12">
+            <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="wc_num_of_empl" id="wc_num_of_empl" class="form-control"
+                    <input type="text" name="wc_num_of_empl" id="wc_num_of_empl" class="form-control required"
                         placeholder="Total Employee (Full Time + Part Time)" />
                     <label for="wc_num_of_empl">Number Of Total Employees (Full Time + Part
                         Time)</label>
@@ -25,7 +25,7 @@
             <h6 class="profession_header mt-2 mb-2">Employee's Profession Entry No. 1</h6>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="wc_profession_type_1" id="wc_profession_type_1"
+                    <select class="form-select required" name="wc_profession_type_1" id="wc_profession_type_1"
                         aria-label="wc_profession_type_1">
                         <!-- For wcProfessions -->
                         <optgroup label='Other Professions'>
@@ -52,14 +52,14 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="wc_annual_payroll_1" id="wc_annual_payroll_1"
-                        class="form-control wc-annual-payroll" placeholder="" />
+                        class="form-control required wc-annual-payroll" placeholder="" />
                     <label for="wc_annual_payroll_1">Annual Payroll:</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="wc_num_employee_under_this_profession_1"
-                        id="wc_num_employee_under_this_profession_1" class="form-control" placeholder="" />
+                        id="wc_num_employee_under_this_profession_1" class="form-control required" placeholder="" />
                     <label for="wc_num_employee_under_this_profession_1">Number of Employee
                         under this Profession (Number
                         only):</label>
@@ -78,29 +78,9 @@
             <p>Please provide the requested information and proceed.</p>
         </div>
         <div class="row justify-content-center">
-            {{-- <div class="col-md-12">
-            <div class="mb-3 form-floating">
-                <select class="form-select" name="wc_no_of_profession"
-                    id="wc_no_of_profession" aria-label="wc_no_of_profession">
-                    <option selected></option>
-                    <option value="1">1 Employee</option>
-                    <option value="2">2 Employees</option>
-                    <option value="3">3 Employees</option>
-                    <option value="4">4 Employees</option>
-                    <option value="5">5 Employees</option>
-                    <option value="6">6 Employees</option>
-                    <option value="7">7 Employees</option>
-                    <option value="8">8 Employees</option>
-                    <option value="9">9 Employees</option>
-                    <option value="10">10 Employees</option>
-                </select>
-                <label for="wc_no_of_profession">Number of Professions?</label>
-            </div>
-        </div>
-        <div id="profession_entry_container"></div> --}}
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="wc_gross_receipt" id="wc_gross_receipt" class="form-control"
+                    <input type="text" name="wc_gross_receipt" id="wc_gross_receipt" class="form-control required"
                         placeholder="Gross Receipt">
                     <label for="wc_gross_receipt">Gross Receipt</label>
                 </div>
@@ -108,7 +88,7 @@
 
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="wc_does_hire_subcon" id="wc_does_hire_subcon"
+                    <select class="form-select required" name="wc_does_hire_subcon" id="wc_does_hire_subcon"
                         aria-label="wc_does_hire_subcon">
                         <option value selected></option>
                         <option value="1">Yes</option>
@@ -121,16 +101,10 @@
             <!--  -->
             <div id="wc_subcon_cost_year_container"></div>
             <!--  -->
-            {{-- <div class="col-md-12">
-            <div class="mb-3 form-floating">
-                <input type="text" name="wc_num_of_empl" id="wc_num_of_empl"
-                    class="form-control" placeholder="Number of Employees">
-                <label for="wc_num_of_empl">Number of Employees</label>
-            </div>
-        </div> --}}
+
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="wc_no_of_losses" id="wc_no_of_losses"
+                    <select class="form-select required" name="wc_no_of_losses" id="wc_no_of_losses"
                         aria-label="wc_no_of_losses">
                         <option selected></option>
                         <option value="0">No Losses</option>
@@ -158,20 +132,20 @@
             <div class="col-md-12">
                 <h5 class="profession_header mt-2 mb-2">Owner's Information</h5>
                 <div class="mb-3 form-floating">
-                    <input type="text" name="wc_name" id="wc_name" class="form-control" placeholder="">
+                    <input type="text" name="wc_name" id="wc_name" class="form-control required" placeholder="">
                     <label for="wc_name">Owner's Name</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="wc_title_relationship" id="wc_title_relationship" class="form-control"
-                        placeholder="">
+                    <input type="text" name="wc_title_relationship" id="wc_title_relationship"
+                        class="form-control required" placeholder="">
                     <label for="wc_title_relationship">Title / Relationship</label>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="wc_ownership_perc" id="wc_ownership_perc"
+                    <select class="form-select required" name="wc_ownership_perc" id="wc_ownership_perc"
                         aria-label="wc_ownership_perc">
                         <option value selected></option>
                         <option value="0">0%</option>
@@ -201,7 +175,7 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="wc_exc_inc" id="wc_exc_inc" aria-label="wc_exc_inc">
+                    <select class="form-select required" name="wc_exc_inc" id="wc_exc_inc" aria-label="wc_exc_inc">
                         <option value selected></option>
                         <option value="Excluded">Excluded</option>
                         <option value="Included">Included</option>
@@ -211,19 +185,21 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="wc_ssn" id="wc_ssn" class="form-control" placeholder="SSN">
+                    <input type="text" name="wc_ssn" id="wc_ssn" class="form-control required"
+                        placeholder="SSN">
                     <label for="wc_ssn">SSN</label>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="wc_fein" id="wc_fein" class="form-control" placeholder="FEIN">
+                    <input type="text" name="wc_fein" id="wc_fein" class="form-control required"
+                        placeholder="FEIN">
                     <label for="wc_fein">FEIN</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="wc_dob" id="wc_dob" class="form-control"
+                    <input type="text" name="wc_dob" id="wc_dob" class="form-control required"
                         placeholder="MM/DD/YYYY">
                     <label for="wc_dob">Date of Birth</label>
                 </div>

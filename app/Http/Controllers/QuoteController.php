@@ -51,7 +51,7 @@ class QuoteController extends Controller
         $ids = [995, 996, 997, 998, 999];
         $professions = $quoteModel->getAllProfessions($ids);
         $wcProfessions = $quoteModel->getWCProfessions($ids);
-        $currentYear = Carbon::now()->format('Y');
+        $currentYear = $this->globalCurrentYear();
 
         // Pollution Opts
         $polOpt1 = new PolOpt1();
@@ -71,6 +71,38 @@ class QuoteController extends Controller
             'p1' => $p1,
             'p2' => $p2,
             'p3' => $p3,
+            'title' => 'Get a Quote Form | Pascal Burke Insurance Brokerage'
+        ]);
+    }
+
+    public function globalCurrentYear() {
+        return Carbon::now()->format('Y');
+    }
+
+    public function termsAndCondition() {
+        $currentYear = $this->globalCurrentYear();
+        return view("terms-and-conditions.index",  [
+            'currentYear' => $currentYear,
+            'trueValues' => null,
+            'title' => 'Terms and Conditions | Pascal Burke Insurance Brokerage'
+        ]);
+    }
+
+    public function privacyPolicy() {
+        $currentYear = $this->globalCurrentYear();
+        return view("privacy-policy.index",  [
+            'currentYear' => $currentYear,
+            'trueValues' => null,
+            'title' => 'Privacy Policy | Pascal Burke Insurance Brokerage'
+        ]);
+    }
+
+    public function cookiePolicy() {
+        $currentYear = $this->globalCurrentYear();
+        return view("cookie-policy.index",  [
+            'currentYear' => $currentYear,
+            'trueValues' => null,
+            'title' => 'Cookie Policy | Pascal Burke Insurance Brokerage'
         ]);
     }
 
@@ -126,7 +158,7 @@ class QuoteController extends Controller
                 </div>
                 <div class='col-md-12'>
                     <div class='mb-3 form-floating'>
-                        <select class='form-select' name='wc_profession_type_{$a}'
+                        <select class='form-select required' name='wc_profession_type_{$a}'
                             id='wc_profession_type_{$a}' aria-label='wc_profession_type_{$a}'>
                             $options
                         </select>
@@ -137,14 +169,14 @@ class QuoteController extends Controller
                 <div class='col-md-12'>
                     <div class='mb-3 form-floating'>
                         <input type='text' name='wc_annual_payroll_{$a}' id='wc_annual_payroll_{$a}'
-                            class='form-control wc-annual-payroll' placeholder='' />
+                            class='form-control required wc-annual-payroll' placeholder='' />
                         <label for='wc_annual_payroll_{$a}'>Annual Payroll:</label>
                     </div>
                 </div>
                 <div class='col-md-12'>
                     <div class='mb-3 form-floating'>
                         <input type='text' name='wc_num_employee_under_this_profession_{$a}'
-                            id='wc_num_employee_under_this_profession_{$a}' class='form-control'
+                            id='wc_num_employee_under_this_profession_{$a}' class='form-control required'
                             placeholder='' />
                         <label for='wc_num_employee_under_this_profession_{$a}'>Number of Employee
                             under this Profession (Must be equal to the total employees):</label>
@@ -247,7 +279,7 @@ class QuoteController extends Controller
 
                         Log::info('Successfully saved OPT IN record. Data: ' . json_encode($utmParamQueries));
                         DB::commit();
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         DB::rollBack();
                         Log::error('Failed to insert UTM Param Queries. Error: ' . $e->getMessage());
                     }
@@ -283,6 +315,7 @@ class QuoteController extends Controller
 
                         // $aboutYourCompany->no_of_losses = $no_of_losses;
                         // $aboutYourCompany->explain_losses = $explain_losses;
+
                         $aboutYourCompany->save();
 
                         $dateBusinessStartedFormatted = Carbon::createFromFormat('m/d/Y', $commonData['ayc_date_business_started'])->format('F j, Y');
@@ -312,7 +345,7 @@ class QuoteController extends Controller
                         $templateData['dateBusinessStartedFormatted'] = $dateBusinessStartedFormatted;
 
                         // Log::info('Successfully saved About Your Company. Record id: ' . $aboutYourCompany->id);
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         Log::error('Failed to insert About Your Company information. Error: ' . $e->getMessage());
                     }
 
@@ -349,7 +382,7 @@ class QuoteController extends Controller
                                     if (isset($productData['gl_amt_of_claims']['value']) && !empty($productData['gl_amt_of_claims']['value'])) {
                                         try {
                                             $gl_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['gl_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $gl_amount_of_claim = null;
                                         }
                                     }
@@ -359,8 +392,6 @@ class QuoteController extends Controller
                                     } else {
                                          $gl_date_of_loss = null;
                                     }
-
-
 
                                     $generalLiability = new GeneralLiabilityInformation();
                                     $generalLiability->client_info_id = $client_info_id;
@@ -422,7 +453,7 @@ class QuoteController extends Controller
                                                         ];
 
                                                         DB::commit();
-                                                    } catch (\Exception $e) {
+                                                    } catch (Exception $e) {
                                                         DB::rollBack();
                                                         Log::error('Failed to insert glAdditionalQuestions record. Exception: ' . $e->getMessage());
                                                     }
@@ -455,7 +486,7 @@ class QuoteController extends Controller
                                                         ];
 
                                                         DB::commit();
-                                                    } catch (\Exception $e) {
+                                                    } catch (Exception $e) {
                                                         DB::rollBack();
                                                         Log::error('Failed to insert glMultipleStateWork record. Exception: ' . $e->getMessage());
                                                     }
@@ -497,7 +528,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for GL: ' . $generalLiability->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert GL record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -513,7 +544,7 @@ class QuoteController extends Controller
                                     if (isset($productData['wc_amt_of_claims']['value']) && !empty($productData['wc_amt_of_claims']['value'])) {
                                         try {
                                             $wc_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['wc_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $wc_amount_of_claim = null;
                                         }
                                     }
@@ -568,7 +599,7 @@ class QuoteController extends Controller
                                                     ];
 
                                                     DB::commit();
-                                                } catch (\Exception $e) {
+                                                } catch (Exception $e) {
                                                     Log::error('Failed to insert wcProfessionEntry record. Exception: ' . $e->getMessage());
                                                 }
                                             }
@@ -602,7 +633,7 @@ class QuoteController extends Controller
                                             $templateData['wcOwnersInfo'] = $wcOwnersInfo;
                                             Log::info('Successfully saved wcOwnersInfo record. Data: ' . json_encode($wcOwnersInfo));
                                             DB::commit();
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             DB::rollBack();
                                             Log::error('Failed to insert wcOwnersInfo record. Exception: ' . $e->getMessage());
                                         }
@@ -650,7 +681,7 @@ class QuoteController extends Controller
                                                         ];
 
                                                         DB::commit();
-                                                    } catch (\Exception $e) {
+                                                    } catch (Exception $e) {
                                                         DB::rollBack();
                                                         Log::error('Failed to insert wcOwnersInfo record. Exception: ' . $e->getMessage());
                                                     }
@@ -689,7 +720,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for WC: ' . $workersCompensation->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert WC record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -711,7 +742,7 @@ class QuoteController extends Controller
                                     if (isset($productData['auto_amt_of_claims']['value']) && !empty($productData['auto_amt_of_claims']['value'])) {
                                         try {
                                             $auto_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['auto_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $auto_amount_of_claim = null;
                                         }
                                     }
@@ -783,7 +814,7 @@ class QuoteController extends Controller
                                                         ];
 
                                                         DB::commit();
-                                                    } catch (\Exception $e) {
+                                                    } catch (Exception $e) {
                                                         DB::rollBack();
                                                         Log::error('Failed to insert vehicleEntry record. Exception: ' . $e->getMessage());
                                                     }
@@ -832,7 +863,7 @@ class QuoteController extends Controller
                                                         ];
 
                                                         DB::commit();
-                                                    } catch (\Exception $e) {
+                                                    } catch (Exception $e) {
                                                         DB::rollBack();
                                                         Log::error('Failed to insert driverEntry record. Exception: ' . $e->getMessage());
                                                     }
@@ -868,7 +899,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for AUTO: ' . $commercialAuto->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert AUTO record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -894,7 +925,7 @@ class QuoteController extends Controller
                                     if (isset($productData['bond_amt_of_claims']['value']) && !empty($productData['bond_amt_of_claims']['value'])) {
                                         try {
                                             $bond_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['bond_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $bond_amount_of_claim = null;
                                         }
                                     }
@@ -930,7 +961,7 @@ class QuoteController extends Controller
 
                                         Log::info('Successfully saved LicenseBondInformation record. Data: ' . json_encode($doesLicenseBondSaved));
                                         DB::commit();
-                                    } catch (\Exception $e) {
+                                    } catch (Exception $e) {
                                         DB::rollBack();
                                         Log::error('Failed to insert LicenseBondInformation record. Exception: ' . $e->getMessage());
 
@@ -966,7 +997,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for BOND: ' . $licenseBond->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert BOND record. Exception: ', ['exception' => $e]);
                                 }
                                 break;
@@ -985,7 +1016,7 @@ class QuoteController extends Controller
                                     if (isset($productData['excess_amt_of_claims']['value']) && !empty($productData['excess_amt_of_claims']['value'])) {
                                         try {
                                             $excess_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['excess_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $excess_amount_of_claim = null;
                                         }
                                     }
@@ -1040,7 +1071,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for EXCESS: ' . $excessLiability->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert EXCESS record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -1062,7 +1093,7 @@ class QuoteController extends Controller
                                     if (isset($productData['tools_amt_of_claims']['value']) && !empty($productData['tools_amt_of_claims']['value'])) {
                                         try {
                                             $tools_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['tools_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $tools_amount_of_claim = null;
                                         }
                                     }
@@ -1116,7 +1147,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for TOOLS: ' . $toolsEquipmentsLiability->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert TOOLS record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -1150,7 +1181,7 @@ class QuoteController extends Controller
                                     if (isset($productData['br_amt_of_claim']['value']) && !empty($productData['br_amt_of_claim']['value'])) {
                                         try {
                                             $br_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['br_amt_of_claim']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $br_amount_of_claim = null;
                                         }
                                     }
@@ -1193,7 +1224,7 @@ class QuoteController extends Controller
                                         } else {
                                             try {
                                                 $buildersRiskLiability->effective_date = Carbon::createFromFormat('m/d/Y', $effectiveDateValue)->toDateString();
-                                            } catch (\Exception $e) {
+                                            } catch (Exception $e) {
                                                 Log::warning('Invalid date format for effective date. Given value: ' . $effectiveDateValue . '. Defaulting to null.');
                                                 $buildersRiskLiability->effective_date = null;
                                             }
@@ -1209,7 +1240,7 @@ class QuoteController extends Controller
                                         } else {
                                             try {
                                                 $buildersRiskLiability->expiration_date = Carbon::createFromFormat('m/d/Y', $expirationDateValue)->toDateString();
-                                            } catch (\Exception $e) {
+                                            } catch (Exception $e) {
                                                 Log::warning('Invalid date format for expiration date. Given value: ' . $expirationDateValue . '. Defaulting to null.');
                                                 $buildersRiskLiability->expiration_date = null;
                                             }
@@ -1229,7 +1260,7 @@ class QuoteController extends Controller
                                         } else {
                                             try {
                                                 $buildersRiskLiability->when_has_project_started = Carbon::createFromFormat('m/d/Y', $whenHasProjectStarted)->toDateString();
-                                            } catch (\Exception $e) {
+                                            } catch (Exception $e) {
                                                 Log::warning('Invalid date format for when has project started date. Given value: ' . $whenHasProjectStarted . '. Defaulting to null.');
                                                 $buildersRiskLiability->when_has_project_started = null;
                                             }
@@ -1251,7 +1282,7 @@ class QuoteController extends Controller
                                         } else {
                                             try {
                                                 $buildersRiskLiability->when_will_project_start = Carbon::createFromFormat('m/d/Y', $whenProjectStart)->toDateString();
-                                            } catch (\Exception $e) {
+                                            } catch (Exception $e) {
                                                 Log::warning('Invalid date format for when will project started date. Given value: ' . $whenProjectStart . '. Defaulting to null.');
                                                 $buildersRiskLiability->when_will_project_start = null;
                                             }
@@ -1295,7 +1326,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for BR: ' . $buildersRiskLiability->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert BR record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -1329,7 +1360,7 @@ class QuoteController extends Controller
                                     if (isset($productData['bop_amt_of_claims']['value']) && !empty($productData['bop_amt_of_claims']['value'])) {
                                         try {
                                             $bop_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['bop_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $bop_amount_of_claim = null;
                                         }
                                     }
@@ -1395,7 +1426,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for BOP: ' . $businessOwnersPolicy->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert BOP record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -1428,7 +1459,7 @@ class QuoteController extends Controller
                                     if (isset($productData['property_amt_of_claims']['value']) && !empty($productData['property_amt_of_claims']['value'])) {
                                         try {
                                             $property_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['property_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $property_amount_of_claim = null;
                                         }
                                     }
@@ -1492,7 +1523,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for COMM PROP: ' . $commercialProperty->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert COMM PROP record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -1533,7 +1564,7 @@ class QuoteController extends Controller
                                     if (isset($productData['eo_amt_of_claims']['value']) && !empty($productData['eo_amt_of_claims']['value'])) {
                                         try {
                                             $eo_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['eo_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $eo_amount_of_claim = null;
                                         }
                                     }
@@ -1605,7 +1636,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for EO: ' . $errorsEmission->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert EO record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -1632,7 +1663,7 @@ class QuoteController extends Controller
                                     if (isset($productData['pollution_amt_of_claims']['value']) && !empty($productData['pollution_amt_of_claims']['value'])) {
                                         try {
                                             $pollution_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['pollution_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $pollution_amount_of_claim = null;
                                         }
                                     }
@@ -1708,7 +1739,7 @@ class QuoteController extends Controller
                                     $html_body .= view('quote.quote-details', $templateData)->render();
 
                                     Log::info('Record inserted with id for POLLUTION: ' . $pollutionLiability->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert POLLUTION record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -1827,7 +1858,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for EPLI: ' . $epli->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert EPLI record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -1853,7 +1884,7 @@ class QuoteController extends Controller
                                     if (isset($productData['cyber_amt_of_claims']['value']) && !empty($productData['cyber_amt_of_claims']['value'])) {
                                         try {
                                             $cyber_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['cyber_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $cyber_amount_of_claim = null;
                                         }
                                     }
@@ -1909,7 +1940,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for CYBER: ' . $cyberLiability->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert CYBER record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -1939,7 +1970,7 @@ class QuoteController extends Controller
                                     if (isset($productData['instfloat_amt_of_claims']['value']) && !empty($productData['instfloat_amt_of_claims']['value'])) {
                                         try {
                                             $instfloat_amount_of_claim = floatval(preg_replace("/[^-0-9\.]/","", $productData['instfloat_amt_of_claims']['value']));
-                                        } catch (\Exception $e) {
+                                        } catch (Exception $e) {
                                             $instfloat_amount_of_claim = null;
                                         }
                                     }
@@ -2025,7 +2056,7 @@ class QuoteController extends Controller
 
                                                     Log::info('Successfully saved instFloaterSchedEquipment record. Data: ' . json_encode($instFloaterSchedEquipment));
                                                     DB::commit();
-                                                } catch (\Exception $e) {
+                                                } catch (Exception $e) {
                                                     DB::rollBack();
                                                     Log::error('Failed to insert instFloaterSchedEquipment record. Exception: ' . $e->getMessage());
                                                 }
@@ -2060,7 +2091,7 @@ class QuoteController extends Controller
                                     $templateData['clientInformation'] = $clientInformation;
                                     $html_body .= view('quote.quote-details', $templateData)->render();
                                     Log::info('Record inserted with id for INSTALLATION FLOATER: ' . $instFloater->id);
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     Log::error('Failed to insert record. Exception: ' . $e->getMessage());
                                 }
                                 break;
@@ -2073,10 +2104,9 @@ class QuoteController extends Controller
 
                 $request->session()->put('forms_completed', true);
                 return response()->json(['status' => 'success', 'message' => 'Data has been saved successfully.']);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 return response()->json(['status' => 'error', 'message' => 'There was an error saving the data.', 'error' => $e->getMessage()], 500);
                 Log::error('Error in transaction: ' . $e->getMessage() . '. Stack trace: ' . $e->getTraceAsString());
-
             }
         }
     }

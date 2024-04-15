@@ -7,22 +7,22 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bop_property_address" id="bop_property_address" class="form-control"
-                        placeholder="Property Address">
+                    <input type="text" name="bop_property_address" id="bop_property_address"
+                        class="form-control required" placeholder="Property Address">
                     <label for="bop_property_address">Property Address</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bop_loss_payee_info" id="bop_loss_payee_info" class="form-control"
-                        placeholder="Loss Payee Information">
+                    <input type="text" name="bop_loss_payee_info" id="bop_loss_payee_info"
+                        class="form-control required" placeholder="Loss Payee Information">
                     <label for="bop_loss_payee_info">Loss Payee
                         Information</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bop_building_industry" id="bop_building_industry"
+                    <select class="form-select required" name="bop_building_industry" id="bop_building_industry"
                         aria-label="bop_building_industry">
                         <option value="" selected></option>
                         <option value="Apartments & Condo Assoc">Apartments &
@@ -50,7 +50,8 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bop_occupancy" id="bop_occupancy" aria-label="bop_occupancy">
+                    <select class="form-select required" name="bop_occupancy" id="bop_occupancy"
+                        aria-label="bop_occupancy">
                         <option value="" selected></option>
                         <option value="Non-Owner Occupied Bldg/Lessors Risk">
                             Non-Owner
@@ -69,7 +70,7 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bop_val_cost_bldg" id="bop_val_cost_bldg" class="form-control"
+                    <input type="text" name="bop_val_cost_bldg" id="bop_val_cost_bldg" class="form-control required"
                         placeholder="Value of Cost of the
                                     Building?">
                     <label for="bop_val_cost_bldg">Value of Cost of the
@@ -79,7 +80,7 @@
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
                     <input type="text" name="bop_business_property_limit" id="bop_business_property_limit"
-                        class="form-control"
+                        class="form-control required"
                         placeholder="What is the Business Property
                                     Limit?">
                     <label for="bop_business_property_limit">What is the Business
@@ -89,7 +90,7 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bop_no_of_losses" id="bop_no_of_losses"
+                    <select class="form-select required" name="bop_no_of_losses" id="bop_no_of_losses"
                         aria-label="bop_no_of_losses">
                         <option selected></option>
                         <option value="0">No Losses</option>
@@ -122,8 +123,8 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bop_bldg_construction_type" id="bop_bldg_construction_type"
-                        aria-label="bop_bldg_construction_type">
+                    <select class="form-select required" name="bop_bldg_construction_type"
+                        id="bop_bldg_construction_type" aria-label="bop_bldg_construction_type">
                         <option value="" selected></option>
                         <option value="Frame">Frame</option>
                         <option value="Joisted Masonry">Joisted Masonry</option>
@@ -142,22 +143,22 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bop_year_built" id="bop_year_built" class="form-control"
+                    <input type="text" name="bop_year_built" id="bop_year_built" class="form-control required"
                         placeholder="Year Built">
                     <label for="bop_year_built">Year Built</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bop_no_of_stories" id="bop_no_of_stories" class="form-control"
-                        placeholder="No. of Stories">
+                    <input type="text" name="bop_no_of_stories" id="bop_no_of_stories"
+                        class="form-control required" placeholder="No. of Stories">
                     <label for="bop_no_of_stories">No. of Stories</label>
                 </div>
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <input type="text" name="bop_total_bldg_sqft" id="bop_total_bldg_sqft" class="form-control"
-                        placeholder="Total Building Sq. Ft.">
+                    <input type="text" name="bop_total_bldg_sqft" id="bop_total_bldg_sqft"
+                        class="form-control required" placeholder="Total Building Sq. Ft.">
                     <label for="bop_total_bldg_sqft">Total Building Sq.
                         Ft.</label>
                 </div>
@@ -178,7 +179,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bop_automatic_sprinkler_system"
+                    <select class="form-select required" name="bop_automatic_sprinkler_system"
                         id="bop_automatic_sprinkler_system" aria-label="bop_automatic_sprinkler_system">
                         <option value="" selected></option>
                         <option value="0">No</option>
@@ -191,8 +192,8 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bop_automatic_fire_alarm" id="bop_automatic_fire_alarm"
-                        aria-label="bop_automatic_fire_alarm">
+                    <select class="form-select required" name="bop_automatic_fire_alarm"
+                        id="bop_automatic_fire_alarm" aria-label="bop_automatic_fire_alarm">
                         <option value="" selected></option>
                         <option value="None">None</option>
                         <option value="Central Station">Central Station</option>
@@ -205,7 +206,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="bop_distance_nearest_fire_hydrant"
-                        id="bop_distance_nearest_fire_hydrant" class="form-control"
+                        id="bop_distance_nearest_fire_hydrant" class="form-control required"
                         placeholder="Distance to Nearest
                                     Fire Hydrant:">
                     <label for="bop_distance_nearest_fire_hydrant">Distance to
@@ -216,7 +217,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="bop_distance_nearest_fire_station"
-                        id="bop_distance_nearest_fire_station" class="form-control"
+                        id="bop_distance_nearest_fire_station" class="form-control required"
                         placeholder="Distance to Nearest
                                     Fire Station:">
                     <label for="bop_distance_nearest_fire_station">Distance to
@@ -226,7 +227,7 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bop_automatic_comm_cooking_ext"
+                    <select class="form-select required" name="bop_automatic_comm_cooking_ext"
                         id="bop_automatic_comm_cooking_ext" aria-label="bop_automatic_comm_cooking_ext">
                         <option value="" selected></option>
                         <option value="0">No</option>
@@ -257,8 +258,8 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bop_automatic_burglar_alarm" id="bop_automatic_burglar_alarm"
-                        aria-label="bop_automatic_burglar_alarm">
+                    <select class="form-select required" name="bop_automatic_burglar_alarm"
+                        id="bop_automatic_burglar_alarm" aria-label="bop_automatic_burglar_alarm">
                         <option value="" selected></option>
                         <option value="None">None</option>
                         <option value="Central or Police Station">Central or
@@ -273,7 +274,7 @@
             </div>
             <div class="col-md-12">
                 <div class="mb-3 form-floating">
-                    <select class="form-select" name="bop_security_cameras" id="bop_security_cameras"
+                    <select class="form-select required" name="bop_security_cameras" id="bop_security_cameras"
                         aria-label="bop_security_cameras">
                         <option value="" selected></option>
                         <option value="0">No</option>
@@ -285,7 +286,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="bop_last_update_roofing_year" id="bop_last_update_roofing_year"
-                        class="form-control"
+                        class="form-control required"
                         placeholder="Last Update to Roofing
                                     Yr:">
                     <label for="bop_last_update_roofing_year">Last Update to
@@ -296,7 +297,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="bop_last_update_heating_year" id="bop_last_update_heating_year"
-                        class="form-control"
+                        class="form-control required"
                         placeholder="Last Update to Heating
                                     Yr:">
                     <label for="bop_last_update_heating_year">Last Update to
@@ -307,7 +308,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="bop_last_update_plumbing_year" id="bop_last_update_plumbing_year"
-                        class="form-control"
+                        class="form-control required"
                         placeholder="Last Update to Plumbing
                                     Yr:">
                     <label for="bop_last_update_plumbing_year">Last Update to
@@ -318,7 +319,7 @@
             <div class="col-md-6">
                 <div class="mb-3 form-floating">
                     <input type="text" name="bop_last_update_electrical_year" id="bop_last_update_electrical_year"
-                        class="form-control"
+                        class="form-control required"
                         placeholder="Last Update to Electrical
                                     Yr:">
                     <label for="bop_last_update_electrical_year">Last Update to
