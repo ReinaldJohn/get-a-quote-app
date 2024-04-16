@@ -1,6 +1,6 @@
 <!-- GL Stepper 1 -->
 <div class="step" id="gl_step_1">
-    @if (session('doesGLChecked') === 'true')
+    @if (session('gl') == 1)
         <div class="question_title">
             <h3>General Liability Application</h3>
             <p>Please provide the requested information and proceed.</p>
@@ -182,12 +182,16 @@
             </div>
         </div>
         <!-- /row -->
+    @else
+        <div>
+            General Liability is not checked.
+        </div>
     @endif
 </div>
 <!-- /Step -->
 <!-- GL Stepper 2 -->
 <div class="step" id="gl_step_2">
-    @if (session('doesGLChecked') === 'true')
+    @if (session('gl') == 1)
         <div class="question_title">
             <h3>General Liability Application</h3>
             <p>Please provide the requested information and proceed.</p>

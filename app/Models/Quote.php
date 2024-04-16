@@ -30,6 +30,14 @@ class Quote extends Model
                     ->get();
     }
 
+    public function getAllProfessionsWithoutParams() {
+        // return $this->select('id', 'name')->from('professions')->orderBy('name', 'ASC')->get();
+        return $this->select('id', 'name')
+                    ->from('professions')
+                    ->orderBy('name', 'ASC')
+                    ->get();
+    }
+
     public function getPolOpt1($id) {
         return PolOpt1::where('id', $id)->get(['id', 'option']);
     }

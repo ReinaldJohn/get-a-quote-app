@@ -1,6 +1,9 @@
+{{-- About your Company --}}
 <div class="step" id="about_your_company_step">
     <div class="question_title">
-        <h3>About Your Company Information Form</h3>
+        <h3>
+            About Your Company Information Form
+        </h3>
         <p>Please provide the requested information and proceed.</p>
     </div>
     <div class="row justify-content-center">
@@ -38,9 +41,10 @@
                     contractor?</label>
             </div>
         </div>
-        @if (session('doesGLChecked') !== 'true')
-            <div class="col-md-12" id="about_you_profession">
-                <h6 class="profession_header mt-2 mb-2">About Your Profession</h6>
+        {{-- @if (session('gl') != 1) --}}
+        <div class="col-md-12" id="about_you_profession">
+            {{-- <h6 class="profession_header mt-2 mb-2">About Your Profession
+                </h6>
                 <div class="form-floating mb-3">
                     <div class="col-md-12">
                         <div class="mb-3 form-floating">
@@ -190,9 +194,9 @@
                                 %</label>
                         </div>
                     </div>
-                </div>
-            </div>
-        @endif
+                </div> --}}
+        </div>
+        {{-- @endif --}}
     </div>
     <!-- /row -->
 </div>

@@ -2155,9 +2155,28 @@ class QuoteController extends Controller
         Log::info('SMTP2GO Response:', $response);
     }
 
+    public function fetchCheckboxContent(Request $request, Quote $quoteModel) {
+        if (session('gl') == 1) {
+            return response()->json(['html' => '']);
+        } else {
+            $professions = $quoteModel->getAllProfessionsWithoutParams(); // Assuming you have a model called Profession
+            return response()->json([
+                'html' => view('partials.additional_question_for_gl_in_ayc', compact('professions'))->render()
+            ]);
+        }
+    }
+
     public function clearSessionData(Request $request) {
         Session::flush();
         return response()->json(['message' => 'Session data cleared successfully']);
+    }
+
+    public function updateSessionVariables(Request $request) {
+        $data = $request->json()->all();
+        foreach ($data as $key => $value) {
+            session([$key => $value]);
+        }
+        return response()->json(['message' => 'Session variables updated successfully']);
     }
 
     public function setSessionVariable(Request $request) {

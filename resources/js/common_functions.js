@@ -3072,6 +3072,67 @@
         mainClass: "my-mfp-zoom-in",
     });
 
+    function computePercentage(a, b) {
+        const val_a = $("#" + a).val();
+        const x = 100 - parseInt(val_a);
+        $("#" + b).val(x.toString());
+    }
+
+    function toUSD(number) {
+        var formatter = new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        });
+        return formatter.format(number);
+    }
+
+    function datePickerFormatter(selector) {
+        $(selector).addClass("readonly").attr("readonly", "readonly");
+        $(selector).datepicker({
+            changeMonth: true,
+            changeYear: true,
+            maxDate: "-1d",
+            yearRange: "1950:" + new Date().getFullYear(),
+            showAnim: "slideDown",
+        });
+    }
+
+    function yearPickerFormatter(selector) {
+        $(selector).addClass("readonly").attr("readonly", "readonly");
+        if (!$(selector).hasClass("hasDatepicker")) {
+            $(selector).datepicker({
+                changeYear: true, // This allows changing the year
+                showButtonPanel: true, // Shows the buttons at the bottom
+                dateFormat: "yy", // Sets the format to only display the year
+                yearRange: "1900:" + new Date().getFullYear(), // For example, if you want a range from 1900 to the current year.
+                beforeShow: function (input, inst) {
+                    setTimeout(function () {
+                        inst.dpDiv.css({
+                            top: $(input).offset().top + $(input).outerHeight(),
+                            left: $(input).offset().left,
+                        });
+                        $(".ui-datepicker-calendar").hide();
+                        $(".ui-datepicker-month").hide();
+                    }, 0);
+                },
+                onClose: function (dateText, inst) {
+                    var year = $(
+                        "#ui-datepicker-div .ui-datepicker-year :selected"
+                    ).val();
+                    $(selector).val(year);
+                },
+            });
+
+            // Hide month calendar and dropdown
+            $(selector).focus(function () {
+                $(".ui-datepicker-calendar").hide();
+                $(".ui-datepicker-month").hide();
+            });
+        }
+    }
+
     function hideSteps(checkboxValue) {
         switch (checkboxValue) {
             case "gl":
@@ -3454,121 +3515,6 @@
         }
     }
 
-    localStorage.clear();
-
-    if (typeof serverData !== "undefined") {
-        if (serverData.hasOwnProperty("subcon")) {
-            serverData["gl"] = serverData["subcon"];
-            delete serverData["subcon"];
-        }
-        for (var key in serverData) {
-            if (serverData.hasOwnProperty(key)) {
-                var state = serverData[key];
-                localStorage.setItem(key, state);
-                // Update the checkbox state
-                var checkbox = $(
-                    'input[name="question_1[]"][value="' + key + '"]'
-                );
-                checkbox.prop("checked", state === "checked");
-                if (state === "checked") {
-                    showSteps(key);
-                } else {
-                    hideSteps(key);
-                }
-            }
-        }
-    }
-
-    $('input[name="question_1[]"]').each(function () {
-        var checkboxValue = $(this).val();
-        var checkboxState = localStorage.getItem(checkboxValue);
-        if (checkboxState === null) {
-            checkboxState = "unchecked";
-            localStorage.setItem(checkboxValue, checkboxState);
-        }
-        $(this).prop("checked", checkboxState === "checked");
-        if (checkboxState === "checked") {
-            showSteps(checkboxValue);
-        } else {
-            hideSteps(checkboxValue);
-        }
-    });
-
-    $('input[name="question_1[]"]').change(function () {
-        var checkboxValue = $(this).val();
-        var isChecked = $(this).is(":checked");
-        localStorage.setItem(
-            checkboxValue,
-            isChecked ? "checked" : "unchecked"
-        );
-        if (isChecked) {
-            showSteps(checkboxValue);
-        } else {
-            hideSteps(checkboxValue);
-        }
-    });
-
-    function computePercentage(a, b) {
-        const val_a = $("#" + a).val();
-        const x = 100 - parseInt(val_a);
-        $("#" + b).val(x.toString());
-    }
-
-    function toUSD(number) {
-        var formatter = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        });
-        return formatter.format(number);
-    }
-
-    function datePickerFormatter(selector) {
-        $(selector).addClass("readonly").attr("readonly", "readonly");
-        $(selector).datepicker({
-            changeMonth: true,
-            changeYear: true,
-            maxDate: "-1d",
-            yearRange: "1950:" + new Date().getFullYear(),
-            showAnim: "slideDown",
-        });
-    }
-
-    function yearPickerFormatter(selector) {
-        $(selector).addClass("readonly").attr("readonly", "readonly");
-        if (!$(selector).hasClass("hasDatepicker")) {
-            $(selector).datepicker({
-                changeYear: true, // This allows changing the year
-                showButtonPanel: true, // Shows the buttons at the bottom
-                dateFormat: "yy", // Sets the format to only display the year
-                yearRange: "1900:" + new Date().getFullYear(), // For example, if you want a range from 1900 to the current year.
-                beforeShow: function (input, inst) {
-                    setTimeout(function () {
-                        inst.dpDiv.css({
-                            top: $(input).offset().top + $(input).outerHeight(),
-                            left: $(input).offset().left,
-                        });
-                        $(".ui-datepicker-calendar").hide();
-                        $(".ui-datepicker-month").hide();
-                    }, 0);
-                },
-                onClose: function (dateText, inst) {
-                    var year = $(
-                        "#ui-datepicker-div .ui-datepicker-year :selected"
-                    ).val();
-                    $(selector).val(year);
-                },
-            });
-
-            // Hide month calendar and dropdown
-            $(selector).focus(function () {
-                $(".ui-datepicker-calendar").hide();
-                $(".ui-datepicker-month").hide();
-            });
-        }
-    }
-
     let equipmentCount = 1;
     function appendNewSchedEquipmentEntry(selector) {
         $(document).on("click", selector, function (e) {
@@ -3893,65 +3839,30 @@
         $(this).val(number);
     }
 
-    // Function to run after page refresh
-    function clearSessionData() {
-        const csrfToken = $('meta[name="csrf-token"]').attr("content");
-        $.ajax({
-            url: "/clear-session-data", // Update this with your Laravel route
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": csrfToken,
-            },
-            success: function (response) {
-                // console.log('Clear Session Variable Message: ' + response.message);
-            },
-            error: function (error) {
-                console.error("Error:", error);
-            },
-        });
+    if (typeof serverData !== "undefined") {
+        if (serverData.hasOwnProperty("subcon")) {
+            serverData["gl"] = serverData["subcon"];
+            delete serverData["subcon"];
+        }
+        for (var key in serverData) {
+            if (serverData.hasOwnProperty(key)) {
+                var state = serverData[key];
+                localStorage.setItem(key, state);
+                // Update the checkbox state
+                var checkbox = $(
+                    'input[name="question_1[]"][value="' + key + '"]'
+                );
+                checkbox.prop("checked", state === "checked");
+                if (state === "checked") {
+                    showSteps(key);
+                } else {
+                    hideSteps(key);
+                }
+            }
+        }
     }
 
-    // Attach the function to the window.onload event
-    window.onload = clearSessionData;
-
-    function setSessionVariable(key, value) {
-        const csrfToken = $('meta[name="csrf-token"]').attr("content");
-        $.ajax({
-            url: "/set-session-variable",
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": csrfToken,
-            },
-            data: { key: key, value: value },
-            success: function (response) {
-                // console.log('Set Session Variable Message: ' + response.message);
-            },
-            error: function (error) {
-                console.error("Error:", error);
-            },
-        });
-    }
-
-    function unsetSessionVariable(key) {
-        const csrfToken = $('meta[name="csrf-token"]').attr("content");
-        $.ajax({
-            url: "/unset-session-variable",
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": csrfToken,
-            },
-            data: {
-                key: key,
-            },
-            success: function (response) {
-                // console.log('Unset Session Variable Message: ' + response.message);
-            },
-            error: function (error) {
-                console.error("Error:", error);
-            },
-        });
-    }
-
+    // Start Here
     var checkboxStates = {
         gl: false,
         wc: false,
@@ -3969,144 +3880,81 @@
         instfloat: false,
     };
 
-    function updateCheckboxState(checkboxValue, isChecked) {
-        checkboxStates[checkboxValue] = isChecked;
-        localStorage.setItem(
-            checkboxValue,
-            isChecked ? "checked" : "unchecked"
-        );
-    }
+    $(document).ready(function () {
+        const csrfToken = $('meta[name="csrf-token"]').attr("content");
 
-    function loadStepContent(stepId, isChecked) {
-        if (isChecked) {
-            $("#" + stepId).load(location.href + " #" + stepId + " > *");
-        }
-    }
+        // Initialize checkbox states based on data attribute value
+        $('input[name="question_1[]"]').each(function () {
+            var checkboxValue = $(this).val();
+            var isChecked = $(this).data("checked") === "true";
+            $(this).prop("checked", isChecked);
+            checkboxStates[checkboxValue] = isChecked;
+        });
 
-    function handleCheckboxChange(checkboxValue, isChecked) {
-        // Common session variable handling
-        var sessionVariableName = `does${checkboxValue.toUpperCase()}Checked`;
-
-        console.log(sessionVariableName);
-
-        if (isChecked) {
-            setSessionVariable(sessionVariableName, true);
-            // Add logic for when the checkbox is checked
-        } else {
-            unsetSessionVariable(sessionVariableName);
-            // Add logic for when the checkbox is unchecked
-        }
-
-        // Handling each checkbox with specific logic
-        switch (checkboxValue) {
-            case "gl":
-                loadStepContent("gl_step_1", isChecked);
-                loadStepContent("gl_step_2", isChecked);
-                // Additional logic specific to 'gl' if needed
-                break;
-            case "wc":
-                loadStepContent("wc_step_1", isChecked);
-                loadStepContent("wc_step_2", isChecked);
-                loadStepContent("wc_step_3", isChecked);
-                // Additional logic specific to 'wc' if needed
-                break;
-            case "auto":
-                loadStepContent("auto_step_1", isChecked);
-                loadStepContent("auto_step_2", isChecked);
-                loadStepContent("auto_step_3", isChecked);
-                // Additional logic specific to 'auto' if needed
-                break;
-            case "bond":
-                loadStepContent("bond_step_1", isChecked);
-                loadStepContent("bond_step_2", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            case "excess":
-                loadStepContent("excess_step_1", isChecked);
-                loadStepContent("excess_step_2", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            case "tools":
-                loadStepContent("tools_step_1", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            case "br":
-                loadStepContent("br_step_1", isChecked);
-                loadStepContent("br_step_2", isChecked);
-                loadStepContent("br_step_3", isChecked);
-                loadStepContent("br_step_4", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            case "bop":
-                loadStepContent("bop_step_1", isChecked);
-                loadStepContent("bop_step_2", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            case "comm_prop":
-                loadStepContent("comm_prop_step_1", isChecked);
-                loadStepContent("comm_prop_step_2", isChecked);
-                loadStepContent("comm_prop_step_3", isChecked);
-                loadStepContent("comm_prop_step_4", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            case "eo":
-                loadStepContent("eo_step_1", isChecked);
-                loadStepContent("eo_step_2", isChecked);
-                loadStepContent("eo_step_3", isChecked);
-                loadStepContent("eo_step_4", isChecked);
-                loadStepContent("eo_step_5", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            case "pollution":
-                loadStepContent("pollution_step_1", isChecked);
-                loadStepContent("pollution_step_2", isChecked);
-                loadStepContent("pollution_step_3", isChecked);
-                loadStepContent("pollution_step_4", isChecked);
-                loadStepContent("pollution_step_5", isChecked);
-                loadStepContent("pollution_step_6", isChecked);
-                loadStepContent("pollution_step_7", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            case "epli":
-                loadStepContent("epli_step_1", isChecked);
-                loadStepContent("epli_step_2", isChecked);
-                loadStepContent("epli_step_3", isChecked);
-                loadStepContent("epli_step_4", isChecked);
-                loadStepContent("epli_step_5", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            case "cyber":
-                loadStepContent("cyber_step_1", isChecked);
-                loadStepContent("cyber_step_2", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            case "instfloat":
-                loadStepContent("instfloat_step_1", isChecked);
-                loadStepContent("instfloat_step_2", isChecked);
-                loadStepContent("instfloat_step_3", isChecked);
-                loadStepContent("instfloat_step_4", isChecked);
-                loadStepContent("instfloat_step_5", isChecked);
-                // Additional logic specific to 'bond' if needed
-                break;
-            default:
-                // Handle any default case if necessary
-                break;
+        // Function to update session variables and UI for all checkboxes at once
+        function updateSessionVariables() {
+            $.ajax({
+                url: "/update-session-variables",
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                data: JSON.stringify(checkboxStates),
+                contentType: "application/json",
+                success: function (response) {
+                    console.log("Session variables updated successfully.");
+                    updateUI(); // Call to update the UI based on the new session states
+                },
+                error: function (error) {
+                    console.error("Error updating session variables:", error);
+                },
+            });
         }
 
-        // Any additional logic that applies to all checkboxes
-    }
+        // Function to update the UI dynamically based on session state
+        function updateUI() {
+            $.ajax({
+                url: "/fetch-checkbox-content", // Endpoint to fetch HTML based on session data
+                method: "GET",
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                success: function (response) {
+                    $("#about_you_profession").html(response.html); // Update the DOM with the returned HTML
+                },
+                error: function (error) {
+                    console.error("Error fetching content:", error);
+                },
+            });
+        }
 
-    // Event listener for checkbox changes
+        // Attach event listener to checkbox change event
+        $(document).on("change", 'input[name="question_1[]"]', function () {
+            var checkboxValue = $(this).val();
+            var isChecked = $(this).is(":checked");
+            checkboxStates[checkboxValue] = isChecked;
+            updateSessionVariables();
+        });
 
-    $(document).on("change", 'input[name="question_1[]"]', function () {
-        var checkboxValue = $(this).val();
-        var isChecked = $(this).is(":checked");
+        // Function to clear session on page load
+        function clearSessionData() {
+            $.ajax({
+                url: "/clear-session-data",
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                success: function (response) {
+                    console.log("Session data cleared successfully");
+                    updateSessionVariables(); // Update session variables initially after clearing
+                },
+                error: function (error) {
+                    console.error("Error clearing session data:", error);
+                },
+            });
+        }
 
-        // Update the state of the checkbox
-        updateCheckboxState(checkboxValue, isChecked);
-
-        // Handle the change for the specific checkbox
-        handleCheckboxChange(checkboxValue, isChecked);
+        clearSessionData(); // Call to clear session when the page loads
     });
 
     function showDriverIfMarried() {

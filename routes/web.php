@@ -13,6 +13,8 @@ Route::get('/wc/showProfessionEntries', [QuoteController::class, 'showProfession
 Route::post('/clear-session-data', [QuoteController::class, 'clearSessionData']);
 Route::post('/set-session-variable', [QuoteController::class, 'setSessionVariable']);
 Route::post('/unset-session-variable', [QuoteController::class, 'unsetSessionVariable']);
+Route::post('/update-session-variables', [QuoteController::class, 'updateSessionVariables']);
+Route::get('/fetch-checkbox-content', [QuoteController::class, 'fetchCheckboxContent']);
 
 Route::get('/', [QuoteController::class, 'index'])->name('quote.index');
 Route::post('/quote-form-submit', [QuoteController::class, 'submitQuoteForm']);
