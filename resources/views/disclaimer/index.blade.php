@@ -5,7 +5,7 @@
         <section class="parallax_window_in" data-parallax="scroll" data-image-src="{{ asset('img/bg.jpg') }}"
             data-natural-width="1400" data-natural-height="800">
             <div id="sub_content_in">
-                <h1>Cookie Policy</h1>
+                <h1>Disclaimer</h1>
                 {{-- <p class="mb-2">"Usu habeo equidem sanctus no ex melius labitur"</p> --}}
             </div>
         </section>
@@ -15,7 +15,7 @@
             <div class="container">
                 <div class="row justify-content-between p-3">
                     <div class="col-lg-12">
-                        <div name="termly-embed" data-id="e8872a12-ab65-4cec-acd3-2e85828e9639"></div>
+                        <div name="termly-embed" data-id="c9c05419-a25b-4a65-874e-004a4def4eba"></div>
                         <script type="text/javascript">
                             (function(d, s, id) {
                                 var js, tjs = d.getElementsByTagName(s)[0];

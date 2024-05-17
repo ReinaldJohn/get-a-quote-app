@@ -79,6 +79,24 @@ class QuoteController extends Controller
         return Carbon::now()->format('Y');
     }
 
+    public function acceptablePolicy() {
+        $currentYear = $this->globalCurrentYear();
+        return view("acceptable-policy.index",  [
+            'currentYear' => $currentYear,
+            'trueValues' => null,
+            'title' => 'Acceptable Use Policy | Pascal Burke Insurance Brokerage'
+        ]);
+    }
+
+    public function disclaimer() {
+        $currentYear = $this->globalCurrentYear();
+        return view("disclaimer.index",  [
+            'currentYear' => $currentYear,
+            'trueValues' => null,
+            'title' => 'Disclaimer | Pascal Burke Insurance Brokerage'
+        ]);
+    }
+
     public function termsAndCondition() {
         $currentYear = $this->globalCurrentYear();
         return view("terms-and-conditions.index",  [
